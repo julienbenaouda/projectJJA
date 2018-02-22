@@ -1,4 +1,4 @@
-package canvaswindow;
+package interactr.domain;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
