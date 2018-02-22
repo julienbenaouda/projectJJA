@@ -1,6 +1,7 @@
 /.Metadata/
 /bin/
-
 /.settings
-/.project
-/.classpath
+/.idea/
+projectJJA.iml
+.classpath
+.project
