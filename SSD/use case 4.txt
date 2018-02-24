@@ -1,0 +1,9 @@
+@startuml
+title update task status
+actor User
+
+User -> ":System": updateTaskStatus()
+":System" --> User: task list
+User -> ":System": selectTask(task)
+User -> ":System": enterTaskStatusDetails(startTime, endTime, status)
+@enduml

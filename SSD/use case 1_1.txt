@@ -1,0 +1,8 @@
+@startuml
+title Show Projects - extension leave overview
+actor User
+
+User -> ":System": getProjectList()
+":System" --> User: project list
+User -> ":System": leaveOverview()
+@enduml
