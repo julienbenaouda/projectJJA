@@ -1,0 +1,22 @@
+@startuml
+title Show Projects
+actor User
+
+User -> ":System": getProjectList()
+":System" --> User: project list
+User -> ":System": getProjectDetails(project)
+":System" --> User: project details
+User -> ":System": getTaskDetails(task)
+":System" --> User: task details
+
+newpage new project
+actor User
+
+User -> ":System": getProjectList()
+":System" --> User: project list
+User -> ":System": getProjectDetails(project)
+":System" --> User: project details
+User -> ":System": getTaskDetails(task)
+":System" --> User: task details
+
+@enduml

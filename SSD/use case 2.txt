@@ -1,0 +1,6 @@
+@startuml
+title create project
+actor user
+User -> ":System": createNewProject()
+User -> ":System": enterProjectDetails(name, description, creationTime, dueTime)
+@enduml

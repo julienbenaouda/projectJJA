@@ -1,0 +1,6 @@
+@startuml
+title create task
+actor User
+User -> ":System": createNewTask()
+User -> ":System": enterTaskDetails(project, description, estimatedDuration, acceptableDeviation)
+@enduml

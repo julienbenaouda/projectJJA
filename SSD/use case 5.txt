@@ -1,0 +1,6 @@
+@startuml
+title advance time
+actor User
+User -> ":System": modifySystemTime(timestamp)
+
+@enduml
