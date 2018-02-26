@@ -1,4 +1,6 @@
-package Domain;
+package Test;
+
+import Domain.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
