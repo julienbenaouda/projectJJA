@@ -1,9 +1,9 @@
 /.Metadata/
-/bin/
 /.settings
 /.idea/
-projectJJA.iml
+/bin/
+/out/
 .classpath
 .project
 .DS_Store
-/out/
+projectJJA.iml
