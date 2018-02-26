@@ -1,9 +1,9 @@
-package Test;
+package Tests;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import Domain.Project;
-import Domain.Task;
+import TaskMan.Project;
+import TaskMan.Task;
 import junit.framework.Assert;
 
 import java.time.*;

@@ -1,4 +1,4 @@
-package Domain;
+package TaskMan;
 
 /**
  * Dummy for enum Status.

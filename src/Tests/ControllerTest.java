@@ -1,6 +1,6 @@
-package Test;
+package Tests;
 
-import Domain.Controller;
+import TaskMan.Controller;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;

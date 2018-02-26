@@ -1,4 +1,4 @@
-package Domain;
+package TaskMan;
 
 import java.time.Duration;
 import java.util.ArrayList;
