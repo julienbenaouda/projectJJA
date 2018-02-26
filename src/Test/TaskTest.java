@@ -1,6 +1,9 @@
 package Test;
 
-import Domain.Task;
+import TaskMan.Task;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,15 +26,15 @@ public class TaskTest {
         start = LocalDateTime.of(2018, Month.FEBRUARY, 26, 20, 16);
         end = LocalDateTime.of(2018, Month.MAY, 12 , 19, 27);
         dependencies = new ArrayList<>();
-        task = new Task("Very interesting description.", duration, 0.15, start, end, dependencies, null)
+        task = new Task("Very interesting description.", duration, 0.15, start, end, dependencies, null);
     }
 
     @Test
-    public void testTesk() {
+    public void testTask() {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The start dates are not equal", start, task.getStartTime());
         Assert.assertEquals("The end dates are not equal", end, task.getEndTime());
-        Assert.assertEquals("The acceptable deviation are not equal", 0.15, task.getAcceptableDeviation());
+        Assert.assertEquals("The acceptable deviation are not equal", (Double) 0.15, task.getAcceptableDeviation());
         Assert.assertEquals("The dependencies are not equal", dependencies, task.getDependencies());
         Assert.assertEquals("The alternative task is nog equal", null, task.getAlternative());
     }
@@ -45,7 +48,7 @@ public class TaskTest {
 
     @Test
     public void testGetTask() {
-        fail("Not yet implemented");
+        Assert.fail("Not yet implemented");
     }
 
 

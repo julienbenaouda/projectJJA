@@ -14,7 +14,7 @@ public class Controller {
     /**
      * Represents the projects of the controller.
      */
-    private ArrayList<Project> projects = new ArrayList<Project>();
+    private ArrayList<Project> projects = new ArrayList<>();
 
     /**
      * Returns the projects of the controller.
