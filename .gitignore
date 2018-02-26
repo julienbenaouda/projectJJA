@@ -6,3 +6,4 @@ projectJJA.iml
 .classpath
 .project
 .DS_Store
+/out/

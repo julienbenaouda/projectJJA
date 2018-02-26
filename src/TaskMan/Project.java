@@ -12,6 +12,7 @@ import java.util.ArrayList;
  *
  */
 public class Project {
+
 	/**
 	 * creates a new project with the given values
 	 * @param name the project name
@@ -44,6 +45,7 @@ public class Project {
 		Task t = new Task(taskDescription, estimatedDuration, acceptableDeviation, startTime, endTime, dependencies, alternative);
 		taskList.add(t);
 	}
+
 	/**
 	 * returns the name of the project
 	 * @return the name of the project
@@ -51,6 +53,7 @@ public class Project {
 	public String getName() {
 		return name;
 	}
+
 	/**
 	 * sets the name of the project to the given name
 	 * @param name the name of the project.
@@ -59,10 +62,12 @@ public class Project {
 	private void setName(String name) {
 		this.name = name;
 	}
+
 	/**
 	 * The name of the project.
 	 */
 	private String name;
+
 	/**
 	 * returns the project description
 	 * @return the project description 
@@ -70,6 +75,7 @@ public class Project {
 	public String getDescription() {
 		return description;
 	}
+
 	/**
 	 * Sets the porject description to the given description
 	 * @param description the description of the project
@@ -78,10 +84,12 @@ public class Project {
 	private void setDescription(String description) {
 		this.description = description;
 	}
+
 	/**
 	 * The project description.
 	 */
 	private String description;
+
 	/**
 	 * returns the creation time of the project
 	 * @return the creationTime of the project
@@ -89,6 +97,7 @@ public class Project {
 	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
+
 	/**
 	 * sets the creation time of the project
 	 * @param creationTime the creationTime of the project
@@ -97,10 +106,12 @@ public class Project {
 	public void setCreationTime(LocalDateTime creationTime) {
 		this.creationTime = creationTime;
 	}
+
 	/**
 	 * The time of creation of the object.
 	 */
 	private LocalDateTime creationTime;
+
 	/**
 	 * returns the due time of the project
 	 * @return the dueTime of the project
@@ -108,6 +119,7 @@ public class Project {
 	public LocalDateTime getDueTime() {
 		return dueTime;
 	}
+
 	/**
 	 * Sets the due time of the project.
 	 * @param dueTime the dueTime of the project
@@ -122,10 +134,12 @@ public class Project {
 			throw new IllegalArgumentException("The due time can't be before the start time.");
 		}
 	}
+
 	/**
 	 * The due time of the project.
 	 */
 	private LocalDateTime dueTime;
+
 	/**
 	 * Returns a list with all tasks of a project
 	 * @return the tasks of the project
@@ -133,6 +147,7 @@ public class Project {
 	public ArrayList<Task> getTasks() {
 		return (ArrayList<Task>) taskList.clone();
 	}
+
 	/**
 	 * returns the task with the given ID
 	 * @param id the id of the task
@@ -142,6 +157,7 @@ public class Project {
 	public Task getTask(int id) throws IndexOutOfBoundsException {
 		return taskList.get(id);
 	}
+
 	/**
 	 * The list of tasks for the project.
 	 */

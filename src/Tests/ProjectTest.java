@@ -1,13 +1,15 @@
 package Tests;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+
 import TaskMan.Project;
 import TaskMan.Task;
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
+
 
 public class ProjectTest {
 	private Project p;
@@ -23,7 +25,6 @@ public class ProjectTest {
 		p = new Project("test", "test desc", creation, due);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testProject() {
 		Assert.assertEquals("The specified name is not equal to the given name", "test", p.getName());
@@ -35,12 +36,13 @@ public class ProjectTest {
 
 	@Test
 	public void testAddTask() {
-		p.addTask("test", d, 20, startTime, endTime, dependencies, a);
+        Assert.fail("Not yet implemented");
+		//p.addTask("test", d, 20, startTime, endTime, dependencies, a);
 	}
 
 	@Test
 	public void testGetTask() {
-		fail("Not yet implemented");
+		Assert.fail("Not yet implemented");
 	}
 
 }
