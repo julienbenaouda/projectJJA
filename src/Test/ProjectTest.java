@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import Domain.Project;
+import Domain.Task;
 import junit.framework.Assert;
 
 import java.time.*;
@@ -17,7 +18,7 @@ public class ProjectTest {
 	@Before
 	public void setUp() {
 		creation = LocalDateTime.of(2018, Month.FEBRUARY, 24, 10, 0);
-		due = LocalDateTime.of(2018, Month.march, 15, 12, 30);
+		due = LocalDateTime.of(2018, Month.MARCH, 15, 12, 30);
 		tasks = new ArrayList<>();
 		p = new Project("test", "test desc", creation, due);
 	}

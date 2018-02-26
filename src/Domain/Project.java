@@ -1,10 +1,10 @@
-/**
- * 
- */
+
 package Domain;
+
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.time.*;
-import be.kuleuven.cs.som.taglet.*;
 
 /**
  * This class represents a project.
@@ -41,7 +41,7 @@ public class Project {
 	 * @post a new task with the give values and status available is added to the project
 	 */
 	public void addTask(String taskDescription, Duration estimatedDuration, double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, ArrayList<Task> dependencies, Task alternative) {
-		Task t = new Task(taskDescription, estimatedDuration, acceptableDeviation, startTime, endTime, dependencies, aternative);
+		Task t = new Task(taskDescription, estimatedDuration, acceptableDeviation, startTime, endTime, dependencies, alternative);
 		taskList.add(t);
 	}
 	/**
@@ -130,14 +130,14 @@ public class Project {
 	 * Returns a list with all tasks of a project
 	 * @return the tasks of the project
 	 */
-	private ArrayList<Task> getTasks() {
-		return taskList.clone();
+	public ArrayList<Task> getTasks() {
+		return (ArrayList<Task>) taskList.clone();
 	}
 	/**
 	 * returns the task with the given ID
 	 * @param id the id of the task
 	 * @return the task with the given ID
-	 * @throws indexOutOfBoundsException When the given index is larger than the maximum size of the list. 
+	 * @throws IndexOutOfBoundsException When the given index is larger than the maximum size of the list.
 	 */
 	public Task getTask(int id) throws IndexOutOfBoundsException {
 		return taskList.get(id);

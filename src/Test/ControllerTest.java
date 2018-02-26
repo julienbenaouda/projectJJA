@@ -1,5 +1,6 @@
-package TaskMan;
+package Test;
 
+import Domain.Controller;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
@@ -23,7 +24,7 @@ class ControllerTest {
 
 
 
-    //////////////////// Getters ////////////////////
+    //////////////////// Tests ////////////////////
 
     @Test
     public void testGetProjects() {
@@ -36,20 +37,13 @@ class ControllerTest {
     }
 
     @Test
-    public void testGetTaskDetails() {
-
-    }
-
-    @Test
-    public void testGetSystemTime() {
-
-    }
-
-
-    //////////////////// Setters ////////////////////
-
-    @Test
     public void testAddNewProject() {
+
+    }
+
+
+    @Test
+    public void testGetTaskDetails() {
 
     }
 
@@ -60,6 +54,12 @@ class ControllerTest {
 
     @Test
     public void testUpdateTaskStatus() {
+
+    }
+
+
+    @Test
+    public void testGetSystemTime() {
 
     }
 
