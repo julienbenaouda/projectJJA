@@ -1,5 +1,5 @@
 
-package TaskMan;
+package taskman;
 
 
 import java.time.Duration;

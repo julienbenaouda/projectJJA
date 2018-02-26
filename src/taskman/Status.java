@@ -1,4 +1,4 @@
-package TaskMan;
+package taskman;
 
 /**
  * This class represents the status of a task.

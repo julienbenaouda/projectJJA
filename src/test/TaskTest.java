@@ -1,6 +1,6 @@
-package Test;
+package test;
 
-import TaskMan.Task;
+import taskman.Task;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
