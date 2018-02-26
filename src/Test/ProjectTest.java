@@ -1,4 +1,4 @@
-package Tests;
+package Test;
 
 import TaskMan.Project;
 import TaskMan.Task;
