@@ -1,0 +1,180 @@
+@startuml
+
+class UserInterface {
+
+- Controller controller
+
++ {static} void main(String[] args)
+
+}
+
+UserInterface o-- Controller
+
+class Controller {
+
+- UserManager userManager
+- Clock clock
+
++ Controller(LocalDateTime timestamp)
+
++ String getCurrentUserName()
++ ArrayList<Project> getProjects()
++ HashMap<String, String> getProjectDetails(String projectName)
++ HashMap<String, String> getTaskDetails(String projectName, Integer taskId)
++ ArrayList<HashMap<String, String>> getDetailsOfAllTasks(String projectName)
++ LocalDateTime getSystemTime()
+
++ void login(String username, String password)
++ void logout()
++ void addProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime)
++ void addTask(String projectName, String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, Task alternative)
++ void updateTaskStatus(String projectName, Integer taskId, LocalDateTime startTime, LocalDateTime endTime, Status status)
++ void updateSystemTime(LocalDateTime timestamp)
+
+}
+
+Controller o-- Clock
+Controller o-- UserManager
+
+class Clock {
+
+- LocalDateTime systemTime
+
++ Clock(LocalDateTime timestamp)
+
++ LocalDateTime getSystemTime()
+
++ void updateSystemTime(LocalDateTime timestamp)
+
+}
+
+class UserManager {
+
+- ArrayList<User> users
+
++ User getCurrentUser()
+
++ void login(String username, String password)
++ void logout()
+
+}
+
+UserManager o-- User
+
+abstract class User {
+
+- String username
+- String password
+- {static} ArrayList<Project> projects
+
++ String getUsername()
+- String getPassword()
++ ArrayList<Project> getProjects()
++ HashMap<String, String> getProjectDetails(String projectName)
++ ArrayList<HashMap<String, String>> getDetailsOfAllTasks(String projectName)
++ HashMap<String, String> getTaskDetails(String projectName, Integer taskId)
+
++ void addProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime)
++ {abstract} void addTask(String projectName, String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, Task alternative)
++ void updateTaskStatus(String projectName, Integer taskId, LocalDateTime startTime, LocalDateTime endTime, Status status)
+
+}
+
+User <|-- RegularUser
+User <|-- Developer
+
+class RegularUser {
+
++ void addTask(String projectName, String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, Task alternative)
+
+}
+
+RegularUser o-- Project
+
+class Developer {
+
++ void addTask(String projectName, String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, Task alternative)
+
+}
+
+Developer o-- Project
+
+class Project {
+
+- String name
+- String description
+- LocalDateTime creationTime 
+- LocalDateTime dueTime
+- ArrayList<Task> tasks
+
++ Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime)
+
++ String getName()
++ String getDescription()
++ LocalDateTime getCreationTime()
++ LocalDateTime getDueTime()
++ ArrayList<Task> getTasks()
++ Task getTask(Integer id)
++ HashMap<String, String> getProjectDetails()
++ ArrayList<HashMap<String, String>> getDetailsOfAllTasks()
++ HashMap<String, String> getTaskDetails(Integer taskId)
+
+- void setName(String name)
+- void setDescription(String description)
+- void setCreationTime(LocalDateTime creationTime)
+- void setDueTime(LocalDateTime dueTime)
+- void addTask(Task task)
++ void addTask(String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, Task alternative)
++ void updateTaskStatus(String projectName, Integer taskId, LocalDateTime startTime, LocalDateTime endTime, Status status)
+
+}
+
+Project *-- Task
+
+class Task {
+
+- String description
+- Duration estimatedDuration
+- Double acceptableDeviation
+- LocalDateTime startTime
+- LocalDateTime endTime
+- Status status
+- ArrayList<Task> dependencies
+- Task alternative
+
++ Task(String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, List<Task> dependencies, Task alternative)
+
++ String getDescription()
++ Duration getEstimatedDuration()
++ Double getAcceptableDeviation()
++ LocalDateTime getStartTime()
++ LocalDateTime getEndTime()
++ Status getStatus()
++ ArrayList<Task> getDependencies()
++ Task getAlternative()
++ Boolean hasAlternative()
++ HashMap<String, String> getTaskDetails()
+
+- void setDescription(String description)
+- void setEstimatedDuration(Duration estimatedDuration)
+- void setAcceptableDeviation(Double deviation)
+- void setStartTime(LocalDateTime startTime)
+- void setEndTime(LocalDateTime endTime)
+- void setStatus(Status status)
+- void addDependency(Task dependency)
+- void setAlternative(Task alternative)
+
+}
+
+Task o-- Status
+
+enum Status {
+
+AVAILABLE
+UNAVAILABLE
+FINISHED
+FAILED
+
+}
+
+@enduml

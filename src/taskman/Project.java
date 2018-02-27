@@ -103,7 +103,7 @@ public class Project {
 	 * @param creationTime the creationTime of the project
 	 * @post the creation time of the project is set to the given creation time
 	 */
-	public void setCreationTime(LocalDateTime creationTime) {
+	private void setCreationTime(LocalDateTime creationTime) {
 		this.creationTime = creationTime;
 	}
 
