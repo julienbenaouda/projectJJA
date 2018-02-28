@@ -5,6 +5,7 @@ package taskman;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represents a project.
@@ -162,5 +163,13 @@ public class Project {
 	 * The list of tasks for the project.
 	 */
 	private ArrayList<Task> taskList;
+	
+	public HashMap<String, String> getProjectDetails()
+	{
+		HashMap<String, String> details = new HashMap<>();
+		details.set("name", getName());
+		details.set("description", getDescription());
+		details
+	}
 
 }
