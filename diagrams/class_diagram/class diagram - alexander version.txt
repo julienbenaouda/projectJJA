@@ -1,6 +1,6 @@
 @startuml
 
-note : In the presentation a simplified diagram is expected.
+note "In the presentation a simplified diagram is expected." as Note1
 
 class UserInterface {
 
