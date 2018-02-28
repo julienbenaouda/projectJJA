@@ -19,7 +19,7 @@ public class Task {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Status status;
-    List<Task> dependencies;
+    ArrayList<Task> dependencies;
     Task alternative;
 
     /**
@@ -33,7 +33,7 @@ public class Task {
      * @param alternative the alternative task of the task
      * @post a new task is created with the given attributes
      */
-    public Task(String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, List<Task> dependencies, Task alternative)
+    public Task(String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, ArrayList<Task> dependencies, Task alternative)
     {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
@@ -101,8 +101,7 @@ public class Task {
      * @return the dependencies of the task
      */
     public ArrayList<Task> getDependencies(){ // TODO: staat wel niet in UML en dit fixen
-        ArrayList<Task> dependenciesCopy = new ArrayList<>(dependencies); // makes a copy
-        return dependenciesCopy;
+        return (ArrayList<Task>) this.dependencies.clone();
     }
 
     /**
@@ -181,7 +180,7 @@ public class Task {
      * @param dependencies list of dependent tasks of the task
      * @post the dependencies is set to the given dependent tasks
      */
-    private void setDependencies(List<Task> dependencies){
+    private void setDependencies(ArrayList<Task> dependencies){
         this.dependencies = dependencies;
     }
 
