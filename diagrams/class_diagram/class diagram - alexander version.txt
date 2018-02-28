@@ -1,5 +1,7 @@
 @startuml
 
+note : In the presentation a simplified diagram is expected.
+
 class UserInterface {
 
 - Controller controller
@@ -117,6 +119,8 @@ class User {
 
 }
 
+note bottom of User : Is a developer also a regular user?
+
 class ProjectController {
 
 - ArrayList<Project> projects
@@ -167,6 +171,7 @@ class Project {
 + LocalDateTime getCreationTime()
 + LocalDateTime getDueTime()
 + HashMap<String, String> getProjectDetails()
++ Duration getTotal
 
 + ArrayList<Integer> getTaskIds()
 + HashMap<String, String> getTaskDetails(Integer taskId)
@@ -179,6 +184,8 @@ class Project {
 + void restoreFromString(String status)
 
 }
+
+note left of Project : Status and total execution time \n of the project should be calculated!
 
 Project *-- Task
 
@@ -225,6 +232,10 @@ class Task {
 + void restoreFromString(String status)
 
 }
+
+note bottom of Task : No loops are allowed \n in the dependency graph!
+note left of Task : If tasks depend on each other, \n timespans cannot overlap!
+note right of Task : The timestamps are expressed \n in hours and minutes, no seconds!
 
 Task o-- Status
 
