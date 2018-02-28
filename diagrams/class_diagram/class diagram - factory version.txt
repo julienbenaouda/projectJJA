@@ -18,10 +18,11 @@ class Controller {
 + Controller(LocalDateTime timestamp)
 
 + String getCurrentUserName()
-+ ArrayList<Project> getProjects()
++ ArrayList<String> getProjectNames()
 + HashMap<String, String> getProjectDetails(String projectName)
++ ArrayList<Integer> getTaskIds(String projectName)
 + HashMap<String, String> getTaskDetails(String projectName, Integer taskId)
-+ ArrayList<HashMap<String, String>> getDetailsOfAllTasks(String projectName)
++ HashMap<Integer,HashMap<String, String>> getDetailsOfTasks(String projectName)
 + LocalDateTime getSystemTime()
 
 + void login(String username, String password)
@@ -35,6 +36,7 @@ class Controller {
 
 Controller o-- Clock
 Controller o-- UserManager
+Controller -- User
 
 class Clock {
 
@@ -69,9 +71,12 @@ abstract class User {
 
 + String getUsername()
 - String getPassword()
-+ ArrayList<Project> getProjects()
++ Boolean verifyPassword(String password)
+- ArrayList<Project> getProjects()
++ ArrayList<String> getProjectNames()
 + HashMap<String, String> getProjectDetails(String projectName)
-+ ArrayList<HashMap<String, String>> getDetailsOfAllTasks(String projectName)
++ ArrayList<Integer> getTaskIds(String projectName)
++ HashMap<Integer,HashMap<String, String>> getDetailsOfTasks(String projectName)
 + HashMap<String, String> getTaskDetails(String projectName, Integer taskId)
 
 + void addProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime)
@@ -113,10 +118,11 @@ class Project {
 + String getDescription()
 + LocalDateTime getCreationTime()
 + LocalDateTime getDueTime()
-+ ArrayList<Task> getTasks()
+- ArrayList<Task> getTasks()
 + Task getTask(Integer id)
 + HashMap<String, String> getProjectDetails()
-+ ArrayList<HashMap<String, String>> getDetailsOfAllTasks()
++ ArrayList<Integer> getTaskIds()
++ HashMap<Integer,HashMap<String, String>> getDetailsOfTasks()
 + HashMap<String, String> getTaskDetails(Integer taskId)
 
 - void setName(String name)
@@ -133,6 +139,8 @@ Project *-- Task
 
 class Task {
 
+- {static} Integer lastTaskId
+- Integer Id
 - String description
 - Duration estimatedDuration
 - Double acceptableDeviation
@@ -144,6 +152,7 @@ class Task {
 
 + Task(String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, List<Task> dependencies, Task alternative)
 
++ Integer getId()
 + String getDescription()
 + Duration getEstimatedDuration()
 + Double getAcceptableDeviation()
