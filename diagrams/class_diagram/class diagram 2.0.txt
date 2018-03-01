@@ -17,9 +17,8 @@ class Controller {
 - Clock clock
 + Controller(LocalDateTime timestamp)
 + void initialize()
-- Clock getClock()
-- void setClock(Clock clock)
-
++ Clock getClock()
++ void setClock(Clock clock)
 
 + List<String> getProjectNames()
 + HashMap<String, String> getProjectDetails(String projectName)
@@ -37,11 +36,12 @@ class Controller {
 
 + void saveToFile(String path)
 + void restoreFromFile(String path)
-
 }
 
 Controller o-- User
 Controller o-- Clock
+Controller o-- Project
+Controller o-- Task
 
 class User {
 - {static} UserType user
@@ -56,19 +56,16 @@ DEVELOPER
 }
 
 class Clock {
-
-- LocalDateTime systemTime
+- {static} LocalDateTime systemTime
+- {static} void setSystemTime(LocalDateTime systemTime)
 
 + Clock(LocalDateTime timestamp)
 
-- void setSystemTime(LocalDateTime systemTime)
++ {static} LocalDateTime getSystemTime()
++ {static} void updateSystemTime(LocalDateTime timestamp)
 
-+ LocalDateTime getSystemTime()
-+ void updateSystemTime(LocalDateTime timestamp)
-
-+ String saveToString()
-+ void restoreFromString(String status)
-
++ {static} String saveToString()
++ {static} void restoreFromString(String status)
 }
 
 class Project {
@@ -103,7 +100,7 @@ class Project {
 
 }
 
-note left of Project : Status and total execution time \n of the project should be calculated!
+note right of Project : Status and total execution time \n of the project should be calculated!
 
 Project *-- Task
 
@@ -139,7 +136,6 @@ class Task {
 + Status getStatus()
 + List<Task> getDependencies()
 + Task getAlternative()
-+ Boolean hasAlternative()
 + HashMap<String, String> getTaskDetails()
 + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status)
 + void addDependency(Task dependency)
@@ -158,7 +154,6 @@ note right of Task : The timestamps are expressed \n in hours and minutes, no se
 Task o-- Status
 
 enum Status {
-
 AVAILABLE
 UNAVAILABLE
 FINISHED
@@ -168,7 +163,6 @@ FAILED
 
 + String saveToString()
 + void restoreFromString(String status)
-
 }
 
 @enduml
