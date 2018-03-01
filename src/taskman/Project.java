@@ -4,6 +4,7 @@ package taskman;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -164,12 +165,19 @@ public class Project {
 	 */
 	private ArrayList<Task> taskList;
 	
+	/**
+	 * This method returns a hashmap containing the project properties.
+	 * @return A hashmap containing each property of the project, except for the list of tasks. The property names can be used as keys.
+	 */
 	public HashMap<String, String> getProjectDetails()
 	{
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd\/MM\/yyyy HH:mm"));
 		HashMap<String, String> details = new HashMap<>();
-		details.set("name", getName());
-		details.set("description", getDescription());
-		details
+		details.put("name", getName());
+		details.put("description", getDescription());
+		details.put("creationTime", getCreationTime().format(dateFormatter);
+		details.put("dueTime", getDueTime().format(DateTimeFormatter));
+		return details.clone();
 	}
 
 }
