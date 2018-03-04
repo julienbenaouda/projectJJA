@@ -17,8 +17,6 @@ class Controller {
 - Clock clock
 + Controller(LocalDateTime timestamp)
 + void initialize()
-+ Clock getClock()
-+ void setClock(Clock clock)
 
 + List<String> getProjectNames()
 + HashMap<String, String> getProjectDetails(String projectName)
@@ -31,8 +29,8 @@ class Controller {
 + void addDependencyToTask(Integer tastId, Integer dependencyTaskId)
 + void updateTaskStatus(String projectName, Integer taskId, LocalDateTime startTime, LocalDateTime endTime, Status status)
 
-+ LocalDateTime getSystemTime()
-+ void updateSystemTime(LocalDateTime timestamp)
++ String getSystemTime()
++ void updateSystemTime(String timestamp)
 
 + void saveToFile(String path)
 + void restoreFromFile(String path)
@@ -64,8 +62,8 @@ class Clock {
 + {static} LocalDateTime getSystemTime()
 + {static} void updateSystemTime(LocalDateTime timestamp)
 
-+ {static} String saveToString()
-+ {static} void restoreFromString(String status)
++ {static} Element saveToString()
++ {static} void restoreFromString(Element xml)
 }
 
 class Project {
@@ -95,8 +93,8 @@ class Project {
 + ArrayList<Integer> getTaskIds()
 + HashMap<String, String> getTaskDetails(Integer taskId)
 
-+ String saveToString()
-+ void restoreFromString(String status)
++ Element saveToString()
++ {static} Project restoreFromString(Element xml)
 
 }
 
@@ -142,8 +140,8 @@ class Task {
 + void removeDependency(Task dependency)
 + void setAlternative(Task alternative)
 
-+ String saveToString()
-+ void restoreFromString(String status)
++ Element saveToString()
++ {static} Task restoreFromString(Element xml)
 
 }
 
