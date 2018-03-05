@@ -1,7 +1,7 @@
 package taskman;
 
 /**
- * This class represents the status of a task.
+ * This enum represents the status of a task.
  * @author Alexander Braekevelt
  *
  */

@@ -19,7 +19,7 @@ public class Task {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Status status;
-    List<Task> dependencies;
+    ArrayList<Task> dependencies;
     Task alternative;
 
     /**

@@ -153,7 +153,7 @@ public class Project {
 	 * @throws IllegalArgumentException when the given date is not valid or null.
 	 * @post the creation time of the project is set to the given creation time
 	 */
-	public void setCreationTime(String creationTime) {
+	private void setCreationTime(String creationTime) {
 		if(creationTime == null)
 		{
 			throw new IllegalArgumentException("The creation time can't be null");

@@ -37,12 +37,12 @@ public class Controller {
      * Adds a new project to the controller.
      * @param name the name of the project
      * @param description the description of the project
-     * @param creatorTime the creator time of the project
+     * @param creationTime the creation time of the project
      * @param dueTime the due time of the project
      * @post the controller will contain a new project
      */
-    public void addNewProject(String name, String description, LocalDateTime creatorTime, LocalDateTime dueTime) {
-        this.projects.add(new Project(name, description, creatorTime, dueTime));
+    public void addNewProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
+        this.projects.add(new Project(name, description, creationTime, dueTime));
     }
 
     /**
