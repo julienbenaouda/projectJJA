@@ -35,7 +35,7 @@ public class TaskTest {
 
     @Test
     public void testTask(){
-        Assert.assertEquals("The task ID is not correct",1, task.getID());
+        Assert.assertEquals("The task ID is not correct", 1, (int) task.getID());
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", duration, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);

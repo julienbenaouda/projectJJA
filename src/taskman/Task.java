@@ -1,9 +1,10 @@
 package taskman;
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 
 
 /**
@@ -22,7 +23,7 @@ public class Task {
      * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    public Task(String description, Duration estimatedDuration, double acceptableDeviation, String startTime, String endTime)
+    public Task(String description, Duration estimatedDuration, Double acceptableDeviation, String startTime, String endTime)
     {
         setID();
         setDescription(description);
@@ -38,7 +39,7 @@ public class Task {
     /**
      * The latest task ID.
      */
-    private static int lastTaskID = 0;
+    private static Integer lastTaskID = 0;
 
 
     /**
@@ -53,21 +54,21 @@ public class Task {
      * @param ID the ID of the last task ID
      * @post the last task ID is set to the given ID
      */
-    private static void setLastTaskID(int ID) { lastTaskID = ID; }
+    private static void setLastTaskID(Integer ID) { lastTaskID = ID; }
 
 
 
     /**
      * The task ID.
      */
-    private int ID;
+    private Integer ID;
 
 
     /**
      * Return the ID of the task.
      * @return the ID of the task
      */
-    public int getID(){
+    public Integer getID(){
         return ID;
     }
 
@@ -139,14 +140,14 @@ public class Task {
     /**
      * The acceptable deviation of the task.
      */
-    private double acceptableDeviation;
+    private Double acceptableDeviation;
 
 
     /**
      * Returns the acceptable deviation of the task
      * @return the acceptable deviation of the task
      */
-    public double getAcceptableDeviation(){
+    public Double getAcceptableDeviation(){
         return acceptableDeviation;
     }
 
@@ -155,7 +156,7 @@ public class Task {
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
-    private final void setAcceptableDeviation(double acceptableDeviation){
+    private final void setAcceptableDeviation(Double acceptableDeviation){
         this.acceptableDeviation = acceptableDeviation;
     }
 
@@ -247,6 +248,12 @@ public class Task {
     }
 
 
+    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status){
+        // TODO
+        // Wachten op implementatie van klok
+    }
+
+
 
     /**
      * The alternative task of the task.
@@ -267,14 +274,11 @@ public class Task {
      * Sets the alternative task of the task to the given task.
      * @param alternative the alternative task of the task
      * @post the alternative task of the task is set to the given task
-     * @throws IllegalArgumentException alternative may not be this task or a dependency
+     * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      */
     public void setAlternative(Task alternative) throws IllegalArgumentException {  // TODO: kan dit dan ook naar zichzelf verwijzen? + moeten we niet controleren dat dit ook geen depedency is
-        if (alternative == this){
-            throw new IllegalArgumentException("The alternative task may not be this task.");
-        }
-        else if (dependencies.contains(alternative)){
-            throw new IllegalArgumentException("The alternative task may not be a dependency.");
+        if (containsLoop(this, alternative)){
+            throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
         this.alternative = alternative;             // may be null
     }
@@ -308,20 +312,82 @@ public class Task {
 
     /**
      * Adds a dependency to the task.
-     * @param dependency the dependency of the task
+     * @param dependency task that needs to be added to the task
      * @post the dependency is added to the task
-     * @throws IllegalArgumentException dependency may not be the alternative
+     * @throws IllegalArgumentException the dependency may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      */
-    public void addDependency(Task dependency) {
-        if (dependency == alternative){
-            throw new IllegalArgumentException("The dependency may not be the alternative of the task.");
+    public void addDependency(Task dependency) throws IllegalArgumentException {
+        if (containsLoop(this, dependency)){
+            throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
         dependencies.add(dependency);
     }
 
 
-    public String getTaskDetails(){
-        return "not yet implemented";
+    /**
+     * Removes dependency of the given task.
+     * @param dependency task that needs to be removed as dependency of the task
+     * @post the dependency is deleted from the task
+     * @throws IllegalArgumentException the dependency task must be a dependency of the task
+     */
+    public void removeDependency(Task dependency){
+        if (! dependencies.contains(dependency)){
+            throw new IllegalArgumentException("The given task is not a dependency of the task.");
+        }
+        dependencies.remove(dependency);
+    }
+
+
+
+    /**
+     * Returns the task details of the task
+     * @return Hashmap containing as keys the detail name and as value the corresponding detail value
+     */
+    public HashMap<String, String> getTaskDetails(){
+        HashMap<String, String> taskDetails = new HashMap<>();
+
+        taskDetails.put("ID", ID.toString());
+        taskDetails.put("Description", description);
+        taskDetails.put("EstimatedDuration", estimatedDuration.toString());
+        taskDetails.put("AcceptableDeviation", acceptableDeviation.toString());
+        taskDetails.put("StartTime", startTime.format(dateTimeFormatter));
+        taskDetails.put("EndTime", endTime.format(dateTimeFormatter));
+        taskDetails.put("Status", status.toString());
+        int[] dependenciesIDs = new int[dependencies.size()];
+        for (int i = 0; i < dependencies.size(); i++){
+            dependenciesIDs[i] = dependencies.get(0).getID();
+        }
+        taskDetails.put("Dependecies", dependenciesIDs.toString());
+        // TODO: afspreken hoe we alternative gaan doen
+        taskDetails.put("Alternative", alternative.getID().toString());
+
+        return taskDetails;
+    }
+
+
+    // LOOP CHECKING CODE
+
+    private boolean containsLoop(Task root, Task searchedTask){
+        Stack<Task> searchStack = new Stack<>();
+        searchStack.push(root);
+        if (root.getAlternative() != null) {
+            searchStack.push(root.getAlternative());
+        }
+
+        while (! searchStack.isEmpty()){
+            Task task = searchStack.pop();
+            if (task == searchedTask) {
+                return true;
+            }
+
+            if (task.getAlternative() != null){
+                searchStack.push(task.getAlternative());
+            }
+            for (Task dependency : task.getDependencies()){
+                searchStack.push(dependency);
+            }
+        }
+        return false;
     }
 
 }
