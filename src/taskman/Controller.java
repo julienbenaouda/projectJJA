@@ -5,6 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class serves as a controller between the interface and the backend.
@@ -97,11 +98,17 @@ public class Controller {
      * @param timestamp the new time of the system
      * @post the time of the system will be set to the given time
      */
-    public void updateSystemTime(LocalDateTime timestamp) {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public void updateSystemTime(String timestamp) {
+        Clock.updateSystemTime(timestamp);
     }
 
     public void setUser(String regularuser) {
         throw new NotImplementedException();
     }
+
+	public void addProject(HashMap<String, String> form) {
+		Project p = new Project(form);
+		projects.add(p);
+		
+	}
 }

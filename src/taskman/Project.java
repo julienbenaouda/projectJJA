@@ -16,6 +16,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -256,7 +257,7 @@ public class Project {
 	 */
 	public HashMap<String, String> getProjectDetails()
 	{
-		HashMap<String, String> details = new HashMap<>();
+		HashMap<String, String> details = new LinkedHashMap<>();
 		details.put("name", getName());
 		details.put("description", getDescription());
 		details.put("creationTime", getCreationTime().format(dateFormatter));
@@ -305,7 +306,7 @@ public class Project {
 			p.appendChild(tasks);
 			return p;
 		} catch (Exception e) {
-			throw new OperationNotSupportedException("Problem parsing projects to file: " +e);
+			throw new XMLParserException(e.getMessage());
 		}
 	}
 	
@@ -320,7 +321,7 @@ public class Project {
 		try {
 			if(!(project.getNodeName().equals("project")))
 			{
-				throw new OperationNotSupportedException("the xml file is not in the correct format");
+				throw new XMLParserException("the xml file you provided is not in the correct format. Please correct the errors or try another file");
 			}
 			String name = project.getElementsByTagName("name").item(0).getTextContent();
 			String description = project.getElementsByTagName("description").item(0).getTextContent();
@@ -330,7 +331,7 @@ public class Project {
 			Node tasks = project.getElementsByTagName("tasks").item(0);
 			if(tasks.getNodeType() != Node.ELEMENT_NODE)
 			{
-				throw new OperationNotSupportedException("the xml file has not the correct format.");
+				throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
 			}
 			Element tasksElem = (Element)tasks;
 			NodeList tl = tasksElem.getElementsByTagName("task");
@@ -341,7 +342,7 @@ public class Project {
 			return p;
 		} catch (Exception e)
 		{
-			throw new OperationNotSupportedException("Something went wrong parsing the xml file");
+			throw new XMLParserException(e.getMessage());
 		}
 	}
 	

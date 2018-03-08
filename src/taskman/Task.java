@@ -418,7 +418,7 @@ public class Task implements Comparable<Object> {
         return this.getID().compareTo(task.getID());
     }
 
-    public Node saveToXML() {
+    public Element saveToXML() {
         throw new NotImplementedException();
     }
 
