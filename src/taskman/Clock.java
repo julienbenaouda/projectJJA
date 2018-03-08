@@ -1,6 +1,7 @@
 package taskman;
 
 import org.w3c.dom.Element;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,10 +34,10 @@ public class Clock {
     }
 
     public static Element saveToXML() {
-        return null;
+        throw new NotImplementedException();
     }
 
     public static void restoreFromXML(Element xml) {
-
+        throw new NotImplementedException();
     }
 }
