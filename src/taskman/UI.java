@@ -244,7 +244,7 @@ public class UI {
 	 * @post a new project is created in the system with the entered parameters.
 	 */
 	public void createProject() {
-		HashMap<String, String> form = controller.getProjectForm();
+		HashMap<String, String> form = controller.getProjectCreationForm();
 		for(String key: form.keySet()) {
 			print(key +": ");
 			form.put(key, inputString());

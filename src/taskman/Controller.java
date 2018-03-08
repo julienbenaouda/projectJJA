@@ -2,8 +2,6 @@ package taskman;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,125 +9,229 @@ import java.util.List;
 /**
  * This class serves as a controller between the interface and the backend.
  * @author Alexander Braekevelt
- *
  */
 public class Controller {
 
     /**
-     * Represents the projects of the controller.
+     * Represents the clock with the system time.
+     */
+    private Clock clock;
+
+    /**
+     * Represents the projects in the system.
      */
     private HashMap<String, Project> projects = new HashMap<>();
 
     /**
-     * Returns the projects of the controller.
-     * @return the projects of the controller
+     * Create a controller.
      */
-    public List<Project> getProjects() {
-        return new ArrayList<Project>(projects.values());
+    public Controller() {
+        this.clock = new Clock();
+    }
+
+    /**
+     * Create a controller.
+     * @param initialTime the initial system time;
+     */
+    public Controller(String initialTime) {
+        this.clock = new Clock();
+        this.clock.updateSystemTime(initialTime);
+    }
+
+    /**
+     * Returns a list with all project names.
+     * @return a list of strings.
+     */
+    public List<String> getProjectNames() {
+        return new ArrayList<>(this.projects.keySet());
+    }
+
+    /**
+     * Returns if a project with the given name exists.
+     * @param name the name to check
+     */
+    public Boolean projectExists(String name) {
+        return projects.containsKey(name);
+    }
+
+    /**
+     * Returns the project with the given name.
+     * @param name the name of the project.
+     * @return a project.
+     * @throws IllegalArgumentException if the project does not exist.
+     */
+    private Project getProject(String name) throws IllegalArgumentException{
+        if (projects.containsKey(name)) {
+            return projects.get(name);
+        }
+        else {
+            throw new IllegalArgumentException("The given project name does not exist!");
+        }
+    }
+
+    /**
+     * Adds a project to the controller.
+     * @param name the name of the project
+     * @param project the project to add
+     * @throws IllegalArgumentException if a project with the given name already exist
+     */
+    private void addProject(String name, Project project) throws IllegalArgumentException{
+        if (projects.containsKey(name)) {
+            throw new IllegalArgumentException("The given project name does already exist!");
+        }
+        else {
+            projects.put(name, project);
+        }
+    }
+
+    /**
+     * This method generates a form containing all parameters needed to create a new project.
+     * All values are empty and can be filled in, and then passed back to create a project.
+     * @return A map containing all elements that need to be filled in to create a new project
+     */
+    public HashMap<String,String> getProjectCreationForm() {
+        return Project.getCreationForm();
+    }
+
+    /**
+     * Adds a project with the properties from a given form.
+     * @param form the creation form for the project
+     * @post a project with the properties from a given form will be added to the controller.
+     * @throws IllegalArgumentException if the form doesn't contain a key 'name'.
+     */
+    public void addProject(HashMap<String, String> form) throws IllegalArgumentException{
+        if (form.containsValue("name")){
+            String name = form.get("name");
+            Project project = new Project(form);
+            addProject(name, project);
+        }
+        else {
+            throw new IllegalArgumentException("The form must contain a name for the project!");
+        }
     }
 
     /**
      * Returns the details of the given project.
      * @param name the project of which the details should be returned
      * @return the details of the given project
+     * @throws IllegalArgumentException if the project does not exist.
      */
-    public HashMap<String, String> getProjectDetails(String name) {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public HashMap<String, String> getProjectDetails(String name) throws IllegalArgumentException{
+        return getProject(name).getProjectDetails();
     }
 
     /**
-     * Adds a new project to the controller.
-     * @param name the name of the project
-     * @param description the description of the project
-     * @param creationTime the creation time of the project
-     * @param dueTime the due time of the project
-     * @post the controller will contain a new project
-     * @throws IllegalArgumentException the name of the new project must be unique
+     * Returns a list of ids of task that belong to a given project.
+     * @param projectName the name of the project
+     * @return a list of Integers
+     * @throws IllegalArgumentException if the project does not exist.
      */
-    public void addNewProject(String name, String description, String creationTime, String dueTime) throws IllegalArgumentException{
-        if (this.projects.containsKey(name)) {
-            throw new IllegalArgumentException("The name of the new project must be unique!");
-        } else {
-            this.projects.put(name, new Project(name, description, creationTime, dueTime));
-        }
+    public List<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException{
+        return getProject(projectName).getTaskIds();
     }
 
     /**
      * Returns the details of the given task
-     * @param project the project of the task
-     * @param task the task of which the details should be returned.
+     * @param projectName the name of the project of the task
+     * @param taskId the id of the task of which the details should be returned.
      * @return the details of the given task
+     * @throws IllegalArgumentException if the project does not exist.
      */
-    public String getTaskDetails(Project project, Task task) {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public HashMap<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException{
+        return getProject(projectName).getTaskDetails(taskId);
     }
 
     /**
-     * Adds a new task to the given project.
-     * @param project the project to which the task will be added
-     * @param description the description of the new task
-     * @param estimatedDuration the estimated duration of the new task
-     * @param acceptableDeviation the acceptable deviation of the new task
-     * @param startime the start time of the new task
-     * @param alternative the alternative task for the new task
-     * @post the project will contain a new task with the given parameters
+     * This method generates a form containing all parameters needed to create a new taks.
+     * All values are empty and can be filled in, and then passed back to create a task.
+     * @return A map containing all elements that need to be filled in to create a new task
      */
-    public void addNewTask(Project project, String description, Duration estimatedDuration, Double acceptableDeviation, LocalDateTime startime, Task alternative) {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public HashMap<String,String> getTaskCreationForm() {
+        return Task.getCreationForm();
     }
+
+    /**
+     * Adds a project with the properties from a given form.
+     * @param form the creation form for the project
+     * @post a project with the properties from a given form will be added to the controller.
+     * @throws IllegalArgumentException if the project does not exist.
+     */
+    public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException{
+        getProject(projectName).addTask(new Task(form));
+    }
+
+    /**
+     * Sets the alternative of the given task to the given alternative task
+     * @param projectName the name of the project which holds both tasks
+     * @param taskId the id of the task
+     * @param alternativeTaskId the id of the alternative task
+     * @throws IllegalArgumentException if the project does not exist.
+     */
+    public void addAlternativeToTask(String projectName, Integer taskId, Integer alternativeTaskId) throws IllegalArgumentException {
+        Project project = getProject(projectName);
+        project.getTask(taskId).setAlternative(project.getTask(alternativeTaskId));
+    }
+
+    /**
+     * Adds the given dependency to the given task
+     * @param projectName the name of the project which holds both tasks
+     * @param taskId the id of the task
+     * @param dependencyTaskId the id of the dependency
+     * @throws IllegalArgumentException if the project does not exist.
+     */
+    public void addDependencyToTask(String projectName, Integer taskId, Integer dependencyTaskId) throws IllegalArgumentException {
+        Project project = getProject(projectName);
+        project.getTask(taskId).addDependency(project.getTask(dependencyTaskId));
+    }
+
 
     /**
      * Updates the status of the given task.
-     * @param project the project of the task
-     * @param task the task to update
+     * @param projectName the name of the project of the task
+     * @param taskId the id of the task to update
      * @param startTime the new start time of the task
      * @param endTime the new end time of the task
      * @param status the new status of the task
      * @post the start time, end time and status of the task will be updated
+     * @throws IllegalArgumentException if the project does not exist.
      */
-    public void updateTaskStatus(Project project, Task task, LocalDateTime startTime, LocalDateTime endTime, Status status) {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public void updateTaskStatus(String projectName, Integer taskId, String startTime, String endTime, String status) throws IllegalArgumentException{
+        getProject(projectName).getTask(taskId).updateStatus(startTime, endTime, status);
     }
 
     /**
      * Return the time of the system
      * @return the time of the system
      */
-    public LocalDateTime getSystemTime() {
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public String getSystemTime() {
+        return clock.getSystemTimeString();
     }
 
     /**
      * Updates the time of the system
-     * @param timestamp the new time of the system
+     * @param newTime the new time of the system
      * @post the time of the system will be set to the given time
      */
-    public void updateSystemTime(String timestamp) {
-        Clock.updateSystemTime(timestamp);
+    public void updateSystemTime(String newTime) {
+        clock.updateSystemTime(newTime);
     }
 
-    public void setUser(String regularuser) {
+    /**
+     * Changes the active user to the given user.
+     * @param user the name of the user to change to.
+     * @throws IllegalArgumentException if the user type does not exist.
+     */
+    public void setUser(String user) throws IllegalArgumentException{
+        User.setUserType(user);
+    }
+
+    public void importXML(String path) {
         throw new NotImplementedException();
     }
 
-	public void addProject(HashMap<String, String> form) {
-		Project p = new Project(form);
-		projects.add(p);
-		
-	}
-
-    public void importXML(String path) {
-
-    }
-
     public void exportToXML(String path) {
+        throw new NotImplementedException();
 
     }
 
-    public void projectExists(String name) {
-    }
-
-    public HashMap<String,String> getProjectForm() {
-        return null;
-    }
 }

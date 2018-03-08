@@ -13,11 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class represents a project.
@@ -74,8 +70,13 @@ public class Project {
 	{
 		taskList.remove(getTaskIndex(id));
 	}
-	
-	public HashMap<String, String> getTaskDetails(int id)
+
+	/**
+	 * Returns the task details of the task
+	 * @param id the id of the task
+	 * @return a HashMap containing as keys the detail name and as value the corresponding detail value
+	 */
+	public HashMap<String, String> getTaskDetails(Integer id)
 	{
 		Task t = taskList.get(getTaskIndex(id));
 		return t.getTaskDetails();
@@ -253,7 +254,7 @@ public class Project {
 	
 	/**
 	 * This method returns a hashmap containing the project properties.
-	 * @return A hashmap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
+	 * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
 	 */
 	public HashMap<String, String> getProjectDetails()
 	{
@@ -348,9 +349,9 @@ public class Project {
 	
 	/**
 	 * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
-	 * @return A hashmap containing all elements that need to be filled in to create a new project
+	 * @return A HashMap containing all elements that need to be filled in to create a new project
 	 */
-	public static HashMap<String, String> getForm()
+	public static HashMap<String, String> getCreationForm()
 	{
 		HashMap<String, String> form = new HashMap<>();
 		form.put("name", "");

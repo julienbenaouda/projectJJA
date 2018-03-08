@@ -1,7 +1,6 @@
 package taskman;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.Duration;
@@ -37,6 +36,10 @@ public class Task implements Comparable<Object> {
         setStartTime(startTime);
         setEndTime(endTime);
         dependencies = new ArrayList<>();
+    }
+
+    public Task(HashMap<String, String> form) {
+        throw new NotImplementedException(); // TODO
     }
 
 
@@ -253,7 +256,7 @@ public class Task implements Comparable<Object> {
     }
 
 
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status){
+    public void updateStatus(String startTime, String endTime, String status){
         // TODO
         // Wachten op implementatie van klok
     }
@@ -346,7 +349,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the task details of the task
-     * @return Hashmap containing as keys the detail name and as value the corresponding detail value
+     * @return a HashMap containing as keys the detail name and as value the corresponding detail value
      */
     public HashMap<String, String> getTaskDetails(){
         HashMap<String, String> taskDetails = new HashMap<>();
@@ -424,6 +427,10 @@ public class Task implements Comparable<Object> {
 
     public static Task restoreFromXML(Element item) {
         throw new NotImplementedException();
+    }
+
+    public static HashMap<String,String> getCreationForm() {
+        throw new NotImplementedException(); // TODO
     }
 
     /*
