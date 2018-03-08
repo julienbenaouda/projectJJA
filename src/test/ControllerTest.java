@@ -7,7 +7,7 @@ import org.junit.Test;
 import taskman.Controller;
 import taskman.Project;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class ControllerTest {
@@ -46,7 +46,7 @@ public class ControllerTest {
 
         controller.addNewProject(name, description, creation, due);
 
-        ArrayList<Project> projects = controller.getProjects();
+        List<Project> projects = controller.getProjects();
         Assert.assertEquals("More than one project is added to the controller!", 1, projects.size());
 
         Project project = projects.get(0);

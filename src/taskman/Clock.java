@@ -8,32 +8,32 @@ import java.time.format.DateTimeFormatter;
 
 public class Clock {
 
-    private static LocalDateTime systemTime = LocalDateTime.MIN;
-    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private LocalDateTime systemTime = LocalDateTime.MIN;
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private void setSystemTime(LocalDateTime newSystemTime) {
+        systemTime = newSystemTime;
+    }
 
-    private static void setSystemTime(LocalDateTime newSystemTime) {
+    public LocalDateTime getSystemTime() {
+        return systemTime.plusNanos(0);
+    }
+
+    public String getSystemTimeString() {
+        return systemTime.format(dateFormatter);
+    }
+
+    public void updateSystemTime(String s) {
+        LocalDateTime newSystemTime = LocalDateTime.parse(s, dateFormatter);
         if (newSystemTime.isAfter(systemTime)) {
-            systemTime = newSystemTime;
+            setSystemTime(newSystemTime);
         }
         else {
             throw new IllegalArgumentException("New system time must be after the current system time!");
         }
     }
 
-    public static LocalDateTime getSystemTime() {
-        return systemTime.plusNanos(0);
-    }
-
-    public static String getSystemTimeString() {
-        return systemTime.format(dateFormatter);
-    }
-
-    public static void updateSystemTime(String time) {
-        setSystemTime(LocalDateTime.parse(time, dateFormatter));
-    }
-
-    public static Element saveToXML() {
+    public Element saveToXML() {
         throw new NotImplementedException();
     }
 
