@@ -1,16 +1,13 @@
 package test;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import taskman.Clock;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ClockTest {
 
@@ -19,7 +16,11 @@ public class ClockTest {
 
     @Test
     public void getSystemTime() {
-        Assert.assertEquals("Initial SystemTime must be minimal!", LocalDateTime.MIN, Clock.getSystemTime());
+        LocalDateTime time = Clock.getSystemTime();
+        Assert.assertEquals("Initial SystemTime must be minimal!", LocalDateTime.MIN, time);
+        LocalDateTime forceTime = LocalDateTime.of(0, 0, 0, 0, 0);
+        time.adjustInto(forceTime);
+        Assert.assertNotEquals("SystemTime can be adjusted outside clock!", forceTime, Clock.getSystemTime());
     }
 
     @Test
