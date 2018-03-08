@@ -26,10 +26,10 @@ public class Controller {
 
     /**
      * Returns the details of the given project.
-     * @param project the project of which the details should be returned
+     * @param name the project of which the details should be returned
      * @return the details of the given project
      */
-    public String getProjectDetails(Project project) {
+    public HashMap<String, String> getProjectDetails(String name) {
         throw new UnsupportedOperationException("Not yet implemented!");
     }
 
