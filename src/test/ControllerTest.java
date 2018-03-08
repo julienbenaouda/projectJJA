@@ -1,16 +1,12 @@
 package test;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.Controller;
-import taskman.Project;
-
-import java.util.List;
-
 
 public class ControllerTest {
+
 
     private static Controller controller;
 
@@ -25,62 +21,71 @@ public class ControllerTest {
     }
 
 
-
     @Test
-    public void testGetProjects() {
-        Assert.assertEquals("Empty controller should not contain projects!", 0, controller.getProjects().size());
+    public void getProjectNames() {
     }
 
     @Test
-    public void testGetProjectDetails() {
-        Assert.fail("Not yet implemented");
-
+    public void projectExists() {
     }
 
     @Test
-    public void testAddNewProject() {
-        String name = "test";
-        String description = "test desc";
-        String creation = "24/02/2018 10:00";
-        String due = "15/03/2018 12:30";
-
-        controller.addNewProject(name, description, creation, due);
-
-        List<Project> projects = controller.getProjects();
-        Assert.assertEquals("More than one project is added to the controller!", 1, projects.size());
-
-        Project project = projects.get(0);
-        Assert.assertEquals("Name of new project is not correct!", name, project.getName());
-        Assert.assertEquals("Description of new project is not correct!", description, project.getDescription());
-        Assert.assertEquals("Creation time of new project is not correct!", creation, project.getCreationTime());
-        Assert.assertEquals("Due time of new project is not correct!", due, project.getDueTime());
-    }
-
-
-    @Test
-    public void testGetTaskDetails() {
-        Assert.fail("Not yet implemented");
+    public void getProjectCreationForm() {
     }
 
     @Test
-    public void testAddNewTask() {
-        Assert.fail("Not yet implemented");
+    public void addProject() {
     }
 
     @Test
-    public void testUpdateTaskStatus() {
-        Assert.fail("Not yet implemented");
-    }
-
-
-    @Test
-    public void testGetSystemTime() {
-        Assert.fail("Not yet implemented");
+    public void getProjectDetails() {
     }
 
     @Test
-    public void testUpdateSystemTime() {
-        Assert.fail("Not yet implemented");
+    public void getTasksOfProject() {
     }
 
+    @Test
+    public void getTaskDetails() {
+    }
+
+    @Test
+    public void getTaskCreationForm() {
+    }
+
+    @Test
+    public void addTask() {
+    }
+
+    @Test
+    public void addAlternativeToTask() {
+    }
+
+    @Test
+    public void addDependencyToTask() {
+    }
+
+    @Test
+    public void updateTaskStatus() {
+    }
+
+    @Test
+    public void getSystemTime() {
+    }
+
+    @Test
+    public void updateSystemTime() {
+    }
+
+    @Test
+    public void setUser() {
+    }
+
+    @Test
+    public void importXML() {
+    }
+
+    @Test
+    public void exportToXML() {
+    }
 }
