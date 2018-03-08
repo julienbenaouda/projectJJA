@@ -60,7 +60,7 @@ public class TaskTest {
     public void testLastTaskID(){
         int prevLastTaskId = Task.getLastTaskID();
         Task newTask = new Task("Less interesting description.", duration, 0.21, start, end);
-        Assert.assertEquals("Last task ID does not equal the ID of the latest task.", prevLastTaskId + 1, Task.getLastTaskID());
+        Assert.assertEquals("Last task ID does not equal the ID of the latest task.", Integer.valueOf(prevLastTaskId + 1), Task.getLastTaskID());
         Assert.assertEquals("ID of the new task does not equal the latest task ID", Task.getLastTaskID(), newTask.getID());
     }
 
