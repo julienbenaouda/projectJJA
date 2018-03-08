@@ -13,6 +13,7 @@ import java.time.Month;
 import java.util.ArrayList;
 
 import javax.naming.OperationNotSupportedException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -79,7 +80,7 @@ public class ProjectTest {
 		p = new Project("test", "testdesc", creation, due);
 		String xml = "<project><name>test</name><description>testdesc</description><startTime>20/11/2007 16:50</startTime><dueTime>22/01/2020 19:00</dueTime><tasks></tasks></project>";
 		try {
-			Element e = p.saveToString();
+			Element e = p.saveToXML();
 			// convert to xml
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer t = tf.newTransformer();
@@ -89,7 +90,7 @@ public class ProjectTest {
 			StreamResult r = new StreamResult(sw);
 			t.transform(d, r);
 			Assert.assertEquals("the xml text is not equal", xml, sw.toString());
-		} catch (OperationNotSupportedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

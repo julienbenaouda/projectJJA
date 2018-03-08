@@ -129,7 +129,7 @@ public class Project {
 	private void setDescription(String description) {
 		if(description == null)
 		{
-			throw new IllegalArgumentDescription("The description can't be null");
+			throw new IllegalArgumentException("The description can't be null");
 		}
 		this.description = description.trim();
 	}
@@ -219,7 +219,7 @@ public class Project {
 		List<Integer> IDs = new ArrayList<>();
 		for(Task t: taskList)
 		{
-			IDs.add(t.getId());
+			IDs.add(t.getID());
 		}
 		return IDs;
 	}
@@ -305,7 +305,7 @@ public class Project {
 			// add all tasks of the project
 			for(Task t: taskList)
 			{
-				tasks.appendChild(t.saveToString());
+				tasks.appendChild(t.saveToXML());
 			}
 			p.appendChild(tasks);
 			return p;
@@ -342,7 +342,7 @@ public class Project {
 			NodeList tl = tasksElem.getElementsByTagName("task");
 			for(int i = 0; i < tl.getLength(); i++)
 			{
-				p.addTask(Task.restoreFromString(tl.item(i)));
+				p.addTask(Task.restoreFromXML((Element)tl.item(i)));
 			}
 			return p;
 		} catch (Exception e)
