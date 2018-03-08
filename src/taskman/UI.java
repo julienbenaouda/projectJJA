@@ -10,6 +10,13 @@ import java.util.Scanner;
  *
  */
 public class UI {
+	private Controller controller;
+	
+	private UI()
+	{
+		controller = new Controller();
+	}
+	
 	public void welcomeDialog()
 	{
 		StringBuilder message = new StringBuilder("Welcome to the taskman project manager.\n");
@@ -26,9 +33,9 @@ public class UI {
 		print(message.toString());
 		int input = inputInt();
 		switch (input) {
-		case 1: controller.setUser(UserType.REGULARUSER);
+		case 1: controller.setUser("REGULARUSER");
 		break;
-		case 2: controller.setUser(UserType.DEVELOPER);
+		case 2: controller.setUser("DEVELOPER");
 		break;
 		default: input = inputInt();
 		break;

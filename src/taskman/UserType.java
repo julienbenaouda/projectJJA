@@ -6,5 +6,5 @@ package taskman;
  *
  */
 public enum UserType {
-    REGLULARUSER, DEVELOPER
+    REGULARUSER, DEVELOPER
 }

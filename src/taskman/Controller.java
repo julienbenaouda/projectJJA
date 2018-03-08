@@ -1,5 +1,7 @@
 package taskman;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class Controller {
      * @param dueTime the due time of the project
      * @post the controller will contain a new project
      */
-    public void addNewProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
+    public void addNewProject(String name, String description, String creationTime, String dueTime) {
         this.projects.add(new Project(name, description, creationTime, dueTime));
     }
 
@@ -99,4 +101,7 @@ public class Controller {
         throw new UnsupportedOperationException("Not yet implemented!");
     }
 
+    public void setUser(String regularuser) {
+        throw new NotImplementedException();
+    }
 }
