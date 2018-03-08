@@ -182,7 +182,7 @@ public class Task {
      * @post the dependencies is set to the given dependent tasks
      */
     private void setDependencies(List<Task> dependencies){
-        this.dependencies = dependencies;
+        this.dependencies = new ArrayList<>(dependencies);
     }
 
     /**

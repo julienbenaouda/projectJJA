@@ -18,12 +18,12 @@ public class ControllerTest {
 
     @Before
     public void runBeforeMethod() {
-        this.controller = new Controller();
+        controller = new Controller();
     }
 
     @After
     public void runAfterMethod() {
-        this.controller = null;
+        controller = null;
     }
 
 
