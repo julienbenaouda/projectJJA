@@ -1,5 +1,7 @@
 package taskman;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -99,4 +101,7 @@ public class Controller {
         throw new UnsupportedOperationException("Not yet implemented!");
     }
 
+    public void setUser(String regularuser) {
+        throw new NotImplementedException();
+    }
 }

@@ -1,10 +1,15 @@
 package taskman;
 
-import java.lang.reflect.Array;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 
 /**
@@ -12,7 +17,7 @@ import java.util.*;
  * @author Jeroen Van Der Donckt
  *
  */
-public class Task {
+public class Task implements Comparable<Object> {
 
     /**
      * Creates a new task with the given values.
@@ -411,6 +416,14 @@ public class Task {
 
     private int compareTo(Task task) {
         return this.getID().compareTo(task.getID());
+    }
+
+    public Node saveToXML() {
+        throw new NotImplementedException();
+    }
+
+    public static Task restoreFromXML(Element item) {
+        throw new NotImplementedException();
     }
 
     /*
