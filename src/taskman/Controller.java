@@ -117,4 +117,19 @@ public class Controller {
 		projects.add(p);
 		
 	}
+
+    public void importXML(String path) {
+
+    }
+
+    public void exportToXML(String path) {
+
+    }
+
+    public void projectExists(String name) {
+    }
+
+    public HashMap<String,String> getProjectForm() {
+        return null;
+    }
 }
