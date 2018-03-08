@@ -41,7 +41,7 @@ public class Controller {
      * @param dueTime the due time of the project
      * @post the controller will contain a new project
      */
-    public void addNewProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
+    public void addNewProject(String name, String description, String creationTime, String dueTime) {
         this.projects.add(new Project(name, description, creationTime, dueTime));
     }
 

@@ -15,7 +15,7 @@ public class UserTest {
 
     @Test
     public void testRegularUser(){
-        User.setUserType(UserType.REGLULARUSER);
+        User.setUserType(UserType.REGULARUSER);
         Assert.assertFalse(User.canChangeTaskStatus());
     }
 
