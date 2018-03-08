@@ -2,8 +2,14 @@
 package taskman;
 
 
-import java.io.StringWriter;
-import java.time.Duration;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.naming.OperationNotSupportedException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,17 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.naming.OperationNotSupportedException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.*;
 
 /**
  * This class represents a project.
@@ -61,7 +56,7 @@ public class Project {
 	
 	/**
 	 * adds a new task to the projects task list
-	 * @param T the task to add
+	 * @param t the task to add
 	 * @post The given task is added to the project
 	 */
 	public void addTask(Task t) {
@@ -312,7 +307,6 @@ public class Project {
 		} catch (Exception e) {
 			throw new OperationNotSupportedException("Problem parsing projects to file: " +e);
 		}
-		return null;
 	}
 	
 	/**
@@ -349,7 +343,6 @@ public class Project {
 		{
 			throw new OperationNotSupportedException("Something went wrong parsing the xml file");
 		}
-		return null;
 	}
 	
 	/**
