@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class serves as a controller between the interface and the backend.
@@ -17,14 +18,14 @@ public class Controller {
     /**
      * Represents the projects of the controller.
      */
-    private ArrayList<Project> projects = new ArrayList<>();
+    private HashMap<String, Project> projects = new HashMap<>();
 
     /**
      * Returns the projects of the controller.
      * @return the projects of the controller
      */
-    public ArrayList<Project> getProjects() {
-        return (ArrayList<Project>) this.projects.clone();
+    public List<Project> getProjects() {
+        return new ArrayList<Project>(projects.values());
     }
 
     /**
@@ -43,9 +44,14 @@ public class Controller {
      * @param creationTime the creation time of the project
      * @param dueTime the due time of the project
      * @post the controller will contain a new project
+     * @throws IllegalArgumentException the name of the new project must be unique
      */
-    public void addNewProject(String name, String description, String creationTime, String dueTime) {
-        this.projects.add(new Project(name, description, creationTime, dueTime));
+    public void addNewProject(String name, String description, String creationTime, String dueTime) throws IllegalArgumentException{
+        if (this.projects.containsKey(name)) {
+            throw new IllegalArgumentException("The name of the new project must be unique!");
+        } else {
+            this.projects.put(name, new Project(name, description, creationTime, dueTime));
+        }
     }
 
     /**

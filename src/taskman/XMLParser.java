@@ -70,7 +70,7 @@ public class XMLParser {
      * @param projects a list of projects
      * @throws OperationNotSupportedException
      */
-	public static void exportXML(String path, ArrayList<Project> projects) throws OperationNotSupportedException
+	public static void exportXML(String path, Clock clock, ArrayList<Project> projects) throws OperationNotSupportedException
 	{
 	    try {
             DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
@@ -81,7 +81,7 @@ public class XMLParser {
                 projectsElem.appendChild(p.saveToXML());
             }
             doc.appendChild(projectsElem);
-            doc.appendChild(Clock.saveToXML());
+            doc.appendChild(clock.saveToXML());
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = tf.newTransformer();
             DOMSource s = new DOMSource(doc);
