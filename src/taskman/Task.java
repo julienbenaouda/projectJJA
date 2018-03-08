@@ -46,7 +46,7 @@ public class Task {
      * Return the ID of the latest task. (This should be the maximum of all ID's)
      * @return the ID of the latest task
      */
-    public static int getLastTaskID() { return lastTaskID; }
+    public static Integer getLastTaskID() { return Integer.valueOf(lastTaskID.intValue()); }
 
 
     /**
@@ -389,5 +389,62 @@ public class Task {
         }
         return false;
     }
+
+
+    // Comparebale
+
+    public int compareTo(Object o) {
+        if (o instanceof Integer) {
+            return compareTo(((Integer) o).intValue());
+        }
+	    else if (o instanceof Task) {
+		    return compareTo(((Task) o).getID());
+        }
+        else {
+            throw new IllegalArgumentException("Uncomparable!");
+        }
+    }
+
+    private int compareTo(Integer id) {
+        return this.getID().compareTo(id);
+    }
+
+    private int compareTo(Task task) {
+        return this.getID().compareTo(task.getID());
+    }
+
+    /*
+    public int compareTo(Integer ID){
+        IntegerComparator comparator = new IntegerComparator();
+        return comparator.compareTo(ID);
+    }
+
+    public int compareTo(Task task){
+        TaskComparator comparator = new TaskComparator();
+        return comparator.compareTo(task);
+    }
+
+
+    private class IntegerComparator implements Comparable<Integer> {
+
+        @Override
+        public int compareTo(Integer ID) {
+            if (getID() > ID) { return 1 ; }
+            else if (getID() < ID) { return -1; }
+            else return 0;
+        }
+    }
+
+
+    private class TaskComparator implements Comparable<Task> {
+
+        @Override
+        public int compareTo(Task task) {
+            if (getID() > task.getID()) { return 1 ; }
+            else if (getID() < task.getID()) { return -1; }
+            else return 0;
+        }
+    }
+    */
 
 }
