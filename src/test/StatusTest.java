@@ -11,4 +11,14 @@ public class StatusTest {
         Assert.assertTrue("There should be at least one status!", 0 < Status.values().length);
     }
 
+    @Test
+    public void testToString() {
+        Assert.assertEquals("Incorrectly parsed status!", "AVAILABLE", Status.AVAILABLE.toString());
+    }
+
+    @Test
+    public void testFromString() {
+        Assert.assertEquals("Incorrectly parsed status!", Status.AVAILABLE, Status.fromString("AVAILABLE"));
+    }
+
 }
