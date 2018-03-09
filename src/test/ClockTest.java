@@ -8,13 +8,15 @@ import taskman.Clock;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 
 import static org.junit.Assert.assertEquals;
 
 public class ClockTest {
 
     private Clock clock;
-    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private final static DateTimeFormatter dateFormatter =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
     @Before
     public void beforeTest(){
@@ -42,12 +44,18 @@ public class ClockTest {
 
     @Test
     public void updateSystemTime() {
+        try {
+            clock.updateSystemTime(clock.getSystemTimeString());
+            Assert.fail("The clock can be updated to the same time!");
+        } catch(Exception e){
+            assertEquals("Wrong exception when updating time to same time! (" + e.getMessage() + ")", IllegalArgumentException.class, e.getClass());
+        }
         LocalDateTime time = LocalDateTime.of(2000, 1, 1, 0, 0);
         clock.updateSystemTime(time.format(dateFormatter));
         Assert.assertEquals("SystemTime is not updated!", time, clock.getSystemTime());
         try {
             clock.updateSystemTime(LocalDateTime.of(1999, 12, 31,23, 59).format(dateFormatter));
-            Assert.fail("Cannot update clock to past!");
+            Assert.fail("The clock can be updated to the past!");
         } catch(Exception e){
             assertEquals("Wrong exception when updating time to past!", IllegalArgumentException.class, e.getClass());
         }
@@ -55,11 +63,11 @@ public class ClockTest {
 
     @Test
     public void saveToXML() {
-        Assert.fail("Not implemented!");
+        Assert.fail("Not implemented!"); // TODO
     }
 
     @Test
     public void restoreFromXML() {
-        Assert.fail("Not implemented!");
+        Assert.fail("Not implemented!"); // TODO
     }
 }

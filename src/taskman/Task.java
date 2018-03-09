@@ -422,11 +422,11 @@ public class Task implements Comparable<Object> {
     }
 
     public Element saveToXML() {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
     }
 
     public static Task restoreFromXML(Element item) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
     }
 
     public static HashMap<String,String> getCreationForm() {
