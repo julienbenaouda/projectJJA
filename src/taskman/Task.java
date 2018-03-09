@@ -4,7 +4,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
@@ -262,7 +261,7 @@ public class Task implements Comparable<Object> {
      * @post the end time of the task is set to the given end time
      * @throws IllegalArgumentException when the parameter is not valid or when the end time is before the starttime
      */
-    private void setEndTime(String endTimeStr) throws  IllegalArgumentException{ // TODO: moet er @throws gebruikt worden hier??
+    private void setEndTime(String endTimeStr) throws  IllegalArgumentException{
         LocalDateTime endTime = LocalDateTime.parse(endTimeStr, dateFormatter);
         if(endTime.compareTo(startTime) > 0)
         {
@@ -300,11 +299,18 @@ public class Task implements Comparable<Object> {
     }
 
 
+    /**
+     * Updates the status of the task
+     * @param startTime the new start time of the task
+     * @param endTime the new end time of the task
+     * @param status the new status of the task
+     * @post the start time, end time and status of the task will be updated
+     */
     public void updateStatus(String startTime, String endTime, String status){
-        // TODO
-        // Wachten op implementatie van klok
+        setStartTime(startTime);
+        setEndTime(endTime);
+        setStatus(status);
     }
-
 
 
     /**
@@ -332,7 +338,7 @@ public class Task implements Comparable<Object> {
         if (containsLoop(this, alternative)){
             throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
-        this.alternative = alternative;             // may be null
+        this.alternative = alternative;             // may be null if there is no alternative
     }
 
 
@@ -493,7 +499,6 @@ public class Task implements Comparable<Object> {
 
     // XML
 
-
     /**
      * This method returns an XML string containing all task details.
      * @returns an XML element containing all task details.
@@ -601,6 +606,7 @@ public class Task implements Comparable<Object> {
     }
 
 
+    // Form
 
     /**
      * This method generates a form containing all parameters needed to create a new task. All values are empty and can be filled in, and then passed back to the task.
