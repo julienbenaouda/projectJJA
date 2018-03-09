@@ -1,10 +1,14 @@
 package taskman;
 
-import java.lang.reflect.Array;
+import org.w3c.dom.Element;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 
 /**
@@ -12,7 +16,7 @@ import java.util.*;
  * @author Jeroen Van Der Donckt
  *
  */
-public class Task {
+public class Task implements Comparable<Object> {
 
     /**
      * Creates a new task with the given values.
@@ -32,6 +36,10 @@ public class Task {
         setStartTime(startTime);
         setEndTime(endTime);
         dependencies = new ArrayList<>();
+    }
+
+    public Task(HashMap<String, String> form) {
+        throw new NotImplementedException(); // TODO
     }
 
 
@@ -248,7 +256,7 @@ public class Task {
     }
 
 
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status){
+    public void updateStatus(String startTime, String endTime, String status){
         // TODO
         // Wachten op implementatie van klok
     }
@@ -341,7 +349,7 @@ public class Task {
 
     /**
      * Returns the task details of the task
-     * @return Hashmap containing as keys the detail name and as value the corresponding detail value
+     * @return a HashMap containing as keys the detail name and as value the corresponding detail value
      */
     public HashMap<String, String> getTaskDetails(){
         HashMap<String, String> taskDetails = new HashMap<>();
@@ -411,6 +419,18 @@ public class Task {
 
     private int compareTo(Task task) {
         return this.getID().compareTo(task.getID());
+    }
+
+    public Element saveToXML() {
+        throw new NotImplementedException();
+    }
+
+    public static Task restoreFromXML(Element item) {
+        throw new NotImplementedException();
+    }
+
+    public static HashMap<String,String> getCreationForm() {
+        throw new NotImplementedException(); // TODO
     }
 
     /*

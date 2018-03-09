@@ -1,15 +1,13 @@
 package test;
 
-import taskman.Controller;
-import taskman.Project;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import taskman.Controller;
+import taskman.Project;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class ControllerTest {
@@ -18,12 +16,12 @@ public class ControllerTest {
 
     @Before
     public void runBeforeMethod() {
-        this.controller = new Controller();
+        controller = new Controller();
     }
 
     @After
     public void runAfterMethod() {
-        this.controller = null;
+        controller = null;
     }
 
 
@@ -43,12 +41,12 @@ public class ControllerTest {
     public void testAddNewProject() {
         String name = "test";
         String description = "test desc";
-        LocalDateTime creation = LocalDateTime.of(2018, Month.FEBRUARY, 24, 10, 0);
-        LocalDateTime due = LocalDateTime.of(2018, Month.MARCH, 15, 12, 30);
+        String creation = "24/02/2018 10:00";
+        String due = "15/03/2018 12:30";
 
         controller.addNewProject(name, description, creation, due);
 
-        ArrayList<Project> projects = controller.getProjects();
+        List<Project> projects = controller.getProjects();
         Assert.assertEquals("More than one project is added to the controller!", 1, projects.size());
 
         Project project = projects.get(0);

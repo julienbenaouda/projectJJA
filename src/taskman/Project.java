@@ -2,26 +2,18 @@
 package taskman;
 
 
-import java.io.StringWriter;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 /**
  * This class represents a project.
@@ -61,7 +53,7 @@ public class Project {
 	
 	/**
 	 * adds a new task to the projects task list
-	 * @param T the task to add
+	 * @param t the task to add
 	 * @post The given task is added to the project
 	 */
 	public void addTask(Task t) {
@@ -78,8 +70,13 @@ public class Project {
 	{
 		taskList.remove(getTaskIndex(id));
 	}
-	
-	public HashMap<String, String> getTaskDetails(int id)
+
+	/**
+	 * Returns the task details of the task
+	 * @param id the id of the task
+	 * @return a HashMap containing as keys the detail name and as value the corresponding detail value
+	 */
+	public HashMap<String, String> getTaskDetails(Integer id)
 	{
 		Task t = taskList.get(getTaskIndex(id));
 		return t.getTaskDetails();
@@ -257,11 +254,11 @@ public class Project {
 	
 	/**
 	 * This method returns a hashmap containing the project properties.
-	 * @return A hashmap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
+	 * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
 	 */
 	public HashMap<String, String> getProjectDetails()
 	{
-		HashMap<String, String> details = new HashMap<>();
+		HashMap<String, String> details = new LinkedHashMap<>();
 		details.put("name", getName());
 		details.put("description", getDescription());
 		details.put("creationTime", getCreationTime().format(dateFormatter));
@@ -310,9 +307,8 @@ public class Project {
 			p.appendChild(tasks);
 			return p;
 		} catch (Exception e) {
-			throw new OperationNotSupportedException("Problem parsing projects to file: " +e);
+			throw new XMLParserException(e.getMessage());
 		}
-		return null;
 	}
 	
 	/**
@@ -326,7 +322,7 @@ public class Project {
 		try {
 			if(!(project.getNodeName().equals("project")))
 			{
-				throw new OperationNotSupportedException("the xml file is not in the correct format");
+				throw new XMLParserException("the xml file you provided is not in the correct format. Please correct the errors or try another file");
 			}
 			String name = project.getElementsByTagName("name").item(0).getTextContent();
 			String description = project.getElementsByTagName("description").item(0).getTextContent();
@@ -336,7 +332,7 @@ public class Project {
 			Node tasks = project.getElementsByTagName("tasks").item(0);
 			if(tasks.getNodeType() != Node.ELEMENT_NODE)
 			{
-				throw new OperationNotSupportedException("the xml file has not the correct format.");
+				throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
 			}
 			Element tasksElem = (Element)tasks;
 			NodeList tl = tasksElem.getElementsByTagName("task");
@@ -347,16 +343,15 @@ public class Project {
 			return p;
 		} catch (Exception e)
 		{
-			throw new OperationNotSupportedException("Something went wrong parsing the xml file");
+			throw new XMLParserException(e.getMessage());
 		}
-		return null;
 	}
 	
 	/**
 	 * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
-	 * @return A hashmap containing all elements that need to be filled in to create a new project
+	 * @return A HashMap containing all elements that need to be filled in to create a new project
 	 */
-	public static HashMap<String, String> getForm()
+	public static HashMap<String, String> getCreationForm()
 	{
 		HashMap<String, String> form = new HashMap<>();
 		form.put("name", "");
