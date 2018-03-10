@@ -498,7 +498,6 @@ public class Task implements Comparable<Object> {
         return this.getID().compareTo(task.getID());
     }
 
-
     // XML
 
     /**

@@ -7,24 +7,25 @@ import taskman.User;
 
 /**
  * This is a test class for the User class.
- * @author Jeroen Van Der Donckt
+ * @author Jeroen Van Der Donckt, Alexander Braekevelt
  *
  */
 public class UserTest {
 
     @Test
     public void testUserType() {
-        for (String s: new String[]{"REGULARUSER", "DEVELOPER"}) {
-            User.setUserType(s);
-            Assert.assertEquals(s + " is not recognized!", s, User.getUserType());
-        }
+        Assert.assertNotNull("Initial user type cannot be null!", User.getUserType());
         for (String s: new String[]{"", "ldksfjqlkjf"}) {
             try {
                 User.setUserType(s);
-                Assert.fail("Exception expected when passing '" + s + "'");
+                Assert.fail("Exception expected when passing '" + s + "'!");
             } catch (Exception e) {
                 Assert.assertEquals(e.getClass(), IllegalArgumentException.class);
             }
+        }
+        for (String s: new String[]{"REGULARUSER", "DEVELOPER"}) {
+            User.setUserType(s);
+            Assert.assertEquals(s + " is not recognized!", s, User.getUserType());
         }
     }
 

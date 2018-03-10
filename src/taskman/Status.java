@@ -22,4 +22,14 @@ public enum Status {
         }
         throw new IllegalArgumentException("The given status does not exist!");
     }
+
+    /**
+     * Returns the name of the status
+     * @return a String
+     */
+    @Override
+    public String toString() {
+        return this.name();
+    }
+
 }

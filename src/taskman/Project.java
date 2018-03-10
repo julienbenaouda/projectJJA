@@ -46,8 +46,7 @@ public class Project {
 	 * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
 	 * @post a new project is created with the given parameters
 	 */
-	public Project(HashMap<String, String> form) throws IllegalArgumentException
-	{
+	public Project(HashMap<String, String> form) throws IllegalArgumentException {
 		this(form.get("name"), form.get("description"), form.get("creationTime"), form.get("dueTime"));
 	}
 	

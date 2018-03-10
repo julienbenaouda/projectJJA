@@ -5,25 +5,56 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 public class Clock {
 
+    /**
+     * Represents the time of the clock.
+     */
     private LocalDateTime systemTime = LocalDateTime.MIN;
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    /**
+     * The notation used for the time.
+     * TODO: overal deze versie gebruiken!!!
+     */
+    private final DateTimeFormatter dateFormatter =
+            DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
+
+    /**
+     * Sets the time of the clock to the given time.
+     * @param newSystemTime a LocalDatTime object
+     * @post the time will be set to the given time.
+     */
     private void setSystemTime(LocalDateTime newSystemTime) {
         systemTime = newSystemTime;
     }
 
+    /**
+     * Returns the time of the clock
+     * @return a LocalDateTime object
+     */
     public LocalDateTime getSystemTime() {
-        return systemTime.plusNanos(0);
+        return systemTime; // LocalDateTime is immutable!
     }
 
+    /**
+     * Returns the time of the clock.
+     * @return a string
+     */
     public String getSystemTimeString() {
         return systemTime.format(dateFormatter);
     }
 
-    public void updateSystemTime(String s) {
+    /**
+     * Updates the time of the clock.
+     * @param s the new time of the clock.
+     * @post the time of the clock will be set to the given time.
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @throws IllegalArgumentException if the new time if before the old time.
+     */
+    public void updateSystemTime(String s) throws DateTimeParseException, IllegalArgumentException {
         LocalDateTime newSystemTime = LocalDateTime.parse(s, dateFormatter);
         if (newSystemTime.isAfter(systemTime)) {
             setSystemTime(newSystemTime);
@@ -34,10 +65,10 @@ public class Clock {
     }
 
     public Element saveToXML() {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
     }
 
     public static void restoreFromXML(Element xml) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
     }
 }

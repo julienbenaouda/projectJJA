@@ -50,9 +50,9 @@ public class UI {
 		int input = inputInt();
 		try {
 			switch (input) {
-			case 1: controller.setUser("REGULARUSER");
+			case 1: controller.setUserType("REGULARUSER");
 					break;
-			case 2: controller.setUser("DEVELOPER");
+			case 2: controller.setUserType("DEVELOPER");
 					break;
 			default: print("Invalid argument, please try again.\n");
 					 showUserChoiceDialog();
@@ -290,7 +290,7 @@ public class UI {
 		}
 
 		try {
-			controller.updateTaskStatus(name, id, form);
+			controller.updateTaskStatus(name, id, form); // TODO: change to form!!!
 		} catch (IllegalArgumentException e){
 			print("Error while updating task status: " + e.getMessage());
 			showMainMenu();

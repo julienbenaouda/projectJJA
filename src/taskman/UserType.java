@@ -23,4 +23,13 @@ public enum UserType {
         throw new IllegalArgumentException("The given user type does not exist!");
     }
 
+    /**
+     * Returns the name of the user type
+     * @return a String
+     */
+    @Override
+    public String toString() {
+        return this.name();
+    }
+
 }

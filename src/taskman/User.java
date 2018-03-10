@@ -12,6 +12,7 @@ public class User {
     /**
      * Sets the active user type to the given user type.
      * @param s the name of the user type to change to.
+     * @post the user type will be set to the given user type.
      * @throws IllegalArgumentException if the user type does not exist.
      */
     public static void setUserType(String s) throws IllegalArgumentException{

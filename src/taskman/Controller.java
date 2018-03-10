@@ -2,6 +2,8 @@ package taskman;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.nio.file.AccessDeniedException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,22 +22,41 @@ public class Controller {
     /**
      * Represents the projects in the system.
      */
-    private HashMap<String, Project> projects = new HashMap<>();
+    private HashMap<String, Project> projects;
 
     /**
-     * Create a controller.
+     * Create a controller (with minimum time and regular user type).
      */
     public Controller() {
         this.clock = new Clock();
+        this.projects = new HashMap<>();
+    }
+
+
+    /**
+     * Create a controller (with given time and regular user type).
+     * @param initialTime the initial system time.
+     * @post the time of the system will be set to the given time
+     * @throws IllegalArgumentException if the new time if before the old time.
+     */
+    public Controller(String initialTime) throws IllegalArgumentException {
+        this();
+        this.updateSystemTime(initialTime);
     }
 
     /**
-     * Create a controller.
-     * @param initialTime the initial system time;
+     * Create a controller (with given time and given user type).
+     * @param initialTime the initial system time.
+     * @param initialUserType the user that will be active.
+     * @post the time of the system will be set to the given time
+     * @post the user type will be set to the given user type.
+     * @throws IllegalArgumentException if the new time if before the old time.
+     * @throws IllegalArgumentException if the user type does not exist.
      */
-    public Controller(String initialTime) {
-        this.clock = new Clock();
-        this.clock.updateSystemTime(initialTime);
+    public Controller(String initialTime, String initialUserType) throws IllegalArgumentException {
+        this();
+        this.updateSystemTime(initialTime);
+        this.setUserType(initialUserType);
     }
 
     /**
@@ -60,8 +81,8 @@ public class Controller {
      * @return a project.
      * @throws IllegalArgumentException if the project does not exist.
      */
-    private Project getProject(String name) throws IllegalArgumentException{
-        if (projects.containsKey(name)) {
+    private Project getProject(String name) throws IllegalArgumentException {
+        if (projectExists(name)) {
             return projects.get(name);
         }
         else {
@@ -73,10 +94,11 @@ public class Controller {
      * Adds a project to the controller.
      * @param name the name of the project
      * @param project the project to add
+     * @post the project will be added to the system.
      * @throws IllegalArgumentException if a project with the given name already exist
      */
-    private void addProject(String name, Project project) throws IllegalArgumentException{
-        if (projects.containsKey(name)) {
+    private void addProject(String name, Project project) throws IllegalArgumentException {
+        if (projectExists(name)) {
             throw new IllegalArgumentException("The given project name does already exist!");
         }
         else {
@@ -97,17 +119,12 @@ public class Controller {
      * Adds a project with the properties from a given form.
      * @param form the creation form for the project
      * @post a project with the properties from a given form will be added to the controller.
-     * @throws IllegalArgumentException if the form doesn't contain a key 'name'.
+     * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
+     * @throws IllegalArgumentException if a project with the given name already exist
      */
-    public void addProject(HashMap<String, String> form) throws IllegalArgumentException{
-        if (form.containsValue("name")){
-            String name = form.get("name");
-            Project project = new Project(form);
-            addProject(name, project);
-        }
-        else {
-            throw new IllegalArgumentException("The form must contain a name for the project!");
-        }
+    public void addProject(HashMap<String, String> form) throws IllegalArgumentException {
+        Project project = new Project(form);
+        addProject(project.getName(), project);
     }
 
     /**
@@ -116,7 +133,7 @@ public class Controller {
      * @return the details of the given project
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public HashMap<String, String> getProjectDetails(String name) throws IllegalArgumentException{
+    public HashMap<String, String> getProjectDetails(String name) throws IllegalArgumentException {
         return getProject(name).getProjectDetails();
     }
 
@@ -126,7 +143,7 @@ public class Controller {
      * @return a list of Integers
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public List<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException{
+    public List<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException {
         return getProject(projectName).getTaskIds();
     }
 
@@ -137,7 +154,7 @@ public class Controller {
      * @return the details of the given task
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public HashMap<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException{
+    public HashMap<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException {
         return getProject(projectName).getTaskDetails(taskId);
     }
 
@@ -156,8 +173,16 @@ public class Controller {
      * @post a project with the properties from a given form will be added to the controller.
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException{
+    public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException {
         getProject(projectName).addTask(new Task(form));
+    }
+
+    /**
+     * Return the ID of the latest task.
+     * @return the ID of the latest task
+     */
+    public static Integer getLastTaskID() {
+        return Task.getLastTaskID();
     }
 
     /**
@@ -165,6 +190,7 @@ public class Controller {
      * @param projectName the name of the project which holds both tasks
      * @param taskId the id of the task
      * @param alternativeTaskId the id of the alternative task
+     * @post the alternative task of the task is set to the given task
      * @throws IllegalArgumentException if the project does not exist.
      */
     public void addAlternativeToTask(String projectName, Integer taskId, Integer alternativeTaskId) throws IllegalArgumentException {
@@ -177,6 +203,7 @@ public class Controller {
      * @param projectName the name of the project which holds both tasks
      * @param taskId the id of the task
      * @param dependencyTaskId the id of the dependency
+     * @post the dependency is added to the task.
      * @throws IllegalArgumentException if the project does not exist.
      */
     public void addDependencyToTask(String projectName, Integer taskId, Integer dependencyTaskId) throws IllegalArgumentException {
@@ -201,9 +228,15 @@ public class Controller {
      * @param form the HashMap containing the new values necessary to update the task status
      * @post the start time, end time and status of the task will be updated
      * @throws IllegalArgumentException if the project does not exist.
+     * @throws AccessDeniedException if the active user type cannot edit tasks
      */
-    public void updateTaskStatus(String projectName, Integer taskId, HashMap<String, String> form) throws IllegalArgumentException{
-        getProject(projectName).getTask(taskId).updateStatus(form);
+    public void updateTaskStatus(String projectName, Integer taskId, HashMap<String, String> form) throws IllegalArgumentException, AccessDeniedException {
+        if (User.canChangeTaskStatus()) {
+            getProject(projectName).getTask(taskId).updateStatus(form);
+        }
+        else {
+            throw new AccessDeniedException("The active user type cannot edit tasks!");
+        }
     }
 
     /**
@@ -218,26 +251,37 @@ public class Controller {
      * Updates the time of the system
      * @param newTime the new time of the system
      * @post the time of the system will be set to the given time
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @throws IllegalArgumentException if the new time if before the old time.
      */
-    public void updateSystemTime(String newTime) {
+    public void updateSystemTime(String newTime) throws DateTimeParseException, IllegalArgumentException {
         clock.updateSystemTime(newTime);
     }
 
     /**
-     * Changes the active user to the given user.
-     * @param user the name of the user to change to.
+     * Returns the name of the active user type.
+     * @return a string.
+     */
+    public String getUserType() {
+        return User.getUserType();
+    }
+
+    /**
+     * Changes the active user type to the given type.
+     * @param user the name of the user type to change to.
+     * @post the user type will be set to the given user type.
      * @throws IllegalArgumentException if the user type does not exist.
      */
-    public void setUser(String user) throws IllegalArgumentException{
+    public void setUserType(String user) throws IllegalArgumentException{
         User.setUserType(user);
     }
 
     public void importXML(String path) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
     }
 
     public void exportToXML(String path) {
-        throw new NotImplementedException();
+        throw new NotImplementedException(); // TODO
 
     }
 
