@@ -3,20 +3,22 @@
  */
 package taskman;
 
+import sun.util.locale.StringTokenIterator;
+
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
  * This class represents the user interface of the taskman program.
- * @author Julien Benaouda
+ * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
 public class UI {
 	private Controller controller;
 
 	/**
-	 * Creates a new ui object.
+	 * Creates a new UI object.
 	 */
 	private UI()
 	{
@@ -41,20 +43,20 @@ public class UI {
 	{
 		StringBuilder message = new StringBuilder();
 		message.append("In which user mode would you like to run the program\n");
-		message.append("options:");
+		message.append("options:\n");
 		message.append("1 - regular user\n2 - developer\n");
-		message.append("chose option:");
+		message.append("Choose option:");
 		print(message.toString());
 		int input = inputInt();
 		try {
 			switch (input) {
 			case 1: controller.setUser("REGULARUSER");
-			break;
+					break;
 			case 2: controller.setUser("DEVELOPER");
-			break;
-			default: print("Invalid argument, please try again.\n"); 
-				showUserChoiceDialog();
-			break;
+					break;
+			default: print("Invalid argument, please try again.\n");
+					 showUserChoiceDialog();
+					 break;
 			}
 		} catch(IllegalArgumentException e) {
 			print("Invalid option, please try again");
@@ -76,37 +78,38 @@ public class UI {
 		message.append("5 - import data\n");
 		message.append("6 - export data\n");
 		message.append("7 - change user\n");
-		message.append("Chose option:");
+		message.append("Choose option:");
 		print(message.toString());
 		int input = inputInt();
 		switch (input) {
 		case 1: listProjects();
-		break;
+				break;
 		case 2: showProjectMenu();
-		break;
+				break;
 		case 3: createProject();
-		break;
+				break;
 		case 4: advanceSystemTime();
-		break;
+				break;
 		case 5: importFile();
-		break;
+				break;
 		case 6: exportFile();
-		break;
+				break;
 		case 7: showUserChoiceDialog();
-		break;
+				break;
 		default: print("Invalid number, please try again");
-		showMainMenu();
-		break;
+		 		 showMainMenu();
+				 break;
 		}
 	}
 	
 	/**
-	 * Prints the list of projects. Only the project names are printes.
+	 * Prints the list of projects. Only the project names are printed.
 	 */
-	public void listProjects()
-	{
+	public void listProjects() {
 		StringBuilder message = new StringBuilder();
-		// todo add the list of projects
+		for (String projectName : controller.getProjectNames()){
+			message.append(projectName + "\n");
+		}
 		print(message.toString());
 		showMainMenu();
 	}
@@ -149,7 +152,7 @@ public class UI {
 	 */
 	public void showProjectMenu()
 	{
-		print("project name: ");
+		print("Project name: ");
 		String name = inputString();
 		try {
 			controller.projectExists(name);
@@ -162,7 +165,7 @@ public class UI {
 	}
 	
 	/**
-	 * Shows the project menu for a given project and let's the user chose an option.
+	 * Shows the project menu for a given project and let's the user choose an option.
 	 * @param name the name of the project to show options for.
 	 */
 	public void showProjectMenu(String name)
@@ -173,70 +176,125 @@ public class UI {
 		sb.append("3 - add task\n");
 		sb.append("4 - update task status\n");
 		sb.append("5 - back to main menu\n");
-		sb.append("chose option:");
+		sb.append("Choose option: ");
 		print(sb.toString());
 		int option = inputInt();
 		switch (option)
 		{
 		case 1: showProjectDetails(name);
-			break;
-		case 2: showTaskDetails(name);
-			break;
-		case 3: try { 
-			createTask(name);
-		} catch (IllegalArgumentException e) {
-			print("Invalid arguments while creating task: " +e.getMessage());
-			showProjectMenu(name);
-		}
-			break;
-		case 4: try {
-			updateTaskStatus(name);
-		} catch (IllegalArgumentException e)
-		{
-			print("Invalid argument while updating task status: " +e.getMessage());
-			showProjectMenu(name);
-		}
-			break;
-		case 5: showMainMenu();
-			break;
-			default: print("Invalid option, please try again.");
-			showProjectMenu(name);
 				break;
+		case 2: showTaskDetails(name);
+				break;
+		case 3: try {
+					createTask(name);
+				} catch (IllegalArgumentException e) {
+					print("Invalid arguments while creating task: " +e.getMessage());
+					showProjectMenu(name);
+				}
+				break;
+		case 4: try {
+					updateTaskStatus(name);
+				} catch (IllegalArgumentException e) {
+					print("Invalid argument while updating task status: " +e.getMessage());
+					showProjectMenu(name);
+				}
+				break;
+		case 5: showMainMenu();
+				break;
+		default: print("Invalid option, please try again.");
+				 showProjectMenu(name);
+				 break;
 		}
 	}
 	
 	/**
-	 * Shows the details of a given project.
+	 * Shows the details of the given project.
 	 * @param name the name of the project to show details for
 	 */
 	public void showProjectDetails(String name) {
 		StringBuilder sb = new StringBuilder();
 		try {
 			HashMap<String, String> details = controller.getProjectDetails(name);
-			for(String key: details.keySet()) {
-				sb.append(key +": " +details.get(key));
+			for (String key: details.keySet()) {
+				sb.append(key + ": " + details.get(key) + "\n");
 			}
 			print(sb.toString());
-		} catch (IllegalArgumentException e)
-		{
+		} catch (IllegalArgumentException e) {
 			print("A project with the specified name does not exist. Please try again");
 			showMainMenu();
 		}
 	}
-	
-	public void showTaskDetails(String name)
-	{
-		//todo write method
+
+	/**
+	 * Shows the task details of the given project.
+	 * @param name the name of the project to show the tasks details for
+	 */
+	public void showTaskDetails(String name) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			for (int id : controller.getTasksOfProject(name)){
+				HashMap<String, String> details = controller.getTaskDetails(name, id);
+				for (String key : details.keySet()){
+					sb.append(key + ": " + details.get(key) + "\n");
+				}
+			}
+			print(sb.toString());
+		} catch (IllegalArgumentException e) {
+			print("A project with the specified name does not exist. Please try again");
+			showMainMenu();
+		}
 	}
-	
-	public void createTask(String name)
-	{
-		//todo write this method
+
+	/**
+	 * Creates a task for the given project.
+	 * @param name the name of the project to create the task for
+	 * @post a new task is created and added to the given project
+	 */
+	public void createTask(String name) {
+		HashMap<String, String> form =  controller.getTaskCreationForm();
+		for (String key: form.keySet()){
+			print(key + ": ");
+			form.put(key, inputString());
+		}
+		try{
+			controller.addTask(name, form);
+		} catch (IllegalArgumentException e){
+			print("Error while creating task: " + e.getMessage());
+			showMainMenu();
+		}
 	}
-	
+
+	/**
+	 * Updates the status of a task
+	 * @param name the name of the project from which a task its status will be updated
+	 * @post the task its status and other properties are updated
+	 */
 	public void updateTaskStatus(String name)
 	{
-		//toto write this method
+		print("task ID (in case you want to cancel updating the task status type 0): "); // normaal kan task ID nooit 0 zijn (begint bij 1) TODO is dit ok voor jullie
+		int id = inputInt();
+		if (id == 0) {
+			print("Task status update is cancelled.");
+			return; // TODO: LELIJKE CODE xdxp
+		}
+
+		HashMap<String, String> form = controller.getUpdateTaskStatusForm();
+		for (String key : form.keySet()){
+			print(key + " (in case you want to cancel updating the task status just press enter): ");
+			String value = inputString();
+			if (value.isEmpty()){
+				print("Task status update is cancelled");
+				return; // TODO: blijft lelijke code :s
+			}
+			form.put(key, value);
+		}
+
+		try {
+			controller.updateTaskStatus(name, id, form);
+		} catch (IllegalArgumentException e){
+			print("Error while updating task status: " + e.getMessage());
+			showMainMenu();
+		}
 	}
 	
 	/**
@@ -246,7 +304,7 @@ public class UI {
 	public void createProject() {
 		HashMap<String, String> form = controller.getProjectCreationForm();
 		for(String key: form.keySet()) {
-			print(key +": ");
+			print(key + ": ");
 			form.put(key, inputString());
 		}
 		try {
