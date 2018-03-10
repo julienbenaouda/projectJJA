@@ -6,6 +6,7 @@ package taskman;
 import sun.util.locale.StringTokenIterator;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -189,14 +190,14 @@ public class UI {
 		case 3: try {
 					createTask(name);
 				} catch (IllegalArgumentException e) {
-					print("Invalid arguments while creating task: " +e.getMessage());
+					print("Invalid arguments while creating task: " + e.getMessage());
 					showProjectMenu(name);
 				}
 				break;
 		case 4: try {
 					updateTaskStatus(name);
 				} catch (IllegalArgumentException e) {
-					print("Invalid argument while updating task status: " +e.getMessage());
+					print("Invalid argument while updating task status: " + e.getMessage());
 					showProjectMenu(name);
 				}
 				break;
@@ -270,30 +271,64 @@ public class UI {
 	 * @param name the name of the project from which a task its status will be updated
 	 * @post the task its status and other properties are updated
 	 */
-	public void updateTaskStatus(String name)
-	{
-		print("task ID (in case you want to cancel updating the task status type 0): "); // normaal kan task ID nooit 0 zijn (begint bij 1) TODO is dit ok voor jullie
-		int id = inputInt();
-		if (id == 0) {
-			print("Task status update is cancelled.");
-			return; // TODO: LELIJKE CODE xdxp
-		}
 
+	/**
+	 * Shows the available tasks of the given project.
+	 * @param name the name of the given project
+	 * @throws IllegalArgumentException if the given project does not contain any available tasks
+	 */
+	private void showAvailableTasks(String name) throws IllegalArgumentException{
+		ArrayList<HashMap<String, String>> availableTasks = controller.getAvailableTaskDetails(name);
+		if (availableTasks.size() == 0){
+			throw new IllegalArgumentException("The given task does not contain any available tasks.");
+		}
+		for (HashMap<String, String> availableTask : availableTasks){
+			print(availableTask.get("id") + ": " + availableTask.get("description"));
+		}
+	}
+
+	/**
+	 * Fills in the update task status form.
+	 * @return a HashMap containing as key the attribute names and as value their values
+	 */
+	private HashMap<String, String> fillInTaskUpdateForm() {
 		HashMap<String, String> form = controller.getUpdateTaskStatusForm();
 		for (String key : form.keySet()){
 			print(key + " (in case you want to cancel updating the task status just press enter): ");
 			String value = inputString();
 			if (value.isEmpty()){
 				print("Task status update is cancelled");
-				return; // TODO: blijft lelijke code :s
+				return null; // TODO: ook lelijke code :s // MSS exception gooien en die dan catchen idk
 			}
 			form.put(key, value);
 		}
+		return form;
+	}
 
-		try {
+	/**
+	 * Updates the task status of an available task of the given project.
+	 * @param name the name of the project
+	 * @post a task status, start time and end time of the selected available task of the given project is updaten
+	 */
+	public void updateTaskStatus(String name)
+	{
+		print("Project: " + name + "\n");
+		try{
+			showAvailableTasks(name);
+			print("task ID (in case you want to cancel updating the task status type 0): "); // normaal kan task ID nooit 0 zijn (begint bij 1) TODO is dit ok voor jullie
+			int id = inputInt();
+			if (id != 0) {
+				print("Task status update is cancelled.");
+				return; // TODO: LELIJKE CODE xdxp
+			}
+			HashMap<String, String> form = fillInTaskUpdateForm();
+			if (form == null){
+				print("Task status update is cancelled.");
+				return; // TODO: nog steeds lelijke code :s
+			}
 			controller.updateTaskStatus(name, id, form);
-		} catch (IllegalArgumentException e){
-			print("Error while updating task status: " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			print("Error while updating task status. " + e.getMessage());
 			showMainMenu();
 		} catch (AccessDeniedException e) {
 			print("Acces denied: " + e.getMessage());

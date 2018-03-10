@@ -410,19 +410,19 @@ public class Task implements Comparable<Object> {
     public HashMap<String, String> getTaskDetails(){
         HashMap<String, String> taskDetails = new HashMap<>();
 
-        taskDetails.put("ID", ID.toString());
-        taskDetails.put("Description", description);
-        taskDetails.put("EstimatedDuration", estimatedDuration.toString());
-        taskDetails.put("AcceptableDeviation", acceptableDeviation.toString());
-        taskDetails.put("StartTime", startTime.format(dateFormatter));
-        taskDetails.put("EndTime", endTime.format(dateFormatter));
-        taskDetails.put("Status", status.toString());
+        taskDetails.put("id", ID.toString());
+        taskDetails.put("description", description);
+        taskDetails.put("estimatedDuration", estimatedDuration.toString());
+        taskDetails.put("acceptableDeviation", acceptableDeviation.toString());
+        taskDetails.put("startTime", startTime.format(dateFormatter));
+        taskDetails.put("endTime", endTime.format(dateFormatter));
+        taskDetails.put("status", status.toString());
         int[] dependenciesIDs = new int[dependencies.size()];
         for (int i = 0; i < dependencies.size(); i++){
             dependenciesIDs[i] = dependencies.get(0).getID();
         }
-        taskDetails.put("Dependecies", dependenciesIDs.toString());
-        taskDetails.put("Alternative", alternative.getID().toString());
+        taskDetails.put("dependecies", dependenciesIDs.toString());
+        taskDetails.put("alternative", alternative.getID().toString());
 
         return taskDetails;
     }

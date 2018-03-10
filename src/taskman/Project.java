@@ -81,6 +81,22 @@ public class Project {
 		return t.getTaskDetails();
 	}
 
+    /**
+     * Returns a list of task details of the available tasks
+     * @return a List containing for each available task a HashMap containing as key the detail name and as value the corresponding detail value
+     */
+    public ArrayList<HashMap<String, String>> getAvailableTaskDetails(){
+	    ArrayList<HashMap<String, String>> availableTaskDetailsList = new ArrayList<>();
+        for (int id : getTaskIds()){
+            HashMap<String, String> taskDetails = getTaskDetails(id);
+            if (Status.fromString(taskDetails.get("status")) == Status.AVAILABLE){
+                availableTaskDetailsList.add(taskDetails);
+            }
+        }
+        return availableTaskDetailsList;
+    }
+
+
 	/**
 	 * returns the name of the project
 	 * @return the name of the project
@@ -250,7 +266,7 @@ public class Project {
 	 * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
 	 */
 	private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	
+
 	/**
 	 * This method returns a hashmap containing the project properties.
 	 * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
@@ -270,6 +286,7 @@ public class Project {
 		details.put("tasks", sb.toString());
 		return details;
 	}
+
 	
 	/**
 	 * This method returns an XML string containing all project details.

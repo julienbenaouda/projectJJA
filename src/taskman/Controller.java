@@ -159,6 +159,16 @@ public class Controller {
     }
 
     /**
+     * Returns a list of details of the available tasks of the given project
+     * @param projectName the name of the project of the available tasks
+     * @return the details of the available tasks of the given project
+     * @throws IllegalArgumentException if the project does not exist
+     */
+    public ArrayList<HashMap<String, String>> getAvailableTaskDetails(String projectName) throws IllegalArgumentException {
+        return getProject(projectName).getAvailableTaskDetails();
+    }
+
+    /**
      * This method generates a form containing all parameters needed to create a new taks.
      * All values are empty and can be filled in, and then passed back to create a task.
      * @return A map containing all elements that need to be filled in to create a new task
