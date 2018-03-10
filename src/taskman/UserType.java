@@ -14,7 +14,7 @@ public enum UserType {
      * @return the user type of the given string.
      * @throws IllegalArgumentException if the user type does not exist.
      */
-    public static UserType fromString(String s) throws IllegalArgumentException{
+    public static UserType fromString(String s) throws IllegalArgumentException {
         for (UserType u: UserType.values()) {
             if (s.equals(u.name())) {
                 return u;
