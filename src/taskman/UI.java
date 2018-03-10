@@ -5,6 +5,7 @@ package taskman;
 
 import sun.util.locale.StringTokenIterator;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -290,9 +291,12 @@ public class UI {
 		}
 
 		try {
-			controller.updateTaskStatus(name, id, form); // TODO: change to form!!!
+			controller.updateTaskStatus(name, id, form);
 		} catch (IllegalArgumentException e){
 			print("Error while updating task status: " + e.getMessage());
+			showMainMenu();
+		} catch (AccessDeniedException e) {
+			print("Acces denied: " + e.getMessage());
 			showMainMenu();
 		}
 	}

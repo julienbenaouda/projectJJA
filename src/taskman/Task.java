@@ -314,7 +314,6 @@ public class Task implements Comparable<Object> {
             throw new IllegalArgumentException("The status may only be finished or failed.");
         } // TODO: controlleren of dit wel klopt (of task niet AVAILABLE MOET ZIJN idk)
         setStartTime(form.get("startTime"));
-        setStartTime(form.get("startTime"));
         setEndTime(form.get("endTime"));
         setStatus(form.get("status"));
     }
