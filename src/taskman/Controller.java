@@ -186,17 +186,24 @@ public class Controller {
 
 
     /**
+     * This method generates a form containing all parameters needed to update a task status
+     * All values are empty and can be filled in, and then passed back to update a task status.
+     * @return A map containing all elements that need to be filled in to update a task status
+     */
+    public HashMap<String, String> getUpdateTaskStatusForm() {
+        return Task.getUpdateStatusForm();
+    }
+
+    /**
      * Updates the status of the given task.
      * @param projectName the name of the project of the task
      * @param taskId the id of the task to update
-     * @param startTime the new start time of the task
-     * @param endTime the new end time of the task
-     * @param status the new status of the task
+     * @param form the HashMap containing the new values necessary to update the task status
      * @post the start time, end time and status of the task will be updated
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public void updateTaskStatus(String projectName, Integer taskId, String startTime, String endTime, String status) throws IllegalArgumentException{
-        getProject(projectName).getTask(taskId).updateStatus(startTime, endTime, status);
+    public void updateTaskStatus(String projectName, Integer taskId, HashMap<String, String> form) throws IllegalArgumentException{
+        getProject(projectName).getTask(taskId).updateStatus(form);
     }
 
     /**
