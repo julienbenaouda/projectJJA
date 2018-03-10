@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
@@ -211,11 +212,15 @@ public class Task implements Comparable<Object> {
     }
 
 
-
     /**
      * The start time of the task.
      */
     private LocalDateTime startTime;
+
+    /**
+     * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
+     */
+    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
 
     /**
@@ -300,9 +305,15 @@ public class Task implements Comparable<Object> {
     /**
      * Updates the status of the task.
      * @param form the HashMap from which to extract the necessary values
+     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(HashMap<String, String> form){
+    // TODO: setStartTime(), setEndTime() beide eens controlleren of wel OK is (ook op andere plaatsen doen)
+    public void updateStatus(HashMap<String, String> form) throws IllegalArgumentException {
+        if (Status.fromString(form.get("status")) != Status.FINISHED && Status.fromString(form.get("status")) != Status.FAILED){
+            throw new IllegalArgumentException("The status may only be finished or failed.");
+        } // TODO: controlleren of dit wel klopt (of task niet AVAILABLE MOET ZIJN idk)
+        setStartTime(form.get("startTime"));
         setStartTime(form.get("startTime"));
         setEndTime(form.get("endTime"));
         setStatus(form.get("status"));
@@ -391,11 +402,6 @@ public class Task implements Comparable<Object> {
         dependencies.remove(dependency);
     }
 
-
-    /**
-     * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
-     */
-    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 
     /**
