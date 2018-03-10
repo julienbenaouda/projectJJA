@@ -73,15 +73,19 @@ public class ControllerTest {
         Integer dependencyTaskId = controller.getLastTaskID();
         controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
 
+        HashMap<String,String> updateForm = controller.getUpdateTaskStatusForm();
+        updateForm.put("startTime", "01/02/2003 05:05");
+        updateForm.put("endTime", "01/01/2100 00:00");
+        updateForm.put("status", "FINISHED");
         try {
             User.setUserType("REGULARUSER");
-            controller.updateTaskStatus(projectName, taskId, "01/02/2003 05:05", "01/01/2100 00:00", "FINISHED");
+            controller.updateTaskStatus(projectName, taskId, updateForm);
             Assert.fail("A regular user should not be able to update a task status!");
-        } catch (AccessDeniedException e) {
-            assert true;
+        } catch (Exception e) {
+            Assert.assertEquals("Wrong exception!", AccessDeniedException.class, e.getClass());
         }
         User.setUserType("DEVELOPER");
-        controller.updateTaskStatus(projectName, taskId, "01/02/2003 05:05", "01/01/2100 00:00", "FINISHED");
+        controller.updateTaskStatus(projectName, taskId, updateForm);
 
     }
 
