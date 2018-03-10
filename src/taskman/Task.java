@@ -32,8 +32,7 @@ public class Task implements Comparable<Object> {
      * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    public Task(String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime)
-    {
+    public Task(String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime) {
         setID();
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
@@ -49,12 +48,12 @@ public class Task implements Comparable<Object> {
      * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
      * @post a new task is created with the given parameters
      */
-    public Task(HashMap<String, String> form) throws IllegalArgumentException{
+    public Task(HashMap<String, String> form) throws IllegalArgumentException {
         this(form.get("description"), form.get("estimatedDuration"), form.get("acceptableDeviation"), form.get("startTime"), form.get("endTime"));
     }
 
     /**
-     * Creates a new task with thte given values
+     * Creates a new task with thte given values.
      * @param lastTaskID the latest task ID
      * @param ID the task ID
      * @param description the task description
@@ -64,7 +63,7 @@ public class Task implements Comparable<Object> {
      * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    private Task(String lastTaskID, String ID, String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime, String status){
+    private Task(String lastTaskID, String ID, String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime, String status) {
         setLastTaskID(Integer.parseInt(lastTaskID));
         setID(Integer.parseInt(ID));
         setDescription(description);
@@ -263,8 +262,7 @@ public class Task implements Comparable<Object> {
      */
     private void setEndTime(String endTimeStr) throws  IllegalArgumentException{
         LocalDateTime endTime = LocalDateTime.parse(endTimeStr, dateFormatter);
-        if(endTime.compareTo(startTime) > 0)
-        {
+        if(endTime.compareTo(startTime) > 0) {
             this.endTime = endTime;
         } else {
             throw new IllegalArgumentException("The end time can't be before the start time.");
@@ -300,16 +298,14 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Updates the status of the task
-     * @param startTime the new start time of the task
-     * @param endTime the new end time of the task
-     * @param status the new status of the task
+     * Updates the status of the task.
+     * @param form the HashMap from which to extract the necessary values
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(String startTime, String endTime, String status){
-        setStartTime(startTime);
-        setEndTime(endTime);
-        setStatus(status);
+    public void updateStatus(HashMap<String, String> form){
+        setStartTime(form.get("startTime"));
+        setEndTime(form.get("endTime"));
+        setStatus(form.get("status"));
     }
 
 
@@ -320,7 +316,7 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Returns the alternative task of the task
+     * Returns the alternative task of the task.
      * @return the alternative task
      */
     public Task getAlternative(){
@@ -403,7 +399,7 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Returns the task details of the task
+     * Returns the task details of the task.
      * @return a HashMap containing as keys the detail name and as value the corresponding detail value
      */
     public HashMap<String, String> getTaskDetails(){
@@ -430,7 +426,7 @@ public class Task implements Comparable<Object> {
     // LOOP CHECKING CODE
 
     /**
-     * Checks if the searched task is equal to the root or one of its dependencies or alternatives (recursively)
+     * Checks if the searched task is equal to the root or one of its dependencies or alternatives (recursively).
      * @param root the root task whose dependencies and alternatives will be further searched
      * @param searchedTask the task we want to search for
      * @return true if the task is found, false otherwise
@@ -462,24 +458,24 @@ public class Task implements Comparable<Object> {
     // Comparebale
 
     /**
-     * Compares this task its ID with that from another task or another ID
+     * Compares this task its ID with that from another task or another ID.
      * @param o the other task or the ID of the other task
      * @return the comparison of both ID's
      */
     public int compareTo(Object o) {
-        if (o instanceof Integer) {
+        if (o instanceof Integer){
             return compareTo(((Integer) o).intValue());
         }
-	    else if (o instanceof Task) {
+	    else if (o instanceof Task){
 		    return compareTo(((Task) o).getID());
         }
-        else {
+        else{
             throw new IllegalArgumentException("Uncomparable!");
         }
     }
 
     /**
-     * Compares an integer with the task its ID
+     * Compares an integer with the task its ID.
      * @param id the ID to compare with
      * @return the comparison of both ID's
      */
@@ -488,7 +484,7 @@ public class Task implements Comparable<Object> {
     }
 
     /**
-     * Compares the ID's of the task with the given task
+     * Compares the ID's of the task with the given task.
      * @param task the task to compare ID's with
      * @return the comparison of both tasks their ID's
      */
@@ -504,8 +500,7 @@ public class Task implements Comparable<Object> {
      * @returns an XML element containing all task details.
      * @throws OperationNotSupportedException when the xml string can't be created.
      */
-    public Element saveToXML() throws OperationNotSupportedException
-    {
+    public Element saveToXML() throws OperationNotSupportedException {
         try {
             // create the document
             DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
@@ -546,8 +541,7 @@ public class Task implements Comparable<Object> {
 
             Element dependencies = doc.createElement("dependencies");
             // add all tasks of the project
-            for(Task d: getDependencies())
-            {
+            for(Task d: getDependencies()){
                 dependencies.appendChild(d.saveToXML());
             }
             t.appendChild(dependencies);
@@ -563,11 +557,9 @@ public class Task implements Comparable<Object> {
      * @return a new task with the data from the xml document
      * @throws OperationNotSupportedException when the provided element can't be parsed.
      */
-    public static Task restoreFromXML(Element task) throws OperationNotSupportedException
-    {
+    public static Task restoreFromXML(Element task) throws OperationNotSupportedException {
         try {
-            if(!(task.getNodeName().equals("task")))
-            {
+            if(!(task.getNodeName().equals("task"))){
                 throw new XMLParserException("the xml file you provided is not in the correct format. Please correct the errors or try another file");
             }
             String id = task.getElementsByTagName("id").item(0).getTextContent();
@@ -581,26 +573,22 @@ public class Task implements Comparable<Object> {
             Task t = new Task(lastTaskID, lastTaskID, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
 
             Node alternative = task.getElementsByTagName("alternative").item(0);
-            if(alternative.getNodeType() != Node.ELEMENT_NODE)
-            {
+            if(alternative.getNodeType() != Node.ELEMENT_NODE){
                 throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
             }
             t.setAlternative(Task.restoreFromXML((Element) alternative));
 
             Node dependencies = task.getElementsByTagName("dependencies").item(0);
-            if(dependencies.getNodeType() != Node.ELEMENT_NODE)
-            {
+            if(dependencies.getNodeType() != Node.ELEMENT_NODE){
                 throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
             }
             Element dependenciesElem = (Element) dependencies;
             NodeList dl = dependenciesElem.getElementsByTagName("task");
-            for(int i = 0; i < dl.getLength(); i++)
-            {
+            for(int i = 0; i < dl.getLength(); i++) {
                 t.addDependency(Task.restoreFromXML((Element) dl.item(i)));
             }
             return t;
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new XMLParserException(e.getMessage());
         }
     }
@@ -610,15 +598,28 @@ public class Task implements Comparable<Object> {
 
     /**
      * This method generates a form containing all parameters needed to create a new task. All values are empty and can be filled in, and then passed back to the task.
-     * @return A HashMap containing all elements that need to be filled in to create a new task
+     * @return a HashMap containing all elements that need to be filled in to create a new task
      */
-    public static HashMap<String,String> getCreationForm() {
+    public static HashMap<String, String> getCreationForm() {
         HashMap<String, String> form = new HashMap<>();
         form.put("description", "");
         form.put("estimatedDuration", "");
         form.put("acceptableDeviation", "");
         form.put("startTime", "");
         form.put("endTime", "");
+        return form;
+    }
+
+
+    /**
+     * This method generates a form containing all parameters needed to update the status of a task. All values are empty and can be filled in, and then passed back to the task.
+     * @return a HashMap containing all elements that need to be filled in to update the status of a task
+     */
+    public static HashMap<String, String> getUpdateStatusForm() {
+        HashMap<String, String> form = new HashMap<>();
+        form.put("startTime", "");
+        form.put("endTime", "");
+        form.put("status", "");
         return form;
     }
 
