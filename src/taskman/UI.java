@@ -3,8 +3,6 @@
  */
 package taskman;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,6 +264,9 @@ public class UI {
 		}
 	}
 
+	// TODO: voeg addDependency() toe hier (+ catch exceptions)
+	// TODO: voeg removeDependency() toe hier (+ catch exceptions)
+
 	/**
 	 * Updates the status of a task
 	 * @param name the name of the project from which a task its status will be updated
@@ -291,7 +292,6 @@ public class UI {
 	 * Fills in the update task status form.
 	 * @return a HashMap containing as key the attribute names and as value their values
 	 */
-	@Nullable
 	private HashMap<String, String> fillInTaskUpdateForm() {
 		HashMap<String, String> form = controller.getUpdateTaskStatusForm();
 		for (String key : form.keySet()){
