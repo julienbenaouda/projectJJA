@@ -50,19 +50,21 @@ public class Project {
 	 */
 	public void addTask(Task task) {
 		int low = 0;
-		int high = taskList.size()-1;
-		while (low <= high) {
-			int middle = (low+high)/2;
+		int middle = low;
+		int high = taskList.size();
+		while (low < high) {
+			middle = (low+high)/2;
 			Task middleTask = taskList.get(middle);
 			if(middleTask.getID().equals(task.getID())) {
-				taskList.add(middle, task);
+				break;
 			}
 			else if (middleTask.getID() > task.getID()) {
-				high = middle;
+				high = middle - 1;
 			} else {
 				low = middle + 1;
 			}
 		}
+		taskList.add(middle, task);
 	}
 	
 	/**

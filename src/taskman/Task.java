@@ -77,7 +77,9 @@ public class Task implements Comparable<Object> {
      * Return the ID of the latest task. (This should be the maximum of all ID's)
      * @return the ID of the latest task
      */
-    public static Integer getLastTaskID() { return Integer.valueOf(lastTaskID.intValue()); }// TODO: Integer object is final, dus moet niet gekopieerd worden!
+    public static Integer getLastTaskID() {
+        return Integer.valueOf(lastTaskID.intValue()); // TODO: Integer object is final, dus moet niet gekopieerd worden!
+    }
 
 
     /**
