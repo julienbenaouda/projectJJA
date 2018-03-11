@@ -386,7 +386,6 @@ public class UI {
 	/**
 	 * Lets the user input an integer value.
 	 * @return the integer the user inputted.
-	 * @return
 	 */
 	private int inputInt()
 	{

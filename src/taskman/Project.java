@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.*;
 
 /**
@@ -74,10 +75,13 @@ public class Project {
 	 * Returns the task details of the task
 	 * @param id the id of the task
 	 * @return a HashMap containing as keys the detail name and as value the corresponding detail value
+	 * @throws IllegalArgumentException when a task with the given ID does not exist in this project.
 	 */
-	public HashMap<String, String> getTaskDetails(Integer id)
+	public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException
 	{
-		Task t = taskList.get(getTaskIndex(id));
+		int index = getTaskIndex(id);
+		System.out.println("continue");
+		Task t = taskList.get(index);
 		return t.getTaskDetails();
 	}
 
@@ -246,15 +250,27 @@ public class Project {
 		return taskList.get(getTaskIndex(id));
 	}
 	
-	private int getTaskIndex(int id)
+	private int getTaskIndex(int id) throws IllegalArgumentException
 	{
-		int index;
-		index = Collections.binarySearch(taskList, new Integer(id));
-		if(index < 0)
+		int low = 0;
+		int high = taskList.size()-1;
+		// System.out.println(high);
+		// int index = -1;
+		while(low <= high)
 		{
-			throw new IllegalArgumentException("A task with the specified ID does not exist in this project.");
+			int middle = (low+high)/2;
+			Task t = taskList.get(middle);
+			if(t.getID() == id)
+			{
+				return middle;
+			}
+			if(t.getID() > id) {
+				high = middle;
+			} else {
+				low=middle+1;
+			}
 		}
-		return index;
+		throw new IllegalArgumentException("A task with the given id does not exist in this project.");
 	}
 
 	/**
@@ -265,7 +281,7 @@ public class Project {
 	/**
 	 * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
 	 */
-	private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
 	/**
 	 * This method returns a hashmap containing the project properties.
@@ -282,7 +298,11 @@ public class Project {
 		for(Integer i: getTaskIds()) {
 			sb.append(i.toString() +",");
 		}
-		sb.deleteCharAt(sb.lastIndexOf(",")); // delete the last comma
+		// delete the last comma if it is present
+		int index = sb.lastIndexOf(",");
+		if(index != -1) {
+			sb.deleteCharAt(index);
+		}
 		details.put("tasks", sb.toString());
 		return details;
 	}
