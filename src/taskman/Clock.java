@@ -1,8 +1,5 @@
 package taskman;
 
-import org.w3c.dom.Element;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -64,11 +61,13 @@ public class Clock {
         }
     }
 
-    public Element saveToXML() {
-        throw new NotImplementedException(); // TODO
+    public void addToXml(XmlObject clockObject) {
+        clockObject.addAttribute("systemTime", this.getSystemTimeString());
     }
 
-    public static void restoreFromXML(Element xml) {
-        throw new NotImplementedException(); // TODO
+    public static Clock getFromXml(XmlObject clockObject) {
+        Clock clock =  new Clock();
+        clock.updateSystemTime(clockObject.getAttribute("systemTime"));
+        return clock;
     }
 }
