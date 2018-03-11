@@ -4,10 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import sun.awt.UNIXToolkit;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.nio.file.AccessDeniedException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,13 +31,14 @@ public class Task implements Comparable<Object> {
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
-     * @post a new task is created with the given attributes
+     * @post a new task is created with the given attributes an available status
      */
     public Task(String description, String estimatedDuration, String acceptableDeviation) {
         setID();
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
+        setStatus(Status.AVAILABLE.toString());
         dependencies = new ArrayList<>();
     }
 
@@ -168,8 +171,8 @@ public class Task implements Comparable<Object> {
      * Returns the estimated duration of the task.
      * @return the estimated duration of the task
      */
-    public Duration getEstimatedDuration(){
-        return estimatedDuration; // TODO: is het wel een slim idee om dit object terug te geven?? is het niet beter .toString()
+    public String getEstimatedDuration(){
+        return Long.toString(estimatedDuration.toMinutes());
     }
 
 
@@ -223,8 +226,8 @@ public class Task implements Comparable<Object> {
      * Returns the start time of the task.
      * @return the start time of the task
      */
-    public LocalDateTime getStartTime(){
-        return startTime; // TODO: is het wel slim om het object terug te geven?
+    public String getStartTime(){
+        return startTime.format(dateFormatter);
     }
 
 
@@ -251,8 +254,8 @@ public class Task implements Comparable<Object> {
      * Returns the end time of the task.
      * @return the end time of the task
      */
-    public LocalDateTime getEndTime(){
-        return endTime; // TODO: idem opmerking startTime
+    public String getEndTime(){
+        return endTime.format(dateFormatter);
     }
 
     /**
@@ -372,12 +375,28 @@ public class Task implements Comparable<Object> {
     /**
      * Adds a dependency to the task.
      * @param dependency task that needs to be added to the task
-     * @post the dependency is added to the task
-     * @throws IllegalArgumentException the dependency may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
+     * @post the dependency is added to the task, the status of the task is updated accordingly
+     * @throws IllegalArgumentException when the dependency is this task or its alternative or one of its dependencies or one of these alternatives recursively
+     * @throws AccessDeniedException if the task is already finished or failed
      */
-    public void addDependency(Task dependency) throws IllegalArgumentException {
+    public void addDependency(Task dependency) throws IllegalArgumentException, AccessDeniedException {
         if (containsLoop(this, dependency)){
             throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
+        }
+        if (getStatus() == Status.FAILED || getStatus() == Status.FINISHED){
+            throw new AccessDeniedException("No dependencies may be added to failed or finished tasks.");
+        }
+        if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
+            setStatus(Status.UNAVAILABLE.toString());
+        }
+        else if (dependency.getStatus() == Status.FAILED){
+            Task alternative = dependency;
+            while (alternative.getAlternative() !=  null && alternative.getStatus() == Status.FAILED){
+                alternative = alternative.getAlternative();
+            }
+            if (alternative.getStatus() != Status.FINISHED){
+                setStatus(Status.UNAVAILABLE.toString());
+            }
         }
         dependencies.add(dependency);
     }
@@ -386,7 +405,7 @@ public class Task implements Comparable<Object> {
     /**
      * Removes dependency of the given task.
      * @param dependency task that needs to be removed as dependency of the task
-     * @post the dependency is deleted from the task
+     * @post the dependency is deleted from the task and the task status is updated accordingly
      * @throws IllegalArgumentException the dependency task must be a dependency of the task
      */
     public void removeDependency(Task dependency){
@@ -394,6 +413,26 @@ public class Task implements Comparable<Object> {
             throw new IllegalArgumentException("The given task is not a dependency of the task.");
         }
         dependencies.remove(dependency);
+        if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
+            boolean becomesAvailable = true;
+            for (Task d : getDependencies()){
+                if (d.getStatus() == Status.AVAILABLE || d.getStatus() == Status.UNAVAILABLE){
+                    becomesAvailable = false;
+                }
+                else if (d.getStatus() == Status.FAILED){
+                    Task alternative = d.getAlternative();
+                    while (alternative != null && alternative.getStatus() == Status.FAILED){
+                        alternative = alternative.getAlternative();
+                    }
+                    if (alternative.getStatus() != Status.FINISHED){
+                        becomesAvailable = false;
+                    }
+                }
+            }
+            if (becomesAvailable){
+                setStatus(Status.AVAILABLE.toString());
+            }
+        }
     }
 
 
@@ -402,15 +441,23 @@ public class Task implements Comparable<Object> {
      * Returns the task details of the task.
      * @return a HashMap containing as keys the detail name and as value the corresponding detail value
      */
-    public HashMap<String, String> getTaskDetails(){
+    public HashMap<String, String> getTaskDetails() {
         HashMap<String, String> taskDetails = new HashMap<>();
 
         taskDetails.put("id", ID.toString());
         taskDetails.put("description", description);
         taskDetails.put("estimatedDuration", estimatedDuration.toString());
         taskDetails.put("acceptableDeviation", acceptableDeviation.toString());
-        taskDetails.put("startTime", startTime.format(dateFormatter));
-        taskDetails.put("endTime", endTime.format(dateFormatter));
+        if (startTime == null) {
+            taskDetails.put("startTime", "not yet set");
+        } else {
+            taskDetails.put("startTime", startTime.format(dateFormatter));
+        }
+        if (endTime == null) {
+            taskDetails.put("endTime", "not yet set");
+        } else{
+            taskDetails.put("endTime", endTime.format(dateFormatter));
+        }
         taskDetails.put("status", status.toString());
         int[] dependenciesIDs = new int[dependencies.size()];
         for (int i = 0; i < dependencies.size(); i++){
@@ -527,7 +574,7 @@ public class Task implements Comparable<Object> {
             endTime.appendChild(doc.createTextNode(getEndTime().format(dateFormatter)));
             t.appendChild(endTime);
             Element status = doc.createElement("status");
-            status.appendChild(doc.createTextNode(getStatus().name())); // TODO: of moet het .toString() zijn
+            status.appendChild(doc.createTextNode(getStatus().toString()));
             t.appendChild(status);
 
             Element lastTaskID = doc.createElement("lastTaskID");
