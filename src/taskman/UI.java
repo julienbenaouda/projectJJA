@@ -315,7 +315,7 @@ public class UI {
 			showAvailableTasks(name);
 			print("task ID (in case you want to cancel updating the task status type 0): "); // normaal kan task ID nooit 0 zijn (begint bij 1) TODO is dit ok voor jullie
 			int id = inputInt();
-			if (id != 0) {
+			if (id == 0) {
 				print("Task status update is cancelled.");
 				return; // TODO: LELIJKE CODE xdxp
 			}
@@ -382,7 +382,6 @@ public class UI {
 	/**
 	 * Lets the user input an integer value.
 	 * @return the integer the user inputted.
-	 * @return
 	 */
 	private int inputInt()
 	{
