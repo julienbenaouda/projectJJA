@@ -248,7 +248,7 @@ public class Project {
 	 * returns the task with the given ID
 	 * @param id the id of the task
 	 * @return the task with the given ID
-	 * @throws IllegalArgumentException When the project doesn't contain a task with the give ID.
+	 * @throws IllegalArgumentException When the project doesn't contain a task with the given ID.
 	 */
 	public Task getTask(int id) {
 		return taskList.get(getTaskIndex(id));

@@ -84,15 +84,6 @@ public class ProjectTest {
 		p = new Project("test", "testdesc", creation, due);
 		String xml = "<project><name>test</name><description>testdesc</description><creationTime>20/11/2007 16:50</creationTime><dueTime>22/01/2020 19:00</dueTime><tasks/></project>";
 		try {
-			Element e = p.saveToXML();
-			// convert to xml
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer t = tf.newTransformer();
-			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); // omit xml header
-			DOMSource d = new DOMSource(e);
-			StringWriter sw = new StringWriter();
-			StreamResult r = new StreamResult(sw);
-			t.transform(d, r);
 			Assert.assertEquals("the xml text is not equal", xml, sw.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -103,9 +94,10 @@ public class ProjectTest {
 	@Test
 	public void testAddTask()
 	{
-		Task t = new Task("taskdesc", "20", "5", "20/02/2018 11:00", "22/02/2018 15:00");
+		Project p = new Project("test", "testdesc", "22/02/2015 15:00", "22/05/2019 11:00");
+		Task t = new Task("taskdesc", "20", "5");
 		p.addTask(t);
-		int id = t.getID();
+		Integer id = t.getID();
 		Task added = p.getTask(id);
 		Assert.assertEquals(t, added);
 	}
@@ -113,6 +105,8 @@ public class ProjectTest {
 	@Test
 	public void testCreateProjectWithForm()
 	{
+		creation = "22/04/2018 12:50";
+		due = "22/05/2018 14:00";
 		HashMap<String, String> h = Project.getCreationForm();
 		h.put("name", "test");
 		h.put("description", "testdesc");
@@ -126,17 +120,16 @@ public class ProjectTest {
 	}
 	
 	@Test
-	public void testgetAvailableTaskDetails() {
-		Task t = new Task("test",  "20", "5", "20/02/2018 11:00", "22/02/2018 15:00");
+	public void testGetAvailableTaskDetails() {
+		Task t = new Task("test",  "20", "5");
 		p.addTask(t);
-		// todo set status to available to let task succeed
 		Assert.assertEquals(1, p.getAvailableTaskDetails().size());
 	}
 	
 	@Test
 	public void testGetTask()
 	{
-		Task t = new Task("testdesc", "10", "10", "22/01/2014 11:00", "22/02/2022 12:00");
+		Task t = new Task("testdesc", "10", "10");
 		int id = t.getID();
 		p = new Project("test", "testdesc", "22/02/2011", "22/05/2012 11:00");
 		p.addTask(t);
