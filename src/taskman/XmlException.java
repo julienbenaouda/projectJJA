@@ -8,7 +8,7 @@ package taskman;
  * @author Julien Benaouda
  *
  */
-public class XmlException extends RuntimeException {
+public class XmlException extends Exception {
 	public XmlException(String message)
 	{
 		super(message);

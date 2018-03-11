@@ -19,14 +19,25 @@ import java.util.List;
 
 /**
  * This object is used to import and export objects to XML.
- * @author Julien Benaouda, Alexander Braekevelt
+ * @author Alexander Braekevelt, Julien Benaouda
  */
 public class XmlObject {
 
+    /**
+     * Represents the document (root object) of the DOM.
+     */
     private Document doc;
+
+    /**
+     * Represents an element of the DOM which is edited by this object.
+     */
     private Element element;
 
-    public XmlObject() {
+    /**
+     * Create an empty xml object.
+     * @throws XmlException if the object can't be created.
+     */
+    public XmlObject() throws XmlException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -38,12 +49,23 @@ public class XmlObject {
         }
     }
 
+    /**
+     * Create an xml object with a given element of a given document.
+     * @param doc the xml document
+     * @param node the xml element within the document
+     */
     private XmlObject(Document doc, Element node) {
         this.doc = doc;
         this.element = node;
     }
 
-    public static XmlObject importFrom(String path) {
+    /**
+     * Create a XmlObject from a given XML file.
+     * @param path a String with the path of the file
+     * @return the created XmlObject
+     * @throws XmlException if the object can't be created.
+     */
+    public static XmlObject importFrom(String path) throws XmlException {
         try {
             File file = new File(path);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -60,7 +82,12 @@ public class XmlObject {
         }
     }
 
-    public void exportTo(String path) {
+    /**
+     * Write this object to a XML file.
+     * @param path the path to write to.
+     * @throws XmlException if the object can't be written to the file.
+     */
+    public void exportTo(String path) throws XmlException {
         try {
             this.doc.appendChild(this.element);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -75,13 +102,24 @@ public class XmlObject {
         }
     }
 
+    /**
+     * Create a XmlObject as child of this XmlObject.
+     * @param name a String with the name of the child object.
+     * @return a XmlObject with the given name and parent.
+     */
     public XmlObject addXmlObject(String name) {
         Element element = this.doc.createElement(name);
         this.element.appendChild(element);
         return new XmlObject(this.doc, element);
     }
 
-    public List<XmlObject> getXmlObjects(String name) {
+    /**
+     * Get all XmlObject with the given name that are a child of this object.
+     * @param name a String with the name of the objects.
+     * @return a list of XmlObjects.
+     * @throws XmlException if a child with the given name is not a XmlObject.
+     */
+    public List<XmlObject> getXmlObjects(String name) throws XmlException {
         NodeList nodes = this.element.getElementsByTagName(name);
         ArrayList<XmlObject> results = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -95,31 +133,60 @@ public class XmlObject {
         return results;
     }
 
-    public XmlObject addAttribute(String name, String value) {
+    /**
+     * Add an attribute to this object with a unique name and a value.
+     * @param name a String with the unique name of the attribute.
+     * @param value a String with the value of the attribute.
+     */
+    public void addAttribute(String name, String value) {
         Attr attribute = doc.createAttribute(name);
         attribute.setValue(value);
         element.setAttributeNode(attribute);
-        return new XmlObject(this.doc, element);
     }
 
-    public String getAttribute(String name) {
-        return this.element.getAttribute(name);
+    /**
+     * Returns the value of an attribute of this object.
+     * @param name a String with the unique name of the attribute.
+     * @return a String with the value of the attribute.
+     * @throws XmlException if the attribute is empty or does not exist
+     */
+    public String getAttribute(String name) throws XmlException {
+        String value = this.element.getAttribute(name);
+        if (value.isEmpty()) {
+            throw new XmlException("The value of '" + name + "' is empty or does not exist!");
+        }
+        else {
+            return value;
+        }
     }
 
-
-    public XmlObject addText(String name, String value) {
-        Attr attribute = doc.createAttribute(name);
-        attribute.setValue(value);
-        element.setAttributeNode(attribute);
-        return new XmlObject(this.doc, element);
+    /**
+     * Add a text attribute to this object with a name and a value.
+     * @param name a String with the name of the text attribute.
+     * @param value a String with the value of the text attribute.
+     */
+    public void addText(String name, String value) {
+        Element element = this.doc.createElement(name);
+        this.element.appendChild(element);
+        element.appendChild(this.doc.createTextNode(value));
     }
 
-    public List<String> getTexts(String name) {
+    /**
+     * Returns the value of a text attribute of this object.
+     * @param name a String with the name of the text attribute.
+     * @return a String with the value of the text attribute.
+     * @throws XmlException if the text attribute cannot be handled.
+     */
+    public List<String> getTexts(String name) throws XmlException {
         NodeList nodes = this.element.getElementsByTagName(name);
         ArrayList<String> results = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
-            results.add(node.getTextContent());
+            try {
+                results.add(node.getTextContent());
+            } catch (DOMException e) {
+                throw new XmlException("DOMException: " + e.getMessage());
+            }
         }
         return results;
     }

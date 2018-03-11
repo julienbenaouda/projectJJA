@@ -530,6 +530,11 @@ public class Task implements Comparable<Object> {
 
     // XML
 
+    /**
+     * Add a task to an XmlObject.
+     * @param taskObject an XmlObject.
+     * @post the task will be added to the XmlObject.
+     */
     public void addToXml(XmlObject taskObject) {
         taskObject.addAttribute("id", getID().toString());
         taskObject.addText("description", getDescription());
@@ -545,7 +550,13 @@ public class Task implements Comparable<Object> {
         }
     }
 
-    public static Task getFromXml(XmlObject taskObject) {
+    /**
+     * Restore a task from an XmlObject.
+     * @param taskObject the XmlObject.
+     * @return the restored task.
+     * @throws XmlException if the task can't be created.
+     */
+    public static Task getFromXml(XmlObject taskObject) throws XmlException {
         String id = taskObject.getAttribute("id");
         String description = taskObject.getTexts("description").get(0);
         String estimatedDuration = taskObject.getTexts("estmatedDuration").get(0);

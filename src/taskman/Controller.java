@@ -30,7 +30,6 @@ public class Controller {
         this.projects = new HashMap<>();
     }
 
-
     /**
      * Create a controller (with given time and regular user type).
      * @param initialTime the initial system time.
@@ -57,6 +56,11 @@ public class Controller {
         this.setUserType(initialUserType);
     }
 
+    /**
+     * Create a controller with its private variables. (Used to restore from XML.)
+     * @param projects a HashMap with Strings and Projects
+     * @param clock a Clock
+     */
     private Controller(HashMap<String, Project> projects, Clock clock) {
         this.projects = projects;
         this.clock = clock;
@@ -289,7 +293,28 @@ public class Controller {
         User.setUserType(user);
     }
 
-    public static Controller importFromXML(String path) {
+    /**
+     * Save a controller to an XML file.
+     * @param path the path of the XML file.
+     * @throws XmlException if the object can't be written to the file.
+     */
+    public void exportToXML(String path) throws XmlException {
+        XmlObject object = new XmlObject();
+        this.clock.addToXml(object.addXmlObject("clock"));
+        User.addToXml(object.addXmlObject("user"));
+        for (Project project: this.projects.values()) {
+            project.addToXml(object.addXmlObject("project"));
+        }
+        object.exportTo(path);
+    }
+
+    /**
+     * Restore a controller from an XML file.
+     * @param path the path of the XML file.
+     * @return the restored controller.
+     * @throws XmlException if the controller can't be created.
+     */
+    public static Controller importFromXML(String path) throws XmlException {
         XmlObject object = XmlObject.importFrom(path);
         Clock clock = Clock.getFromXml(object.getXmlObjects("clock").get(0));
         User.setFromXml(object.getXmlObjects("user").get(0));
@@ -299,16 +324,6 @@ public class Controller {
             projects.put(project.getName(), project);
         }
         return new Controller(projects, clock);
-    }
-
-    public void exportToXML(String path) {
-        XmlObject object = new XmlObject();
-        this.clock.addToXml(object.addXmlObject("clock"));
-        User.addToXml(object.addXmlObject("user"));
-        for (Project project: this.projects.values()) {
-            project.addToXml(object.addXmlObject("project"));
-        }
-        object.exportTo(path);
     }
 
 }
