@@ -123,6 +123,9 @@ public class TaskTest {
         Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime().format(dateFormatter));
         Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime().format(dateFormatter));
         Assert.assertEquals("The status is not correctly updated.", Status.FINISHED, updateStatusTask.getStatus());
+
+        // TODO: advance time implementeren en shit zodat status op available komt
+        // TODO deze test ook nog eens nagaan
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -134,6 +137,7 @@ public class TaskTest {
         task.updateStatus(form);
     }
 
+
     @Test
     public void testSetAlternative(){
         Assert.assertEquals("There is already an alternative", null, task.getAlternative());
@@ -141,6 +145,11 @@ public class TaskTest {
         Task alternative = new Task("Alternative interesting description.", duration, deviation, start, end);
         task.setAlternative(alternative);
         Assert.assertEquals("The alternative does not equal the newly added alternative", alternative, task.getAlternative());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testInvalidSetAlternativeRoot(){
+        task.setAlternative(task);
     }
 
     @Test
@@ -159,11 +168,107 @@ public class TaskTest {
         Assert.assertEquals("The dependencies list is not empty", 0, dependecies.size());
     }
 
+    @Test (expected = IllegalArgumentException.class)
+    public void testInvalidAddDependencyRoot(){
+        task.addDependency(task);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testInvalidRemoveDependency(){
+        task.removeDependency(task);
+    }
+
+    private static Task root;
+    private static Task alternative1_3;
+    private static Task alternative1_2_1;
+    private static Task dependency1_2;
+    private static Task dependency1_1_3;
+
+    @BeforeClass
+    public static void setupContainsLoop(){
+        String estimatedDuration = "5";
+        String acceptableDeviation = "0.2356";
+        String startTime = "11/03/2018 01:36";
+        String endTime = "11/03/2018 01:45";
+
+        root = new Task("root description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        root.addDependency(dependency1_1);
+        root.addDependency(dependency1_2);
+        root.addDependency(dependency1_3);
+
+        Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_2 = null;
+        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        dependency1_1.setAlternative(alternative1_1);
+        dependency1_2.setAlternative(alternative1_2);
+        dependency1_3.setAlternative(alternative1_3);
+
+        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        dependency1_1.addDependency(dependency1_1_1);
+        dependency1_1.addDependency(dependency1_1_2);
+        dependency1_1.addDependency(dependency1_1_3);
+
+        Task alternative1_1_1 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_1_2 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_1_3 = null;
+
+        dependency1_1_1.setAlternative(alternative1_1_1);
+        dependency1_1_2.setAlternative(alternative1_1_2);
+        dependency1_1_3.setAlternative(alternative1_1_3);
+
+        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        dependency1_2.addDependency(dependency1_2_1);
+        dependency1_2.addDependency(dependency1_2_2);
+
+        alternative1_2_1 = new Task ("alternative 1_2_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_2_2 = new Task ("alternative 1_2_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+
+        dependency1_2_1.setAlternative(alternative1_2_1);
+        dependency1_2_2.setAlternative(alternative1_2_2);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalSetAlternativeRecursive1(){
+        root.setAlternative(alternative1_3);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalSetAlternativeRecursive2(){
+        root.setAlternative(alternative1_2_1);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalAddDependencyRecursive1(){
+        root.addDependency(dependency1_2);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testIllegalAddDependencyRecursive2(){
+        root.addDependency(dependency1_1_3);
+    }
 
     @Test
-    public void testGetTask() {
+    public void testGetTaskDetails(){
         Assert.fail("Not yet implemented");
     }
+
+    @Test
+    public void testCompareTo(){
+        Assert.fail("Not yet implemented");
+    }
+
+    // TODO (xml testen)
 
 
 }
