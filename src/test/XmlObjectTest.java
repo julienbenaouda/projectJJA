@@ -69,4 +69,6 @@ public class XmlObjectTest {
         Assert.assertEquals("Wrong text value!", sub3.getTexts("sub3_text").get(0), "sub3 text value");
     }
 
+    // TODO: tests voor exceptions...
+
 }
