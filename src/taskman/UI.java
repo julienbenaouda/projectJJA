@@ -123,7 +123,7 @@ public class UI {
 		print("Path to xml file: ");
 		String path = inputString();
 		try {
-			controller.importXML(path);
+			controller = Controller.importFromXML(path);
 		}
 		catch(XmlException e)
 		{

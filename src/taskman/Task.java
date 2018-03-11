@@ -492,7 +492,6 @@ public class Task implements Comparable<Object> {
 
     // XML
 
-    @Override
     public void addToXml(XmlObject taskObject) {
         taskObject.addAttribute("id", getID().toString());
         taskObject.addText("description", getDescription());
@@ -508,7 +507,6 @@ public class Task implements Comparable<Object> {
         }
     }
 
-    @Override
     public static Task getFromXml(XmlObject taskObject) {
         String id = taskObject.getAttribute("id");
         String description = taskObject.getTexts("description").get(0);
