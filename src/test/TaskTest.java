@@ -29,7 +29,7 @@ public class TaskTest {
     private static String deviation;
     private static String start;
     private static String end;
-    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
+    private final static DateTimeFormatter dateFormatter =DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
     private static Task root;
     private static Task alternative1_3;

@@ -29,7 +29,7 @@ public class ProjectTest {
 	private String due;
 	private ArrayList<Task> tasks;
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
-	
+
 	@Before
 	public void setUp() {
 		tasks = new ArrayList<>();
