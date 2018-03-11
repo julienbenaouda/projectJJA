@@ -1,13 +1,5 @@
 package taskman;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.naming.OperationNotSupportedException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -500,102 +492,33 @@ public class Task implements Comparable<Object> {
 
     // XML
 
-    /**
-     * This method returns an XML string containing all task details.
-     * @returns an XML element containing all task details.
-     * @throws OperationNotSupportedException when the xml string can't be created.
-     */
-    public Element saveToXML() throws OperationNotSupportedException {
-        try {
-            // create the document
-            DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = df.newDocumentBuilder();
-            Document doc = db.newDocument();
-            // add all task attributes
-            Element t = doc.createElement("task");
-
-            Element id = doc.createElement("id");
-            id.appendChild(doc.createTextNode(getID().toString()));
-            t.appendChild(id);
-            Element description = doc.createElement("description");
-            description.appendChild(doc.createTextNode(getDescription()));
-            t.appendChild(description);
-            Element estimatedDuration = doc.createElement("estimatedDuration");
-            estimatedDuration.appendChild(doc.createTextNode(getEstimatedDuration().toString()));
-            t.appendChild(estimatedDuration);
-            Element acceptableDeviation = doc.createElement("acceptableDeviation");
-            description.appendChild(doc.createTextNode(getAcceptableDeviation().toString()));
-            t.appendChild(acceptableDeviation);
-            Element startTime = doc.createElement("startTime");
-            startTime.appendChild(doc.createTextNode(getStartTime().format(dateFormatter)));
-            t.appendChild(startTime);
-            Element endTime = doc.createElement("endTime");
-            endTime.appendChild(doc.createTextNode(getEndTime().format(dateFormatter)));
-            t.appendChild(endTime);
-            Element status = doc.createElement("status");
-            status.appendChild(doc.createTextNode(getStatus().name())); // TODO: of moet het .toString() zijn
-            t.appendChild(status);
-
-            Element lastTaskID = doc.createElement("lastTaskID");
-            lastTaskID.appendChild(doc.createTextNode(getLastTaskID().toString()));
-            t.appendChild(lastTaskID);
-
-            Element alternative = doc.createElement("alternative");
-            alternative.appendChild(getAlternative().saveToXML());
-            t.appendChild(alternative);
-
-            Element dependencies = doc.createElement("dependencies");
-            // add all tasks of the project
-            for(Task d: getDependencies()){
-                dependencies.appendChild(d.saveToXML());
-            }
-            t.appendChild(dependencies);
-            return t;
-        } catch (Exception e) {
-            throw new XMLParserException(e.getMessage());
+    @Override
+    public void addToXml(XmlObject taskObject) {
+        taskObject.addAttribute("id", getID().toString());
+        taskObject.addText("description", getDescription());
+        taskObject.addText("estimatedDuration", getEstimatedDuration().toString()); // TODO: nieuwe functie geeft string terug, dus aanpassen
+        taskObject.addText("acceptableDeviation", getAcceptableDeviation().toString());
+        taskObject.addText("startTime", getStartTime().format(dateFormatter));
+        taskObject.addText("endTime", getEndTime().format(dateFormatter));
+        taskObject.addText("status", getStatus().name());
+        taskObject.addText("lastTaskID", getLastTaskID().toString());
+        taskObject.addText("alternative", getAlternative().getID().toString());
+        for (Task dependency: getDependencies()) {
+            taskObject.addText("dependency", dependency.getID().toString());
         }
     }
 
-    /**
-     * This method converts a xml element containing task data to a task.
-     * @param task the xml element containing the task data
-     * @return a new task with the data from the xml document
-     * @throws OperationNotSupportedException when the provided element can't be parsed.
-     */
-    public static Task restoreFromXML(Element task) throws OperationNotSupportedException {
-        try {
-            if(!(task.getNodeName().equals("task"))){
-                throw new XMLParserException("the xml file you provided is not in the correct format. Please correct the errors or try another file");
-            }
-            String id = task.getElementsByTagName("id").item(0).getTextContent();
-            String description = task.getElementsByTagName("description").item(0).getTextContent();
-            String estimatedDuration = task.getElementsByTagName("estmatedDuration").item(0).getTextContent();
-            String acceptableDeviation = task.getElementsByTagName("acceptableDeviation").item(0).getTextContent();
-            String startTime = task.getElementsByTagName("startTime").item(0).getTextContent();
-            String endTime = task.getElementsByTagName("endTime").item(0).getTextContent();
-            String lastTaskID = task.getElementsByTagName("lastTaskID").item(0).getTextContent();
-            String status = task.getElementsByTagName("status").item(0).getTextContent();
-            Task t = new Task(lastTaskID, lastTaskID, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
-
-            Node alternative = task.getElementsByTagName("alternative").item(0);
-            if(alternative.getNodeType() != Node.ELEMENT_NODE){
-                throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
-            }
-            t.setAlternative(Task.restoreFromXML((Element) alternative));
-
-            Node dependencies = task.getElementsByTagName("dependencies").item(0);
-            if(dependencies.getNodeType() != Node.ELEMENT_NODE){
-                throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
-            }
-            Element dependenciesElem = (Element) dependencies;
-            NodeList dl = dependenciesElem.getElementsByTagName("task");
-            for(int i = 0; i < dl.getLength(); i++) {
-                t.addDependency(Task.restoreFromXML((Element) dl.item(i)));
-            }
-            return t;
-        } catch (Exception e) {
-            throw new XMLParserException(e.getMessage());
-        }
+    @Override
+    public static Task getFromXml(XmlObject taskObject) {
+        String id = taskObject.getAttribute("id");
+        String description = taskObject.getTexts("description").get(0);
+        String estimatedDuration = taskObject.getTexts("estmatedDuration").get(0);
+        String acceptableDeviation = taskObject.getTexts("acceptableDeviation").get(0);
+        String startTime = taskObject.getTexts("startTime").get(0);
+        String endTime = taskObject.getTexts("endTime").get(0);
+        String lastTaskID = taskObject.getTexts("lastTaskID").get(0);
+        String status = taskObject.getTexts("status").get(0);
+        return new Task(lastTaskID, id, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
     }
 
 

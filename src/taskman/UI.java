@@ -125,7 +125,7 @@ public class UI {
 		try {
 			controller.importXML(path);
 		}
-		catch(XMLParserException e)
+		catch(XmlException e)
 		{
 			print("Error while parsing the xml file: " +e.getMessage());
 		}
@@ -141,7 +141,7 @@ public class UI {
 		String path = inputString();
 		try {
 			controller.exportToXML(path);
-		} catch (XMLParserException e)
+		} catch (XmlException e)
 		{
 			print("Error while exporting data: " +e.getMessage());
 		}

@@ -2,14 +2,6 @@
 package taskman;
 
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.naming.OperationNotSupportedException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -52,12 +44,24 @@ public class Project {
 	
 	/**
 	 * adds a new task to the projects task list
-	 * @param t the task to add
+	 * @param task the task to add
 	 * @post The given task is added to the project
 	 */
-	public void addTask(Task t) {
-		taskList.add(t);
-		// In this stage, the list doesn't need to be sorted as IDs are always increasing.
+	public void addTask(Task task) {
+		int low = 0;
+		int high = taskList.size()-1;
+		while (low <= high) {
+			int middle = (low+high)/2;
+			Task middleTask = taskList.get(middle);
+			if(middleTask.getID().equals(task.getID())) {
+				taskList.add(middle, task);
+			}
+			else if (middleTask.getID() > task.getID()) {
+				high = middle;
+			} else {
+				low = middle + 1;
+			}
+		}
 	}
 	
 	/**
@@ -287,80 +291,40 @@ public class Project {
 		return details;
 	}
 
-	
-	/**
-	 * This method returns an XML string containing all project details.
-	 * @returns an XML element containing all project details.
-	 * @throws OperationNotSupportedException when the xml string can't be created.
-	 */
-	public Element saveToXML() throws OperationNotSupportedException
-	{
-		try {
-			// create the document
-			DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = df.newDocumentBuilder();
-			Document doc = db.newDocument();
-			// add all project attributes
-			Element p = doc.createElement("project");
-			Element name = doc.createElement("name");
-			name.appendChild(doc.createTextNode(getName()));
-			p.appendChild(name);
-			Element description = doc.createElement("description");
-			description.appendChild(doc.createTextNode(getDescription()));
-			p.appendChild(description);
-			Element creationTime = doc.createElement("creationTime");
-			creationTime.appendChild(doc.createTextNode(getCreationTime().format(dateFormatter)));
-			p.appendChild(creationTime);
-			Element dueTime = doc.createElement("dueTime");
-			dueTime.appendChild(doc.createTextNode(getDueTime().format(dateFormatter)));
-			p.appendChild(dueTime);
-			Element tasks = doc.createElement("tasks");
-			// add all tasks of the project
-			for(Task t: taskList)
-			{
-				tasks.appendChild(t.saveToXML());
-			}
-			p.appendChild(tasks);
-			return p;
-		} catch (Exception e) {
-			throw new XMLParserException(e.getMessage());
+	public void addToXml(XmlObject project) {
+		project.addAttribute("name", getName());
+		project.addText("description", getDescription());
+		project.addText("creationTime", getCreationTime().format(dateFormatter));
+		project.addText("dueTime", getDueTime().format(dateFormatter));
+		for(Task task: taskList)
+		{
+			XmlObject object = project.addXmlObject("task");
+			task.addToXml(object);
 		}
 	}
-	
-	/**
-	 * This method converts a xml element containing project data to a project.
-	 * @param project the xml element containing the project data
-	 * @return a new project with the data from the xml document
-	 * @throws OperationNotSupportedException when the provided element can't be parsed.
-	 */
-	public static Project restoreFromXML(Element project) throws OperationNotSupportedException
-	{
-		try {
-			if(!(project.getNodeName().equals("project")))
-			{
-				throw new XMLParserException("the xml file you provided is not in the correct format. Please correct the errors or try another file");
-			}
-			String name = project.getElementsByTagName("name").item(0).getTextContent();
-			String description = project.getElementsByTagName("description").item(0).getTextContent();
-			String creationTime = project.getElementsByTagName("creationTime").item(0).getTextContent();
-			String dueTime = project.getElementsByTagName("dueTime").item(0).getTextContent();
-			Project p = new Project(name, description, creationTime, dueTime);
-			Node tasks = project.getElementsByTagName("tasks").item(0);
-			if(tasks.getNodeType() != Node.ELEMENT_NODE)
-			{
-				throw new XMLParserException("the xml file has not the correct format. Pleas correct the errors or try another file");
-			}
-			Element tasksElem = (Element)tasks;
-			NodeList tl = tasksElem.getElementsByTagName("task");
-			for(int i = 0; i < tl.getLength(); i++)
-			{
-				p.addTask(Task.restoreFromXML((Element)tl.item(i)));
-			}
-			return p;
-		} catch (Exception e)
-		{
-			throw new XMLParserException(e.getMessage());
+
+	public static Project getFromXml(XmlObject projectObject) {
+		String name = projectObject.getTexts("name").get(0);
+		String description = projectObject.getTexts("description").get(0);
+		String creationTime = projectObject.getTexts("creationTime").get(0);
+		String dueTime = projectObject.getTexts("dueTime").get(0);
+		Project project = new Project(name, description, creationTime, dueTime);
+		for (XmlObject taskObject : projectObject.getXmlObjects("task")) {
+			project.addTask(Task.getFromXml(taskObject));
 		}
+		for (XmlObject taskObject : projectObject.getXmlObjects("task")) {
+			Integer id = Integer.parseInt(taskObject.getAttribute("id"));
+			Task task = project.getTask(id);
+
+			Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
+			task.setAlternative(project.getTask(alternativeId));
+
+			for (String s : taskObject.getTexts("dependency")) {
+				Integer dependencyId = Integer.parseInt(s);
+				project.getTask(id).addDependency(project.getTask(dependencyId));
+			}
+		}
+		return project;
 	}
 	
 	/**

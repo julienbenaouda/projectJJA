@@ -34,4 +34,13 @@ public class User {
     public static boolean canChangeTaskStatus(){
         return userType == UserType.DEVELOPER;
     }
+
+    public static void addToXml(XmlObject userObject) {
+        userObject.addAttribute("userType", getUserType());
+    }
+
+    public static void setFromXml(XmlObject userObject) {
+        setUserType(userObject.getAttribute("userType"));
+    }
+
 }

@@ -1,7 +1,5 @@
 package taskman;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.nio.file.AccessDeniedException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -57,6 +55,11 @@ public class Controller {
         this();
         this.updateSystemTime(initialTime);
         this.setUserType(initialUserType);
+    }
+
+    private Controller(HashMap<String, Project> projects, Clock clock) {
+        this.projects = projects;
+        this.clock = clock;
     }
 
     /**
@@ -286,13 +289,26 @@ public class Controller {
         User.setUserType(user);
     }
 
-    public void importXML(String path) {
-        throw new NotImplementedException(); // TODO
+    public static Controller importFromXML(String path) {
+        XmlObject object = XmlObject.importFrom(path);
+        Clock clock = Clock.getFromXml(object.getXmlObjects("clock").get(0));
+        User.setFromXml(object.getXmlObjects("user").get(0));
+        HashMap<String, Project> projects = new HashMap<>();
+        for (XmlObject projectObject: object.getXmlObjects("project")) {
+            Project project = Project.getFromXml(projectObject);
+            projects.put(project.getName(), project);
+        }
+        return new Controller(projects, clock);
     }
 
     public void exportToXML(String path) {
-        throw new NotImplementedException(); // TODO
-
+        XmlObject object = new XmlObject();
+        this.clock.addToXml(object.addXmlObject("clock"));
+        User.addToXml(object.addXmlObject("user"));
+        for (Project project: this.projects.values()) {
+            project.addToXml(object.addXmlObject("project"));
+        }
+        object.exportTo(path);
     }
 
 }
