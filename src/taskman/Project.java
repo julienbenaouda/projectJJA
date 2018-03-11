@@ -315,8 +315,9 @@ public class Project {
 	 * Add a project to an XmlObject.
 	 * @param projectObject an XmlObject.
 	 * @post the project will be added to the XmlObject.
+	 * @throws XmlException if the project cannot be added to the XmlObject.
 	 */
-	public void addToXml(XmlObject projectObject) {
+	public void addToXml(XmlObject projectObject) throws XmlException {
 		projectObject.addAttribute("name", getName());
 		projectObject.addText("description", getDescription());
 		projectObject.addText("creationTime", getCreationTime().format(dateFormatter));

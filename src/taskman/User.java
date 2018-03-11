@@ -39,8 +39,9 @@ public class User {
      * Add a user to an XmlObject.
      * @param userObject an XmlObject.
      * @post the user will be added to the XmlObject.
+     * @throws XmlException if the user cannot be added to the XmlObject.
      */
-    public static void addToXml(XmlObject userObject) {
+    public static void addToXml(XmlObject userObject) throws XmlException {
         userObject.addAttribute("userType", getUserType());
     }
 
