@@ -389,6 +389,14 @@ public class Task implements Comparable<Object> {
         dependencies.add(dependency);
     }
 
+    /**
+     * Restores the dependencies of the task without checks.
+     * @param dependencies an ArrayList of Task on which this task is dependant.
+     */
+    public void restoreDependencies(ArrayList<Task> dependencies) {
+        this.setDependencies(dependencies);
+        // TODO: vragen aan Jeroen of dit mag!!!
+    }
 
     /**
      * Removes dependency of the given task.
@@ -533,8 +541,9 @@ public class Task implements Comparable<Object> {
      * Add a task to an XmlObject.
      * @param taskObject an XmlObject.
      * @post the task will be added to the XmlObject.
+     * @throws XmlException if the clock cannot be added to the XmlObject.
      */
-    public void addToXml(XmlObject taskObject) {
+    public void addToXml(XmlObject taskObject) throws XmlException {
         taskObject.addAttribute("id", getID().toString());
         taskObject.addText("description", getDescription());
         taskObject.addText("estimatedDuration", getEstimatedDuration());

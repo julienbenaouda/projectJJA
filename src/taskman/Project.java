@@ -315,8 +315,9 @@ public class Project {
 	 * Add a project to an XmlObject.
 	 * @param projectObject an XmlObject.
 	 * @post the project will be added to the XmlObject.
+	 * @throws XmlException if the project cannot be added to the XmlObject.
 	 */
-	public void addToXml(XmlObject projectObject) {
+	public void addToXml(XmlObject projectObject) throws XmlException {
 		projectObject.addAttribute("name", getName());
 		projectObject.addText("description", getDescription());
 		projectObject.addText("creationTime", getCreationTime().format(dateFormatter));
@@ -350,10 +351,12 @@ public class Project {
 			Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
 			task.setAlternative(project.getTask(alternativeId));
 
+			ArrayList<Task> dependencies = new ArrayList<>();
 			for (String s : taskObject.getTexts("dependency")) {
 				Integer dependencyId = Integer.parseInt(s);
-				project.getTask(id).addDependency(project.getTask(dependencyId));
+				dependencies.add(project.getTask(dependencyId));
 			}
+			task.restoreDependencies(dependencies);
 		}
 		return project;
 	}

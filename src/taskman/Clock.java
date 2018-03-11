@@ -65,8 +65,9 @@ public class Clock {
      * Add a clock to an XmlObject.
      * @param clockObject an XmlObject.
      * @post the clock will be added to the XmlObject.
+     * @throws XmlException if the clock cannot be added to the XmlObject.
      */
-    public void addToXml(XmlObject clockObject) {
+    public void addToXml(XmlObject clockObject) throws XmlException {
         clockObject.addAttribute("systemTime", this.getSystemTimeString());
     }
 
@@ -76,7 +77,7 @@ public class Clock {
      * @return the restored clock.
      * @throws XmlException if the clock can't be created.
      */
-    public static Clock getFromXml(XmlObject clockObject) {
+    public static Clock getFromXml(XmlObject clockObject) throws XmlException {
         Clock clock =  new Clock();
         clock.updateSystemTime(clockObject.getAttribute("systemTime"));
         return clock;

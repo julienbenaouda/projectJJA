@@ -222,8 +222,9 @@ public class Controller {
      * @param dependencyTaskId the id of the dependency
      * @post the dependency is added to the task.
      * @throws IllegalArgumentException if the project does not exist.
+     * @throws AccessDeniedException if the task is already finished or failed.
      */
-    public void addDependencyToTask(String projectName, Integer taskId, Integer dependencyTaskId) throws IllegalArgumentException {
+    public void addDependencyToTask(String projectName, Integer taskId, Integer dependencyTaskId) throws IllegalArgumentException, AccessDeniedException {
         Project project = getProject(projectName);
         project.getTask(taskId).addDependency(project.getTask(dependencyTaskId));
     }
