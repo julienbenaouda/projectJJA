@@ -350,10 +350,12 @@ public class Project {
 			Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
 			task.setAlternative(project.getTask(alternativeId));
 
+			ArrayList<Task> dependencies = new ArrayList<>();
 			for (String s : taskObject.getTexts("dependency")) {
 				Integer dependencyId = Integer.parseInt(s);
-				project.getTask(id).addDependency(project.getTask(dependencyId));
+				dependencies.add(project.getTask(dependencyId));
 			}
+			task.restoreDependencies(dependencies);
 		}
 		return project;
 	}

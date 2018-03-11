@@ -390,6 +390,14 @@ public class Task implements Comparable<Object> {
         dependencies.add(dependency);
     }
 
+    /**
+     * Restores the dependencies of the task without checks.
+     * @param dependencies an ArrayList of Task on which this task is dependant.
+     */
+    public void restoreDependencies(ArrayList<Task> dependencies) {
+        this.setDependencies(dependencies);
+        // TODO: vragen aan Jeroen of dit mag!!!
+    }
 
     /**
      * Removes dependency of the given task.

@@ -76,7 +76,7 @@ public class Clock {
      * @return the restored clock.
      * @throws XmlException if the clock can't be created.
      */
-    public static Clock getFromXml(XmlObject clockObject) {
+    public static Clock getFromXml(XmlObject clockObject) throws XmlException {
         Clock clock =  new Clock();
         clock.updateSystemTime(clockObject.getAttribute("systemTime"));
         return clock;
