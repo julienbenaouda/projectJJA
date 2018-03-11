@@ -36,9 +36,7 @@ public class TaskTest {
     public static void setUp(){
         duration = "22";
         deviation = "0.15";
-        start = "04/03/2018 15:31";
-        end = "04/03/2018 15:53";
-        task = new Task("Very interesting description.", duration, deviation, start, end);
+        task = new Task("Very interesting description.", duration, deviation);
     }
 
     @Test
@@ -47,6 +45,7 @@ public class TaskTest {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", Long.parseLong(duration), task.getEstimatedDuration().toMinutes());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
+        /*
         Assert.assertEquals("The start dates are not equal", start, task.getStartTime().format(dateFormatter));
         Assert.assertEquals("The years of the start time are not equal", 2018, task.getStartTime().getYear());
         Assert.assertEquals("The months of the start time are not equal", 3, task.getStartTime().getMonthValue());
@@ -61,6 +60,7 @@ public class TaskTest {
         Assert.assertEquals("The hours of the end time are not equal", 15, task.getEndTime().getHour());
         Assert.assertEquals("The minutes of the end time are not equal", 53, task.getEndTime().getMinute());
         Assert.assertEquals("The seconds of the end time are not equal", 0, task.getEndTime().getSecond());
+        */
     }
 
 
@@ -70,13 +70,12 @@ public class TaskTest {
         form.put("description", "another description");
         form.put("estimatedDuration", "1076");
         form.put("acceptableDeviation", "1.34");
-        form.put("startTime", "10/03/2018 12:45");
-        form.put("endTime", "11/03/2018 05:30");
         Task taskHM = new Task(form);
 
         Assert.assertEquals("The task ID is not the last task ID", (int) Task.getLastTaskID(), (int) taskHM.getID());
         Assert.assertEquals("The descriptions are not equal", "another description", taskHM.getDescription());
         Assert.assertEquals("The estimated durations are not equal", Long.parseLong("1076"), taskHM.getEstimatedDuration().toMinutes());
+        /*
         Assert.assertEquals("The acceptable deviations are not equal", 1.34, taskHM.getAcceptableDeviation(), 0);
         Assert.assertEquals("The start dates are not equal", "10/03/2018 12:45", taskHM.getStartTime().format(dateFormatter));
         Assert.assertEquals("The years of the start time are not equal", 2018, taskHM.getStartTime().getYear());
@@ -92,27 +91,31 @@ public class TaskTest {
         Assert.assertEquals("The hours of the end time are not equal", 5, taskHM.getEndTime().getHour());
         Assert.assertEquals("The minutes of the end time are not equal", 30, taskHM.getEndTime().getMinute());
         Assert.assertEquals("The seconds of the end time are not equal", 0, taskHM.getEndTime().getSecond());
+        */
     }
 
 
     @Test
     public void testLastTaskID(){
         int prevLastTaskId = Task.getLastTaskID();
-        Task newTask = new Task("Less interesting description.", duration, deviation, start, end);
+        Task newTask = new Task("Less interesting description.", duration, deviation);
         Assert.assertEquals("Last task ID does not equal the ID of the latest task.", Integer.valueOf(prevLastTaskId + 1), Task.getLastTaskID());
         Assert.assertEquals("ID of the new task does not equal the latest task ID", Task.getLastTaskID(), newTask.getID());
     }
 
+    // TODO
+    /*
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidEndTime(){
         String startTime = "10/03/2018 10:49";
         String invalidEndTime = "10/03/2018 10:48";
         Task invalidTask = new Task("description 123", duration, deviation, startTime, invalidEndTime);
     }
+    */
 
     @Test
     public void testUpdateStatus(){
-        Task updateStatusTask = new Task("description 1234", duration, deviation, start, end);
+        Task updateStatusTask = new Task("description 1234", duration, deviation);
         HashMap<String, String> form = new HashMap<>();
         form.put("startTime", "10/03/2018 23:34");
         form.put("endTime", "11/03/2018 21:34");
@@ -142,7 +145,7 @@ public class TaskTest {
     public void testSetAlternative(){
         Assert.assertEquals("There is already an alternative", null, task.getAlternative());
 
-        Task alternative = new Task("Alternative interesting description.", duration, deviation, start, end);
+        Task alternative = new Task("Alternative interesting description.", duration, deviation);
         task.setAlternative(alternative);
         Assert.assertEquals("The alternative does not equal the newly added alternative", alternative, task.getAlternative());
     }
@@ -157,7 +160,7 @@ public class TaskTest {
         ArrayList<Task> dependecies = task.getDependencies();
         Assert.assertEquals("The depedencies list is not empty", 0, dependecies.size());
 
-        Task dependency = new Task("Another interesting description.", duration, deviation, start, end);
+        Task dependency = new Task("Another interesting description.", duration, deviation);
         task.addDependency(dependency);
         dependecies = task.getDependencies();
         Assert.assertEquals("The depedencies list does not contains 1 depedency", 1, dependecies.size());
@@ -191,48 +194,48 @@ public class TaskTest {
         String startTime = "11/03/2018 01:36";
         String endTime = "11/03/2018 01:45";
 
-        root = new Task("root description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        root = new Task("root description", estimatedDuration, acceptableDeviation);
 
-        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation);
+        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation);
 
         root.addDependency(dependency1_1);
         root.addDependency(dependency1_2);
         root.addDependency(dependency1_3);
 
-        Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation);
         Task alternative1_2 = null;
-        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation);
 
         dependency1_1.setAlternative(alternative1_1);
         dependency1_2.setAlternative(alternative1_2);
         dependency1_3.setAlternative(alternative1_3);
 
-        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation);
+        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation);
 
         dependency1_1.addDependency(dependency1_1_1);
         dependency1_1.addDependency(dependency1_1_2);
         dependency1_1.addDependency(dependency1_1_3);
 
-        Task alternative1_1_1 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        Task alternative1_1_2 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task alternative1_1_1 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_1_2 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
         Task alternative1_1_3 = null;
 
         dependency1_1_1.setAlternative(alternative1_1_1);
         dependency1_1_2.setAlternative(alternative1_1_2);
         dependency1_1_3.setAlternative(alternative1_1_3);
 
-        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation);
 
         dependency1_2.addDependency(dependency1_2_1);
         dependency1_2.addDependency(dependency1_2_2);
 
-        alternative1_2_1 = new Task ("alternative 1_2_1 description", estimatedDuration, acceptableDeviation, startTime, endTime);
-        Task alternative1_2_2 = new Task ("alternative 1_2_2 description", estimatedDuration, acceptableDeviation, startTime, endTime);
+        alternative1_2_1 = new Task ("alternative 1_2_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_2_2 = new Task ("alternative 1_2_2 description", estimatedDuration, acceptableDeviation);
 
         dependency1_2_1.setAlternative(alternative1_2_1);
         dependency1_2_2.setAlternative(alternative1_2_2);

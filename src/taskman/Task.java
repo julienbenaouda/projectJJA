@@ -29,17 +29,13 @@ public class Task implements Comparable<Object> {
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
-     * @param startTime the start time of the task
-     * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    public Task(String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime) {
+    public Task(String description, String estimatedDuration, String acceptableDeviation) {
         setID();
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStartTime(startTime);
-        setEndTime(endTime);
         dependencies = new ArrayList<>();
     }
 
@@ -50,7 +46,7 @@ public class Task implements Comparable<Object> {
      * @post a new task is created with the given parameters
      */
     public Task(HashMap<String, String> form) throws IllegalArgumentException {
-        this(form.get("description"), form.get("estimatedDuration"), form.get("acceptableDeviation"), form.get("startTime"), form.get("endTime"));
+        this(form.get("description"), form.get("estimatedDuration"), form.get("acceptableDeviation"));
     }
 
     /**
@@ -235,6 +231,7 @@ public class Task implements Comparable<Object> {
     /**
      * Sets the start time of the task to the given start time.
      * @param startTimeStr the start time of the task
+     * @pre the start time must be before the end time
      * @post the start time of the task is set to the given start time
      */
     private void setStartTime(String startTimeStr){
@@ -263,15 +260,10 @@ public class Task implements Comparable<Object> {
      * @param endTimeStr the end time of the task
      * @pre the end time must be later than the start time
      * @post the end time of the task is set to the given end time
-     * @throws IllegalArgumentException when the parameter is not valid or when the end time is before the starttime
      */
-    private void setEndTime(String endTimeStr) throws  IllegalArgumentException{
+    private void setEndTime(String endTimeStr){
         LocalDateTime endTime = LocalDateTime.parse(endTimeStr, dateFormatter);
-        if(endTime.compareTo(startTime) > 0) {
-            this.endTime = endTime;
-        } else {
-            throw new IllegalArgumentException("The end time can't be before the start time.");
-        }
+        this.endTime = endTime;
     }
 
 
@@ -305,14 +297,16 @@ public class Task implements Comparable<Object> {
     /**
      * Updates the status of the task.
      * @param form the HashMap from which to extract the necessary values
-     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED
+     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time
      * @post the start time, end time and status of the task will be updated
      */
-    // TODO: setStartTime(), setEndTime() beide eens controlleren of wel OK is (ook op andere plaatsen doen)
     public void updateStatus(HashMap<String, String> form) throws IllegalArgumentException {
         if (Status.fromString(form.get("status")) != Status.FINISHED && Status.fromString(form.get("status")) != Status.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
-        } // TODO: controlleren of dit wel klopt (of task niet AVAILABLE MOET ZIJN idk)
+        }
+        if (LocalDateTime.parse(form.get("endTime"), dateFormatter).compareTo(LocalDateTime.parse(form.get("startTime"), dateFormatter)) > 0){
+            throw new IllegalArgumentException("The end time can't be before the start time.");
+        }
         setStartTime(form.get("startTime"));
         setEndTime(form.get("endTime"));
         setStatus(form.get("status"));
@@ -610,8 +604,6 @@ public class Task implements Comparable<Object> {
         form.put("description", "");
         form.put("estimatedDuration", "");
         form.put("acceptableDeviation", "");
-        form.put("startTime", "");
-        form.put("endTime", "");
         return form;
     }
 
