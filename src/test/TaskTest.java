@@ -31,12 +31,68 @@ public class TaskTest {
     private static String end;
     private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
+    private static Task root;
+    private static Task alternative1_3;
+    private static Task alternative1_2_1;
+    private static Task dependency1_2;
+    private static Task dependency1_1_3;
 
     @BeforeClass
     public static void setUp(){
         duration = "22";
         deviation = "0.15";
         task = new Task("Very interesting description.", duration, deviation);
+
+        String estimatedDuration = "5";
+        String acceptableDeviation = "0.2356";
+        String startTime = "11/03/2018 01:36";
+        String endTime = "11/03/2018 01:45";
+
+        root = new Task("root description", estimatedDuration, acceptableDeviation);
+
+        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation);
+        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation);
+
+        root.addDependency(dependency1_1);
+        root.addDependency(dependency1_2);
+        root.addDependency(dependency1_3);
+
+        Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_2 = null;
+        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation);
+
+        dependency1_1.setAlternative(alternative1_1);
+        dependency1_2.setAlternative(alternative1_2);
+        dependency1_3.setAlternative(alternative1_3);
+
+        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation);
+        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation);
+
+        dependency1_1.addDependency(dependency1_1_1);
+        dependency1_1.addDependency(dependency1_1_2);
+        dependency1_1.addDependency(dependency1_1_3);
+
+        Task alternative1_1_1 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_1_2 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_1_3 = null;
+
+        dependency1_1_1.setAlternative(alternative1_1_1);
+        dependency1_1_2.setAlternative(alternative1_1_2);
+        dependency1_1_3.setAlternative(alternative1_1_3);
+
+        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation);
+
+        dependency1_2.addDependency(dependency1_2_1);
+        dependency1_2.addDependency(dependency1_2_2);
+
+        alternative1_2_1 = new Task ("alternative 1_2_1 description", estimatedDuration, acceptableDeviation);
+        Task alternative1_2_2 = new Task ("alternative 1_2_2 description", estimatedDuration, acceptableDeviation);
+
+        dependency1_2_1.setAlternative(alternative1_2_1);
+        dependency1_2_2.setAlternative(alternative1_2_2);
     }
 
     @Test
@@ -181,64 +237,10 @@ public class TaskTest {
         task.removeDependency(task);
     }
 
-    private static Task root;
-    private static Task alternative1_3;
-    private static Task alternative1_2_1;
-    private static Task dependency1_2;
-    private static Task dependency1_1_3;
 
     @BeforeClass
     public static void setupContainsLoop(){
-        String estimatedDuration = "5";
-        String acceptableDeviation = "0.2356";
-        String startTime = "11/03/2018 01:36";
-        String endTime = "11/03/2018 01:45";
 
-        root = new Task("root description", estimatedDuration, acceptableDeviation);
-
-        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation);
-        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation);
-
-        root.addDependency(dependency1_1);
-        root.addDependency(dependency1_2);
-        root.addDependency(dependency1_3);
-
-        Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation);
-        Task alternative1_2 = null;
-        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation);
-
-        dependency1_1.setAlternative(alternative1_1);
-        dependency1_2.setAlternative(alternative1_2);
-        dependency1_3.setAlternative(alternative1_3);
-
-        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation);
-        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation);
-
-        dependency1_1.addDependency(dependency1_1_1);
-        dependency1_1.addDependency(dependency1_1_2);
-        dependency1_1.addDependency(dependency1_1_3);
-
-        Task alternative1_1_1 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
-        Task alternative1_1_2 = new Task ("alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
-        Task alternative1_1_3 = null;
-
-        dependency1_1_1.setAlternative(alternative1_1_1);
-        dependency1_1_2.setAlternative(alternative1_1_2);
-        dependency1_1_3.setAlternative(alternative1_1_3);
-
-        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation);
-
-        dependency1_2.addDependency(dependency1_2_1);
-        dependency1_2.addDependency(dependency1_2_2);
-
-        alternative1_2_1 = new Task ("alternative 1_2_1 description", estimatedDuration, acceptableDeviation);
-        Task alternative1_2_2 = new Task ("alternative 1_2_2 description", estimatedDuration, acceptableDeviation);
-
-        dependency1_2_1.setAlternative(alternative1_2_1);
-        dependency1_2_2.setAlternative(alternative1_2_2);
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -265,7 +267,10 @@ public class TaskTest {
     public void testGetTaskDetails(){
         HashMap<String, String> taskDetails = task.getTaskDetails();
 
-        //Assert.assertEquals();
+        Assert.assertEquals("The task ID is not correct", "1", taskDetails.get("id"));
+        Assert.assertEquals("The descriptions are not equal", "Very interesting description.", taskDetails.get("description"));
+        Assert.assertEquals("The estimated durations are not equal", duration, taskDetails.get("estimatedDuration"));
+        Assert.assertEquals("The acceptable deviations are not equal", deviation, taskDetails.get("acceptableDeviation"));
     }
 
     @Test
