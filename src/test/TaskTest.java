@@ -260,7 +260,9 @@ public class TaskTest {
 
     @Test
     public void testGetTaskDetails(){
-        Assert.fail("Not yet implemented");
+        HashMap<String, String> taskDetails = task.getTaskDetails();
+
+        //Assert.assertEquals();
     }
 
     @Test

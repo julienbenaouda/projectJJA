@@ -569,13 +569,13 @@ public class Task implements Comparable<Object> {
             }
             String id = task.getElementsByTagName("id").item(0).getTextContent();
             String description = task.getElementsByTagName("description").item(0).getTextContent();
-            String estimatedDuration = task.getElementsByTagName("estmatedDuration").item(0).getTextContent();
+            String estimatedDuration = task.getElementsByTagName("estimatedDuration").item(0).getTextContent();
             String acceptableDeviation = task.getElementsByTagName("acceptableDeviation").item(0).getTextContent();
             String startTime = task.getElementsByTagName("startTime").item(0).getTextContent();
             String endTime = task.getElementsByTagName("endTime").item(0).getTextContent();
             String lastTaskID = task.getElementsByTagName("lastTaskID").item(0).getTextContent();
             String status = task.getElementsByTagName("status").item(0).getTextContent();
-            Task t = new Task(lastTaskID, lastTaskID, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
+            Task t = new Task(lastTaskID, id, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
 
             Node alternative = task.getElementsByTagName("alternative").item(0);
             if(alternative.getNodeType() != Node.ELEMENT_NODE){
@@ -628,38 +628,5 @@ public class Task implements Comparable<Object> {
         return form;
     }
 
-    /*
-    public int compareTo(Integer ID){
-        IntegerComparator comparator = new IntegerComparator();
-        return comparator.compareTo(ID);
-    }
-
-    public int compareTo(Task task){
-        TaskComparator comparator = new TaskComparator();
-        return comparator.compareTo(task);
-    }
-
-
-    private class IntegerComparator implements Comparable<Integer> {
-
-        @Override
-        public int compareTo(Integer ID) {
-            if (getID() > ID) { return 1 ; }
-            else if (getID() < ID) { return -1; }
-            else return 0;
-        }
-    }
-
-
-    private class TaskComparator implements Comparable<Task> {
-
-        @Override
-        public int compareTo(Task task) {
-            if (getID() > task.getID()) { return 1 ; }
-            else if (getID() < task.getID()) { return -1; }
-            else return 0;
-        }
-    }
-    */
 
 }

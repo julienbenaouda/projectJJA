@@ -3,6 +3,8 @@
  */
 package taskman;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -289,6 +291,7 @@ public class UI {
 	 * Fills in the update task status form.
 	 * @return a HashMap containing as key the attribute names and as value their values
 	 */
+	@Nullable
 	private HashMap<String, String> fillInTaskUpdateForm() {
 		HashMap<String, String> form = controller.getUpdateTaskStatusForm();
 		for (String key : form.keySet()){
@@ -308,23 +311,24 @@ public class UI {
 	 * @param name the name of the project
 	 * @post a task status, start time and end time of the selected available task of the given project is updaten
 	 */
-	public void updateTaskStatus(String name)
-	{
+	public void updateTaskStatus(String name) {
 		print("Project: " + name + "\n");
 		try{
 			showAvailableTasks(name);
-			print("task ID (in case you want to cancel updating the task status type 0): "); // normaal kan task ID nooit 0 zijn (begint bij 1) TODO is dit ok voor jullie
+			print("task ID (in case you want to cancel updating the task status type 0): "); // task ID will never be 0 (lowest possible value = 1)
 			int id = inputInt();
 			if (id != 0) {
-				print("Task status update is cancelled.");
-				return; // TODO: LELIJKE CODE xdxp
+				HashMap<String, String> form = fillInTaskUpdateForm();
+				if (form != null){
+					controller.updateTaskStatus(name, id, form);
+				}
+				else{
+					print("Task status update is cancelled.");
+				}
 			}
-			HashMap<String, String> form = fillInTaskUpdateForm();
-			if (form == null){
+			else{
 				print("Task status update is cancelled.");
-				return; // TODO: nog steeds lelijke code :s
 			}
-			controller.updateTaskStatus(name, id, form);
 		} catch (IllegalArgumentException e) {
 			print("Error while updating task status. " + e.getMessage());
 			showMainMenu();
