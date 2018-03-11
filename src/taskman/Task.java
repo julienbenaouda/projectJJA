@@ -77,7 +77,7 @@ public class Task implements Comparable<Object> {
      * Return the ID of the latest task. (This should be the maximum of all ID's)
      * @return the ID of the latest task
      */
-    public static Integer getLastTaskID() { return Integer.valueOf(lastTaskID.intValue()); }// TODO: Integer object is final, dus moet niet gekopieerd worden!
+    public static Integer getLastTaskID() { return lastTaskID; }
 
 
     /**
@@ -100,7 +100,7 @@ public class Task implements Comparable<Object> {
      * @return the ID of the task
      */
     public Integer getID(){
-        return Integer.valueOf(ID.intValue()); // TODO: Integer object is final, dus moet niet gekopieerd worden!
+        return ID;
     }
 
 
@@ -189,7 +189,7 @@ public class Task implements Comparable<Object> {
      * @return the acceptable deviation of the task
      */
     public Double getAcceptableDeviation(){
-        return Double.valueOf(acceptableDeviation.doubleValue()); // TODO: Double object is final, dus moet niet gekopieerd worden!
+        return acceptableDeviation;
     }
 
     /**
@@ -197,7 +197,7 @@ public class Task implements Comparable<Object> {
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
-    private final void setAcceptableDeviation(String acceptableDeviation){ // TODO: Waarom final?
+    private final void setAcceptableDeviation(String acceptableDeviation){ // TODO: Waarom final? TODO omdat maar enkel in begin kan geset worden?
         this.acceptableDeviation = Double.parseDouble(acceptableDeviation);
     }
 
@@ -225,7 +225,6 @@ public class Task implements Comparable<Object> {
     /**
      * Sets the start time of the task to the given start time.
      * @param startTimeStr the start time of the task
-     * @pre the start time must be before the end time // TODO: pre tag is niet defensief programmeren!
      * @post the start time of the task is set to the given start time
      */
     private void setStartTime(String startTimeStr){
@@ -366,14 +365,14 @@ public class Task implements Comparable<Object> {
      * @param dependency task that needs to be added to the task
      * @post the dependency is added to the task, the status of the task is updated accordingly
      * @throws IllegalArgumentException when the dependency is this task or its alternative or one of its dependencies or one of these alternatives recursively
-     * @throws AccessDeniedException if the task is already finished or failed
+     * @throws IllegalStateException if the task is already finished or failed
      */
-    public void addDependency(Task dependency) throws IllegalArgumentException, AccessDeniedException {
+    public void addDependency(Task dependency) throws IllegalArgumentException, IllegalStateException {
         if (containsLoop(this, dependency)){
             throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
         if (getStatus() == Status.FAILED || getStatus() == Status.FINISHED){
-            throw new AccessDeniedException("No dependencies may be added to failed or finished tasks.");
+            throw new IllegalStateException("No dependencies may be added to failed or finished tasks.");
         }
         if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
             setStatus(Status.UNAVAILABLE.toString());
@@ -409,11 +408,11 @@ public class Task implements Comparable<Object> {
                     becomesAvailable = false;
                 }
                 else if (d.getStatus() == Status.FAILED){
-                    Task alternative = d.getAlternative();
-                    while (alternative != null && alternative.getStatus() == Status.FAILED){
+                    Task alternative = d;
+                    while (alternative.getAlternative() != null && alternative.getStatus() == Status.FAILED){
                         alternative = alternative.getAlternative();
                     }
-                    if (alternative.getStatus() != Status.FINISHED){ // TODO: Method invocation 'getStatus' may produce 'java.lang.NullPointerException'.
+                    if (alternative.getStatus() != Status.FINISHED){
                         becomesAvailable = false;
                     }
                 }

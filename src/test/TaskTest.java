@@ -99,7 +99,7 @@ public class TaskTest {
     public void testTask(){
         Assert.assertEquals("The task ID is not correct", 1, (int) task.getID());
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
-        Assert.assertEquals("The estimated durations are not equal", Long.parseLong(duration), task.getEstimatedDuration().toMinutes());
+        Assert.assertEquals("The estimated durations are not equal", duration, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
         /*
         Assert.assertEquals("The start dates are not equal", start, task.getStartTime().format(dateFormatter));
@@ -130,7 +130,7 @@ public class TaskTest {
 
         Assert.assertEquals("The task ID is not the last task ID", (int) Task.getLastTaskID(), (int) taskHM.getID());
         Assert.assertEquals("The descriptions are not equal", "another description", taskHM.getDescription());
-        Assert.assertEquals("The estimated durations are not equal", Long.parseLong("1076"), taskHM.getEstimatedDuration().toMinutes());
+        Assert.assertEquals("The estimated durations are not equal", "1076", taskHM.getEstimatedDuration());
         /*
         Assert.assertEquals("The acceptable deviations are not equal", 1.34, taskHM.getAcceptableDeviation(), 0);
         Assert.assertEquals("The start dates are not equal", "10/03/2018 12:45", taskHM.getStartTime().format(dateFormatter));
@@ -179,8 +179,8 @@ public class TaskTest {
 
         Assert.assertEquals("The status is not correct.", Status.UNAVAILABLE, updateStatusTask.getStatus());
         updateStatusTask.updateStatus(form);
-        Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime().format(dateFormatter));
-        Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime().format(dateFormatter));
+        Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime());
+        Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime());
         Assert.assertEquals("The status is not correctly updated.", Status.FINISHED, updateStatusTask.getStatus());
 
         // TODO: advance time implementeren en shit zodat status op available komt
