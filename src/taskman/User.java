@@ -35,11 +35,22 @@ public class User {
         return userType == UserType.DEVELOPER;
     }
 
+    /**
+     * Add a user to an XmlObject.
+     * @param userObject an XmlObject.
+     * @post the user will be added to the XmlObject.
+     */
     public static void addToXml(XmlObject userObject) {
         userObject.addAttribute("userType", getUserType());
     }
 
-    public static void setFromXml(XmlObject userObject) {
+    /**
+     * Restore a user from an XmlObject.
+     * @param userObject the XmlObject.
+     * @post the user will be restored.
+     * @throws XmlException if the user can't be created.
+     */
+    public static void setFromXml(XmlObject userObject) throws XmlException {
         setUserType(userObject.getAttribute("userType"));
     }
 
