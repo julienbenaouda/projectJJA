@@ -341,6 +341,7 @@ public class Task implements Comparable<Object> {
      * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      */
     public void setAlternative(Task alternative) throws IllegalArgumentException {
+        // TODO: implement that this is only allowed when status FAILED??
         if (containsLoop(this, alternative)){
             throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
