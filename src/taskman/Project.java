@@ -48,24 +48,25 @@ public class Project {
 	 * @param task the task to add
 	 * @post The given task is added to the project
 	 */
-public void addTask(Task task) {
- int low = 0;
- int middle = low;
- int high = taskList.size();
- while (low < high) {
-	 middle = (low+high)/2;
-	 Task middleTask = taskList.get(middle);
-	 if(middleTask.getID().equals(task.getID())) {
-		 break;
-	 }
-	 else if (middleTask.getID() > task.getID()) {
-		 high = middle - 1;
-	 } else {
-		 low = middle + 1;
-	 }
- 	}
- 	taskList.add(middle, task);
- }
+	public void addTask(Task task) {
+		// TODO: ge zijt case met lege lijst vergeten
+		int low = 0;
+	 	int middle = low;
+	 	int high = taskList.size();
+	 	while (low < high) {
+			middle = (low+high)/2;
+		 	Task middleTask = taskList.get(middle);
+		 	if(middleTask.getID().equals(task.getID())) {
+				 break;
+		 	}
+		 	else if (middleTask.getID() > task.getID()) {
+				 high = middle - 1;
+		 	} else {
+				 low = middle + 1;
+		 	}
+	 	}
+	 	taskList.add(middle, task);
+	}
 	
 	/**
 	 * This method removes a task from the projects task list.
@@ -86,7 +87,6 @@ public void addTask(Task task) {
 	public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException
 	{
 		int index = getTaskIndex(id);
-		System.out.println("continue");
 		Task t = taskList.get(index);
 		return t.getTaskDetails();
 	}
@@ -351,8 +351,11 @@ public void addTask(Task task) {
 			Integer id = Integer.parseInt(taskObject.getAttribute("id"));
 			Task task = project.getTask(id);
 
-			Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
-			task.setAlternative(project.getTask(alternativeId));
+			// TODO: dit testen (deze if heb ik toegevoegd)
+			if (taskObject.getTexts("alternative").get(0) != null) {
+				Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
+				task.setAlternative(project.getTask(alternativeId));
+			}
 
 			ArrayList<Task> dependencies = new ArrayList<>();
 			for (String s : taskObject.getTexts("dependency")) {

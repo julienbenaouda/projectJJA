@@ -116,7 +116,8 @@ public class ProjectTest {
 		Project p = new Project("test", "testdesc", "22/02/2002 22:22", "22/02/2004 22:22");
 		Task t = new Task("test",  "20", "5");
 		p.addTask(t);
-		Assert.assertEquals(1, p.getAvailableTaskDetails().size());
+		Assert.assertEquals("There is a different number of available tasks",1, p.getAvailableTaskDetails().size());
+		Assert.assertEquals("The task is not the available task", t.getID().toString(), p.getAvailableTaskDetails().get(0).get("id"));
 	}
 	
 	@Test
@@ -130,6 +131,7 @@ public class ProjectTest {
 		Assert.assertEquals("testdesc", h.get("description"));
 		Assert.assertEquals("10", h.get("estimatedDuration"));
 		Assert.assertEquals("10", h.get("acceptableDeviation"));
+		// TODO: task krijgt niet onderstaande parametrs van project
 		Assert.assertEquals("22/02/2011", h.get("startTime"));
 		Assert.assertEquals("22/05/2012 11:00", h.get("endTime"));
 	}
