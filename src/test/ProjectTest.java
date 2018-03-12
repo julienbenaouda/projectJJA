@@ -1,6 +1,7 @@
 package test;
 
 import taskman.Project;
+import taskman.Status;
 import taskman.Task;
 import taskman.XmlObject;
 
@@ -160,11 +161,28 @@ public class ProjectTest {
 	@Test
 	public void testXMLTaskWithAlternative()
 	{
-		Task t = new Task("test", "10", "20");
+		Task t = new Task("test", "10", "20"){
+			private Status status;
+
+			@Override
+			public void updateStatus(HashMap<String, String> form) {
+				this.status = Status.fromString(form.get("status"));
+			}
+
+			@Override
+			public Status getStatus(){
+				return status;
+			}
+		};
+
 		Task alternative = new Task("test alternative", "5", "10");
 		p = new Project("test", "testdesc", "19/09/2015 15:15", "20/09/2015 19:00");
 		p.addTask(t);
 		p.addTask(alternative);
+
+		HashMap<String, String> form = new HashMap<>();
+		form.put("status", "FAILED");
+		t.updateStatus(form);
 		t.setAlternative(alternative);
 		int id = t.getID();
 		int altID = alternative.getID();
