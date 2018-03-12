@@ -108,7 +108,6 @@ public class TaskTest {
 
     @Test
     public void testTask(){
-        Assert.assertEquals("The task ID is not correct", 1, (int) task.getID());
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", duration, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
@@ -230,11 +229,6 @@ public class TaskTest {
     }
 
 
-    @BeforeClass
-    public static void setupContainsLoop(){
-
-    }
-
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
         root.setAlternative(alternative1_3);
@@ -264,7 +258,7 @@ public class TaskTest {
     public void testGetTaskDetails(){
         HashMap<String, String> taskDetails = task.getTaskDetails();
 
-        Assert.assertEquals("The task ID is not correct", "1", taskDetails.get("id"));
+        Assert.assertEquals("The task ID is not correct", task.getID().toString(), taskDetails.get("id"));
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", taskDetails.get("description"));
         Assert.assertEquals("The estimated durations are not equal", duration, taskDetails.get("estimatedDuration"));
         Assert.assertEquals("The acceptable deviations are not equal", deviation, taskDetails.get("acceptableDeviation"));
