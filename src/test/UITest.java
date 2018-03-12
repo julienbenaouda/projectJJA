@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
@@ -412,6 +413,78 @@ public class UITest {
 			ui.showMainMenu();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("valid"));
+	}
+	
+	@Test
+	public void testAddDependencyToTask() {
+		ui.setInput("2");
+		try {
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask 2");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("1");
+		ui.setInput("2");
+		try {
+			ui.addDependency("test");
+		} catch (UnsupportedOperationException e) {} catch (AccessDeniedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertTrue(ui.getOutput().contains("Dependency added successfully"));
+	}
+	
+	@Test
+	public void addAlternativeToTask() {
+		ui.setInput("2");
+		try {
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask2");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask2");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("1");
+		ui.setInput("2");
+		try {
+			ui.addAlternative("test");
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Alternative added successfully"));
 	}
 
 }
