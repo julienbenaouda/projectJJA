@@ -50,19 +50,20 @@ public class Project {
 	 */
 	public void addTask(Task task) throws IllegalStateException {
 		int low = 0;
-	 	int middle = low;
 	 	int high = taskList.size();
+		int middle = (low + high) / 2;
 	 	while (low < high) {
-			middle = (low+high)/2;
 		 	Task middleTask = taskList.get(middle);
 		 	if(middleTask.getID().equals(task.getID())) {
 				 break;
 		 	}
 		 	else if (middleTask.getID() > task.getID()) {
 				 high = middle - 1;
-		 	} else {
+		 	}
+		 	else {
 				 low = middle + 1;
 		 	}
+			middle = (low + high) / 2;
 	 	}
 	 	taskList.add(middle, task);
 	}
@@ -271,22 +272,28 @@ public class Project {
 	private int getTaskIndex(int id) throws IllegalArgumentException
 	{
 		int low = 0;
-		int high = taskList.size()-1;
-		while(low <= high)
+		int high = taskList.size() - 1;
+		int middle = (low + high) / 2;
+		while(low < high)
 		{
-			int middle = (low+high)/2;
-			Task t = taskList.get(middle);
-			if(t.getID() == id)
-			{
-				return middle;
+			Task middleTask = taskList.get(middle);
+			if(middleTask.getID().equals(id)) {
+				break;
 			}
-			if(t.getID() > id) {
-				high = middle;
-			} else {
-				low=middle+1;
+			else if(middleTask.getID() > id) {
+				high = middle - 1;
 			}
+			else {
+				low = middle + 1;
+			}
+			middle = (low + high) / 2;
 		}
-		throw new IllegalArgumentException("A task with the given id does not exist in this project.");
+		if(taskList.get(middle).getID().equals(id)) {
+			return middle;
+		}
+		else {
+			throw new IllegalArgumentException("A task with the given id does not exist in this project.");
+		}
 	}
 
 	/**
