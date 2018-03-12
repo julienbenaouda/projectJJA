@@ -195,7 +195,9 @@ public class UI {
         sb.append("2 - view task details\n");
         sb.append("3 - add task\n");
         sb.append("4 - update task status\n");
-        sb.append("5 - back to main menu\n");
+        sb.append("5 - add dependency");
+        sb.append("6 - add alternative to task");
+        sb.append("7 - back to main menu\n");
         sb.append("Choose option: ");
         print(sb.toString());
         int option = inputInt();
@@ -219,12 +221,63 @@ public class UI {
                 showProjectMenu(name);
             }
                 break;
-            case 5: showMainMenu();
+            case 5: try {
+                addDependency(name);
+                showProjectMenu(name);
+            } catch (IllegalArgumentException e)
+            {
+                print("Error wile adding dependency: " +e.getMessage() +"\n");
+                showProjectMenu(name);
+            } catch(AccessDeniedException e) {
+                print("You don't have enough rights to add a dependency.\n");
+                showProjectMenu(name);
+            }
+                break;
+            case 6: addAlternative(name);
+                break;
+            case 7: showMainMenu();
                 break;
             default: print("Invalid option, please try again.");
                 showProjectMenu(name);
                 break;
         }
+    }
+
+    /**
+     * Adds an alternative to a task of a project
+     * @param name the name of the project
+     */
+    public void addAlternative(String name)
+    {
+        print("Enter the id of the task for which to add an alternative: ");
+        int taskID = inputInt();
+        print("Enter the id of tha laternative task: ");
+        int alternativeID = inputInt();
+        try {
+            controller.addAlternativeToTask(name, taskID, alternativeID);
+            print("Alternative added successfully.\n");
+            showProjectMenu(name);
+        } catch (IllegalArgumentException e)
+        {
+            print("Error when adding the alternative: " +e.getMessage());
+            showProjectMenu(name);
+        }
+    }
+
+    /**
+     * adds a dependency to a task of the given project
+     * @param name the name of the project
+     * @throws IllegalArgumentException
+     * @throws AccessDeniedException
+     */
+    public void addDependency(String name) throws AccessDeniedException, IllegalArgumentException
+    {
+        print("enter the ID of the task for which to add a dependency: ");
+        int taskID = inputInt();
+        print("Enter the id of the dependency: ");
+        int dependencyID = inputInt();
+        controller.addDependencyToTask(name, taskID, dependencyID);
+        print("Dependency added successfully.\n");
     }
 
     /**

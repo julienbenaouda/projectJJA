@@ -48,7 +48,7 @@ public class Project {
      * @param task the task to add
      * @post The given task is added to the project
      */
-    public void addTask(Task task) {
+    public void addTask(Task task) throws IllegalStateException {
         int low = 0;
         int middle = low;
         int high = taskList.size();
@@ -65,6 +65,19 @@ public class Project {
             }
         }
         taskList.add(middle, task);
+    }
+
+    /**
+     * Return if the project is finished
+     * @return a Boolean
+     */
+    public Boolean isFinished() {
+        for (Task task: this.taskList) {
+            if (task.getStatus() != Status.FINISHED) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -335,7 +348,7 @@ public class Project {
      * @throws XmlException if the project can't be created.
      */
     public static Project getFromXml(XmlObject projectObject) throws XmlException {
-        String name = projectObject.getTexts("name").get(0);
+        String name = projectObject.getAttribute("name");
         String description = projectObject.getTexts("description").get(0);
         String creationTime = projectObject.getTexts("creationTime").get(0);
         String dueTime = projectObject.getTexts("dueTime").get(0);
@@ -347,7 +360,6 @@ public class Project {
             Integer id = Integer.parseInt(taskObject.getAttribute("id"));
             Task task = project.getTask(id);
 
-            // TODO: dit testen (deze if heb ik toegevoegd)
             if (taskObject.getTexts("alternative").get(0) != null) {
                 Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
                 task.setAlternative(project.getTask(alternativeId));

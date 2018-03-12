@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.Clock;
+import taskman.XmlException;
+import taskman.XmlObject;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,12 +64,14 @@ public class ClockTest {
     }
 
     @Test
-    public void saveToXML() {
-        Assert.fail("Not implemented!"); // TODO
-    }
-
-    @Test
-    public void restoreFromXML() {
-        Assert.fail("Not implemented!"); // TODO
+    public void xml() throws XmlException {
+        String time = "13/10/1298 12:28";
+        clock.updateSystemTime(time);
+        XmlObject obj = new XmlObject();
+        clock.addToXml(obj);
+        Assert.assertEquals("Wrong time in XmlObject!", time, obj.getAttribute("systemTime"));
+        clock = null;
+        clock = Clock.getFromXml(obj);
+        Assert.assertEquals("Wrong time when restoring from xml!", time, clock.getSystemTimeString());
     }
 }

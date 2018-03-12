@@ -163,8 +163,8 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Returns the estimated duration of the task.
-     * @return the estimated duration of the task
+     * Returns the estimated duration of the task in minutes.
+     * @return the estimated duration of the task in minutes
      */
     public String getEstimatedDuration(){
         return Long.toString(estimatedDuration.toMinutes());
@@ -172,8 +172,8 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Sets the estimated duration of the task to the given duration.
-     * @param estimatedDuration the estimated duration of the task
+     * Sets the estimated duration of the task to the given duration in minutes.
+     * @param estimatedDuration the estimated duration of the task in minutes
      * @post the estimated duration of the task is set to the given duration
      */
     private void setEstimatedDuration(String estimatedDuration){
@@ -299,18 +299,42 @@ public class Task implements Comparable<Object> {
      * Updates the status of the task.
      * @param form the HashMap from which to extract the necessary values
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time
+     * @throws IllegalArgumentException when the startTime if before the endTime of its dependencies
      * @post the start time, end time and status of the task will be updated
      */
     public void updateStatus(HashMap<String, String> form) throws IllegalArgumentException {
-        if (Status.fromString(form.get("status")) != Status.FINISHED && Status.fromString(form.get("status")) != Status.FAILED){
+        Status status = Status.fromString(form.get("status"));
+        if (status != Status.FINISHED && status != Status.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
-        if (LocalDateTime.parse(form.get("endTime"), dateFormatter).compareTo(LocalDateTime.parse(form.get("startTime"), dateFormatter)) < 0){
+        LocalDateTime endTime = LocalDateTime.parse(form.get("endTime"), dateFormatter);
+        LocalDateTime startTime = LocalDateTime.parse(form.get("startTime"), dateFormatter);
+        if (startTime.isAfter(endTime)){
             throw new IllegalArgumentException("The end time can't be before the start time.");
+        }
+        for (Task dependency: this.getDependencies()) {
+            if (startTime.isBefore(dependency.endTime)) {
+                throw new IllegalArgumentException("The task must start after its dependencies!");
+            }
         }
         setStartTime(form.get("startTime"));
         setEndTime(form.get("endTime"));
         setStatus(form.get("status"));
+    }
+
+    /**
+     * Return the delay between the end time and the estimated end time in minutes.
+     * @return a String with the time between the end time and the estimated end time in minutes.
+     * @throws IllegalStateException if the task is not yet finished.
+     */
+    public String getDelay() throws IllegalStateException {
+        if (this.getStatus() != Status.FINISHED) {
+            throw new IllegalStateException("Cannot calculate delay of task if not fininshed!");
+        }
+        else {
+            return Long.toString(Duration.between(this.startTime, this.endTime).minus(this.estimatedDuration).toMinutes());
+        }
+        // TODO: test
     }
 
 

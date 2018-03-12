@@ -14,7 +14,6 @@ public class Clock {
 
     /**
      * The notation used for the time.
-     * TODO: overal deze versie gebruiken!!!
      */
     private final DateTimeFormatter dateFormatter =
             DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
@@ -79,7 +78,10 @@ public class Clock {
      */
     public static Clock getFromXml(XmlObject clockObject) throws XmlException {
         Clock clock =  new Clock();
-        clock.updateSystemTime(clockObject.getAttribute("systemTime"));
+        String time = clockObject.getAttribute("systemTime");
+        if (!time.equals(clock.getSystemTimeString())) {
+            clock.updateSystemTime(time);
+        }
         return clock;
     }
 }

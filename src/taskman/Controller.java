@@ -258,6 +258,15 @@ public class Controller {
     }
 
     /**
+     * Return the delay between the end time and the estimated end time in minutes.
+     * @return a String with the time between the end time and the estimated end time in minutes.
+     * @throws IllegalStateException if the task is not yet finished.
+     */
+    public String getDelay(String projectName, Integer taskId) throws IllegalStateException {
+        return this.getProject(projectName).getTask(taskId).getDelay();
+    }
+
+    /**
      * Return the time of the system
      * @return the time of the system
      */
