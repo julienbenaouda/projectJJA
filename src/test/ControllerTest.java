@@ -58,8 +58,8 @@ public class ControllerTest {
         Assert.assertEquals("Project already has tasks!", 0, controller.getTasksOfProject(projectName).size());
         HashMap<String,String> taskForm = controller.getTaskCreationForm();
         taskForm.put("description", "test task description");
-        taskForm.put("estimatedDuration", "7d 1h 30m 25s");
-        taskForm.put("acceptableDeviation", "1d 0h 0m 0s");
+        taskForm.put("estimatedDuration", "105");
+        taskForm.put("acceptableDeviation", "0.3657");
         controller.addTask(projectName, taskForm);
         Assert.assertEquals("The task is not added!", 1, controller.getTasksOfProject(projectName).size());
         Integer taskId = controller.getLastTaskID();
