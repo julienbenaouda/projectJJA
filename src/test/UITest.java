@@ -23,6 +23,7 @@ public class UITest {
 		public UIMock() {
 			super();
 			input = new ArrayDeque<>();
+			emptyOutput();
 		}
 				
 		public void setInput(String input)
@@ -31,24 +32,30 @@ public class UITest {
 		}
 		
 		@Override
-		protected String inputString()
+		protected String inputString() throws UnsupportedOperationException
 		{
 			if(input.size() > 0)
 			{
 				String text = input.pop();
 				return text;
+			} else {
+				throw new UnsupportedOperationException("de program terminates here (only for testing purposes)");
 			}
-			return null;
 		}
 		
 		@Override
 		public void print(String text) {
-			output = text;
+			output = output +text;
 		}
 		
 		public String getOutput()
 		{
 			return output;
+		}
+		
+		public void emptyOutput()
+		{
+			output = "";
 		}
 		
 	}
@@ -62,14 +69,17 @@ public class UITest {
 	@Test
 	public void testChoseUser()
 	{
-		ui.setInput("1");
-		Assert.assertEquals(mainMenu, ui.getOutput());
+		try {
+			ui.setInput("1");
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("project"));
 	}
 
 	@Test
 	public void testListProjects() {
 		HashMap<String, String> p = new HashMap<>();
-		p.put("name", "test");
+		p.put("name", "test 1");
 		p.put("description", "testdesc");
 		p.put("creationTime", "22/02/2011 12:12");
 		p.put("dueTime", "23/05/2011 12:00");
@@ -80,16 +90,215 @@ public class UITest {
 		p2.put("dueTime", "11/11/2019 19:00");
 		c.addProject(p);
 		c.addProject(p2);
-		String expected = "test\ntest 2"; 
-		ui.listProjects();
+		try {
+			ui.listProjects();
+		} catch (UnsupportedOperationException e) {}
 		String actual = ui.getOutput();
-		Assert.assertEquals(expected, actual);
+		Assert.assertTrue(actual.contains("test 2") && actual.contains("test 1"));
 	}
 	
 	@Test
 	public void testAddProject()
 	{
-		
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Project created succesfully"));
+	}
+	
+	@Test
+	public void addProjectInvalidData()
+	{
+		ui.setInput("22/02/2032");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Error"));
+	}
+	
+	@Test
+	public void testOpenProject()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("test");
+		try {
+			ui.showProjectMenu();
+		} catch(UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("task"));
+	}
+	
+	@Test
+	public void testOpenProjectWrongName()
+	{
+		ui.setInput("abc");
+		try {
+			ui.showProjectMenu();
+		} catch (UnsupportedOperationException e) {}
+		System.out.println(ui.getOutput());
+		Assert.assertTrue(ui.getOutput().contains("exist"));
+	}
+	
+	@Test
+	public void testShowProjectDetails()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("1");
+		ui.setInput("test");
+		ui.setInput("2");
+		try {
+			ui.showMainMenu();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("name:"));
+	}
+	
+	@Test
+	public void testAddTask()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Task added succesfully"));
+	}
+	
+	@Test
+	public void addTaskInvalidData()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("noNumber");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Error"));
+	}
+	
+	@Test
+	public void testUpdateTaskStatus()
+	{
+		ui.setInput("2");
+		try {
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("FINISHED");
+		ui.setInput("12/02/2018 12:00");
+		ui.setInput("11/01/2017 15:00");
+		ui.setInput("1");
+		try {
+			ui.updateTaskStatus("test");
+		} catch (UnsupportedOperationException e) {}
+		System.out.println(ui.getOutput());
+		Assert.assertTrue(ui.getOutput().contains("updated succesfully"));
+	}
+
+	@Test
+	public void testUpdateTaskStatusInvalidData()
+	{
+		ui.setInput("2");
+		try {
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("finished");
+		ui.setInput("12/02/2018 12:00");
+		ui.setInput("11/01/2017 15:00");
+		ui.setInput("1");
+		try {
+			ui.updateTaskStatus("test");
+		} catch (UnsupportedOperationException e) {}
+		System.out.println(ui.getOutput());
+		Assert.assertTrue(ui.getOutput().contains("Error"));
+	}
+
+	@Test
+	public void testUpdateTaskStatusAccessDenied()
+	{
+		ui.setInput("1");
+		try {
+			ui.showUserChoiceDialog();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("FINISHED");
+		ui.setInput("12/02/2018 12:00");
+		ui.setInput("11/01/2017 15:00");
+		ui.setInput("1");
+		try {
+			ui.updateTaskStatus("test");
+		} catch (UnsupportedOperationException e) {}
+		System.out.println(ui.getOutput());
+		Assert.assertTrue(ui.getOutput().contains("denied"));
 	}
 
 }
