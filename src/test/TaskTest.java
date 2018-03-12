@@ -1,11 +1,10 @@
 package test;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import taskman.Status;
 import taskman.Task;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import taskman.XmlObject;
 
 import java.time.format.DateTimeFormatter;
@@ -468,6 +467,23 @@ public class TaskTest {
             // Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void getDelayTest() {
+        HashMap<String,String> taskForm = Task.getCreationForm();
+        taskForm.put("description", "test task description");
+        taskForm.put("estimatedDuration", "60");
+        taskForm.put("acceptableDeviation", "0.1");
+        Task delayTask = new Task(taskForm);
+
+        HashMap<String, String> updateForm = Task.getUpdateStatusForm();
+        updateForm.put("status", "FINISHED");
+        updateForm.put("startTime", "01/01/2000 00:00");
+        updateForm.put("endTime", "01/01/2000 02:00");
+        delayTask.updateStatus(updateForm);
+
+        Assert.assertEquals( "Wrong delay!","60", delayTask.getDelay());
     }
 
 }
