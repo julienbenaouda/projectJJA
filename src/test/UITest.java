@@ -40,7 +40,7 @@ public class UITest {
 				String text = input.pop();
 				return text;
 			} else {
-				throw new UnsupportedOperationException("de program terminates here (only for testing purposes)");
+				throw new UnsupportedOperationException("The program terminates here (only for testing purposes)");
 			}
 		}
 		
@@ -445,10 +445,8 @@ public class UITest {
 		try {
 			ui.addDependency("test");
 		} catch (UnsupportedOperationException e) {} catch (AccessDeniedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Assert.assertTrue(ui.getOutput().contains("Dependency added successfully"));

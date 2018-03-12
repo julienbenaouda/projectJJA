@@ -261,6 +261,8 @@ public class UI {
         {
             print("Error when adding the alternative: " +e.getMessage());
             showProjectMenu(name);
+        } catch( IllegalStateException e){
+            print ("Error while adding the alternative: " + e.getMessage());
         }
     }
 
@@ -341,9 +343,6 @@ public class UI {
         }
     }
 
-    // TODO: voeg addDependency() toe hier (+ catch exceptions)
-    // TODO: voeg removeDependency() toe hier (+ catch exceptions)
-
     /**
      * Updates the status of a task
      * @param name the name of the project from which a task its status will be updated
@@ -355,7 +354,7 @@ public class UI {
      * @param name the name of the given project
      * @throws IllegalArgumentException if the given project does not contain any available tasks
      */
-    private void showAvailableTasks(String name) throws IllegalArgumentException{
+    public void showAvailableTasks(String name) throws IllegalArgumentException{
         ArrayList<HashMap<String, String>> availableTasks = controller.getAvailableTaskDetails(name);
         if (availableTasks.size() == 0){
             throw new IllegalArgumentException("The given project does not contain any available tasks.");
@@ -376,7 +375,7 @@ public class UI {
             String value = inputString();
             if (value.isEmpty()){
                 print("Task status update is cancelled");
-                return null; // TODO: ook lelijke code :s // MSS exception gooien en die dan catchen idk
+                return null;
             }
             form.put(key, value);
         }
