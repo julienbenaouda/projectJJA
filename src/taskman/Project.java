@@ -48,27 +48,6 @@ public class Project {
 	 * @param task the task to add
 	 * @post The given task is added to the project
 	 */
-	/*public void addTask(Task task) {
-		if(taskList.size() > 0) {
-			int low = 0;
-			int high = taskList.size()-1;
-			while (low <= high) {
-				int middle = (low+high)/2;
-				Task middleTask = taskList.get(middle);
-				if(middleTask.getID().equals(task.getID())) {
-					taskList.add(middle, task);
-				}
-				else if (middleTask.getID() > task.getID()) {
-					high = middle;
-				} else {
-					low = middle + 1;
-				}
-			}
-		} else {
-			taskList.add(task);
-		}
-	}*/
-
 public void addTask(Task task) {
  int low = 0;
  int middle = low;
@@ -87,8 +66,6 @@ public void addTask(Task task) {
  	}
  	taskList.add(middle, task);
  }
-
-
 	
 	/**
 	 * This method removes a task from the projects task list.
