@@ -153,7 +153,6 @@ public class ProjectTest {
 			Assert.assertEquals(project.getName(), pnew.getName());
 			Assert.assertEquals(project.getDescription(), pnew.getDescription());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -196,7 +195,6 @@ public class ProjectTest {
 			Task checkFromProject = p.getTask(altID);
 			Assert.assertEquals(check.getID(), checkFromProject.getID());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
