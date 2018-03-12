@@ -70,7 +70,6 @@ public class ControllerTest {
         controller.addTask(projectName, taskForm);
         Integer alternativeTaskId = controller.getLastTaskID();
         Assert.assertNotEquals("The last task id is not updated!", taskId, alternativeTaskId);
-        System.out.println("Check!");
         controller.addAlternativeToTask(projectName, taskId, alternativeTaskId); // TODO: oneindige loop oplossen!
 
         controller.addTask(projectName, taskForm);
