@@ -6,6 +6,7 @@ import taskman.Task;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import taskman.XmlObject;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class TaskTest {
     private static Task alternative1_2_1;
     private static Task dependency1_2;
     private static Task dependency1_1_3;
+    private static Task alternative1_3d;
 
     @BeforeClass
     public static void setUp(){
@@ -61,6 +63,15 @@ public class TaskTest {
         Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation);
         Task alternative1_2 = null;
         alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation);
+
+        Task alternative1_3a = new Task ("alternative 1_3a description", estimatedDuration, acceptableDeviation);
+        Task alternative1_3b = new Task ("alternative 1_3b description", estimatedDuration, acceptableDeviation);
+        Task alternative1_3c = new Task ("alternative 1_3c description", estimatedDuration, acceptableDeviation);
+        alternative1_3d = new Task ("alternative 1_3d description", estimatedDuration, acceptableDeviation);
+        alternative1_3.setAlternative(alternative1_3a);
+        alternative1_3a.setAlternative(alternative1_3b);
+        alternative1_3b.setAlternative(alternative1_3c);
+        alternative1_3c.setAlternative(alternative1_3d);
 
         dependency1_1.setAlternative(alternative1_1);
         dependency1_2.setAlternative(alternative1_2);
@@ -101,22 +112,6 @@ public class TaskTest {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", duration, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
-        /*
-        Assert.assertEquals("The start dates are not equal", start, task.getStartTime().format(dateFormatter));
-        Assert.assertEquals("The years of the start time are not equal", 2018, task.getStartTime().getYear());
-        Assert.assertEquals("The months of the start time are not equal", 3, task.getStartTime().getMonthValue());
-        Assert.assertEquals("The days of the start time are not equal", 4, task.getStartTime().getDayOfMonth());
-        Assert.assertEquals("The hours of the start time are not equal", 15, task.getStartTime().getHour());
-        Assert.assertEquals("The minutes of the start time are not equal", 31, task.getStartTime().getMinute());
-        Assert.assertEquals("The seconds of the start time are not equal", 0, task.getStartTime().getSecond());
-        Assert.assertEquals("The end dates are not equal", end, task.getEndTime().format(dateFormatter));
-        Assert.assertEquals("The years of the end time are not equal", 2018, task.getEndTime().getYear());
-        Assert.assertEquals("The months of the end time are not equal", 3, task.getEndTime().getMonthValue());
-        Assert.assertEquals("The days of the end time are not equal", 4, task.getEndTime().getDayOfMonth());
-        Assert.assertEquals("The hours of the end time are not equal", 15, task.getEndTime().getHour());
-        Assert.assertEquals("The minutes of the end time are not equal", 53, task.getEndTime().getMinute());
-        Assert.assertEquals("The seconds of the end time are not equal", 0, task.getEndTime().getSecond());
-        */
     }
 
 
@@ -131,23 +126,7 @@ public class TaskTest {
         Assert.assertEquals("The task ID is not the last task ID", (int) Task.getLastTaskID(), (int) taskHM.getID());
         Assert.assertEquals("The descriptions are not equal", "another description", taskHM.getDescription());
         Assert.assertEquals("The estimated durations are not equal", "1076", taskHM.getEstimatedDuration());
-        /*
-        Assert.assertEquals("The acceptable deviations are not equal", 1.34, taskHM.getAcceptableDeviation(), 0);
-        Assert.assertEquals("The start dates are not equal", "10/03/2018 12:45", taskHM.getStartTime().format(dateFormatter));
-        Assert.assertEquals("The years of the start time are not equal", 2018, taskHM.getStartTime().getYear());
-        Assert.assertEquals("The months of the start time are not equal", 3, taskHM.getStartTime().getMonthValue());
-        Assert.assertEquals("The days of the start time are not equal", 10, taskHM.getStartTime().getDayOfMonth());
-        Assert.assertEquals("The hours of the start time are not equal", 12, taskHM.getStartTime().getHour());
-        Assert.assertEquals("The minutes of the start time are not equal", 45, taskHM.getStartTime().getMinute());
-        Assert.assertEquals("The seconds of the start time are not equal", 0, taskHM.getStartTime().getSecond());
-        Assert.assertEquals("The end dates are not equal", "11/03/2018 05:30", taskHM.getEndTime().format(dateFormatter));
-        Assert.assertEquals("The years of the end time are not equal", 2018, taskHM.getEndTime().getYear());
-        Assert.assertEquals("The months of the end time are not equal", 3, taskHM.getEndTime().getMonthValue());
-        Assert.assertEquals("The days of the end time are not equal", 11, taskHM.getEndTime().getDayOfMonth());
-        Assert.assertEquals("The hours of the end time are not equal", 5, taskHM.getEndTime().getHour());
-        Assert.assertEquals("The minutes of the end time are not equal", 30, taskHM.getEndTime().getMinute());
-        Assert.assertEquals("The seconds of the end time are not equal", 0, taskHM.getEndTime().getSecond());
-        */
+        Assert.assertEquals("The acceptable deviations are not equal", 1.34 , taskHM.getAcceptableDeviation(), 0);
     }
 
 
@@ -160,14 +139,18 @@ public class TaskTest {
     }
 
     // TODO
-    /*
+
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidEndTime(){
-        String startTime = "10/03/2018 10:49";
-        String invalidEndTime = "10/03/2018 10:48";
-        Task invalidTask = new Task("description 123", duration, deviation, startTime, invalidEndTime);
+        Task invalidUpdateStatusTask = new Task("description 1234", duration, deviation);
+        HashMap<String, String> form = new HashMap<>();
+        form.put("startTime", "10/03/2018 10:49");
+        form.put("endTime", "10/03/2018 10:48");
+        form.put("status", "FINISHED");
+
+        invalidUpdateStatusTask.updateStatus(form);
     }
-    */
+
 
     @Test
     public void testUpdateStatus(){
@@ -177,7 +160,7 @@ public class TaskTest {
         form.put("endTime", "11/03/2018 21:34");
         form.put("status", "FINISHED");
 
-        Assert.assertEquals("The status is not correct.", Status.UNAVAILABLE, updateStatusTask.getStatus());
+        Assert.assertEquals("The status is not correct.", Status.AVAILABLE, updateStatusTask.getStatus());
         updateStatusTask.updateStatus(form);
         Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime());
         Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime());
@@ -188,10 +171,19 @@ public class TaskTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testInvalidUpdateStatus(){
+    public void testInvalidTimeUpdateStatus(){
         HashMap<String, String> form = new HashMap<>();
         form.put("startTime", "10/03/2018 10:49");
         form.put("endTime", "10/03/2018 10:48");
+        form.put("status", "FINISHED");
+        task.updateStatus(form);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void testInvalidStatusUpdateStatus(){
+        HashMap<String, String> form = new HashMap<>();
+        form.put("startTime", "10/03/2018 23:34");
+        form.put("endTime", "11/03/2018 21:34");
         form.put("status", "AVAILABLE");
         task.updateStatus(form);
     }
@@ -254,6 +246,11 @@ public class TaskTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
+    public void testIllegalSetAlternativeRecursive3(){
+        root.setAlternative(alternative1_3d);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
     public void testIllegalAddDependencyRecursive1(){
         root.addDependency(dependency1_2);
     }
@@ -275,10 +272,36 @@ public class TaskTest {
 
     @Test
     public void testCompareTo(){
-        Assert.fail("Not yet implemented");
+        Assert.assertEquals("The task is not equal to itself.", 0, task.compareTo(task));
+        Assert.assertEquals("The task is not equal to itself ID.", 0, task.compareTo(task.getID()));
+
+        Assert.assertEquals("The task it's ID is not smaller than root.", -1, task.compareTo(root));
+        Assert.assertEquals("The task it's ID is not smaller than root ID.", -1, task.compareTo(root.getID()));
+
+        Assert.assertEquals("The dependency it's ID is not larger than dependent.", 1, dependency1_1_3.compareTo(dependency1_2));
+        Assert.assertEquals("The dependency it's ID is not smaller than dependent ID.", 1, dependency1_1_3.compareTo(dependency1_2.getID()));
     }
 
-    // TODO (xml testen)
 
+    @Test
+    public void testExportXML()
+    {
+        try {
+            Task taskXml = new Task("task description", "103", "0.32");
+            XmlObject object = new XmlObject();
+            taskXml.addToXml(object.addXmlObject("task"));
+            Task tNew = Task.getFromXml(object.getXmlObjects("task").get(0));
+            Assert.assertEquals("ID is not equal.", taskXml.getID(), tNew.getID());
+            Assert.assertEquals("Description is not equal.",taskXml.getDescription(), tNew.getDescription());
+            Assert.assertEquals("Estimated duration is not equal.", taskXml.getEstimatedDuration(), tNew.getEstimatedDuration());
+            Assert.assertEquals("Acceptable deviation is not equal.", taskXml.getAcceptableDeviation(), tNew.getAcceptableDeviation());
+            Assert.assertEquals("Status is not equal.", taskXml.getStatus(), tNew.getStatus());
+            Assert.assertEquals("Start time is not equal.", taskXml.getStartTime(), tNew.getStartTime());
+            Assert.assertEquals("End time is not equal", taskXml.getEndTime(), tNew.getEndTime());
+        } catch (Exception e) {
+            // Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
 }
