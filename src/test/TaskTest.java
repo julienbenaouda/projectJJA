@@ -45,11 +45,51 @@ public class TaskTest {
         String startTime = "11/03/2018 01:36";
         String endTime = "11/03/2018 01:45";
 
-        root = new Task("root description", estimatedDuration, acceptableDeviation);
+        root = new Task("root description", estimatedDuration, acceptableDeviation) {
+            private Status status;
 
-        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation);
-        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation);
+            @Override
+            public void updateStatus(HashMap<String, String> form) {
+                this.status = Status.fromString(form.get("status"));
+            }
+
+            @Override
+            public Status getStatus(){
+                return status;
+            }
+        };
+
+
+        Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        dependency1_2 = new Task ("dependency 1_2 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
 
         root.addDependency(dependency1_1);
         root.addDependency(dependency1_2);
@@ -57,11 +97,47 @@ public class TaskTest {
 
         Task alternative1_1 = new Task ("alternative 1_1 description", estimatedDuration, acceptableDeviation);
         Task alternative1_2 = null;
-        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation);
+        alternative1_3 = new Task ("alternative 1_3 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
 
-        Task alternative1_3a = new Task ("alternative 1_3a description", estimatedDuration, acceptableDeviation);
-        Task alternative1_3b = new Task ("alternative 1_3b description", estimatedDuration, acceptableDeviation);
-        Task alternative1_3c = new Task ("alternative 1_3c description", estimatedDuration, acceptableDeviation);
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+
+        Task alternative1_3a = new Task ("alternative 1_3a description", estimatedDuration, acceptableDeviation) {
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        Task alternative1_3b = new Task ("alternative 1_3b description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        Task alternative1_3c = new Task ("alternative 1_3c description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
         alternative1_3d = new Task ("alternative 1_3d description", estimatedDuration, acceptableDeviation);
         alternative1_3.setAlternative(alternative1_3a);
         alternative1_3a.setAlternative(alternative1_3b);
@@ -72,9 +148,36 @@ public class TaskTest {
         dependency1_2.setAlternative(alternative1_2);
         dependency1_3.setAlternative(alternative1_3);
 
-        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation);
-        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_1_1 = new Task ("dependency 1_1_1 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        Task dependency1_1_2 = new Task ("dependency 1_1_2 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        dependency1_1_3 = new Task ("dependency 1_1_3 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
 
         dependency1_1.addDependency(dependency1_1_1);
         dependency1_1.addDependency(dependency1_1_2);
@@ -88,8 +191,26 @@ public class TaskTest {
         dependency1_1_2.setAlternative(alternative1_1_2);
         dependency1_1_3.setAlternative(alternative1_1_3);
 
-        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation);
-        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation);
+        Task dependency1_2_1 = new Task ("dependency 1_2_1 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
+        Task dependency1_2_2 = new Task ("dependency 1_2_2 description", estimatedDuration, acceptableDeviation){
+            private Task alternative;
+            @Override
+            public void setAlternative(Task alternative){
+                this.alternative = alternative;
+            }
+
+            @Override
+            public Task getAlternative(){ return alternative; }
+        };
 
         dependency1_2.addDependency(dependency1_2_1);
         dependency1_2.addDependency(dependency1_2_2);
@@ -187,14 +308,60 @@ public class TaskTest {
     public void testSetAlternative(){
         Assert.assertEquals("There is already an alternative", null, task.getAlternative());
 
+        Task setAlternative = new Task("description of this task", duration, deviation){
+            private Status status;
+
+            @Override
+            public void updateStatus(HashMap<String, String> form) {
+                this.status = Status.fromString(form.get("status"));
+            }
+
+            @Override
+            public Status getStatus(){
+                return status;
+            }
+        };
+
         Task alternative = new Task("Alternative interesting description.", duration, deviation);
+
+        HashMap<String, String> form = new HashMap<>();
+        form.put("status", "FAILED");
+        setAlternative.updateStatus(form);
+
+        setAlternative.setAlternative(alternative);
+        Assert.assertEquals("The alternative does not equal the newly added alternative", alternative, setAlternative.getAlternative());
+    }
+
+    @Test (expected = IllegalStateException.class)
+    public void testInvaladSetAlternative(){
+        Task alternative = new Task("alternative task", duration, deviation);
         task.setAlternative(alternative);
-        Assert.assertEquals("The alternative does not equal the newly added alternative", alternative, task.getAlternative());
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidSetAlternativeRoot(){
-        task.setAlternative(task);
+        Assert.assertEquals("There is already an alternative", null, task.getAlternative());
+
+        Task setAlternative = new Task("description of this task", duration, deviation){
+            private Status status;
+
+            @Override
+            public void updateStatus(HashMap<String, String> form) {
+                this.status = Status.fromString(form.get("status"));
+            }
+
+            @Override
+            public Status getStatus(){
+                return status;
+            }
+        };
+
+        Task alternative = new Task("Alternative interesting description.", duration, deviation);
+
+        HashMap<String, String> form = new HashMap<>();
+        form.put("status", "FAILED");
+        setAlternative.updateStatus(form);
+        setAlternative.setAlternative(setAlternative);
     }
 
     @Test
@@ -226,21 +393,31 @@ public class TaskTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
+        HashMap<String, String> form = new HashMap<>();
+        form.put("status", "FAILED");
+        root.updateStatus(form);
         root.setAlternative(alternative1_3);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive2(){
+        HashMap<String, String> form = new HashMap<>();
+        form.put("status", "FAILED");
+        root.updateStatus(form);
         root.setAlternative(alternative1_2_1);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive3(){
+        HashMap<String, String> form = new HashMap<>();
+        form.put("status", "FAILED");
+        root.updateStatus(form);
         root.setAlternative(alternative1_3d);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalAddDependencyRecursive1(){
+
         root.addDependency(dependency1_2);
     }
 
