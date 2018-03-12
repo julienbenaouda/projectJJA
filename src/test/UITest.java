@@ -15,8 +15,6 @@ import taskman.Controller;
 public class UITest {
 	private UIMock ui;
 	private Controller c;
-	private String mainMenu = "options:\\n1 - list all projects\\n2 - open project\\n3 - add new project\\n4 - advance system time\\n5 - import data\\n6 - export data\\n7 - change user\\nChoose option:";
-	
 	class UIMock extends taskman.UI {
 		ArrayDeque<String> input;
 		String output;
