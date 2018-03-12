@@ -2,43 +2,26 @@ package test;
 
 import taskman.Project;
 import taskman.Task;
-import taskman.XmlException;
 import taskman.XmlObject;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Element;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.StringWriter;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.naming.OperationNotSupportedException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 
 public class ProjectTest {
 	private Project p;
 	private String creation;
 	private String due;
-	private ArrayList<Task> tasks;
 	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
 	@Before
 	public void setUp() {
-		tasks = new ArrayList<>();
+		new ArrayList<>();
 	}
 
 	@Test
@@ -127,12 +110,16 @@ public class ProjectTest {
 		int id = t.getID();
 		p = new Project("test", "testdesc", "22/02/2011 10:00", "22/05/2012 11:00");
 		p.addTask(t);
-		HashMap<String, String> h = p.getTaskDetails(id);
+		HashMap<String, String> h = new HashMap<>();
+		h.put("startTime", "22/02/2011 10:00");
+		h.put("endTime", "22/05/2012 11:00");
+		h.put("status", "FINISHED");
+		t.updateStatus(h);
+		h = p.getTaskDetails(id);
 		Assert.assertEquals("testdesc", h.get("description"));
 		Assert.assertEquals("10", h.get("estimatedDuration"));
-		Assert.assertEquals("10", h.get("acceptableDeviation"));
-		// TODO: task krijgt niet onderstaande parametrs van project
-		Assert.assertEquals("22/02/2011", h.get("startTime"));
+		Assert.assertEquals("10.0", h.get("acceptableDeviation"));
+		Assert.assertEquals("22/02/2011 10:00", h.get("startTime"));
 		Assert.assertEquals("22/05/2012 11:00", h.get("endTime"));
 	}
 	
@@ -144,7 +131,7 @@ public class ProjectTest {
 	}
 	
 	@Test
-	public void removeTask()
+	public void testRemoveTask()
 	{
 		Project p = new Project("test", "testdesc", "12/12/2012 12:12", "12/12/2013 12:12");
 		Task t = new Task("test", "5", "5");
@@ -164,6 +151,32 @@ public class ProjectTest {
 			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
 			Assert.assertEquals(project.getName(), pnew.getName());
 			Assert.assertEquals(project.getDescription(), pnew.getDescription());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testXMLTaskWithAlternative()
+	{
+		Task t = new Task("test", "10", "20");
+		Task alternative = new Task("test alternative", "5", "10");
+		p = new Project("test", "testdesc", "19/09/2015 15:15", "20/09/2015 19:00");
+		p.addTask(t);
+		p.addTask(alternative);
+		t.setAlternative(alternative);
+		int id = t.getID();
+		int altID = alternative.getID();
+		try {
+			
+			XmlObject object = new XmlObject();
+			p.addToXml(object.addXmlObject("project"));
+			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
+			Task check = pnew.getTask(id).getAlternative();
+			Assert.assertEquals(new Integer(altID), check.getID());
+			Task checkFromProject = p.getTask(altID);
+			Assert.assertEquals(check.getID(), checkFromProject.getID());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

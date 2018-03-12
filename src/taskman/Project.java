@@ -53,7 +53,6 @@ public class Project {
 		if (this.isFinished()) {
 			throw new IllegalStateException("Cannot assign a task to a finished project!");
 		}
-		// TODO: ge zijt case met lege lijst vergeten
 		int low = 0;
 	 	int middle = low;
 	 	int high = taskList.size();

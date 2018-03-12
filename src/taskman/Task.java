@@ -1,12 +1,12 @@
 package taskman;
 
-import java.nio.file.AccessDeniedException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Stack;
 
 
@@ -469,7 +469,11 @@ public class Task implements Comparable<Object> {
             dependenciesIDs[i] = dependencies.get(0).getID();
         }
         taskDetails.put("dependencies", dependenciesIDs.toString());
-        taskDetails.put("alternative", alternative.getID().toString());
+        if(alternative != null) {
+        	taskDetails.put("alternative", alternative.getID().toString());
+        } else {
+        	taskDetails.put("alternative", "no alternative task");
+        }
 
         return taskDetails;
     }
@@ -598,7 +602,7 @@ public class Task implements Comparable<Object> {
      * @return a HashMap containing all elements that need to be filled in to create a new task
      */
     public static HashMap<String, String> getCreationForm() {
-        HashMap<String, String> form = new HashMap<>();
+        HashMap<String, String> form = new LinkedHashMap<>();
         form.put("description", "");
         form.put("estimatedDuration", "");
         form.put("acceptableDeviation", "");
@@ -611,7 +615,7 @@ public class Task implements Comparable<Object> {
      * @return a HashMap containing all elements that need to be filled in to update the status of a task
      */
     public static HashMap<String, String> getUpdateStatusForm() {
-        HashMap<String, String> form = new HashMap<>();
+        HashMap<String, String> form = new LinkedHashMap<>();
         form.put("startTime", "");
         form.put("endTime", "");
         form.put("status", "");
