@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,26 +20,25 @@ public class UITest {
 	private String mainMenu = "options:\\n1 - list all projects\\n2 - open project\\n3 - add new project\\n4 - advance system time\\n5 - import data\\n6 - export data\\n7 - change user\\nChoose option:";
 	
 	class UIMock extends taskman.UI {
-		ArrayList<String> input;
+		ArrayDeque<String> input;
 		String output;
 		
 		public UIMock() {
 			super();
-			input = new ArrayList<>();
+			input = new ArrayDeque<>();
 		}
 				
 		public void setInput(String input)
 		{
-			this.input.add(input);
+			this.input.push(input);
 		}
 		
 		@Override
-		public String inputString()
+		protected String inputString()
 		{
 			if(input.size() > 0)
 			{
-				String text = input.get(0);
-				input.remove(0);
+				String text = input.pop();
 				return text;
 			}
 			return null;
@@ -84,7 +84,8 @@ public class UITest {
 		c.addProject(p);
 		c.addProject(p2);
 		String expected = "test\ntest 2"; 
-		String actual = ui.listProjects();
+		ui.listProjects();
+		String actual = ui.getOutput();
 		Assert.assertEquals(expected, actual);
 	}
 	
