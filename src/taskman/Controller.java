@@ -198,7 +198,7 @@ public class Controller {
      * Return the ID of the latest task.
      * @return the ID of the latest task
      */
-    public static Integer getLastTaskID() {
+    public Integer getLastTaskID() {
         return Task.getLastTaskID();
     }
 

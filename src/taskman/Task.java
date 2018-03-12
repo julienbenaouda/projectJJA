@@ -313,13 +313,21 @@ public class Task implements Comparable<Object> {
             throw new IllegalArgumentException("The end time can't be before the start time.");
         }
         for (Task dependency: this.getDependencies()) {
-            if (startTime.isBefore(dependency.endTime)) {
+            if (dependency.getStatus().isFinal() && startTime.isBefore(dependency.getEndTimeObject())) {
                 throw new IllegalArgumentException("The task must start after its dependencies!");
             }
         }
         setStartTime(form.get("startTime"));
         setEndTime(form.get("endTime"));
         setStatus(form.get("status"));
+    }
+
+    /**
+     * Return the end time of this task.
+     * @return a LocalDateTime object.
+     */
+    private LocalDateTime getEndTimeObject() {
+        return this.endTime;
     }
 
     /**
@@ -520,7 +528,7 @@ public class Task implements Comparable<Object> {
      * @param searchedTask the task we want to search for
      * @return true if the task is found, false otherwise
      */
-    private boolean containsLoop(Task root, Task searchedTask){
+    private static boolean containsLoop(Task root, Task searchedTask){
         Stack<Task> searchStack = new Stack<>();
         searchStack.push(root);
         if (root.getAlternative() != null) {
@@ -553,32 +561,14 @@ public class Task implements Comparable<Object> {
      */
     public int compareTo(Object o) {
         if (o instanceof Integer){
-            return compareTo((Integer) o);
+            return this.getID().compareTo((Integer) o);
         }
 	    else if (o instanceof Task){
-		    return compareTo(((Task) o).getID());
+		    return this.getID().compareTo(((Task) o).getID());
         }
         else{
             throw new IllegalArgumentException("Uncomparable!");
         }
-    }
-
-    /**
-     * Compares an integer with the task its ID.
-     * @param id the ID to compare with
-     * @return the comparison of both ID's
-     */
-    private int compareTo(Integer id) {
-        return this.getID().compareTo(id);
-    }
-
-    /**
-     * Compares the ID's of the task with the given task.
-     * @param task the task to compare ID's with
-     * @return the comparison of both tasks their ID's
-     */
-    private int compareTo(Task task) {
-        return this.getID().compareTo(task.getID());
     }
 
     // XML
