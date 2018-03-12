@@ -60,8 +60,12 @@ public class Task implements Comparable<Object> {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStartTime(startTime);
-        setEndTime(endTime);
+        if (startTime != null){
+            setStartTime(startTime);
+        }
+        if(endTime != null){
+            setEndTime(endTime);
+        }
         setStatus(status);
         dependencies = new ArrayList<>();
     }
@@ -77,13 +81,7 @@ public class Task implements Comparable<Object> {
      * Return the ID of the latest task. (This should be the maximum of all ID's)
      * @return the ID of the latest task
      */
-<<<<<<< HEAD
     public static Integer getLastTaskID() { return lastTaskID; }
-=======
-    public static Integer getLastTaskID() {
-        return Integer.valueOf(lastTaskID.intValue()); // TODO: Integer object is final, dus moet niet gekopieerd worden!
-    }
->>>>>>> master
 
 
     /**
@@ -221,9 +219,12 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the start time of the task.
-     * @return the start time of the task
+     * @return the start time of the task or null if there is no start time
      */
     public String getStartTime(){
+        if (startTime == null){
+            return null;
+        }
         return startTime.format(dateFormatter);
     }
 
@@ -247,9 +248,12 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the end time of the task.
-     * @return the end time of the task
+     * @return the end time of the task or null if there is no end time
      */
     public String getEndTime(){
+        if (endTime == null){
+            return null;
+        }
         return endTime.format(dateFormatter);
     }
 
@@ -301,7 +305,7 @@ public class Task implements Comparable<Object> {
         if (Status.fromString(form.get("status")) != Status.FINISHED && Status.fromString(form.get("status")) != Status.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
-        if (LocalDateTime.parse(form.get("endTime"), dateFormatter).compareTo(LocalDateTime.parse(form.get("startTime"), dateFormatter)) > 0){
+        if (LocalDateTime.parse(form.get("endTime"), dateFormatter).compareTo(LocalDateTime.parse(form.get("startTime"), dateFormatter)) < 0){
             throw new IllegalArgumentException("The end time can't be before the start time.");
         }
         setStartTime(form.get("startTime"));
@@ -401,7 +405,6 @@ public class Task implements Comparable<Object> {
      */
     public void restoreDependencies(ArrayList<Task> dependencies) {
         this.setDependencies(dependencies);
-        // TODO: vragen aan Jeroen of dit mag!!!
     }
 
     /**
@@ -446,10 +449,10 @@ public class Task implements Comparable<Object> {
     public HashMap<String, String> getTaskDetails() {
         HashMap<String, String> taskDetails = new HashMap<>();
 
-        taskDetails.put("id", ID.toString());
-        taskDetails.put("description", description);
-        taskDetails.put("estimatedDuration", estimatedDuration.toString());
-        taskDetails.put("acceptableDeviation", acceptableDeviation.toString());
+        taskDetails.put("id", getID().toString());
+        taskDetails.put("description", getDescription());
+        taskDetails.put("estimatedDuration", getEstimatedDuration());
+        taskDetails.put("acceptableDeviation", getAcceptableDeviation().toString());
         if (startTime == null) {
             taskDetails.put("startTime", "not yet set");
         } else {
@@ -460,12 +463,12 @@ public class Task implements Comparable<Object> {
         } else{
             taskDetails.put("endTime", endTime.format(dateFormatter));
         }
-        taskDetails.put("status", status.toString());
+        taskDetails.put("status", getStatus().toString());
         int[] dependenciesIDs = new int[dependencies.size()];
         for (int i = 0; i < dependencies.size(); i++){
             dependenciesIDs[i] = dependencies.get(0).getID();
         }
-        taskDetails.put("dependecies", dependenciesIDs.toString());
+        taskDetails.put("dependencies", dependenciesIDs.toString());
         taskDetails.put("alternative", alternative.getID().toString());
 
         return taskDetails;
@@ -558,7 +561,12 @@ public class Task implements Comparable<Object> {
         taskObject.addText("endTime", getEndTime());
         taskObject.addText("status", getStatus().name());
         taskObject.addText("lastTaskID", getLastTaskID().toString());
-        taskObject.addText("alternative", getAlternative().getID().toString());
+        if (getAlternative() == null){
+            taskObject.addText("alternative", null);
+        }
+        else {
+            taskObject.addText("alternative", getAlternative().getID().toString());
+        }
         for (Task dependency: getDependencies()) {
             taskObject.addText("dependency", dependency.getID().toString());
         }
@@ -573,7 +581,7 @@ public class Task implements Comparable<Object> {
     public static Task getFromXml(XmlObject taskObject) throws XmlException {
         String id = taskObject.getAttribute("id");
         String description = taskObject.getTexts("description").get(0);
-        String estimatedDuration = taskObject.getTexts("estmatedDuration").get(0);
+        String estimatedDuration = taskObject.getTexts("estimatedDuration").get(0);
         String acceptableDeviation = taskObject.getTexts("acceptableDeviation").get(0);
         String startTime = taskObject.getTexts("startTime").get(0);
         String endTime = taskObject.getTexts("endTime").get(0);
