@@ -333,10 +333,14 @@ public class Task implements Comparable<Object> {
      * Sets the alternative task of the task to the given task.
      * @param alternative the alternative task of the task
      * @post the alternative task of the task is set to the given task
+     * @throws IllegalStateException the task must be failed to set the alternative task
      * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      */
-    public void setAlternative(Task alternative) throws IllegalArgumentException {
-        // TODO: implement that this is only allowed when status FAILED??
+    public void setAlternative(Task alternative) throws IllegalStateException, IllegalArgumentException {
+        // TODO: deze illegalstatexception catchen in ui
+        if (getStatus() != Status.FAILED){
+            throw new IllegalStateException("The task must be failed to set an alternative.");
+        }
         if (containsLoop(this, alternative)){
             throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
         }
