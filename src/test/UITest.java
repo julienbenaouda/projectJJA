@@ -107,7 +107,7 @@ public class UITest {
 		try {
 			ui.createProject();
 		} catch (UnsupportedOperationException e) {}
-		Assert.assertTrue(ui.getOutput().contains("Project created succesfully"));
+		Assert.assertTrue(ui.getOutput().contains("Project created successfully"));
 	}
 	
 	@Test
@@ -186,7 +186,7 @@ public class UITest {
 		try {
 			ui.createTask("test");
 		} catch (UnsupportedOperationException e) {}
-		Assert.assertTrue(ui.getOutput().contains("Task added succesfully"));
+		Assert.assertTrue(ui.getOutput().contains("Task added successfully"));
 	}
 	
 	@Test
@@ -236,7 +236,7 @@ public class UITest {
 			ui.updateTaskStatus("test");
 		} catch (UnsupportedOperationException e) {}
 		System.out.println(ui.getOutput());
-		Assert.assertTrue(ui.getOutput().contains("updated succesfully"));
+		Assert.assertTrue(ui.getOutput().contains("updated successfully"));
 	}
 
 	@Test
@@ -299,6 +299,119 @@ public class UITest {
 		} catch (UnsupportedOperationException e) {}
 		System.out.println(ui.getOutput());
 		Assert.assertTrue(ui.getOutput().contains("denied"));
+	}
+	
+	@Test
+	public void testShowTaskDetails()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("1");
+		try {
+			ui.showTaskDetails("test");
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("description:"));
+	}
+	
+	@Test
+	public void testExport() {
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		try {
+			ui.setInput("e:\\file.xml");
+			ui.setInput("6");
+			ui.showMainMenu();
+		} catch(UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("successfully"));
+	}
+	
+	@Test
+	public void testExportInvalidPath()
+	{
+		ui.setInput("22/02/2032 22:22");
+		ui.setInput("22/02/2022 10:10");
+		ui.setInput("testdesc");
+		ui.setInput("test");
+		try {
+			ui.createProject();
+		} catch (UnsupportedOperationException e) {}
+		ui.setInput("5");
+		ui.setInput("10");
+		ui.setInput("testtask");
+		try {
+			ui.createTask("test");
+		} catch (UnsupportedOperationException e) {}
+		try {
+			ui.setInput("e:\\fil:e.xml");
+			ui.setInput("6");
+			ui.showMainMenu();
+		} catch(UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Error"));
+	}
+	
+	@Test
+	public void testImport()
+	{
+		ui.setInput("e:\\file.xml");
+		ui.setInput("5");
+		try {
+			ui.showMainMenu();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("successfully"));
+	}
+	
+	@Test
+	public void testImportInvalidPath() {
+		ui.setInput("e:\\file2.xml");
+		ui.setInput("5");
+		try {
+			ui.showMainMenu();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("Error"));
+	}
+	
+	@Test
+	public void testAdvanceSystemTime()
+	{
+		ui.setInput("11/11/2017 16:20");
+		ui.setInput("4");
+		try {
+			ui.showMainMenu();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("successfully"));
+	}
+	
+	@Test
+	public void testAdvanceTimeInvalidFormat()
+	{
+		ui.setInput("11/11/2017");
+		ui.setInput("7");
+		try {
+			ui.showMainMenu();
+		} catch (UnsupportedOperationException e) {}
+		Assert.assertTrue(ui.getOutput().contains("valid"));
 	}
 
 }

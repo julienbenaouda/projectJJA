@@ -78,6 +78,8 @@ public class UI {
 		message.append("5 - import data\n");
 		message.append("6 - export data\n");
 		message.append("7 - change user\n");
+		message.append("8 - get system time\n");
+		message.append("9 - quit\n");
 		message.append("Choose option:");
 		print(message.toString());
 		int input = inputInt();
@@ -96,12 +98,25 @@ public class UI {
 				break;
 		case 7: showUserChoiceDialog();
 				break;
-		default: print("Invalid number, please try again");
+		case 8: showSystemTime();
+				break;
+		case 9: System.exit(0);
+				break;
+		default: print("Invalid number, please try again\n");
 		 		 showMainMenu();
 				 break;
 		}
 	}
 	
+	public void showSystemTime() {
+		StringBuilder sb = new StringBuilder("The system time is: ");
+		sb.append(controller.getSystemTime());
+		sb.append("\n");
+		print(sb.toString());
+		showMainMenu();
+		
+	}
+
 	/**
 	 * Prints the list of projects. Only the project names are printed.
 	 */
@@ -124,7 +139,7 @@ public class UI {
 		String path = inputString();
 		try {
 			controller = Controller.importFromXML(path);
-			print("Data imported succesfully.");
+			print("Data imported successfully.");
 			showMainMenu();
 		}
 		catch(XmlException e)
@@ -144,7 +159,7 @@ public class UI {
 		String path = inputString();
 		try {
 			controller.exportToXML(path);
-			print("Data exported succesfully.\n");
+			print("Data exported successfully.\n");
 			showMainMenu();
 		} catch (XmlException e)
 		{
@@ -265,7 +280,7 @@ public class UI {
 		}
 		try{
 			controller.addTask(name, form);
-			print("Task added succesfully\n");
+			print("Task added successfully\n");
 			showProjectMenu(name);
 		} catch (IllegalArgumentException e){
 			print("Error while creating task: " + e.getMessage());
@@ -290,7 +305,7 @@ public class UI {
 	private void showAvailableTasks(String name) throws IllegalArgumentException{
 		ArrayList<HashMap<String, String>> availableTasks = controller.getAvailableTaskDetails(name);
 		if (availableTasks.size() == 0){
-			throw new IllegalArgumentException("The given task does not contain any available tasks.");
+			throw new IllegalArgumentException("The given project does not contain any available tasks.");
 		}
 		for (HashMap<String, String> availableTask : availableTasks){
 			print(availableTask.get("id") + ": " + availableTask.get("description"));
@@ -330,7 +345,7 @@ public class UI {
 				HashMap<String, String> form = fillInTaskUpdateForm();
 				if (form != null){
 					controller.updateTaskStatus(name, id, form);
-					print("Status updated succesfully.\n");
+					print("Status updated successfully.\n");
 					showProjectMenu(name);
 				}
 				else{
@@ -363,7 +378,7 @@ public class UI {
 		}
 		try {
 			controller.addProject(form);
-			print("Project created succesfully.\n");
+			print("Project created successfully.\n");
 			showMainMenu();
 		} catch (IllegalArgumentException e)
 		{
@@ -382,6 +397,8 @@ public class UI {
 		String time = inputString();
 		try {
 			controller.updateSystemTime(time);
+			print("Time updated successfully.\n");
+			showMainMenu();
 		} catch (IllegalArgumentException e)
 		{
 			print("The given time is not valid. Please try again");

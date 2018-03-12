@@ -276,13 +276,10 @@ public class Project {
 	{
 		int low = 0;
 		int high = taskList.size()-1;
-		System.out.println(high);
-		// int index = -1;
 		while(low <= high)
 		{
 			int middle = (low+high)/2;
 			Task t = taskList.get(middle);
-			System.out.println(id +", " +t.getID());
 			if(t.getID() == id)
 			{
 				return middle;

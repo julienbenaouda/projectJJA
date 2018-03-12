@@ -403,7 +403,7 @@ public class Task implements Comparable<Object> {
      */
     public void addDependency(Task dependency) throws IllegalArgumentException, IllegalStateException {
         if (containsLoop(this, dependency)){
-            throw new IllegalArgumentException("The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley");
+            throw new IllegalArgumentException("The alternative may not be one of the dependencies or the alternative of this or of its dependendecies recursivley");
         }
         if (getStatus() == Status.FAILED || getStatus() == Status.FINISHED){
             throw new IllegalStateException("No dependencies may be added to failed or finished tasks.");
@@ -488,9 +488,16 @@ public class Task implements Comparable<Object> {
             taskDetails.put("endTime", endTime.format(dateFormatter));
         }
         taskDetails.put("status", getStatus().toString());
-        int[] dependenciesIDs = new int[dependencies.size()];
+        /*int[] dependenciesIDs = new int[dependencies.size()];
         for (int i = 0; i < dependencies.size(); i++){
-            dependenciesIDs[i] = dependencies.get(0).getID();
+            dependenciesIDs[i] = dependencies.get(i).getID();
+        }*/
+        StringBuilder dependenciesIDs = new StringBuilder();
+        for(Task t: getDependencies()) {
+        	dependenciesIDs.append(t.getID().toString() +", ");
+        }
+        if(dependenciesIDs.lastIndexOf(",") != -1) {
+        	dependenciesIDs.deleteCharAt(dependenciesIDs.lastIndexOf(","));
         }
         taskDetails.put("dependencies", dependenciesIDs.toString());
         if(alternative != null) {
