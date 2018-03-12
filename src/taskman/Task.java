@@ -368,7 +368,6 @@ public class Task implements Comparable<Object> {
      * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      */
     public void setAlternative(Task alternative) throws IllegalStateException, IllegalArgumentException {
-        // TODO: deze illegalstatexception catchen in ui
         if (getStatus() != Status.FAILED){
             throw new IllegalStateException("The task must be failed to set an alternative.");
         }

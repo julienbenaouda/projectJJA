@@ -252,8 +252,6 @@ public class TaskTest {
         Assert.assertEquals("ID of the new task does not equal the latest task ID", Task.getLastTaskID(), newTask.getID());
     }
 
-    // TODO
-
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidEndTime(){
         Task invalidUpdateStatusTask = new Task("description 1234", duration, deviation);
@@ -280,8 +278,6 @@ public class TaskTest {
         Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime());
         Assert.assertEquals("The status is not correctly updated.", Status.FINISHED, updateStatusTask.getStatus());
 
-        // TODO: advance time implementeren en shit zodat status op available komt
-        // TODO deze test ook nog eens nagaan
     }
 
     @Test (expected = IllegalArgumentException.class)
