@@ -47,8 +47,12 @@ public class Project {
 	 * adds a new task to the projects task list
 	 * @param task the task to add
 	 * @post The given task is added to the project
+	 * @throws IllegalStateException if the project is finished
 	 */
-	public void addTask(Task task) {
+	public void addTask(Task task) throws IllegalStateException {
+		if (this.isFinished()) {
+			throw new IllegalStateException("Cannot assign a task to a finished project!");
+		}
 		// TODO: ge zijt case met lege lijst vergeten
 		int low = 0;
 	 	int middle = low;
@@ -66,6 +70,19 @@ public class Project {
 		 	}
 	 	}
 	 	taskList.add(middle, task);
+	}
+
+	/**
+	 * Return if the project is finished
+	 * @return a Boolean
+	 */
+	public Boolean isFinished() {
+		for (Task task: this.taskList) {
+			if (task.getStatus() != Status.FINISHED) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
