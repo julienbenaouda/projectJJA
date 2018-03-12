@@ -393,7 +393,7 @@ public void addTask(Task task) {
 	 */
 	public static HashMap<String, String> getCreationForm()
 	{
-		HashMap<String, String> form = new HashMap<>();
+		HashMap<String, String> form = new LinkedHashMap<>();
 		form.put("name", "");
 		form.put("description", "");
 		form.put("creationTime", "");

@@ -20,7 +20,7 @@ public class UI {
 	/**
 	 * Creates a new UI object.
 	 */
-	private UI()
+	protected UI()
 	{
 		controller = new Controller();
 	}
@@ -48,6 +48,7 @@ public class UI {
 		message.append("Choose option:");
 		print(message.toString());
 		int input = inputInt();
+		System.out.println(input);
 		try {
 			switch (input) {
 			case 1: controller.setUserType("REGULARUSER");
@@ -219,6 +220,7 @@ public class UI {
 				sb.append(key + ": " + details.get(key) + "\n");
 			}
 			print(sb.toString());
+			showMainMenu();
 		} catch (IllegalArgumentException e) {
 			print("A project with the specified name does not exist. Please try again");
 			showMainMenu();
@@ -350,6 +352,8 @@ public class UI {
 		}
 		try {
 			controller.addProject(form);
+			print("Project created succesfully.\n");
+			showMainMenu();
 		} catch (IllegalArgumentException e)
 		{
 			print("Error while creating project: " +e.getMessage());
@@ -392,7 +396,7 @@ public class UI {
 		String input = inputString();
 		int inputInt = 0;
 		try {
-			Integer.parseInt(input);
+			inputInt = Integer.parseInt(input);
 		} catch (Exception e)
 		{
 			print("This is not a valid number, please try again.");
@@ -416,5 +420,16 @@ public class UI {
 			input = inputString();
 		}
 		return input;
+	}
+	
+	public Controller getController()
+	{
+		return controller;
+	}
+	
+	public static void main(String[] args)
+	{
+		UI ui = new UI();
+		ui.welcomeDialog();
 	}
 }
