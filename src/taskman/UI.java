@@ -48,7 +48,6 @@ public class UI {
 		message.append("Choose option:");
 		print(message.toString());
 		int input = inputInt();
-		System.out.println(input);
 		try {
 			switch (input) {
 			case 1: controller.setUserType("REGULARUSER");
@@ -125,10 +124,13 @@ public class UI {
 		String path = inputString();
 		try {
 			controller = Controller.importFromXML(path);
+			print("Data imported succesfully.");
+			showMainMenu();
 		}
 		catch(XmlException e)
 		{
-			print("Error while parsing the xml file: " +e.getMessage());
+			print("Error while parsing the xml file: " +e.getMessage() +"\n");
+			showMainMenu();
 		}
 	}
 	
@@ -142,9 +144,12 @@ public class UI {
 		String path = inputString();
 		try {
 			controller.exportToXML(path);
+			print("Data exported succesfully.\n");
+			showMainMenu();
 		} catch (XmlException e)
 		{
-			print("Error while exporting data: " +e.getMessage());
+			print("Error while exporting data: " +e.getMessage() +"\n");
+			showMainMenu();
 		}
 	}
 	
@@ -155,10 +160,9 @@ public class UI {
 	{
 		print("Project name: ");
 		String name = inputString();
-		try {
-			controller.projectExists(name);
+		if(controller.projectExists(name)) {
 			showProjectMenu(name);
-		} catch (IllegalArgumentException e)
+		} else
 		{
 			print("A project with the given name does not exist, please try again.");
 			showMainMenu();
@@ -171,7 +175,7 @@ public class UI {
 	 */
 	public void showProjectMenu(String name)
 	{
-		StringBuilder sb = new StringBuilder("options:\n");
+		StringBuilder sb = new StringBuilder("options for project " +name +":\n");
 		sb.append("1 - view project details\n");
 		sb.append("2 - view task details\n");
 		sb.append("3 - add task\n");
@@ -220,7 +224,7 @@ public class UI {
 				sb.append(key + ": " + details.get(key) + "\n");
 			}
 			print(sb.toString());
-			showMainMenu();
+			showProjectMenu(name);
 		} catch (IllegalArgumentException e) {
 			print("A project with the specified name does not exist. Please try again");
 			showMainMenu();
@@ -241,6 +245,7 @@ public class UI {
 				}
 			}
 			print(sb.toString());
+			showProjectMenu(name);
 		} catch (IllegalArgumentException e) {
 			print("A project with the specified name does not exist. Please try again");
 			showMainMenu();
@@ -260,9 +265,11 @@ public class UI {
 		}
 		try{
 			controller.addTask(name, form);
+			print("Task added succesfully\n");
+			showProjectMenu(name);
 		} catch (IllegalArgumentException e){
 			print("Error while creating task: " + e.getMessage());
-			showMainMenu();
+			showProjectMenu(name);
 		}
 	}
 
@@ -323,20 +330,24 @@ public class UI {
 				HashMap<String, String> form = fillInTaskUpdateForm();
 				if (form != null){
 					controller.updateTaskStatus(name, id, form);
+					print("Status updated succesfully.\n");
+					showProjectMenu(name);
 				}
 				else{
-					print("Task status update is cancelled.");
+					print("Task status update is cancelled.\n");
+					showProjectMenu(name);
 				}
 			}
 			else{
-				print("Task status update is cancelled.");
+				print("Task status update is cancelled.\n");
+				showProjectMenu(name);
 			}
 		} catch (IllegalArgumentException e) {
-			print("Error while updating task status. " + e.getMessage());
-			showMainMenu();
+			print("Error while updating task status. " + e.getMessage() +"\n");
+			showProjectMenu(name);
 		} catch (AccessDeniedException e) {
-			print("Acces denied: " + e.getMessage());
-			showMainMenu();
+			print("Acces denied: " + e.getMessage() +"\n");
+			showProjectMenu(name);
 		}
 	}
 	
@@ -418,7 +429,9 @@ public class UI {
 		} catch (NoSuchElementException e)
 		{
 			input = inputString();
-		}
+		} /*finally {
+			sc.close();
+		}*/
 		return input;
 	}
 	
