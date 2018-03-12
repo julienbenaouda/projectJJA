@@ -40,4 +40,6 @@ public class UserTest {
         User.setUserType("DEVELOPER");
         Assert.assertTrue(User.canChangeTaskStatus());
     }
+
+    // TODO: test XML
 }

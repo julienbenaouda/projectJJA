@@ -48,22 +48,24 @@ public class Project {
 	 * @param task the task to add
 	 * @post The given task is added to the project
 	 */
-	public void addTask(Task task) {
-		int low = 0;
-		int high = taskList.size()-1;
-		while (low <= high) {
-			int middle = (low+high)/2;
-			Task middleTask = taskList.get(middle);
-			if(middleTask.getID().equals(task.getID())) {
-				taskList.add(middle, task);
-			}
-			else if (middleTask.getID() > task.getID()) {
-				high = middle;
-			} else {
-				low = middle + 1;
-			}
-		}
-	}
+public void addTask(Task task) {
+ int low = 0;
+ int middle = low;
+ int high = taskList.size();
+ while (low < high) {
+	 middle = (low+high)/2;
+	 Task middleTask = taskList.get(middle);
+	 if(middleTask.getID().equals(task.getID())) {
+		 break;
+	 }
+	 else if (middleTask.getID() > task.getID()) {
+		 high = middle - 1;
+	 } else {
+		 low = middle + 1;
+	 }
+ 	}
+ 	taskList.add(middle, task);
+ }
 	
 	/**
 	 * This method removes a task from the projects task list.
@@ -248,7 +250,7 @@ public class Project {
 	 * returns the task with the given ID
 	 * @param id the id of the task
 	 * @return the task with the given ID
-	 * @throws IllegalArgumentException When the project doesn't contain a task with the give ID.
+	 * @throws IllegalArgumentException When the project doesn't contain a task with the given ID.
 	 */
 	public Task getTask(int id) {
 		return taskList.get(getTaskIndex(id));
@@ -258,12 +260,13 @@ public class Project {
 	{
 		int low = 0;
 		int high = taskList.size()-1;
-		// System.out.println(high);
+		System.out.println(high);
 		// int index = -1;
 		while(low <= high)
 		{
 			int middle = (low+high)/2;
 			Task t = taskList.get(middle);
+			System.out.println(id +", " +t.getID());
 			if(t.getID() == id)
 			{
 				return middle;
@@ -367,7 +370,7 @@ public class Project {
 	 */
 	public static HashMap<String, String> getCreationForm()
 	{
-		HashMap<String, String> form = new HashMap<>();
+		HashMap<String, String> form = new LinkedHashMap<>();
 		form.put("name", "");
 		form.put("description", "");
 		form.put("creationTime", "");

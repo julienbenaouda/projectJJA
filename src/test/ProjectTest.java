@@ -2,11 +2,17 @@ package test;
 
 import taskman.Project;
 import taskman.Task;
+import taskman.XmlException;
+import taskman.XmlObject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -76,36 +82,14 @@ public class ProjectTest {
 		p = new Project("", "testdesc", creation, due);
 	}
 
-	@Test
-	public void testProjectSaveToXML()
-	{
-		creation = "20/11/2007 16:50";
-		due = "22/01/2020 19:00";
-		p = new Project("test", "testdesc", creation, due);
-		String xml = "<project><name>test</name><description>testdesc</description><creationTime>20/11/2007 16:50</creationTime><dueTime>22/01/2020 19:00</dueTime><tasks/></project>";
-		try {
-			Element e = p.saveToXML();
-			// convert to xml
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer t = tf.newTransformer();
-			t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); // omit xml header
-			DOMSource d = new DOMSource(e);
-			StringWriter sw = new StringWriter();
-			StreamResult r = new StreamResult(sw);
-			t.transform(d, r);
-			Assert.assertEquals("the xml text is not equal", xml, sw.toString());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	@Test
 	public void testAddTask()
 	{
-		Task t = new Task("taskdesc", "20", "5", "20/02/2018 11:00", "22/02/2018 15:00");
+		Project p = new Project("test", "testdesc", "22/02/2015 15:00", "22/05/2019 11:00");
+		Task t = new Task("taskdesc", "20", "5");
 		p.addTask(t);
-		int id = t.getID();
+		Integer id = t.getID();
 		Task added = p.getTask(id);
 		Assert.assertEquals(t, added);
 	}
@@ -113,6 +97,8 @@ public class ProjectTest {
 	@Test
 	public void testCreateProjectWithForm()
 	{
+		creation = "22/04/2018 12:50";
+		due = "22/05/2018 14:00";
 		HashMap<String, String> h = Project.getCreationForm();
 		h.put("name", "test");
 		h.put("description", "testdesc");
@@ -126,19 +112,19 @@ public class ProjectTest {
 	}
 	
 	@Test
-	public void testgetAvailableTaskDetails() {
-		Task t = new Task("test",  "20", "5", "20/02/2018 11:00", "22/02/2018 15:00");
+	public void testGetAvailableTaskDetails() {
+		Project p = new Project("test", "testdesc", "22/02/2002 22:22", "22/02/2004 22:22");
+		Task t = new Task("test",  "20", "5");
 		p.addTask(t);
-		// todo set status to available to let task succeed
 		Assert.assertEquals(1, p.getAvailableTaskDetails().size());
 	}
 	
 	@Test
 	public void testGetTask()
 	{
-		Task t = new Task("testdesc", "10", "10", "22/01/2014 11:00", "22/02/2022 12:00");
+		Task t = new Task("testdesc", "10", "10");
 		int id = t.getID();
-		p = new Project("test", "testdesc", "22/02/2011", "22/05/2012 11:00");
+		p = new Project("test", "testdesc", "22/02/2011 10:00", "22/05/2012 11:00");
 		p.addTask(t);
 		HashMap<String, String> h = p.getTaskDetails(id);
 		Assert.assertEquals("testdesc", h.get("description"));
@@ -153,6 +139,33 @@ public class ProjectTest {
 	{
 		Project p = new Project("test", "testdesc", "22/02/2018 22:00", "22/05/2018 22:00");
 		p.getTaskDetails(25);
+	}
+	
+	@Test
+	public void removeTask()
+	{
+		Project p = new Project("test", "testdesc", "12/12/2012 12:12", "12/12/2013 12:12");
+		Task t = new Task("test", "5", "5");
+		int id = t.getID();
+		p.addTask(t);
+		p.removeTask(id);
+		Assert.assertEquals(0, p.getTaskIds().size());
+	}
+	
+	@Test
+	public void testExportXML()
+	{
+		try {
+			Project project = new Project("test", "testdesc", "22/03/2018 12:00", "24/03/2018 12:00");
+			XmlObject object = new XmlObject();
+			project.addToXml(object.addXmlObject("project"));
+			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
+			Assert.assertEquals(project.getName(), pnew.getName());
+			Assert.assertEquals(project.getDescription(), pnew.getDescription());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
