@@ -97,8 +97,7 @@ public class Project {
 	 * @return a HashMap containing as keys the detail name and as value the corresponding detail value
 	 * @throws IllegalArgumentException when a task with the given ID does not exist in this project.
 	 */
-	public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException
-	{
+	public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException {
 		int index = getTaskIndex(id);
 		Task t = taskList.get(index);
 		return t.getTaskDetails();
@@ -267,17 +266,22 @@ public class Project {
 	public Task getTask(int id) {
 		return taskList.get(getTaskIndex(id));
 	}
-	
+
+	/**
+	 * Get the task index of a task id.
+	 * @param id the id of the taks
+	 * @return a task index.
+	 * @throws IllegalArgumentException if the id isn't found.
+	 */
 	private int getTaskIndex(int id) throws IllegalArgumentException
 	{
 		int low = 0;
 		int high = taskList.size() - 1;
 		int middle = (low + high) / 2;
-		while(low < high)
-		{
+		while(low <= high) {
 			Task middleTask = taskList.get(middle);
 			if(middleTask.getID().equals(id)) {
-				break;
+				return middle;
 			}
 			else if(middleTask.getID() > id) {
 				high = middle - 1;
@@ -287,12 +291,7 @@ public class Project {
 			}
 			middle = (low + high) / 2;
 		}
-		if(taskList.get(middle).getID().equals(id)) {
-			return middle;
-		}
-		else {
-			throw new IllegalArgumentException("A task with the given id does not exist in this project.");
-		}
+		throw new IllegalArgumentException("A task with the given id does not exist in this project.");
 	}
 
 	/**
