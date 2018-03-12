@@ -201,7 +201,7 @@ public class Task implements Comparable<Object> {
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
-    private final void setAcceptableDeviation(String acceptableDeviation){ // TODO: Waarom final? TODO omdat maar enkel in begin kan geset worden?
+    private void setAcceptableDeviation(String acceptableDeviation){
         this.acceptableDeviation = Double.parseDouble(acceptableDeviation);
     }
 
@@ -334,7 +334,6 @@ public class Task implements Comparable<Object> {
         else {
             return Long.toString(Duration.between(this.startTime, this.endTime).minus(this.estimatedDuration).toMinutes());
         }
-        // TODO: test
     }
 
 
