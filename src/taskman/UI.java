@@ -409,7 +409,7 @@ public class UI {
 	 * Reads a string from the user input.
 	 * @return the string the user entered.
 	 */
-	private String inputString()
+	protected String inputString()
 	{
 		Scanner sc = new Scanner(System.in);
 		String input = "";
