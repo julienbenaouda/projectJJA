@@ -66,7 +66,7 @@ public class XmlObjectTest {
         Assert.assertEquals("Wrong text value!", new_object.getTexts("text").get(1), "text value 2");
         Assert.assertEquals("Wrong attribute value!", new_sub1.getAttribute("sub1_attribute"), "sub1 attribute value");
         Assert.assertEquals("Wrong text value!", new_sub1.getTexts("sub1_text").get(0), "sub1 text value");
-        Assert.assertEquals("Wrong text value!", sub3.getTexts("sub3_text").get(0), "sub3 text value");
+        Assert.assertEquals("Wrong text value!", new_sub3.getTexts("sub3_text").get(0), "sub3 text value");
     }
 
     // TODO: tests voor exceptions...

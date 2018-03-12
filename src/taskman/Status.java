@@ -32,4 +32,7 @@ public enum Status {
         return this.name();
     }
 
+    public Boolean isFinal() {
+        return this.equals(Status.FINISHED) || this.equals(Status.FAILED);
+    }
 }
