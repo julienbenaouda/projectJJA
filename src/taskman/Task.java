@@ -1,6 +1,5 @@
 package taskman;
 
-import java.nio.file.AccessDeniedException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -469,7 +468,11 @@ public class Task implements Comparable<Object> {
             dependenciesIDs[i] = dependencies.get(0).getID();
         }
         taskDetails.put("dependencies", dependenciesIDs.toString());
-        taskDetails.put("alternative", alternative.getID().toString());
+        if(alternative != null) {
+        	taskDetails.put("alternative", alternative.getID().toString());
+        } else {
+        	taskDetails.put("alternative", "no alternative task");
+        }
 
         return taskDetails;
     }

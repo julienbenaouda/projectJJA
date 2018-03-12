@@ -418,6 +418,8 @@ public class UI {
 		} catch (NoSuchElementException e)
 		{
 			input = inputString();
+		} finally {
+			sc.close();
 		}
 		return input;
 	}

@@ -8,15 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import taskman.XmlObject;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  * This is a test class for the Task class.

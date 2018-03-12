@@ -3,7 +3,6 @@ package test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Before;
@@ -11,8 +10,6 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 import taskman.Controller;
-import taskman.Project;
-import taskman.UI;
 
 public class UITest {
 	private UIMock ui;

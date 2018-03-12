@@ -49,7 +49,6 @@ public class Project {
 	 * @post The given task is added to the project
 	 */
 	public void addTask(Task task) {
-		// TODO: ge zijt case met lege lijst vergeten
 		int low = 0;
 	 	int middle = low;
 	 	int high = taskList.size();
