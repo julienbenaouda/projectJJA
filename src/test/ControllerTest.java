@@ -68,19 +68,14 @@ public class ControllerTest {
         Assert.assertNotNull("Task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
         controller.addTask(projectName, taskForm);
-        Integer alternativeTaskId = controller.getLastTaskID();
-        Assert.assertNotEquals("The last task id is not updated!", taskId, alternativeTaskId);
-        System.out.println("Check!");
-        controller.addAlternativeToTask(projectName, taskId, alternativeTaskId); // TODO: oneindige loop oplossen!
-
-        controller.addTask(projectName, taskForm);
         Integer dependencyTaskId = controller.getLastTaskID();
+        Assert.assertNotEquals("The last task id is not updated!", taskId, dependencyTaskId);
         controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
 
         HashMap<String,String> updateForm = controller.getUpdateTaskStatusForm();
         updateForm.put("startTime", "01/02/2003 05:05");
         updateForm.put("endTime", "01/01/2100 00:00");
-        updateForm.put("status", "FINISHED");
+        updateForm.put("status", "FAILED");
         try {
             User.setUserType("REGULARUSER");
             controller.updateTaskStatus(projectName, taskId, updateForm);
@@ -91,6 +86,9 @@ public class ControllerTest {
         User.setUserType("DEVELOPER");
         controller.updateTaskStatus(projectName, taskId, updateForm);
 
+        controller.addTask(projectName, taskForm);
+        Integer alternativeTaskId = controller.getLastTaskID();
+        controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
     }
 
     @Test

@@ -1,16 +1,14 @@
 package test;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.Controller;
 
+import java.io.File;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import junit.framework.Assert;
-import taskman.Controller;
 
 public class UITest {
 	private UIMock ui;
@@ -322,7 +320,9 @@ public class UITest {
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("description:"));
 	}
-	
+
+	private String os_path = System.getProperty("user.dir") + File.separator;
+
 	@Test
 	public void testExport() {
 		ui.setInput("22/02/2032 22:22");
@@ -339,7 +339,7 @@ public class UITest {
 			ui.createTask("test");
 		} catch (UnsupportedOperationException e) {}
 		try {
-			ui.setInput("e:\\file.xml");
+			ui.setInput(os_path + "file.xml");
 			ui.setInput("6");
 			ui.showMainMenu();
 		} catch(UnsupportedOperationException e) {}
@@ -363,7 +363,7 @@ public class UITest {
 			ui.createTask("test");
 		} catch (UnsupportedOperationException e) {}
 		try {
-			ui.setInput("e:\\fil:e.xml");
+			ui.setInput(os_path + "fil:e.xml");
 			ui.setInput("6");
 			ui.showMainMenu();
 		} catch(UnsupportedOperationException e) {}
@@ -373,7 +373,7 @@ public class UITest {
 	@Test
 	public void testImport()
 	{
-		ui.setInput("e:\\file.xml");
+		ui.setInput(os_path + "file.xml");
 		ui.setInput("5");
 		try {
 			ui.showMainMenu();
@@ -383,7 +383,7 @@ public class UITest {
 	
 	@Test
 	public void testImportInvalidPath() {
-		ui.setInput("e:\\file2.xml");
+		ui.setInput(os_path + "file2.xml");
 		ui.setInput("5");
 		try {
 			ui.showMainMenu();
