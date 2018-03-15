@@ -1,0 +1,28 @@
+@startuml
+
+title "Update Task Status - Sequence Diagram"
+
+
+Activate ":UI"
+":UI" -> ":Controller": getAvailableTaskDetails(projectName)
+Activate ":Controller"
+":Controller" -> ":Project": getAvailableTaskDetails()
+Activate ":Project"
+":Project" --> ":Controller": availableTaskDetails
+Deactivate ":Project"
+":Controller" --> ":UI": availableTaskDetails
+
+":UI" -> ":Controller": getUpdateTaskStatusForm
+":Controller" -> ":Task": getUpdateStatusForm
+Activate ":Task"
+":Task" --> ":Controller": form
+Deactivate ":Task"
+":Controller" --> ":UI": form
+
+":UI"->":Controller" : updateTaskStatus(projectName, form)
+":Controller" -> ":Task": UpdateTaskStatus(form)
+Activate ":Task"
+Deactivate ":Task"
+Deactivate ":Controller"
+
+@enduml
