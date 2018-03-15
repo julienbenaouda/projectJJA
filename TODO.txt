@@ -8,3 +8,4 @@ TODO:
 - Creatie van object in UI moet direct foutboodschap geven na foute invoer i.p.v. achteraf. Mss isValidFormEntry(key, value) in Controller?
 - addXmlObject -> createXmlObject
 - printMenu(ArrayList<String>)
+- UITest op punt zetten
