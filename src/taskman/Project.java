@@ -10,21 +10,22 @@ import java.util.*;
 
 /**
  * This class represents a project.
- * @author Julien Benaouda
  *
+ * @author Julien Benaouda
  */
 public class Project {
 
-	/**
-	 * creates a new project with the given values
-	 * @param name the project name
-	 * @param description the project description
-	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
-	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
-	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
-	 * @post a new project is created with the given attributes
-	 */
-	public Project(String name, String description, String creationTime, String dueTime) throws IllegalArgumentException
+    /**
+     * creates a new project with the given values
+     *
+     * @param name         the project name
+     * @param description  the project description
+     * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
+     * @param dueTime      the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
+     * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+     * @post a new project is created with the given attributes
+     */
+    public Project(String name, String description, String creationTime, String dueTime) throws IllegalArgumentException
 	{
 		setName(name);
 		setDescription(description);
@@ -32,23 +33,26 @@ public class Project {
 		setDueTime(dueTime);
 		taskList = new ArrayList<>();
 	}
-	
-	/**
-	 * Creates a new project with parameters from the given hashmap.
-	 * @param form the HashMap from which to extract the parameters.
-	 * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
-	 * @post a new project is created with the given parameters
-	 */
-	public Project(HashMap<String, String> form) throws IllegalArgumentException {
+
+    /**
+     * Creates a new project with parameters from the given hashmap.
+     *
+     * @param form the HashMap from which to extract the parameters.
+     * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
+     * @post a new project is created with the given parameters
+     */
+    public Project(HashMap<String, String> form) throws IllegalArgumentException {
 		this(form.get("name"), form.get("description"), form.get("creationTime"), form.get("dueTime"));
 	}
-	
-	/**
-	 * adds a new task to the projects task list
-	 * @param task the task to add
-	 * @post The given task is added to the project
-	 */
-	public void addTask(Task task) throws IllegalStateException {
+
+    /**
+     * adds a new task to the projects task list
+     *
+     * @param task the task to add
+     * @throws IllegalStateException the illegal state exception
+     * @post The given task is added to the project
+     */
+    public void addTask(Task task) throws IllegalStateException {
 		int low = 0;
 	 	int high = taskList.size();
 		int middle = (low + high) / 2;
@@ -68,11 +72,12 @@ public class Project {
 	 	taskList.add(middle, task);
 	}
 
-	/**
-	 * Return if the project is finished
-	 * @return a Boolean
-	 */
-	public Boolean isFinished() {
+    /**
+     * Return if the project is finished
+     *
+     * @return a Boolean
+     */
+    public Boolean isFinished() {
 		for (Task task: this.taskList) {
 			if (task.getStatus() != Status.FINISHED) {
 				return false;
@@ -80,24 +85,26 @@ public class Project {
 		}
 		return true;
 	}
-	
-	/**
-	 * This method removes a task from the projects task list.
-	 * @param id the ID of the task to remove
-	 * @throws IllegalArgumentException If a task with the given ID does not exist in the project.
-	 */
-	public void removeTask(int id) throws IllegalArgumentException
+
+    /**
+     * This method removes a task from the projects task list.
+     *
+     * @param id the ID of the task to remove
+     * @throws IllegalArgumentException If a task with the given ID does not exist in the project.
+     */
+    public void removeTask(int id) throws IllegalArgumentException
 	{
 		taskList.remove(getTaskIndex(id));
 	}
 
-	/**
-	 * Returns the task details of the task
-	 * @param id the id of the task
-	 * @return a HashMap containing as keys the detail name and as value the corresponding detail value
-	 * @throws IllegalArgumentException when a task with the given ID does not exist in this project.
-	 */
-	public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException {
+    /**
+     * Returns the task details of the task
+     *
+     * @param id the id of the task
+     * @return a HashMap containing as keys the detail name and as value the corresponding detail value
+     * @throws IllegalArgumentException when a task with the given ID does not exist in this project.
+     */
+    public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException {
 		int index = getTaskIndex(id);
 		Task t = taskList.get(index);
 		return t.getTaskDetails();
@@ -105,6 +112,7 @@ public class Project {
 
     /**
      * Returns a list of task details of the available tasks
+     *
      * @return a List containing for each available task a HashMap containing as key the detail name and as value the corresponding detail value
      */
     public ArrayList<HashMap<String, String>> getAvailableTaskDetails(){
@@ -118,11 +126,12 @@ public class Project {
         return availableTaskDetailsList;
     }
 
-	/**
-	 * returns the name of the project
-	 * @return the name of the project
-	 */
-	public String getName() {
+    /**
+     * returns the name of the project
+     *
+     * @return the name of the project
+     */
+    public String getName() {
 		return name;
 	}
 
@@ -145,11 +154,12 @@ public class Project {
 	 */
 	private String name;
 
-	/**
-	 * returns the project description
-	 * @return the project description 
-	 */
-	public String getDescription() {
+    /**
+     * returns the project description
+     *
+     * @return the project description
+     */
+    public String getDescription() {
 		return description;
 	}
 
@@ -172,11 +182,12 @@ public class Project {
 	 */
 	private String description;
 
-	/**
-	 * returns the creation time of the project
-	 * @return the creationTime of the project
-	 */
-	public LocalDateTime getCreationTime() {
+    /**
+     * returns the creation time of the project
+     *
+     * @return the creationTime of the project
+     */
+    public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
 
@@ -204,11 +215,12 @@ public class Project {
 	 */
 	private LocalDateTime creationTime;
 
-	/**
-	 * returns the due time of the project
-	 * @return the dueTime of the project
-	 */
-	public LocalDateTime getDueTime() {
+    /**
+     * returns the due time of the project
+     *
+     * @return the dueTime of the project
+     */
+    public LocalDateTime getDueTime() {
 		return dueTime;
 	}
 
@@ -235,19 +247,22 @@ public class Project {
 	 */
 	private LocalDateTime dueTime;
 
-	/**
-	 * Returns a list with all tasks of a project
-	 * @return the tasks of the project
-	 */
-	public ArrayList<Task> getTasks() {
+    /**
+     * Returns a list with all tasks of a project
+     *
+     * @return the tasks of the project
+     */
+    public ArrayList<Task> getTasks() {
 		return ((ArrayList<Task>)taskList.clone());
 	}
-	
-	/**
-	 * This method returns a list with all the task IDs contained in the project
-	 * @returns A list of task IDs
-	 */
-	public List<Integer> getTaskIds()
+
+    /**
+     * This method returns a list with all the task IDs contained in the project
+     *
+     * @return the task ids
+     * @returns A list of task IDs
+     */
+    public List<Integer> getTaskIds()
 	{
 		List<Integer> IDs = new ArrayList<>();
 		for(Task t: taskList)
@@ -257,13 +272,14 @@ public class Project {
 		return IDs;
 	}
 
-	/**
-	 * returns the task with the given ID
-	 * @param id the id of the task
-	 * @return the task with the given ID
-	 * @throws IllegalArgumentException When the project doesn't contain a task with the given ID.
-	 */
-	public Task getTask(int id) {
+    /**
+     * returns the task with the given ID
+     *
+     * @param id the id of the task
+     * @return the task with the given ID
+     * @throws IllegalArgumentException When the project doesn't contain a task with the given ID.
+     */
+    public Task getTask(int id) {
 		return taskList.get(getTaskIndex(id));
 	}
 
@@ -304,11 +320,12 @@ public class Project {
 	 */
 	private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
-	/**
-	 * This method returns a hashmap containing the project properties.
-	 * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
-	 */
-	public HashMap<String, String> getProjectDetails()
+    /**
+     * This method returns a hashmap containing the project properties.
+     *
+     * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
+     */
+    public HashMap<String, String> getProjectDetails()
 	{
 		HashMap<String, String> details = new LinkedHashMap<>();
 		details.put("name", getName());
@@ -328,13 +345,14 @@ public class Project {
 		return details;
 	}
 
-	/**
-	 * Add a project to an XmlObject.
-	 * @param projectObject an XmlObject.
-	 * @post the project will be added to the XmlObject.
-	 * @throws XmlException if the project cannot be added to the XmlObject.
-	 */
-	public void addToXml(XmlObject projectObject) throws XmlException {
+    /**
+     * Add a project to an XmlObject.
+     *
+     * @param projectObject an XmlObject.
+     * @throws XmlException if the project cannot be added to the XmlObject.
+     * @post the project will be added to the XmlObject.
+     */
+    public void addToXml(XmlObject projectObject) throws XmlException {
 		projectObject.addAttribute("name", getName());
 		projectObject.addText("description", getDescription());
 		projectObject.addText("creationTime", getCreationTime().format(dateFormatter));
@@ -346,13 +364,14 @@ public class Project {
 		}
 	}
 
-	/**
-	 * Restore a project from an XmlObject.
-	 * @param projectObject the XmlObject.
-	 * @return the restored project.
-	 * @throws XmlException if the project can't be created.
-	 */
-	public static Project getFromXml(XmlObject projectObject) throws XmlException {
+    /**
+     * Restore a project from an XmlObject.
+     *
+     * @param projectObject the XmlObject.
+     * @return the restored project.
+     * @throws XmlException if the project can't be created.
+     */
+    public static Project getFromXml(XmlObject projectObject) throws XmlException {
 		String name = projectObject.getAttribute("name");
 		String description = projectObject.getTexts("description").get(0);
 		String creationTime = projectObject.getTexts("creationTime").get(0);
@@ -379,12 +398,13 @@ public class Project {
 		}
 		return project;
 	}
-	
-	/**
-	 * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
-	 * @return A HashMap containing all elements that need to be filled in to create a new project
-	 */
-	public static HashMap<String, String> getCreationForm()
+
+    /**
+     * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
+     *
+     * @return A HashMap containing all elements that need to be filled in to create a new project
+     */
+    public static HashMap<String, String> getCreationForm()
 	{
 		HashMap<String, String> form = new LinkedHashMap<>();
 		form.put("name", "");

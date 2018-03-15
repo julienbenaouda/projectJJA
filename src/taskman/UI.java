@@ -11,8 +11,8 @@ import java.util.Scanner;
 
 /**
  * This class represents the user interface of the taskman program.
- * @author Julien Benaouda, Jeroen Van Der Donckt
  *
+ * @author Julien Benaouda, Jeroen Van Der Donckt
  */
 public class UI {
     private Controller controller;
@@ -37,6 +37,7 @@ public class UI {
 
     /**
      * Shows a dialog where a user type can be chosen.
+     *
      * @post the user type is set to the specified type.
      */
     public void showUserChoiceDialog()
@@ -108,6 +109,9 @@ public class UI {
         }
     }
 
+    /**
+     * Show system time.
+     */
     public void showSystemTime() {
         StringBuilder sb = new StringBuilder("The system time is: ");
         sb.append(controller.getSystemTime());
@@ -131,6 +135,7 @@ public class UI {
 
     /**
      * Lets the user import a path to an xml file and converts that xml file into project data.
+     *
      * @post all system and project data is restored from the xml file.
      */
     public void importFile()
@@ -151,6 +156,7 @@ public class UI {
 
     /**
      * Exports all system and project data to a file with the entered path
+     *
      * @post all system and project data is exported to an xml file.
      */
     public void exportFile()
@@ -186,6 +192,7 @@ public class UI {
 
     /**
      * Shows the project menu for a given project and let's the user choose an option.
+     *
      * @param name the name of the project to show options for.
      */
     public void showProjectMenu(String name)
@@ -245,6 +252,7 @@ public class UI {
 
     /**
      * Adds an alternative to a task of a project
+     *
      * @param name the name of the project
      */
     public void addAlternative(String name)
@@ -268,9 +276,10 @@ public class UI {
 
     /**
      * adds a dependency to a task of the given project
+     *
      * @param name the name of the project
-     * @throws IllegalArgumentException
-     * @throws AccessDeniedException
+     * @throws AccessDeniedException    the access denied exception
+     * @throws IllegalArgumentException the illegal argument exception
      */
     public void addDependency(String name) throws AccessDeniedException, IllegalArgumentException
     {
@@ -284,6 +293,7 @@ public class UI {
 
     /**
      * Shows the details of the given project.
+     *
      * @param name the name of the project to show details for
      */
     public void showProjectDetails(String name) {
@@ -303,6 +313,7 @@ public class UI {
 
     /**
      * Shows the task details of the given project.
+     *
      * @param name the name of the project to show the tasks details for
      */
     public void showTaskDetails(String name) {
@@ -324,6 +335,7 @@ public class UI {
 
     /**
      * Creates a task for the given project.
+     *
      * @param name the name of the project to create the task for
      * @post a new task is created and added to the given project
      */
@@ -351,6 +363,7 @@ public class UI {
 
     /**
      * Shows the available tasks of the given project.
+     *
      * @param name the name of the given project
      * @throws IllegalArgumentException if the given project does not contain any available tasks
      */
@@ -384,6 +397,7 @@ public class UI {
 
     /**
      * Updates the task status of an available task of the given project.
+     *
      * @param name the name of the project
      * @post a task status, start time and end time of the selected available task of the given project is updaten
      */
@@ -420,6 +434,7 @@ public class UI {
 
     /**
      * creates a new project
+     *
      * @post a new project is created in the system with the entered parameters.
      */
     public void createProject() {
@@ -441,6 +456,7 @@ public class UI {
 
     /**
      * Advances the system time to the new time.
+     *
      * @post the system time is set to the entered time.
      */
     public void advanceSystemTime()
@@ -460,6 +476,7 @@ public class UI {
 
     /**
      * Prints the given text to the console.
+     *
      * @param text the text to print
      */
     public void print(String text)
@@ -487,6 +504,7 @@ public class UI {
 
     /**
      * Reads a string from the user input.
+     *
      * @return the string the user entered.
      */
     protected String inputString()
@@ -504,11 +522,21 @@ public class UI {
         return input;
     }
 
+    /**
+     * Gets controller.
+     *
+     * @return the controller
+     */
     public Controller getController()
     {
         return controller;
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args)
     {
         UI ui = new UI();
