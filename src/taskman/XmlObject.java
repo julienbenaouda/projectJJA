@@ -20,7 +20,9 @@ import java.util.List;
 /**
  * This object is used to import and export objects to XML.
  *
- * @author Alexander Braekevelt, Julien Benaouda Source: https://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/ Source: https://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
+ * @author Alexander Braekevelt, Julien Benaouda
+ * Source: https://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/
+ * Source: https://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
  */
 public class XmlObject {
 
@@ -55,8 +57,12 @@ public class XmlObject {
      * Create an xml object with a given element of a given document.
      * @param doc the xml document
      * @param node the xml element within the document
+     * @throws NullPointerException if an argument is null.
      */
-    private XmlObject(Document doc, Element node) {
+    private XmlObject(Document doc, Element node) throws NullPointerException {
+        if (doc == null || node == null) {
+            throw new NullPointerException("Null objects in constructor of XmlObject!");
+        }
         this.doc = doc;
         this.element = node;
     }
@@ -65,9 +71,13 @@ public class XmlObject {
      * Write this object to a XML file.
      *
      * @param path the path to write to.
-     * @throws XmlException if the object can't be written to the file.
+     * @throws XmlException if the object can't be written to the file or the path is null.
+     * @throws NullPointerException is path is null.
      */
-    public void exportTo(String path) throws XmlException {
+    public void exportTo(String path) throws XmlException, NullPointerException {
+        if (path == null) {
+            throw new NullPointerException("Path is null!");
+        }
         try {
             this.doc.appendChild(this.element);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -88,8 +98,12 @@ public class XmlObject {
      * @param path a String with the path of the file
      * @return the created XmlObject
      * @throws XmlException if the object can't be created.
+     * @throws NullPointerException if the path is null
      */
-    public static XmlObject importFrom(String path) throws XmlException {
+    public static XmlObject importFrom(String path) throws XmlException, NullPointerException {
+        if (path == null) {
+            throw new NullPointerException("Path is null!");
+        }
         try {
             File file = new File(path);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -111,8 +125,12 @@ public class XmlObject {
      *
      * @param name a String with the name of the child object.
      * @return a XmlObject with the given name and parent.
+     * @throws NullPointerException if the name is null.
      */
-    public XmlObject addXmlObject(String name) {
+    public XmlObject addXmlObject(String name) throws NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("Name of XmlObject is null!");
+        }
         Element element = this.doc.createElement(name);
         this.element.appendChild(element);
         return new XmlObject(this.doc, element);
@@ -124,8 +142,12 @@ public class XmlObject {
      * @param name a String with the name of the objects.
      * @return a list of XmlObjects.
      * @throws XmlException if a child with the given name is not a XmlObject.
+     * @throws NullPointerException if the name is null.
      */
-    public List<XmlObject> getXmlObjects(String name) throws XmlException {
+    public List<XmlObject> getXmlObjects(String name) throws XmlException, NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("Name of XmlObject is null!");
+        }
         NodeList nodes = this.element.getElementsByTagName(name);
         ArrayList<XmlObject> results = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -145,8 +167,15 @@ public class XmlObject {
      * @param name  a String with the unique name of the attribute.
      * @param value a String with the value of the attribute.
      * @throws XmlException if the name contains whitespaces.
+     * @throws NullPointerException if name is null.
      */
-    public void addAttribute(String name, String value) throws XmlException {
+    public void addAttribute(String name, String value) throws XmlException, NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("An attribute is added with a null as name!");
+        }
+        if (value == null) {
+            value = "null";
+        }
         if (name.contains(" ")) {
             throw new XmlException("The name '" + name + "' of an attribute cannot contain whitespaces!");
         }
@@ -161,8 +190,12 @@ public class XmlObject {
      * @param name a String with the unique name of the attribute.
      * @return a String with the value of the attribute.
      * @throws XmlException if the attribute is empty or does not exist, or the name contains whitespaces.
+     * @throws NullPointerException if the name is null.
      */
-    public String getAttribute(String name) throws XmlException {
+    public String getAttribute(String name) throws XmlException, NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("Name is null!");
+        }
         if (name.contains(" ")) {
             throw new XmlException("The name '" + name + "' of an attribute cannot contain whitespaces!");
         }
@@ -170,7 +203,9 @@ public class XmlObject {
         if (value.isEmpty()) {
             throw new XmlException("The value of '" + name + "' is empty or does not exist!");
         }
-        else {
+        else if (value.equals("null")) {
+            return null;
+        } else {
             return value;
         }
     }
@@ -181,8 +216,15 @@ public class XmlObject {
      * @param name  a String with the name of the text attribute.
      * @param value a String with the value of the text attribute.
      * @throws XmlException if the name contains whitespaces.
+     * @throws NullPointerException if name is null.
      */
-    public void addText(String name, String value) throws XmlException {
+    public void addText(String name, String value) throws XmlException, NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("Text is added with a null as name!");
+        }
+        if (value == null) {
+            value = "null";
+        }
         if (name.contains(" ")) {
             throw new XmlException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
         }
@@ -197,8 +239,12 @@ public class XmlObject {
      * @param name a String with the name of the text attribute.
      * @return a String with the value of the text attribute.
      * @throws XmlException if the text attribute cannot be handled of the name contains whitespaces.
+     * @throws NullPointerException if the name is null.
      */
-    public List<String> getTexts(String name) throws XmlException {
+    public List<String> getTexts(String name) throws XmlException, NullPointerException {
+        if (name == null) {
+            throw new NullPointerException("Name is null!");
+        }
         if (name.contains(" ")) {
             throw new XmlException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
         }
@@ -207,7 +253,11 @@ public class XmlObject {
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
             try {
-                results.add(node.getTextContent());
+                String text = node.getTextContent();
+                if (text.equals("null")) {
+                    text = null;
+                }
+                results.add(text);
             } catch (DOMException e) {
                 throw new XmlException("DOMException: " + e.getMessage());
             }
