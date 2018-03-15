@@ -1,0 +1,10 @@
+TODO:
+- Status -> TaskStatus
+- Constructor van Task in Project
+- User en UserType samenvoegen
+- getTasks in Project private maken
+- Nuttige error boodschappen geven in UI
+- Omzettingen van tijd allemaal in Clock doen
+- Creatie van object in UI moet direct foutboodschap geven na foute invoer i.p.v. achteraf. Mss isValidFormEntry(key, value) in Controller?
+- addXmlObject -> createXmlObject
+- printMenu(ArrayList<String>)
