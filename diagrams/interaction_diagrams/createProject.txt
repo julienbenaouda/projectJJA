@@ -1,0 +1,22 @@
+@startuml
+
+title "Create Project - Sequence Diagram"
+
+
+Activate ":UI"
+":UI" -> ":Controller": getProjectCreationForm()
+Activate ":Controller"
+":Controller" -> ":Project": getCreationForm()
+Activate ":Project"
+":Project" --> ":Controller": form
+Deactivate ":Project"
+":Controller" --> ":UI": form
+
+":UI" -> ":Controller": addProject(form)
+":Controller" -> ":Project": Project(form)
+Activate ":Project"
+Deactivate ":Project"
+
+Deactivate ":Controller"
+
+@enduml

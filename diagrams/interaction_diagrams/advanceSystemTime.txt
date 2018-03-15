@@ -1,0 +1,11 @@
+@startuml
+
+title "Advance System Time - Sequence Diagram"
+
+
+Activate ":UI"
+":UI" -> ":Controller": updateSystemTime(newTime)
+Activate ":Controller"
+Deactivate ":Controller"
+
+@enduml
