@@ -231,8 +231,9 @@ title TASKMAN\n
 
   Controller *-- Clock 
   Controller *-- Project
-  Controller *-- Task
-  Controller *-- XmlObject
+  Controller o-- Task
+  Controller o-- XmlObject
+  Controller o-- User
   Project *-- Task: task
   Task *-- Status : status
   Task *-- Task : alternative
