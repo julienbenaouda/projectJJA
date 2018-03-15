@@ -1,0 +1,42 @@
+TaskMan
+A Project-Oriented Task Manager
+SWOP – Iteration 1
+
+Overview of the design
+
+The Task class
+Information Expert
+Don’t Talk to Strangers
+Mocking
+
+The Project class
+Information Expert
+Creator: verkeerd!
+Indirection
+Don’t Talk to Strangers
+
+The Clock class
+Information Expert
+Don’t Talk to Strangers
+
+The User class
+static class
+Information Expert
+Indirection
+Don’t Talk to Strangers
+
+The Controller class
+Controller
+Creator
+Indirection
+
+The XmlObject class
+Pure fabrication
+Information expert
+
+The UI class
+Information Expert
+Don’t Talk to Strangers
+Forms
+Mocking for print & input
+
