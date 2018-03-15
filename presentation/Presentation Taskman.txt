@@ -8,35 +8,81 @@ The Task class
 Information Expert
 Don’t Talk to Strangers
 Mocking
+Unique ID’s
+Checks for loops in depencencies & alternatives
+Checks overlap with timespans of dependencies
+Maps for forms & details
+LocalDateTime, Duration
 
 The Project class
 Information Expert
-Creator: verkeerd!
-Indirection
+Task Creator in wrong class (!)
 Don’t Talk to Strangers
+Unique name
+Tasks not shared
+Maps for forms & details
+LocalDateTime, Duration
 
 The Clock class
 Information Expert
 Don’t Talk to Strangers
+LocalDateTime, DateTimeFormatter
 
 The User class
-static class
 Information Expert
-Indirection
 Don’t Talk to Strangers
+Static class
+UserType
+No login
+Permission checked in Controller
 
 The Controller class
 Controller
 Creator
 Indirection
+Maps for forms & details
+Initialize Clock, User, Projects
+Checks permission
+Create and signal XmlObject
 
 The XmlObject class
 Pure fabrication
 Information expert
+Import/export logic
+Classes add/get text info
+Checks existence of values
+Throws XmlException
 
 The UI class
 Information Expert
+Creator
 Don’t Talk to Strangers
-Forms
+Command line interface
+Maps for forms & details
+Main function
+Parse input strings
 Mocking for print & input
+
+Use cases
+Create project
+Show projects
+
+Use cases
+Create task
+Update task status
+
+Use cases
+Advance system time
+
+Project management
+Design Coordinator: Julien Benaouda
+Testing Coordinator: Alexander Braekevelt
+Domain Coordinator: Jeroen Van Der Donckt
+... but actually everyone did everything (of his part of the code)
+next iteration we will continue this approach
+
+		Julien	Jeroen	Alexander
+group work	±20h	±20h	±20h
+individual work	±60h	±25h	±25h
+study		±60h	±22h	±10h
 
