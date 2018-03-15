@@ -12,15 +12,16 @@ import java.util.Stack;
 
 /**
  * This class represents a task.
- * @author Jeroen Van Der Donckt
  *
+ * @author Jeroen Van Der Donckt
  */
 public class Task implements Comparable<Object> {
 
     /**
      * Creates a new task with the given values.
-     * @param description the task description
-     * @param estimatedDuration the estimated duration of the task in minutes
+     *
+     * @param description         the task description
+     * @param estimatedDuration   the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
      * @post a new task is created with the given attributes an available status
      */
@@ -35,6 +36,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Creates a new task with parameters from the given hashmap.
+     *
      * @param form the HashMap from which to extract the parameters.
      * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
      * @post a new task is created with the given parameters
@@ -79,6 +81,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Return the ID of the latest task. (This should be the maximum of all ID's)
+     *
      * @return the ID of the latest task
      */
     public static Integer getLastTaskID() { return lastTaskID; }
@@ -101,6 +104,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Return the ID of the task.
+     *
      * @return the ID of the task
      */
     public Integer getID(){
@@ -138,6 +142,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the task description.
+     *
      * @return the task description
      */
     public String getDescription(){
@@ -164,6 +169,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the estimated duration of the task in minutes.
+     *
      * @return the estimated duration of the task in minutes
      */
     public String getEstimatedDuration(){
@@ -190,6 +196,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the acceptable deviation of the task
+     *
      * @return the acceptable deviation of the task
      */
     public Double getAcceptableDeviation(){
@@ -219,6 +226,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the start time of the task.
+     *
      * @return the start time of the task or null if there is no start time
      */
     public String getStartTime(){
@@ -248,6 +256,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the end time of the task.
+     *
      * @return the end time of the task or null if there is no end time
      */
     public String getEndTime(){
@@ -277,6 +286,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the task status.
+     *
      * @return the task status
      */
     public Status getStatus(){
@@ -297,9 +307,9 @@ public class Task implements Comparable<Object> {
 
     /**
      * Updates the status of the task.
+     *
      * @param form the HashMap from which to extract the necessary values
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time
-     * @throws IllegalArgumentException when the startTime if before the endTime of its dependencies
      * @post the start time, end time and status of the task will be updated
      */
     public void updateStatus(HashMap<String, String> form) throws IllegalArgumentException {
@@ -332,6 +342,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Return the delay between the end time and the estimated end time in minutes.
+     *
      * @return a String with the time between the end time and the estimated end time in minutes.
      * @throws IllegalStateException if the task is not yet finished.
      */
@@ -353,6 +364,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns the alternative task of the task.
+     *
      * @return the alternative task
      */
     public Task getAlternative(){
@@ -362,10 +374,11 @@ public class Task implements Comparable<Object> {
 
     /**
      * Sets the alternative task of the task to the given task.
+     *
      * @param alternative the alternative task of the task
-     * @post the alternative task of the task is set to the given task
-     * @throws IllegalStateException the task must be failed to set the alternative task
+     * @throws IllegalStateException    the task must be failed to set the alternative task
      * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
+     * @post the alternative task of the task is set to the given task
      */
     public void setAlternative(Task alternative) throws IllegalStateException, IllegalArgumentException {
         if (getStatus() != Status.FAILED){
@@ -387,6 +400,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Returns a list with all dependencies of the task.
+     *
      * @return the dependencies of the task
      */
     public ArrayList<Task> getDependencies(){
@@ -406,10 +420,11 @@ public class Task implements Comparable<Object> {
 
     /**
      * Adds a dependency to the task.
+     *
      * @param dependency task that needs to be added to the task
-     * @post the dependency is added to the task, the status of the task is updated accordingly
      * @throws IllegalArgumentException when the dependency is this task or its alternative or one of its dependencies or one of these alternatives recursively
-     * @throws IllegalStateException if the task is already finished or failed
+     * @throws IllegalStateException    if the task is already finished or failed
+     * @post the dependency is added to the task, the status of the task is updated accordingly
      */
     public void addDependency(Task dependency) throws IllegalArgumentException, IllegalStateException {
         if (containsLoop(this, dependency)){
@@ -435,6 +450,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Restores the dependencies of the task without checks.
+     *
      * @param dependencies an ArrayList of Task on which this task is dependant.
      */
     public void restoreDependencies(ArrayList<Task> dependencies) {
@@ -443,9 +459,10 @@ public class Task implements Comparable<Object> {
 
     /**
      * Removes dependency of the given task.
+     *
      * @param dependency task that needs to be removed as dependency of the task
-     * @post the dependency is deleted from the task and the task status is updated accordingly
      * @throws IllegalArgumentException the dependency task must be a dependency of the task
+     * @post the dependency is deleted from the task and the task status is updated accordingly
      */
     public void removeDependency(Task dependency){
         if (! dependencies.contains(dependency)){
@@ -475,9 +492,9 @@ public class Task implements Comparable<Object> {
     }
 
 
-
     /**
      * Returns the task details of the task.
+     *
      * @return a HashMap containing as keys the detail name and as value the corresponding detail value
      */
     public HashMap<String, String> getTaskDetails() {
@@ -575,9 +592,10 @@ public class Task implements Comparable<Object> {
 
     /**
      * Add a task to an XmlObject.
+     *
      * @param taskObject an XmlObject.
-     * @post the task will be added to the XmlObject.
      * @throws XmlException if the clock cannot be added to the XmlObject.
+     * @post the task will be added to the XmlObject.
      */
     public void addToXml(XmlObject taskObject) throws XmlException {
         taskObject.addAttribute("id", getID().toString());
@@ -601,6 +619,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * Restore a task from an XmlObject.
+     *
      * @param taskObject the XmlObject.
      * @return the restored task.
      * @throws XmlException if the task can't be created.
@@ -622,6 +641,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * This method generates a form containing all parameters needed to create a new task. All values are empty and can be filled in, and then passed back to the task.
+     *
      * @return a HashMap containing all elements that need to be filled in to create a new task
      */
     public static HashMap<String, String> getCreationForm() {
@@ -635,6 +655,7 @@ public class Task implements Comparable<Object> {
 
     /**
      * This method generates a form containing all parameters needed to update the status of a task. All values are empty and can be filled in, and then passed back to the task.
+     *
      * @return a HashMap containing all elements that need to be filled in to update the status of a task
      */
     public static HashMap<String, String> getUpdateStatusForm() {

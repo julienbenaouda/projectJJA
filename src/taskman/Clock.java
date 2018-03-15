@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
+/**
+ * The type Clock.
+ */
 public class Clock {
 
     /**
@@ -29,6 +32,7 @@ public class Clock {
 
     /**
      * Returns the time of the clock
+     *
      * @return a LocalDateTime object
      */
     public LocalDateTime getSystemTime() {
@@ -37,6 +41,7 @@ public class Clock {
 
     /**
      * Returns the time of the clock.
+     *
      * @return a string
      */
     public String getSystemTimeString() {
@@ -45,10 +50,11 @@ public class Clock {
 
     /**
      * Updates the time of the clock.
+     *
      * @param s the new time of the clock.
-     * @post the time of the clock will be set to the given time.
-     * @throws DateTimeParseException if the text cannot be parsed
+     * @throws DateTimeParseException   if the text cannot be parsed
      * @throws IllegalArgumentException if the new time if before the old time.
+     * @post the time of the clock will be set to the given time.
      */
     public void updateSystemTime(String s) throws DateTimeParseException, IllegalArgumentException {
         LocalDateTime newSystemTime = LocalDateTime.parse(s, dateFormatter);
@@ -62,9 +68,10 @@ public class Clock {
 
     /**
      * Add a clock to an XmlObject.
+     *
      * @param clockObject an XmlObject.
-     * @post the clock will be added to the XmlObject.
      * @throws XmlException if the clock cannot be added to the XmlObject.
+     * @post the clock will be added to the XmlObject.
      */
     public void addToXml(XmlObject clockObject) throws XmlException {
         clockObject.addAttribute("systemTime", this.getSystemTimeString());
@@ -72,6 +79,7 @@ public class Clock {
 
     /**
      * Restore a clock from an XmlObject.
+     *
      * @param clockObject the XmlObject.
      * @return the restored clock.
      * @throws XmlException if the clock can't be created.

@@ -1,0 +1,275 @@
+@startuml
+
+title __TASKMAN's Class Diagram__\n
+
+  package taskman {
+    class Clock {
+        - systemTime : LocalDateTime
+        - dateFormatter : DateTimeFormatter
+        - setSystemTime()
+        + getSystemTime()
+        + getSystemTimeString()
+        + updateSystemTime()
+        + addToXml()
+        {static} + getFromXml()
+    }
+  }
+  
+
+  package taskman {
+    class Controller {
+        - projects : HashMap<String, Project>
+        + Controller()
+        + Controller()
+        + Controller()
+        - Controller()
+        + getProjectNames()
+        + projectExists()
+        - getProject()
+        - addProject()
+        + getProjectCreationForm()
+        + addProject()
+        + getProjectDetails()
+        + getTasksOfProject()
+        + getTaskDetails()
+        + getAvailableTaskDetails()
+        + getTaskCreationForm()
+        + addTask()
+        + getLastTaskID()
+        + addAlternativeToTask()
+        + addDependencyToTask()
+        + getUpdateTaskStatusForm()
+        + updateTaskStatus()
+        + getDelay()
+        + getSystemTime()
+        + updateSystemTime()
+        + getUserType()
+        + setUserType()
+        + exportToXML()
+        {static} + importFromXML()
+    }
+  }
+  
+
+  package taskman {
+    class Project {
+        - name : String
+        - description : String
+        - creationTime : LocalDateTime
+        - dueTime : LocalDateTime
+        - taskList : ArrayList<Task>
+        {static} - dateFormatter : DateTimeFormatter
+        + Project()
+        + Project()
+        + addTask()
+        + isFinished()
+        + removeTask()
+        + getTaskDetails()
+        + getAvailableTaskDetails()
+        + getName()
+        - setName()
+        + getDescription()
+        - setDescription()
+        + getCreationTime()
+        - setCreationTime()
+        + getDueTime()
+        - setDueTime()
+        + getTasks()
+        + getTaskIds()
+        + getTask()
+        - getTaskIndex()
+        + getProjectDetails()
+        + addToXml()
+        {static} + getFromXml()
+        {static} + getCreationForm()
+    }
+  }
+  
+
+  package taskman {
+    enum Status {
+      AVAILABLE
+      UNAVAILABLE
+      FINISHED
+      FAILED
+    }
+  }
+  
+
+  package taskman {
+    class Task {
+        {static} - lastTaskID : Integer
+        - ID : Integer
+        - description : String
+        - estimatedDuration : Duration
+        - acceptableDeviation : Double
+        - startTime : LocalDateTime
+        {static} - dateFormatter : DateTimeFormatter
+        - endTime : LocalDateTime
+        - dependencies : ArrayList<Task>
+        + Task()
+        + Task()
+        - Task()
+        {static} + getLastTaskID()
+        {static} - setLastTaskID()
+        + getID()
+        - setID()
+        - setID()
+        + getDescription()
+        - setDescription()
+        + getEstimatedDuration()
+        - setEstimatedDuration()
+        + getAcceptableDeviation()
+        - setAcceptableDeviation()
+        + getStartTime()
+        - setStartTime()
+        + getEndTime()
+        - setEndTime()
+        + getStatus()
+        - setStatus()
+        + updateStatus()
+        - getEndTimeObject()
+        + getDelay()
+        + getAlternative()
+        + setAlternative()
+        + getDependencies()
+        - setDependencies()
+        + addDependency()
+        + restoreDependencies()
+        + removeDependency()
+        + getTaskDetails()
+        {static} - containsLoop()
+        + compareTo()
+        + addToXml()
+        {static} + getFromXml()
+        {static} + getCreationForm()
+        {static} + getUpdateStatusForm()
+    }
+  }
+  
+
+  package taskman {
+    class UI {
+        # UI()
+        + welcomeDialog()
+        + showUserChoiceDialog()
+        + showMainMenu()
+        + showSystemTime()
+        + listProjects()
+        + importFile()
+        + exportFile()
+        + showProjectMenu()
+        + showProjectMenu()
+        + addAlternative()
+        + addDependency()
+        + showProjectDetails()
+        + showTaskDetails()
+        + createTask()
+        + showAvailableTasks()
+        - fillInTaskUpdateForm()
+        + updateTaskStatus()
+        + createProject()
+        + advanceSystemTime()
+        + print()
+        - inputInt()
+        # inputString()
+        + getController()
+        {static} + main()
+    }
+  }
+  
+
+  package taskman {
+    class User {
+        {static} - userType : UserType
+        {static} + setUserType()
+        {static} + getUserType()
+        {static} + canChangeTaskStatus()
+        {static} + addToXml()
+        {static} + setFromXml()
+    }
+  }
+  
+
+  package taskman {
+    enum UserType {
+      REGULARUSER
+      DEVELOPER
+    }
+  }
+  
+
+  package taskman {
+    class XmlException {
+        + XmlException()
+    }
+  }
+  
+
+  class WrappedPrintWriter {
+      - printWriter : PrintWriter
+      ~ WrappedPrintWriter()
+      ~ lock()
+      ~ println()
+  }
+  
+
+  class WrappedPrintStream {
+      - printStream : PrintStream
+      ~ WrappedPrintStream()
+      ~ lock()
+      ~ println()
+  }
+  
+
+  abstract class PrintStreamOrWriter {
+      - PrintStreamOrWriter()
+      {abstract} ~ lock()
+      {abstract} ~ println()
+  }
+  
+
+  class SentinelHolder {
+      {static} + STACK_TRACE_ELEMENT_SENTINEL : StackTraceElement
+      {static} + STACK_TRACE_SENTINEL : StackTraceElement[]
+      - SentinelHolder()
+  }
+  
+
+  package taskman {
+    class XmlObject {
+        - doc : Document
+        - element : Element
+        + XmlObject()
+        - XmlObject()
+        + exportTo()
+        {static} + importFrom()
+        + addXmlObject()
+        + getXmlObjects()
+        + addAttribute()
+        + getAttribute()
+        + addText()
+        + getTexts()
+    }
+  }
+  
+
+  Controller o-- Clock : clock
+  Task -up-|> Comparable
+  Task o-- Status : status
+  Task o-- Task : alternative
+  UI o-- Controller : controller
+  XmlException +-down- WrappedPrintWriter
+  XmlException +-down- WrappedPrintStream
+  XmlException +-down- PrintStreamOrWriter
+  XmlException +-down- SentinelHolder
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
