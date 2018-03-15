@@ -1,0 +1,26 @@
+@startuml
+
+title "Create Task - Sequence Diagram"
+
+
+Activate ":UI"
+":UI" -> ":Controller": getTaskCreationForm()
+Activate ":Controller"
+":Controller" -> ":Task": getCreationForm()
+Activate ":Task"
+":Task" --> ":Controller": form
+Deactivate ":Task"
+":Controller" --> ":UI": form
+
+":UI"->":Controller" : addTask(projectName, form)
+":Controller" -> ":Task": Task(form)
+Activate ":Task"
+Deactivate ":Task"
+
+":Controller" -> ":Project": addTask()
+Activate ":Project"
+Deactivate ":Project"
+
+Deactivate ":Controller"
+
+@enduml
