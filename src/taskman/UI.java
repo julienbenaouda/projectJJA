@@ -185,7 +185,7 @@ public class UI {
             showProjectMenu(name);
         } else
         {
-            print("A project with the given name does not exist, please try again.");
+            print("A project with the given name does not exist, please try again.\n");
             showMainMenu();
         }
     }
@@ -202,8 +202,8 @@ public class UI {
         sb.append("2 - view task details\n");
         sb.append("3 - add task\n");
         sb.append("4 - update task status\n");
-        sb.append("5 - add dependency");
-        sb.append("6 - add alternative to task");
+        sb.append("5 - add dependency\n");
+        sb.append("6 - add alternative to task\n");
         sb.append("7 - back to main menu\n");
         sb.append("Choose option: ");
         print(sb.toString());
@@ -259,7 +259,7 @@ public class UI {
     {
         print("Enter the id of the task for which to add an alternative: ");
         int taskID = inputInt();
-        print("Enter the id of tha laternative task: ");
+        print("Enter the id of the alaternative task: ");
         int alternativeID = inputInt();
         try {
             controller.addAlternativeToTask(name, taskID, alternativeID);
@@ -271,6 +271,7 @@ public class UI {
             showProjectMenu(name);
         } catch( IllegalStateException e){
             print ("Error while adding the alternative: " + e.getMessage());
+            showProjectMenu(name);
         }
     }
 
@@ -289,6 +290,7 @@ public class UI {
         int dependencyID = inputInt();
         controller.addDependencyToTask(name, taskID, dependencyID);
         print("Dependency added successfully.\n");
+        showProjectMenu(name);
     }
 
     /**
