@@ -26,10 +26,8 @@ public class Controller {
     /**
      * Create a controller (with minimum time and regular user type).
      */
-    public Controller() {
-        this.clock = new Clock();
-        this.projects = new HashMap<>();
-    }
+    public Controller() {}
+    
 
     /**
      * Create a controller (with given time and regular user type).
@@ -63,7 +61,7 @@ public class Controller {
      * @param projects a HashMap with Strings and Projects
      * @param clock a Clock
      */
-    private Controller(HashMap<String, Project> projects, Clock clock) {
+    public Controller(HashMap<String, Project> projects, Clock clock) {
         this.projects = projects;
         this.clock = clock;
     }
@@ -204,7 +202,7 @@ public class Controller {
      * @post a project with the properties from a given form will be added to the controller.
      */
     public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException {
-        getProject(projectName).addTask(new Task(form));
+        getProject(projectName).addTask(form);
     }
 
     /**

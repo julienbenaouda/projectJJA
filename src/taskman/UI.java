@@ -19,10 +19,18 @@ public class UI {
 
     /**
      * Creates a new UI object.
+     * @param c the controller that the UI may use.
+     * @post a new UI object is created with the given controller. If the controller is null, the system exits.
      */
-    protected UI()
+    public UI(Controller c)
     {
-        controller = new Controller();
+    	if(c != null)
+    	{
+    		controller = c;
+    	} else {
+    		print("Error while opening the program, no controller.");
+    		System.exit(0);
+    	}
     }
 
     /**
@@ -71,18 +79,17 @@ public class UI {
      */
     public void showMainMenu()
     {
-        StringBuilder message = new StringBuilder("options:\n");
-        message.append("1 - list all projects\n");
-        message.append("2 - open project\n");
-        message.append("3 - add new project\n");
-        message.append("4 - advance system time\n");
-        message.append("5 - import data\n");
-        message.append("6 - export data\n");
-        message.append("7 - change user\n");
-        message.append("8 - get system time\n");
-        message.append("9 - quit\n");
-        message.append("Choose option:");
-        print(message.toString());
+        String[] items = new String[9];
+        items[0] = "list all projects";
+        items[1] = "open project";
+        items[2] = "add new project";
+        items[3] = "4 - advance system time";
+        items[4] = "import data";
+        items[5] = "export data";
+        items[6] = "change user";
+        items[7] = "get system time";
+        items[8] = "9 - quit";
+        showMenu(items);
         int input = inputInt();
         switch (input) {
             case 1: listProjects();
@@ -197,16 +204,15 @@ public class UI {
      */
     public void showProjectMenu(String name)
     {
-        StringBuilder sb = new StringBuilder("options for project " +name +":\n");
-        sb.append("1 - view project details\n");
-        sb.append("2 - view task details\n");
-        sb.append("3 - add task\n");
-        sb.append("4 - update task status\n");
-        sb.append("5 - add dependency\n");
-        sb.append("6 - add alternative to task\n");
-        sb.append("7 - back to main menu\n");
-        sb.append("Choose option: ");
-        print(sb.toString());
+        String[] items = new String[7];
+        items[0] = "view project details";
+        items[1] = "view task details";
+        items[2] = "add task\n";
+        items[3] = "update task status";
+        items[4] = "add dependency";
+        items[5] = "add alternative to task";
+        items[6] = "back to main menu";
+        showMenu(items);
         int option = inputInt();
         switch (option)
         {
@@ -518,10 +524,22 @@ public class UI {
         } catch (NoSuchElementException e)
         {
             input = inputString();
-        } /*finally {
-			sc.close();
-		}*/
+        } 
         return input;
+    }
+    
+    /**
+     * Shows a menu to the user
+     * @param items an array representing the menu items
+     */
+    private void showMenu(String[] items)
+    {
+    	StringBuilder sb = new StringBuilder("Options:\n");
+    	for(int i = 0; i < items.length; i++) {
+    		sb.append((i+1) +" - " +items[i] +"\n");
+    	}
+    	sb.append("Chose option: ");
+    	print(sb.toString());
     }
 
     /**
@@ -534,14 +552,4 @@ public class UI {
         return controller;
     }
 
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     */
-    public static void main(String[] args)
-    {
-        UI ui = new UI();
-        ui.welcomeDialog();
-    }
 }
