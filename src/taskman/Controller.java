@@ -11,17 +11,17 @@ import java.util.*;
 public class Controller {
 
     /**
-     * Represents the clock.
+     * Represents the Clock.
      */
     private Clock clock;
 
     /**
-     * Represents the user.
+     * Represents the User.
      */
     private User user;
 
     /**
-     * Represents the projects with their unique ids.
+     * Represents the Projects with their unique ids.
      */
     private Map<String, Project> projects;
 
