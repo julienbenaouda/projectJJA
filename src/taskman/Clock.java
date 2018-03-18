@@ -23,7 +23,7 @@ public class Clock {
 
     /**
      * Sets the time of the clock to the given time.
-     * @param newSystemTime a LocalDatTime object
+     * @param newSystemTime a LocalDatTime object.
      * @post the time will be set to the given time.
      */
     private void setSystemTime(LocalDateTime newSystemTime) {
@@ -31,9 +31,8 @@ public class Clock {
     }
 
     /**
-     * Returns the time of the clock
-     *
-     * @return a LocalDateTime object
+     * Returns the time of the clock.
+     * @return a LocalDateTime object.
      */
     public LocalDateTime getSystemTime() {
         return systemTime; // LocalDateTime is immutable!
@@ -41,8 +40,7 @@ public class Clock {
 
     /**
      * Returns the time of the clock.
-     *
-     * @return a string
+     * @return a String.
      */
     public String getSystemTimeString() {
         return systemTime.format(dateFormatter);
@@ -50,9 +48,8 @@ public class Clock {
 
     /**
      * Updates the time of the clock.
-     *
      * @param s the new time of the clock.
-     * @throws DateTimeParseException   if the text cannot be parsed
+     * @throws DateTimeParseException   if the text cannot be parsed.
      * @throws IllegalArgumentException if the new time if before the old time.
      * @post the time of the clock will be set to the given time.
      */
