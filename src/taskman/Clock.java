@@ -70,10 +70,10 @@ public class Clock {
      * Add a clock to an XmlObject.
      *
      * @param clockObject an XmlObject.
-     * @throws XmlException if the clock cannot be added to the XmlObject.
+     * @throws ImportExportException if the clock cannot be added to the XmlObject.
      * @post the clock will be added to the XmlObject.
      */
-    public void addToXml(XmlObject clockObject) throws XmlException {
+    public void addToXml(XmlObject clockObject) throws ImportExportException {
         clockObject.addAttribute("systemTime", this.getSystemTimeString());
     }
 
@@ -82,9 +82,9 @@ public class Clock {
      *
      * @param clockObject the XmlObject.
      * @return the restored clock.
-     * @throws XmlException if the clock can't be created.
+     * @throws ImportExportException if the clock can't be created.
      */
-    public static Clock getFromXml(XmlObject clockObject) throws XmlException {
+    public static Clock getFromXml(XmlObject clockObject) throws ImportExportException {
         Clock clock =  new Clock();
         String time = clockObject.getAttribute("systemTime");
         if (!time.equals(clock.getSystemTimeString())) {

@@ -5,8 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.Controller;
+import taskman.ImportExportException;
 import taskman.User;
-import taskman.XmlException;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
@@ -127,7 +127,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void import_export() throws XmlException, AccessDeniedException {
+    public void import_export() throws ImportExportException, AccessDeniedException {
         String path = System.getProperty("user.dir") + File.separator + "test.xml";
         deleteFile(path);
         controller.exportToXML(path);

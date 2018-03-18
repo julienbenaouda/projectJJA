@@ -148,7 +148,7 @@ public class ProjectTest {
 		try {
 			Project project = new Project("test", "testdesc", "22/03/2018 12:00", "24/03/2018 12:00");
 			XmlObject object = new XmlObject();
-			project.addToXml(object.addXmlObject("project"));
+			project.addToXml(object.createXmlObject("project"));
 			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
 			Assert.assertEquals(project.getName(), pnew.getName());
 			Assert.assertEquals(project.getDescription(), pnew.getDescription());
@@ -188,7 +188,7 @@ public class ProjectTest {
 		try {
 			
 			XmlObject object = new XmlObject();
-			p.addToXml(object.addXmlObject("project"));
+			p.addToXml(object.createXmlObject("project"));
 			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
 			Task check = pnew.getTask(id).getAlternative();
 			Assert.assertEquals(new Integer(altID), check.getID());

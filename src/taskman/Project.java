@@ -349,17 +349,17 @@ public class Project {
      * Add a project to an XmlObject.
      *
      * @param projectObject an XmlObject.
-     * @throws XmlException if the project cannot be added to the XmlObject.
+     * @throws ImportExportException if the project cannot be added to the XmlObject.
      * @post the project will be added to the XmlObject.
      */
-    public void addToXml(XmlObject projectObject) throws XmlException {
+    public void addToXml(XmlObject projectObject) throws ImportExportException {
 		projectObject.addAttribute("name", getName());
 		projectObject.addText("description", getDescription());
 		projectObject.addText("creationTime", getCreationTime().format(dateFormatter));
 		projectObject.addText("dueTime", getDueTime().format(dateFormatter));
 		for(Task task: taskList)
 		{
-			XmlObject object = projectObject.addXmlObject("task");
+			XmlObject object = projectObject.createXmlObject("task");
 			task.addToXml(object);
 		}
 	}
@@ -369,9 +369,9 @@ public class Project {
      *
      * @param projectObject the XmlObject.
      * @return the restored project.
-     * @throws XmlException if the project can't be created.
+     * @throws ImportExportException if the project can't be created.
      */
-    public static Project getFromXml(XmlObject projectObject) throws XmlException {
+    public static Project getFromXml(XmlObject projectObject) throws ImportExportException {
 		String name = projectObject.getAttribute("name");
 		String description = projectObject.getTexts("description").get(0);
 		String creationTime = projectObject.getTexts("creationTime").get(0);

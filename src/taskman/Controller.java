@@ -332,14 +332,14 @@ public class Controller {
      * Save a controller to an XML file.
      *
      * @param path the path of the XML file.
-     * @throws XmlException if the object can't be written to the file.
+     * @throws ImportExportException if the object can't be written to the file.
      */
-    public void exportToXML(String path) throws XmlException {
+    public void exportToXML(String path) throws ImportExportException {
         XmlObject object = new XmlObject();
-        this.clock.addToXml(object.addXmlObject("clock"));
-        User.addToXml(object.addXmlObject("user"));
+        this.clock.addToXml(object.createXmlObject("clock"));
+        User.addToXml(object.createXmlObject("user"));
         for (Project project: this.projects.values()) {
-            project.addToXml(object.addXmlObject("project"));
+            project.addToXml(object.createXmlObject("project"));
         }
         object.exportTo(path);
     }
@@ -349,9 +349,9 @@ public class Controller {
      *
      * @param path the path of the XML file.
      * @return the restored controller.
-     * @throws XmlException if the controller can't be created.
+     * @throws ImportExportException if the controller can't be created.
      */
-    public static Controller importFromXML(String path) throws XmlException {
+    public static Controller importFromXML(String path) throws ImportExportException {
         XmlObject object = XmlObject.importFrom(path);
         Clock clock = Clock.getFromXml(object.getXmlObjects("clock").get(0));
         User.setFromXml(object.getXmlObjects("user").get(0));

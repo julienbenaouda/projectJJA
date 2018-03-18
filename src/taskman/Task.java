@@ -594,10 +594,10 @@ public class Task implements Comparable<Object> {
      * Add a task to an XmlObject.
      *
      * @param taskObject an XmlObject.
-     * @throws XmlException if the clock cannot be added to the XmlObject.
+     * @throws ImportExportException if the clock cannot be added to the XmlObject.
      * @post the task will be added to the XmlObject.
      */
-    public void addToXml(XmlObject taskObject) throws XmlException {
+    public void addToXml(XmlObject taskObject) throws ImportExportException {
         taskObject.addAttribute("id", getID().toString());
         taskObject.addText("description", getDescription());
         taskObject.addText("estimatedDuration", getEstimatedDuration());
@@ -622,9 +622,9 @@ public class Task implements Comparable<Object> {
      *
      * @param taskObject the XmlObject.
      * @return the restored task.
-     * @throws XmlException if the task can't be created.
+     * @throws ImportExportException if the task can't be created.
      */
-    public static Task getFromXml(XmlObject taskObject) throws XmlException {
+    public static Task getFromXml(XmlObject taskObject) throws ImportExportException {
         String id = taskObject.getAttribute("id");
         String description = taskObject.getTexts("description").get(0);
         String estimatedDuration = taskObject.getTexts("estimatedDuration").get(0);

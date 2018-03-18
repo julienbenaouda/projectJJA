@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This object is used to import and export objects to XML.
+ * This class is responsible for providing a convenient, simple and safe abstraction of an Element in XML.
  *
  * @author Alexander Braekevelt, Julien Benaouda
  * Source: https://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/
@@ -38,10 +38,9 @@ public class XmlObject {
 
     /**
      * Create an empty xml object.
-     *
-     * @throws XmlException if the object can't be created.
+     * @throws ImportExportException if the object can't be created.
      */
-    public XmlObject() throws XmlException {
+    public XmlObject() throws ImportExportException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -49,7 +48,7 @@ public class XmlObject {
             this.doc = doc;
             this.element = doc.createElement("XmlObject");
         } catch (ParserConfigurationException e) {
-            throw new XmlException("ParserConfigurationException: " + e.getMessage());
+            throw new ImportExportException("ParserConfigurationException: " + e.getMessage());
         }
     }
 
@@ -69,12 +68,11 @@ public class XmlObject {
 
     /**
      * Write this object to a XML file.
-     *
      * @param path the path to write to.
-     * @throws XmlException if the object can't be written to the file or the path is null.
+     * @throws ImportExportException if the object can't be written to the file or the path is null.
      * @throws NullPointerException is path is null.
      */
-    public void exportTo(String path) throws XmlException, NullPointerException {
+    public void exportTo(String path) throws ImportExportException, NullPointerException {
         if (path == null) {
             throw new NullPointerException("Path is null!");
         }
@@ -86,21 +84,20 @@ public class XmlObject {
             StreamResult result = new StreamResult(new File(path));
             transformer.transform(source, result);
         } catch (TransformerConfigurationException e) {
-            throw new XmlException("TransformerConfigurationException: " + e.getMessage());
+            throw new ImportExportException("TransformerConfigurationException: " + e.getMessage());
         } catch (TransformerException e) {
-            throw new XmlException("TransformerException: " + e.getMessage());
+            throw new ImportExportException("TransformerException: " + e.getMessage());
         }
     }
 
     /**
      * Create a XmlObject from a given XML file.
-     *
      * @param path a String with the path of the file
      * @return the created XmlObject
-     * @throws XmlException if the object can't be created.
+     * @throws ImportExportException if the object can't be created.
      * @throws NullPointerException if the path is null
      */
-    public static XmlObject importFrom(String path) throws XmlException, NullPointerException {
+    public static XmlObject importFrom(String path) throws ImportExportException, NullPointerException {
         if (path == null) {
             throw new NullPointerException("Path is null!");
         }
@@ -112,22 +109,21 @@ public class XmlObject {
             doc.getDocumentElement().normalize();
             return new XmlObject(doc, doc.getDocumentElement());
         } catch (ParserConfigurationException e) {
-            throw new XmlException("ParserConfigurationException: " + e.getMessage());
+            throw new ImportExportException("ParserConfigurationException: " + e.getMessage());
         } catch (IOException e) {
-            throw new XmlException("IOException: " + e.getMessage());
+            throw new ImportExportException("IOException: " + e.getMessage());
         } catch (SAXException e) {
-            throw new XmlException("SAXException: " + e.getMessage());
+            throw new ImportExportException("SAXException: " + e.getMessage());
         }
     }
 
     /**
      * Create a XmlObject as child of this XmlObject.
-     *
      * @param name a String with the name of the child object.
      * @return a XmlObject with the given name and parent.
      * @throws NullPointerException if the name is null.
      */
-    public XmlObject addXmlObject(String name) throws NullPointerException {
+    public XmlObject createXmlObject(String name) throws NullPointerException {
         if (name == null) {
             throw new NullPointerException("Name of XmlObject is null!");
         }
@@ -137,14 +133,30 @@ public class XmlObject {
     }
 
     /**
-     * Get all XmlObject with the given name that are a child of this object.
-     *
-     * @param name a String with the name of the objects.
-     * @return a list of XmlObjects.
-     * @throws XmlException if a child with the given name is not a XmlObject.
+     * Get an XmlObject with the given name that is a child of this object.
+     * @param name a String with the name of the object.
+     * @return an XmlObjects.
+     * @throws ImportExportException if a child with the given name is not a XmlObject.
      * @throws NullPointerException if the name is null.
      */
-    public List<XmlObject> getXmlObjects(String name) throws XmlException, NullPointerException {
+    public XmlObject getXmlObject(String name) throws ImportExportException, NullPointerException {
+        List<XmlObject> objects = getXmlObjects(name);
+        if (objects.isEmpty()) {
+            throw new ImportExportException("No XmlObject with name '" + name + "' found!");
+        }
+        else {
+            return objects.get(0);
+        }
+    }
+
+    /**
+     * Get all XmlObject with the given name that are a child of this object.
+     * @param name a String with the name of the objects.
+     * @return a list of XmlObjects.
+     * @throws ImportExportException if a child with the given name is not a XmlObject.
+     * @throws NullPointerException if the name is null.
+     */
+    public List<XmlObject> getXmlObjects(String name) throws ImportExportException, NullPointerException {
         if (name == null) {
             throw new NullPointerException("Name of XmlObject is null!");
         }
@@ -155,7 +167,7 @@ public class XmlObject {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 results.add(new XmlObject(this.doc, (Element) node));
             } else {
-                throw new XmlException("A node with name '" + name + "' cannot be parsed to an XmlObject!");
+                throw new ImportExportException("A node with name '" + name + "' cannot be parsed to an XmlObject!");
             }
         }
         return results;
@@ -163,21 +175,18 @@ public class XmlObject {
 
     /**
      * Add an attribute to this object with a unique name and a value.
-     *
+     * Warning: a value "null" will be returned as null in getAttribute(name)!
      * @param name  a String with the unique name of the attribute.
      * @param value a String with the value of the attribute.
-     * @throws XmlException if the name contains whitespaces.
-     * @throws NullPointerException if name is null.
+     * @throws ImportExportException if the name contains whitespaces.
+     * @throws NullPointerException if name or value are null.
      */
-    public void addAttribute(String name, String value) throws XmlException, NullPointerException {
-        if (name == null) {
-            throw new NullPointerException("An attribute is added with a null as name!");
-        }
-        if (value == null) {
-            value = "null";
+    public void addAttribute(String name, String value) throws ImportExportException, NullPointerException {
+        if (name == null || value == null) {
+            throw new NullPointerException("An attribute is added with a null as name or value!");
         }
         if (name.contains(" ")) {
-            throw new XmlException("The name '" + name + "' of an attribute cannot contain whitespaces!");
+            throw new ImportExportException("The name '" + name + "' of an attribute cannot contain whitespaces!");
         }
         Attr attribute = doc.createAttribute(name);
         attribute.setValue(value);
@@ -186,25 +195,21 @@ public class XmlObject {
 
     /**
      * Returns the value of an attribute of this object.
-     *
      * @param name a String with the unique name of the attribute.
      * @return a String with the value of the attribute.
-     * @throws XmlException if the attribute is empty or does not exist, or the name contains whitespaces.
+     * @throws ImportExportException if the attribute is empty or does not exist, or the name contains whitespaces.
      * @throws NullPointerException if the name is null.
      */
-    public String getAttribute(String name) throws XmlException, NullPointerException {
+    public String getAttribute(String name) throws ImportExportException, NullPointerException {
         if (name == null) {
-            throw new NullPointerException("Name is null!");
+            throw new NullPointerException("Name of attribute is null!");
         }
         if (name.contains(" ")) {
-            throw new XmlException("The name '" + name + "' of an attribute cannot contain whitespaces!");
+            throw new ImportExportException("The name '" + name + "' of an attribute cannot contain whitespaces!");
         }
         String value = this.element.getAttribute(name);
         if (value.isEmpty()) {
-            throw new XmlException("The value of '" + name + "' is empty or does not exist!");
-        }
-        else if (value.equals("null")) {
-            return null;
+            throw new ImportExportException("The value of '" + name + "' is empty or does not exist!");
         } else {
             return value;
         }
@@ -212,21 +217,17 @@ public class XmlObject {
 
     /**
      * Add a text attribute to this object with a name and a value.
-     *
      * @param name  a String with the name of the text attribute.
      * @param value a String with the value of the text attribute.
-     * @throws XmlException if the name contains whitespaces.
-     * @throws NullPointerException if name is null.
+     * @throws ImportExportException if the name contains whitespaces.
+     * @throws NullPointerException if name or value are null.
      */
-    public void addText(String name, String value) throws XmlException, NullPointerException {
-        if (name == null) {
-            throw new NullPointerException("Text is added with a null as name!");
-        }
-        if (value == null) {
-            value = "null";
+    public void addText(String name, String value) throws ImportExportException, NullPointerException {
+        if (name == null || value == null) {
+            throw new NullPointerException("Text is added with a null as name or value!");
         }
         if (name.contains(" ")) {
-            throw new XmlException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
+            throw new ImportExportException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
         }
         Element element = this.doc.createElement(name);
         this.element.appendChild(element);
@@ -235,31 +236,43 @@ public class XmlObject {
 
     /**
      * Returns the value of a text attribute of this object.
-     *
      * @param name a String with the name of the text attribute.
      * @return a String with the value of the text attribute.
-     * @throws XmlException if the text attribute cannot be handled of the name contains whitespaces.
+     * @throws ImportExportException if the text attribute cannot be handled, does not exist or the name contains whitespaces.
      * @throws NullPointerException if the name is null.
      */
-    public List<String> getTexts(String name) throws XmlException, NullPointerException {
+    public String getText(String name) throws ImportExportException {
+        List<String> texts = getTexts(name);
+        if (texts.isEmpty()) {
+            throw new ImportExportException("No text with name '" + name + "' found!");
+        }
+        else {
+            return texts.get(0);
+        }
+    }
+
+    /**
+     * Returns the values of a text attribute of this object.
+     * @param name a String with the name of the text attribute.
+     * @return a list of Strings with the values of the text attribute.
+     * @throws ImportExportException if the text attribute cannot be handled or the name contains whitespaces.
+     * @throws NullPointerException if the name is null.
+     */
+    public List<String> getTexts(String name) throws ImportExportException, NullPointerException {
         if (name == null) {
-            throw new NullPointerException("Name is null!");
+            throw new NullPointerException("Name of text is null!");
         }
         if (name.contains(" ")) {
-            throw new XmlException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
+            throw new ImportExportException("The name '" + name + "' of a text attribute cannot contain whitespaces!");
         }
         NodeList nodes = this.element.getElementsByTagName(name);
         ArrayList<String> results = new ArrayList<>();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
             try {
-                String text = node.getTextContent();
-                if (text.equals("null")) {
-                    text = null;
-                }
-                results.add(text);
+                results.add(node.getTextContent());
             } catch (DOMException e) {
-                throw new XmlException("DOMException: " + e.getMessage());
+                throw new ImportExportException("DOMException: " + e.getMessage());
             }
         }
         return results;

@@ -147,7 +147,7 @@ public class UI {
             print("Data imported successfully.");
             showMainMenu();
         }
-        catch(XmlException e)
+        catch(ImportExportException e)
         {
             print("Error while parsing the xml file: " +e.getMessage() +"\n");
             showMainMenu();
@@ -167,7 +167,7 @@ public class UI {
             controller.exportToXML(path);
             print("Data exported successfully.\n");
             showMainMenu();
-        } catch (XmlException e)
+        } catch (ImportExportException e)
         {
             print("Error while exporting data: " +e.getMessage() +"\n");
             showMainMenu();

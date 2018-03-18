@@ -450,7 +450,7 @@ public class TaskTest {
         try {
             Task taskXml = new Task("task description", "103", "0.32");
             XmlObject object = new XmlObject();
-            taskXml.addToXml(object.addXmlObject("task"));
+            taskXml.addToXml(object.createXmlObject("task"));
             Task tNew = Task.getFromXml(object.getXmlObjects("task").get(0));
             Assert.assertEquals("ID is not equal.", taskXml.getID(), tNew.getID());
             Assert.assertEquals("Description is not equal.",taskXml.getDescription(), tNew.getDescription());

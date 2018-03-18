@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.XmlException;
+import taskman.ImportExportException;
 import taskman.XmlObject;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public class XmlObjectTest {
     private static XmlObject object;
 
     @Before
-    public void setUp() throws XmlException {
+    public void setUp() throws ImportExportException {
         object = new XmlObject();
     }
 
@@ -34,10 +34,10 @@ public class XmlObjectTest {
     }
 
     @Test
-    public void import_export() throws XmlException, AccessDeniedException {
-        XmlObject sub1 = object.addXmlObject("object");
-        XmlObject sub2 = object.addXmlObject("object");
-        XmlObject sub3 = sub2.addXmlObject("object");
+    public void import_export() throws ImportExportException, AccessDeniedException {
+        XmlObject sub1 = object.createXmlObject("object");
+        XmlObject sub2 = object.createXmlObject("object");
+        XmlObject sub3 = sub2.createXmlObject("object");
 
         object.addAttribute("attribute", "attribute value");
         object.addText("text", "text value 1");

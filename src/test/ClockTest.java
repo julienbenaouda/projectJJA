@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.Clock;
-import taskman.XmlException;
+import taskman.ImportExportException;
 import taskman.XmlObject;
 
 import java.time.LocalDateTime;
@@ -64,7 +64,7 @@ public class ClockTest {
     }
 
     @Test
-    public void xml() throws XmlException {
+    public void xml() throws ImportExportException {
         String time = "13/10/1298 12:28";
         clock.updateSystemTime(time);
         XmlObject obj = new XmlObject();
