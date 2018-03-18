@@ -588,54 +588,6 @@ public class Task implements Comparable<Object> {
         }
     }
 
-    // XML
-
-    /**
-     * Add a task to an XmlObject.
-     *
-     * @param taskObject an XmlObject.
-     * @throws ImportExportException if the clock cannot be added to the XmlObject.
-     * @post the task will be added to the XmlObject.
-     */
-    public void addToXml(XmlObject taskObject) throws ImportExportException {
-        taskObject.addAttribute("id", getID().toString());
-        taskObject.addText("description", getDescription());
-        taskObject.addText("estimatedDuration", getEstimatedDuration());
-        taskObject.addText("acceptableDeviation", getAcceptableDeviation().toString());
-        taskObject.addText("startTime", getStartTime());
-        taskObject.addText("endTime", getEndTime());
-        taskObject.addText("status", getStatus().name());
-        taskObject.addText("lastTaskID", getLastTaskID().toString());
-        if (getAlternative() == null){
-            taskObject.addText("alternative", null);
-        }
-        else {
-            taskObject.addText("alternative", getAlternative().getID().toString());
-        }
-        for (Task dependency: getDependencies()) {
-            taskObject.addText("dependency", dependency.getID().toString());
-        }
-    }
-
-    /**
-     * Restore a task from an XmlObject.
-     *
-     * @param taskObject the XmlObject.
-     * @return the restored task.
-     * @throws ImportExportException if the task can't be created.
-     */
-    public static Task getFromXml(XmlObject taskObject) throws ImportExportException {
-        String id = taskObject.getAttribute("id");
-        String description = taskObject.getTexts("description").get(0);
-        String estimatedDuration = taskObject.getTexts("estimatedDuration").get(0);
-        String acceptableDeviation = taskObject.getTexts("acceptableDeviation").get(0);
-        String startTime = taskObject.getTexts("startTime").get(0);
-        String endTime = taskObject.getTexts("endTime").get(0);
-        String lastTaskID = taskObject.getTexts("lastTaskID").get(0);
-        String status = taskObject.getTexts("status").get(0);
-        return new Task(lastTaskID, id, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
-    }
-
 
     // Form
 

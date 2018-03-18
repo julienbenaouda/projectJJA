@@ -143,7 +143,7 @@ public class UI {
         print("Path to xml file: ");
         String path = inputString();
         try {
-            controller = Controller.importFromXML(path);
+            controller = Controller.importSystem(path);
             print("Data imported successfully.");
             showMainMenu();
         }
@@ -164,7 +164,7 @@ public class UI {
         print("Path to file: ");
         String path = inputString();
         try {
-            controller.exportToXML(path);
+            controller.exportSystem(path);
             print("Data exported successfully.\n");
             showMainMenu();
         } catch (ImportExportException e)

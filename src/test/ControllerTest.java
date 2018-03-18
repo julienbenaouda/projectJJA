@@ -130,11 +130,11 @@ public class ControllerTest {
     public void import_export() throws ImportExportException, AccessDeniedException {
         String path = System.getProperty("user.dir") + File.separator + "test.xml";
         deleteFile(path);
-        controller.exportToXML(path);
+        controller.exportSystem(path);
         System.out.println("A file is temporally saved to '" + path + "'");
         Assert.assertTrue("XML file cannot be saved!", new File(path).exists());
         controller = null;
-        controller = Controller.importFromXML(path);
+        controller = Controller.importSystem(path);
         deleteFile(path);
         System.out.println("A file is deleted from '" + path + "'");
         Assert.assertNotNull("Controller cannot be restored!", controller);

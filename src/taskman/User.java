@@ -39,26 +39,4 @@ public class User {
         return userType == UserType.DEVELOPER;
     }
 
-    /**
-     * Add a user to an XmlObject.
-     *
-     * @param userObject an XmlObject.
-     * @throws ImportExportException if the user cannot be added to the XmlObject.
-     * @post the user will be added to the XmlObject.
-     */
-    public static void addToXml(XmlObject userObject) throws ImportExportException {
-        userObject.addAttribute("userType", getUserType());
-    }
-
-    /**
-     * Restore a user from an XmlObject.
-     *
-     * @param userObject the XmlObject.
-     * @throws ImportExportException if the user can't be created.
-     * @post the user will be restored.
-     */
-    public static void setFromXml(XmlObject userObject) throws ImportExportException {
-        setUserType(userObject.getAttribute("userType"));
-    }
-
 }

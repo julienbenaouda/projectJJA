@@ -37,10 +37,10 @@ public class ImportExportHandler {
     /**
      * Import objects from the given path.
      * @param path a String with a location in the file system.
-     * @post all previously added objects will be removed.
+     * @post all previously added objects will be removed and the imported objects will be added.
      * @throws ImportExportException if the import fails.
      */
-    public void importFromFile(String path) throws ImportExportException {
+    public void importFromPath(String path) throws ImportExportException {
         this.xml = XmlObject.importFrom(path);
     }
 
@@ -50,7 +50,7 @@ public class ImportExportHandler {
      * @post the Clock will be added.
      * @throws ImportExportException if the Clock cannot be added.
      */
-    private void addClock(Clock clock) throws ImportExportException {
+    public void addClock(Clock clock) throws ImportExportException {
         this.xml.createXmlObject("clock").addAttribute("time", clock.getSystemTimeString());
     }
 
@@ -59,7 +59,7 @@ public class ImportExportHandler {
      * @return the restored Clock.
      * @throws ImportExportException if the Clock can't be created.
      */
-    private Clock getClock() throws ImportExportException {
+    public Clock getClock() throws ImportExportException {
         Clock clock =  new Clock();
         String time = this.xml.getXmlObject("clock").getAttribute("time");
         if (!time.equals(clock.getSystemTimeString())) {
@@ -130,7 +130,7 @@ public class ImportExportHandler {
      * @post the Tasks will be added.
      * @throws ImportExportException if a Task cannot be added.
      */
-    public void addTasks(Collection<Task> tasks, XmlObject project_xml) throws ImportExportException {
+    private void addTasks(Collection<Task> tasks, XmlObject project_xml) throws ImportExportException {
         for (Task task: tasks) {
             XmlObject task_xml = project_xml.createXmlObject("task");
             task_xml.addAttribute("lastTaskID", task.getLastTaskID());
@@ -158,7 +158,7 @@ public class ImportExportHandler {
      * @return a Collection of restored Tasks.
      * @throws ImportExportException if a Task can't be created.
      */
-    public Collection<Task> getTasks(XmlObject project_xml) throws ImportExportException {
+    private Collection<Task> getTasks(XmlObject project_xml) throws ImportExportException {
         HashMap<String, Task> tasks = new HashMap<>();
         for (XmlObject task_xml: project_xml.getXmlObjects("task")) {
             String lastTaskID = task_xml.getAttribute("lastTaskID");

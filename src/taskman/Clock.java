@@ -65,31 +65,4 @@ public class Clock {
             throw new IllegalArgumentException("New system time must be after the current system time!");
         }
     }
-
-    /**
-     * Add a clock to an XmlObject.
-     *
-     * @param clockObject an XmlObject.
-     * @throws ImportExportException if the clock cannot be added to the XmlObject.
-     * @post the clock will be added to the XmlObject.
-     */
-    public void addToXml(XmlObject clockObject) throws ImportExportException {
-        clockObject.addAttribute("systemTime", this.getSystemTimeString());
-    }
-
-    /**
-     * Restore a clock from an XmlObject.
-     *
-     * @param clockObject the XmlObject.
-     * @return the restored clock.
-     * @throws ImportExportException if the clock can't be created.
-     */
-    public static Clock getFromXml(XmlObject clockObject) throws ImportExportException {
-        Clock clock =  new Clock();
-        String time = clockObject.getAttribute("systemTime");
-        if (!time.equals(clock.getSystemTimeString())) {
-            clock.updateSystemTime(time);
-        }
-        return clock;
-    }
 }

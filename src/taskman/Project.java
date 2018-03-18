@@ -346,60 +346,6 @@ public class Project {
 	}
 
     /**
-     * Add a project to an XmlObject.
-     *
-     * @param projectObject an XmlObject.
-     * @throws ImportExportException if the project cannot be added to the XmlObject.
-     * @post the project will be added to the XmlObject.
-     */
-    public void addToXml(XmlObject projectObject) throws ImportExportException {
-		projectObject.addAttribute("name", getName());
-		projectObject.addText("description", getDescription());
-		projectObject.addText("creationTime", getCreationTime().format(dateFormatter));
-		projectObject.addText("dueTime", getDueTime().format(dateFormatter));
-		for(Task task: taskList)
-		{
-			XmlObject object = projectObject.createXmlObject("task");
-			task.addToXml(object);
-		}
-	}
-
-    /**
-     * Restore a project from an XmlObject.
-     *
-     * @param projectObject the XmlObject.
-     * @return the restored project.
-     * @throws ImportExportException if the project can't be created.
-     */
-    public static Project getFromXml(XmlObject projectObject) throws ImportExportException {
-		String name = projectObject.getAttribute("name");
-		String description = projectObject.getTexts("description").get(0);
-		String creationTime = projectObject.getTexts("creationTime").get(0);
-		String dueTime = projectObject.getTexts("dueTime").get(0);
-		Project project = new Project(name, description, creationTime, dueTime);
-		for (XmlObject taskObject : projectObject.getXmlObjects("task")) {
-			project.addTask(Task.getFromXml(taskObject));
-		}
-		for (XmlObject taskObject : projectObject.getXmlObjects("task")) {
-			Integer id = Integer.parseInt(taskObject.getAttribute("id"));
-			Task task = project.getTask(id);
-
-			if (taskObject.getTexts("alternative").get(0) != null) {
-				Integer alternativeId = Integer.parseInt(taskObject.getTexts("alternative").get(0));
-				task.setAlternative(project.getTask(alternativeId));
-			}
-
-			ArrayList<Task> dependencies = new ArrayList<>();
-			for (String s : taskObject.getTexts("dependency")) {
-				Integer dependencyId = Integer.parseInt(s);
-				dependencies.add(project.getTask(dependencyId));
-			}
-			task.restoreDependencies(dependencies);
-		}
-		return project;
-	}
-
-    /**
      * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
      *
      * @return A HashMap containing all elements that need to be filled in to create a new project

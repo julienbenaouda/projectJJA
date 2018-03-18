@@ -244,17 +244,17 @@ public class Controller {
     }
 
     /**
-     * Return the time of the system
-     * @return the time of the system
+     * Return the time of the system.
+     * @return the time of the system.
      */
     public String getSystemTime() {
         return clock.getSystemTimeString();
     }
 
     /**
-     * Updates the time of the system
-     * @param newTime the new time of the system
-     * @throws DateTimeParseException   if the text cannot be parsed
+     * Updates the time of the system.
+     * @param newTime the new time of the system.
+     * @throws DateTimeParseException if the text cannot be parsed.
      * @throws IllegalArgumentException if the new time if before the old time.
      * @post the time of the system will be set to the given time
      */
@@ -281,36 +281,28 @@ public class Controller {
     }
 
     /**
-     * Save a controller to an XML file.
-     * @param path the path of the XML file.
-     * @throws ImportExportException if the object can't be written to the file.
+     * Save the status of the system to a file.
+     * @param path a String with a location in the file system.
+     * @throws ImportExportException if the system can't be saved to the file.
      */
-    public void exportToXML(String path) throws ImportExportException {
-        XmlObject object = new XmlObject();
-        this.clock.addToXml(object.createXmlObject("clock"));
-        User.addToXml(object.createXmlObject("user"));
-        for (Project project: this.projects.values()) {
-            project.addToXml(object.createXmlObject("project"));
-        }
-        object.exportTo(path);
+    public void exportSystem(String path) throws ImportExportException {
+        ImportExportHandler exporter = new ImportExportHandler();
+        exporter.addClock(this.clock);
+        exporter.addUser(this.user);
+        exporter.addProjects(this.projects.values());
+        exporter.exportToPath(path);
     }
 
     /**
-     * Restore a controller from an XML file.
-     * @param path the path of the XML file.
-     * @return the restored controller.
-     * @throws ImportExportException if the controller can't be created.
+     * Restore the status of a system from a file.
+     * @param path a String with a location in the file system.
+     * @return a new Controller with the restored system.
+     * @throws ImportExportException if the system can't be restored from the file.
      */
-    public static Controller importFromXML(String path) throws ImportExportException {
-        XmlObject object = XmlObject.importFrom(path);
-        Clock clock = Clock.getFromXml(object.getXmlObjects("clock").get(0));
-        User.setFromXml(object.getXmlObjects("user").get(0));
-        HashMap<String, Project> projects = new HashMap<>();
-        for (XmlObject projectObject: object.getXmlObjects("project")) {
-            Project project = Project.getFromXml(projectObject);
-            projects.put(project.getName(), project);
-        }
-        return new Controller(projects, clock);
+    public static Controller importSystem(String path) throws ImportExportException {
+        ImportExportHandler importer = new ImportExportHandler();
+        importer.importFromPath(path);
+        return new Controller(importer.getClock(), importer.getUser(), importer.getProjects());
     }
 
 }
