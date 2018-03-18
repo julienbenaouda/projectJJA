@@ -1,31 +1,32 @@
 package taskman;
 
 /**
- * This enum represents the status of a task.
- *
+ * This enum is responsible for storing the status of a Task.
  * @author Alexander Braekevelt, Jeroen Van Der Donckt
  */
 public enum Status {
     /**
      * Available status.
      */
-    AVAILABLE, /**
+    AVAILABLE,
+    /**
      * Unavailable status.
      */
-    UNAVAILABLE, /**
+    UNAVAILABLE,
+    /**
      * Finished status.
      */
-    FINISHED, /**
+    FINISHED,
+    /**
      * Failed status.
      */
     FAILED;
 
     /**
-     * Returns the status with as name the given string.
-     *
-     * @param s the string with the name of the status.
-     * @return the status of the given string.
-     * @throws IllegalArgumentException if the status does not exist.
+     * Returns the Status with as name the given String.
+     * @param s the String with the name of the Status.
+     * @return the Status of the given string.
+     * @throws IllegalArgumentException if the Status does not exist.
      */
     public static Status fromString(String s) throws IllegalArgumentException{
         for (Status status: Status.values()) {
@@ -38,7 +39,7 @@ public enum Status {
 
     /**
      * Returns the name of the status
-     * @return a String
+     * @return a String.
      */
     @Override
     public String toString() {
@@ -46,9 +47,8 @@ public enum Status {
     }
 
     /**
-     * Is final boolean.
-     *
-     * @return the boolean
+     * Return if the Status is a final Status.
+     * @return a Boolean.
      */
     public Boolean isFinal() {
         return this.equals(Status.FINISHED) || this.equals(Status.FAILED);
