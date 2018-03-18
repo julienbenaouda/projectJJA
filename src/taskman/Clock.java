@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
 /**
- * The type Clock.
+ * This class is responsible for storing a consistent system time.
  */
 public class Clock {
 

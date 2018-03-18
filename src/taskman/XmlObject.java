@@ -19,7 +19,6 @@ import java.util.List;
 
 /**
  * This class is responsible for providing a convenient, simple and safe abstraction of an Element in XML.
- *
  * @author Alexander Braekevelt, Julien Benaouda
  * Source: https://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/
  * Source: https://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/

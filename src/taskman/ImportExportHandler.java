@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * The class is responsible for exporting and restoring objects from the backend to a textual representation.
- *
  * @author Alexander Braekevelt
  */
 public class ImportExportHandler {
