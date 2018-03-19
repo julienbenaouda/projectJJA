@@ -9,3 +9,28 @@ TODO:
 - addXmlObject -> createXmlObject
 - printMenu(ArrayList<String>)
 - UITest op punt zetten
+- Task (alles als strings in constructor) ==> intermediate class om dit te checken of legit strings zijn
+- getCreationForm(), ... (should not be implemented like that)
+- parsing should not be inside Task
+- should not use ID as external reference to get tasks
+  => should only use for the external world
+- getTaskDetails() in Project zou beter ter hoogte van controller geïmplementeerd zijn
+  beter getTasks() in Project
+- Clock: updateSystemTime => changes the system
+  Make another clock and make it immutable and load up your system time
+  updateSystemTime() => moet geen string parsen
+- User en UserType mergen
+- canUpdateTask() moet in task chechecked worden!
+- controller needs to have reference to the external database
+  (easiest way = inject hashmap in controller => easy is constructor injection)
+  (add clock and project hashmap in controller)
+  => Controller could easiliy delegate import and export to external class
+  !! Controller is only a glue
+- Interaction sequence diagrams, add before submitting
+- Class diagram should not be reverse engineered!! Should have the correct relations
+  Should show the interesting decisions of the design, interesting methods and design decisions
+- Documentation, think who is about the read it
+  Think about responsibality: who is about to read it?
+
+Cohesion: iedere class enkel zijn eigen informatie
+-> Geen extra info toevoegen voor door te geven nr de UI
