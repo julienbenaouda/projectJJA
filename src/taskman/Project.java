@@ -215,7 +215,7 @@ public class Project {
 
 
 	// TODO: de andere functies met ID's en getTask(id) heb ik verwijderd
-	
+
 	/**
 	 * The list of tasks for the project.
 	 */
