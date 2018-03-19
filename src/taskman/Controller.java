@@ -41,47 +41,47 @@ public class Controller {
     }
 
     /**
-     * Returns a list with all project names.
-     * @return a list of strings.
+     * Returns all Project names.
+     * @return a Collection of Strings.
      */
-    public List<String> getProjectNames() {
+    public Collection<String> getProjectNames() {
         return new ArrayList<>(this.projects.keySet());
     }
 
     /**
-     * Returns if a project with the given name exists.
-     * @param name the name to check
-     * @return the boolean
+     * Returns if a Project with the given name exists.
+     * @param name a String with a possible name of a Project.
+     * @return a Boolean.
      */
     public Boolean projectExists(String name) {
         return projects.containsKey(name);
     }
 
     /**
-     * Returns the project with the given name.
-     * @param name the name of the project.
-     * @return a project.
-     * @throws IllegalArgumentException if the project does not exist.
+     * Returns the Project with the given name.
+     * @param name the name of the Project as String.
+     * @return a Project.
+     * @throws IllegalArgumentException if no Project is found with the given name.
      */
     private Project getProject(String name) throws IllegalArgumentException {
         if (projectExists(name)) {
             return projects.get(name);
         }
         else {
-            throw new IllegalArgumentException("The given project name does not exist!");
+            throw new IllegalArgumentException("No Project found with name '"+ name + "'!");
         }
     }
 
     /**
-     * Adds a project to the controller.
-     * @param name the name of the project
-     * @param project the project to add
-     * @post the project will be added to the system.
-     * @throws IllegalArgumentException if a project with the given name already exist
+     * Add a Project to the Controller.
+     * @param name the name of the Project
+     * @param project the Project to add
+     * @post the Project will be added to the Controller.
+     * @throws IllegalArgumentException if a Project with the given name already exists.
      */
     private void addProject(String name, Project project) throws IllegalArgumentException {
         if (projectExists(name)) {
-            throw new IllegalArgumentException("The given project name does already exist!");
+            throw new IllegalArgumentException("A Project with name '"+ name + "' already exists!");
         }
         else {
             projects.put(name, project);
@@ -89,19 +89,19 @@ public class Controller {
     }
 
     /**
-     * This method generates a form containing all parameters needed to create a new project.
-     * All values are empty and can be filled in, and then passed back to create a project.
-     * @return A map containing all elements that need to be filled in to create a new project
+     * This method generates a form containing all parameters needed to create a new Project.
+     * All values are empty and can be filled in, and then passed back to create a Project.
+     * @return A Map containing all elements that need to be filled in to create a new Project.
      */
-    public HashMap<String,String> getProjectCreationForm() {
+    public Map<String,String> getProjectCreationForm() {
         return Project.getCreationForm();
     }
 
     /**
-     * Adds a project with the properties from a given form.
-     * @param form the creation form for the project
-     * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
-     * @post a project with the properties from a given form will be added to the controller.
+     * Add a Project with the properties from a given form.
+     * @param form the creation form for the Project
+     * @throws IllegalArgumentException when one of the parameters is absent or invalid.
+     * @post a Project with the properties from a given form will be added to the Controller.
      */
     public void addProject(HashMap<String, String> form) throws IllegalArgumentException {
         Project project = new Project(form);
@@ -109,22 +109,22 @@ public class Controller {
     }
 
     /**
-     * Returns the details of the given project.
-     * @param name the project of which the details should be returned
-     * @return the details of the given project
-     * @throws IllegalArgumentException if the project does not exist.
+     * Returns the details of the Project with the given name.
+     * @param name a String with the name of the Project.
+     * @return a Map with the details of the Project with the given name.
+     * @throws IllegalArgumentException if no Project is found with the given name.
      */
-    public HashMap<String, String> getProjectDetails(String name) throws IllegalArgumentException {
+    public Map<String, String> getProjectDetails(String name) throws IllegalArgumentException {
         return getProject(name).getProjectDetails();
     }
 
     /**
-     * Returns a list of ids of task that belong to a given project.
-     * @param projectName the name of the project
-     * @return a list of Integers
-     * @throws IllegalArgumentException if the project does not exist.
+     * Returns the ids of Tasks that belong to a given Project.
+     * @param projectName the name of the Project as String.
+     * @return a Collection of Integers.
+     * @throws IllegalArgumentException if no Project is found with the given name.
      */
-    public List<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException {
+    public Collection<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException {
         return getProject(projectName).getTaskIds();
     }
 
@@ -135,7 +135,7 @@ public class Controller {
      * @return the details of the given task
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public HashMap<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException {
+    public Map<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException {
         return getProject(projectName).getTaskDetails(taskId);
     }
 
