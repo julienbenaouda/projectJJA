@@ -51,7 +51,7 @@ public class Project {
      */
     public void createTask(HashMap<String, String> form) {
     	Task t = new Task(form);
-    	addTask(t);
+    	addTaskToList(t);
     }
 
     /**
@@ -61,7 +61,7 @@ public class Project {
      * @throws IllegalStateException the illegal state exception
      * @post The given task is added to the project
      */
-    public void addTask(Task task) throws IllegalStateException {
+    private void addTaskToList(Task task) throws IllegalStateException {
 		int low = 0;
 		int high = taskList.size();
 		int middle = (low + high) / 2;
