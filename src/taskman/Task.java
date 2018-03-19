@@ -2,11 +2,7 @@ package taskman;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Stack;
 
 
@@ -15,7 +11,7 @@ import java.util.Stack;
  *
  * @author Jeroen Van Der Donckt
  */
-public class Task implements Comparable<Object> {
+public class Task {
 
     /**
      * Creates a new task with the given values.
@@ -25,30 +21,17 @@ public class Task implements Comparable<Object> {
      * @param acceptableDeviation the acceptable  deviation of the task
      * @post a new task is created with the given attributes an available status
      */
-    public Task(String description, String estimatedDuration, String acceptableDeviation) {
-        setID();
+    public Task(String description, Long estimatedDuration, Double acceptableDeviation) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStatus(Status.AVAILABLE.toString());
+        setStatus(Status.AVAILABLE);
         dependencies = new ArrayList<>();
     }
 
-    /**
-     * Creates a new task with parameters from the given hashmap.
-     *
-     * @param form the HashMap from which to extract the parameters.
-     * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
-     * @post a new task is created with the given parameters
-     */
-    public Task(HashMap<String, String> form) throws IllegalArgumentException {
-        this(form.get("description"), form.get("estimatedDuration"), form.get("acceptableDeviation"));
-    }
 
     /**
      * Creates a new task with thte given values.
-     * @param lastTaskID the latest task ID
-     * @param ID the task ID
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable deviation of the task
@@ -56,82 +39,15 @@ public class Task implements Comparable<Object> {
      * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    private Task(String lastTaskID, String ID, String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime, String status) {
-        setLastTaskID(Integer.parseInt(lastTaskID));
-        setID(Integer.parseInt(ID));
+    private Task(String description, Long estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, Status status) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        if (startTime != null){
-            setStartTime(startTime);
-        }
-        if(endTime != null){
-            setEndTime(endTime);
-        }
+        setStartTime(startTime);
+        setEndTime(endTime);
         setStatus(status);
         dependencies = new ArrayList<>();
     }
-
-
-    /**
-     * The latest task ID.
-     */
-    private static Integer lastTaskID = 0;
-
-
-    /**
-     * Return the ID of the latest task. (This should be the maximum of all ID's)
-     *
-     * @return the ID of the latest task
-     */
-    public static Integer getLastTaskID() { return lastTaskID; }
-
-
-    /**
-     * Sets the last task ID of task.
-     * @param ID the ID of the last task ID
-     * @post the last task ID is set to the given ID
-     */
-    private static void setLastTaskID(Integer ID) { lastTaskID = ID; }
-
-
-
-    /**
-     * The task ID.
-     */
-    private Integer ID;
-
-
-    /**
-     * Return the ID of the task.
-     *
-     * @return the ID of the task
-     */
-    public Integer getID(){
-        return ID;
-    }
-
-
-    /**
-     * Sets the ID of the task.
-     * @post the last task ID is incremented by 1
-     * @post the ID of the task is set to new last task ID
-     */
-    private void setID(){
-        ID = getLastTaskID() + 1;
-        setLastTaskID(ID);
-    }
-
-
-    /**
-     * Sets the ID of the task to the given ID.
-     * @param ID the task ID
-     * @post the ID of the tqsk is set to the given ID
-     */
-    private void setID(Integer ID){
-        this.ID = ID;
-    }
-
 
 
     /**
@@ -162,9 +78,9 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * The estimated duration of the task.
+     * The estimated duration of the task in minutes.
      */
-    private Duration estimatedDuration;
+    private Long estimatedDuration;
 
 
     /**
@@ -172,8 +88,8 @@ public class Task implements Comparable<Object> {
      *
      * @return the estimated duration of the task in minutes
      */
-    public String getEstimatedDuration(){
-        return Long.toString(estimatedDuration.toMinutes());
+    public Long getEstimatedDuration(){
+        return estimatedDuration;
     }
 
 
@@ -182,8 +98,8 @@ public class Task implements Comparable<Object> {
      * @param estimatedDuration the estimated duration of the task in minutes
      * @post the estimated duration of the task is set to the given duration
      */
-    private void setEstimatedDuration(String estimatedDuration){
-        this.estimatedDuration = Duration.ofMinutes(Long.parseLong(estimatedDuration));
+    private void setEstimatedDuration(Long estimatedDuration){
+        this.estimatedDuration = estimatedDuration;
     }
 
 
@@ -195,7 +111,7 @@ public class Task implements Comparable<Object> {
 
 
     /**
-     * Returns the acceptable deviation of the task
+     * Returns the acceptable deviation of the task.
      *
      * @return the acceptable deviation of the task
      */
@@ -208,8 +124,8 @@ public class Task implements Comparable<Object> {
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
-    private void setAcceptableDeviation(String acceptableDeviation){
-        this.acceptableDeviation = Double.parseDouble(acceptableDeviation);
+    private void setAcceptableDeviation(Double acceptableDeviation){
+        this.acceptableDeviation = acceptableDeviation;
     }
 
 
@@ -218,32 +134,24 @@ public class Task implements Comparable<Object> {
      */
     private LocalDateTime startTime;
 
-    /**
-     * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
-     */
-    private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
-
 
     /**
      * Returns the start time of the task.
      *
-     * @return the start time of the task or null if there is no start time
+     * @return the start time of the task
      */
-    public String getStartTime(){
-        if (startTime == null){
-            return null;
-        }
-        return startTime.format(dateFormatter);
+    public LocalDateTime getStartTime(){
+        return startTime;
     }
 
 
     /**
      * Sets the start time of the task to the given start time.
-     * @param startTimeStr the start time of the task
+     * @param startTime the start time of the task
      * @post the start time of the task is set to the given start time
      */
-    private void setStartTime(String startTimeStr){
-        this.startTime = LocalDateTime.parse(startTimeStr, dateFormatter);
+    private void setStartTime(LocalDateTime startTime){
+        this.startTime = startTime;
     }
 
 
@@ -257,23 +165,23 @@ public class Task implements Comparable<Object> {
     /**
      * Returns the end time of the task.
      *
-     * @return the end time of the task or null if there is no end time
+     * @return the end time of the task
      */
-    public String getEndTime(){
-        if (endTime == null){
-            return null;
-        }
-        return endTime.format(dateFormatter);
+    public LocalDateTime getEndTime(){
+        return endTime;
     }
 
     /**
-     * Sets the end time of the task tot the given end time
-     * @param endTimeStr the end time of the task
-     * @pre the end time must be later than the start time
+     * Sets the end time of the task tot the given end time.
+     * @param endTime the end time of the task
+     * @throws IllegalArgumentException when the end time is not later than the start time
      * @post the end time of the task is set to the given end time
      */
-    private void setEndTime(String endTimeStr){
-        this.endTime = LocalDateTime.parse(endTimeStr, dateFormatter);
+    private void setEndTime(LocalDateTime endTime){
+        if (endTime.compareTo(getStartTime()) <= 0) {
+            throw new IllegalArgumentException("The end time can't be before or equal to the start time.");
+        }
+        this.endTime = endTime;
     }
 
 
@@ -297,61 +205,52 @@ public class Task implements Comparable<Object> {
     /**
      * Sets the task status to the given status.
      * @param status the task status
-     * @throws IllegalArgumentException when the given status does not exist
      * @post the task status is set to the given status
      */
-    private void setStatus(String status) throws IllegalArgumentException{
-        this.status = Status.fromString(status);
+    private void setStatus(Status status){
+        this.status = status;
     }
 
 
     /**
      * Updates the status of the task.
      *
-     * @param form the HashMap from which to extract the necessary values
-     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time
+     * @param startTime the start time of the task
+     * @param endTime the end time of the task
+     * @param status the new status of the task
+     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time or
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(HashMap<String, String> form) throws IllegalArgumentException {
-        Status status = Status.fromString(form.get("status"));
+    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status) throws IllegalArgumentException {
         if (status != Status.FINISHED && status != Status.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
-        LocalDateTime endTime = LocalDateTime.parse(form.get("endTime"), dateFormatter);
-        LocalDateTime startTime = LocalDateTime.parse(form.get("startTime"), dateFormatter);
         if (startTime.isAfter(endTime)){
             throw new IllegalArgumentException("The end time can't be before the start time.");
         }
         for (Task dependency: this.getDependencies()) {
-            if (dependency.getStatus().isFinal() && startTime.isBefore(dependency.getEndTimeObject())) {
+            if (dependency.getStatus().isFinal() && startTime.isBefore(dependency.getEndTime())) {
                 throw new IllegalArgumentException("The task must start after its dependencies!");
             }
         }
-        setStartTime(form.get("startTime"));
-        setEndTime(form.get("endTime"));
-        setStatus(form.get("status"));
+        setStartTime(startTime);
+        setEndTime(endTime);
+        setStatus(status);
     }
 
-    /**
-     * Return the end time of this task.
-     * @return a LocalDateTime object.
-     */
-    private LocalDateTime getEndTimeObject() {
-        return this.endTime;
-    }
 
     /**
      * Return the delay between the end time and the estimated end time in minutes.
      *
-     * @return a String with the time between the end time and the estimated end time in minutes.
+     * @return the time between the end time and the estimated end time in minutes
      * @throws IllegalStateException if the task is not yet finished.
      */
-    public String getDelay() throws IllegalStateException {
+    public Long getDelay() throws IllegalStateException {
         if (this.getStatus() != Status.FINISHED) {
             throw new IllegalStateException("Cannot calculate delay of task if not fininshed!");
         }
         else {
-            return Long.toString(Duration.between(this.startTime, this.endTime).minus(this.estimatedDuration).toMinutes());
+            return Duration.between(getStartTime(), getEndTime()).toMinutes() - getEstimatedDuration();
         }
     }
 
@@ -376,7 +275,7 @@ public class Task implements Comparable<Object> {
      * Sets the alternative task of the task to the given task.
      *
      * @param alternative the alternative task of the task
-     * @throws IllegalStateException    the task must be failed to set the alternative task
+     * @throws IllegalStateException the task must be failed to set the alternative task
      * @throws IllegalArgumentException the alternative may not be this task or its alternative or one of its dependencies or one of these alternatives recursively
      * @post the alternative task of the task is set to the given task
      */
@@ -389,7 +288,6 @@ public class Task implements Comparable<Object> {
         }
         this.alternative = alternative;             // may be null if there is no alternative
     }
-
 
 
     /**
@@ -423,7 +321,7 @@ public class Task implements Comparable<Object> {
      *
      * @param dependency task that needs to be added to the task
      * @throws IllegalArgumentException when the dependency is this task or its alternative or one of its dependencies or one of these alternatives recursively
-     * @throws IllegalStateException    if the task is already finished or failed
+     * @throws IllegalStateException if the task is already finished or failed
      * @post the dependency is added to the task, the status of the task is updated accordingly
      */
     public void addDependency(Task dependency) throws IllegalArgumentException, IllegalStateException {
@@ -434,7 +332,7 @@ public class Task implements Comparable<Object> {
             throw new IllegalStateException("No dependencies may be added to failed or finished tasks.");
         }
         if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
-            setStatus(Status.UNAVAILABLE.toString());
+            setStatus(Status.UNAVAILABLE);
         }
         else if (dependency.getStatus() == Status.FAILED){
             Task alternative = dependency;
@@ -442,7 +340,7 @@ public class Task implements Comparable<Object> {
                 alternative = alternative.getAlternative();
             }
             if (alternative.getStatus() != Status.FINISHED){
-                setStatus(Status.UNAVAILABLE.toString());
+                setStatus(Status.UNAVAILABLE);
             }
         }
         dependencies.add(dependency);
@@ -453,7 +351,7 @@ public class Task implements Comparable<Object> {
      *
      * @param dependencies an ArrayList of Task on which this task is dependant.
      */
-    public void restoreDependencies(ArrayList<Task> dependencies) {
+    public void restoreDependencies(ArrayList<Task> dependencies) { // TODO: wordt deze functie wel echt gebruikt of moet die in de andere public constructor gebruikt worden
         this.setDependencies(dependencies);
     }
 
@@ -486,55 +384,11 @@ public class Task implements Comparable<Object> {
                 }
             }
             if (becomesAvailable){
-                setStatus(Status.AVAILABLE.toString());
+                setStatus(Status.AVAILABLE);
             }
         }
     }
 
-
-    /**
-     * Returns the task details of the task.
-     *
-     * @return a HashMap containing as keys the detail name and as value the corresponding detail value
-     */
-    public HashMap<String, String> getTaskDetails() {
-        HashMap<String, String> taskDetails = new HashMap<>();
-
-        taskDetails.put("id", getID().toString());
-        taskDetails.put("description", getDescription());
-        taskDetails.put("estimatedDuration", getEstimatedDuration());
-        taskDetails.put("acceptableDeviation", getAcceptableDeviation().toString());
-        if (startTime == null) {
-            taskDetails.put("startTime", "not yet set");
-        } else {
-            taskDetails.put("startTime", startTime.format(dateFormatter));
-        }
-        if (endTime == null) {
-            taskDetails.put("endTime", "not yet set");
-        } else{
-            taskDetails.put("endTime", endTime.format(dateFormatter));
-        }
-        taskDetails.put("status", getStatus().toString());
-        /*int[] dependenciesIDs = new int[dependencies.size()];
-        for (int i = 0; i < dependencies.size(); i++){
-            dependenciesIDs[i] = dependencies.get(i).getID();
-        }*/
-        StringBuilder dependenciesIDs = new StringBuilder();
-        for(Task t: getDependencies()) {
-        	dependenciesIDs.append(t.getID().toString() +", ");
-        }
-        if(dependenciesIDs.lastIndexOf(",") != -1) {
-        	dependenciesIDs.deleteCharAt(dependenciesIDs.lastIndexOf(","));
-        }
-        taskDetails.put("dependencies", dependenciesIDs.toString());
-        if(alternative != null) {
-        	taskDetails.put("alternative", alternative.getID().toString());
-        } else {
-        	taskDetails.put("alternative", "no alternative task");
-        }
-
-        return taskDetails;
-    }
 
 
     // LOOP CHECKING CODE
@@ -566,104 +420,6 @@ public class Task implements Comparable<Object> {
             }
         }
         return false;
-    }
-
-
-    // Comparebale
-
-    /**
-     * Compares this task its ID with that from another task or another ID.
-     * @param o the other task or the ID of the other task
-     * @return the comparison of both ID's
-     */
-    public int compareTo(Object o) {
-        if (o instanceof Integer){
-            return this.getID().compareTo((Integer) o);
-        }
-	    else if (o instanceof Task){
-		    return this.getID().compareTo(((Task) o).getID());
-        }
-        else{
-            throw new IllegalArgumentException("Uncomparable!");
-        }
-    }
-
-    // XML
-
-    /**
-     * Add a task to an XmlObject.
-     *
-     * @param taskObject an XmlObject.
-     * @throws XmlException if the clock cannot be added to the XmlObject.
-     * @post the task will be added to the XmlObject.
-     */
-    public void addToXml(XmlObject taskObject) throws XmlException {
-        taskObject.addAttribute("id", getID().toString());
-        taskObject.addText("description", getDescription());
-        taskObject.addText("estimatedDuration", getEstimatedDuration());
-        taskObject.addText("acceptableDeviation", getAcceptableDeviation().toString());
-        taskObject.addText("startTime", getStartTime());
-        taskObject.addText("endTime", getEndTime());
-        taskObject.addText("status", getStatus().name());
-        taskObject.addText("lastTaskID", getLastTaskID().toString());
-        if (getAlternative() == null){
-            taskObject.addText("alternative", null);
-        }
-        else {
-            taskObject.addText("alternative", getAlternative().getID().toString());
-        }
-        for (Task dependency: getDependencies()) {
-            taskObject.addText("dependency", dependency.getID().toString());
-        }
-    }
-
-    /**
-     * Restore a task from an XmlObject.
-     *
-     * @param taskObject the XmlObject.
-     * @return the restored task.
-     * @throws XmlException if the task can't be created.
-     */
-    public static Task getFromXml(XmlObject taskObject) throws XmlException {
-        String id = taskObject.getAttribute("id");
-        String description = taskObject.getTexts("description").get(0);
-        String estimatedDuration = taskObject.getTexts("estimatedDuration").get(0);
-        String acceptableDeviation = taskObject.getTexts("acceptableDeviation").get(0);
-        String startTime = taskObject.getTexts("startTime").get(0);
-        String endTime = taskObject.getTexts("endTime").get(0);
-        String lastTaskID = taskObject.getTexts("lastTaskID").get(0);
-        String status = taskObject.getTexts("status").get(0);
-        return new Task(lastTaskID, id, description, estimatedDuration, acceptableDeviation, startTime, endTime, status);
-    }
-
-
-    // Form
-
-    /**
-     * This method generates a form containing all parameters needed to create a new task. All values are empty and can be filled in, and then passed back to the task.
-     *
-     * @return a HashMap containing all elements that need to be filled in to create a new task
-     */
-    public static HashMap<String, String> getCreationForm() {
-        HashMap<String, String> form = new LinkedHashMap<>();
-        form.put("description", "");
-        form.put("estimatedDuration", "");
-        form.put("acceptableDeviation", "");
-        return form;
-    }
-
-
-    /**
-     * This method generates a form containing all parameters needed to update the status of a task. All values are empty and can be filled in, and then passed back to the task.
-     *
-     * @return a HashMap containing all elements that need to be filled in to update the status of a task
-     */
-    public static HashMap<String, String> getUpdateStatusForm() {
-        HashMap<String, String> form = new LinkedHashMap<>();
-        form.put("startTime", "");
-        form.put("endTime", "");
-        form.put("status", "");
-        return form;
     }
 
 
