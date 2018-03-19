@@ -1,10 +1,15 @@
 package test;
 
 import junit.framework.Assert;
+import taskman.Clock;
+import taskman.Controller;
+import taskman.Project;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
+import java.util.HashMap;
 
 public class CreateProjectUseCase {
 
@@ -15,8 +20,8 @@ public class CreateProjectUseCase {
         ArrayDeque<String> input;
         String output;
 
-        public UIMock() {
-            super();
+        public UIMock(Controller c) {
+            super(c);
             input = new ArrayDeque<>();
             emptyOutput();
         }
@@ -57,7 +62,10 @@ public class CreateProjectUseCase {
 
     @Before
     public void setUp() throws Exception {
-        ui = new CreateProjectUseCase.UIMock();
+    	Clock clock = new Clock();
+    	HashMap<String, Project> projects = new HashMap<>();
+    	Controller c = new Controller(projects, clock);
+        ui = new CreateProjectUseCase.UIMock(c);
     }
 
     @Test

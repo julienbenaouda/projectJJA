@@ -166,7 +166,7 @@ public class Controller {
      * @post a project with the properties from a given form will be added to the controller.
      */
     public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException {
-        getProject(projectName).addTask(new Task(form));
+        getProject(projectName).addTask(form);
     }
 
     /**

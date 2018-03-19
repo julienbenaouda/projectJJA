@@ -3,18 +3,22 @@ package test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayDeque;
+import java.util.HashMap;
 
 import org.junit.Test;
 
 import junit.framework.Assert;
+import taskman.Clock;
+import taskman.Controller;
+import taskman.Project;
 
 public class CreateTaskUseCase {
 	class UIMock extends taskman.UI {
 		ArrayDeque<String> input;
 		String output;
 		
-		public UIMock() {
-			super();
+		public UIMock(Controller c) {
+			super(c);
 			input = new ArrayDeque<>();
 			emptyOutput();
 		}
@@ -52,10 +56,14 @@ public class CreateTaskUseCase {
 		}
 		
 	}
+	
 
 	@Test
 	public void testCreateTask() {
-		UIMock ui = new UIMock();
+		Clock clock = new Clock();
+		HashMap<String, Project> projects = new HashMap<>();
+		Controller c = new Controller(projects, clock);
+		UIMock ui = new UIMock(c);
 		ui.setInput("22/02/2032 22:22");
 		ui.setInput("22/02/2022 10:10");
 		ui.setInput("testdesc");
@@ -75,7 +83,10 @@ public class CreateTaskUseCase {
 	@Test
 	public void addTaskInvalidData()
 	{
-		UIMock ui = new UIMock();
+		Clock clock = new Clock();
+		HashMap<String, Project> projects = new HashMap<>();
+		Controller c = new Controller(projects, clock);
+		UIMock ui = new UIMock(c);
 		ui.setInput("22/02/2032 22:22");
 		ui.setInput("22/02/2022 10:10");
 		ui.setInput("testdesc");

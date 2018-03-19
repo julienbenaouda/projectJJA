@@ -44,6 +44,15 @@ public class Project {
     public Project(HashMap<String, String> form) throws IllegalArgumentException {
 		this(form.get("name"), form.get("description"), form.get("creationTime"), form.get("dueTime"));
 	}
+    
+    /**
+     * Create a new task with the given parameters
+     * @param form the form from which to create a task
+     */
+    public void createTask(HashMap<String, String> form) {
+    	Task t = new Task(form);
+    	addTaskToList(t);
+    }
 
     /**
      * adds a new task to the projects task list
@@ -52,9 +61,9 @@ public class Project {
      * @throws IllegalStateException the illegal state exception
      * @post The given task is added to the project
      */
-    public void addTask(Task task) throws IllegalStateException {
+    private void addTaskToList(Task task) throws IllegalStateException {
 		int low = 0;
-	 	int high = taskList.size();
+		int high = taskList.size();
 		int middle = (low + high) / 2;
 	 	while (low < high) {
 		 	Task middleTask = taskList.get(middle);

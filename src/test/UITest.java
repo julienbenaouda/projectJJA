@@ -3,7 +3,11 @@ package test;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import taskman.Clock;
 import taskman.Controller;
+import taskman.Project;
+import taskman.Task;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
@@ -13,12 +17,13 @@ import java.util.HashMap;
 public class UITest {
 	private UIMock ui;
 	private Controller c;
+	private HashMap<String, Project> projects; 
 	class UIMock extends taskman.UI {
 		ArrayDeque<String> input;
 		String output;
 		
-		public UIMock() {
-			super();
+		public UIMock(Controller c) {
+			super(c);
 			input = new ArrayDeque<>();
 			emptyOutput();
 		}
@@ -59,8 +64,10 @@ public class UITest {
 
 	@Before
 	public void setUp() throws Exception {
-		ui = new UIMock();
-		c = ui.getController();
+		Clock clock = new Clock();
+		projects = new HashMap<>();
+		c = new Controller(projects, clock);
+		ui = new UIMock(c);
 	}
 	
 	@Test
@@ -75,18 +82,10 @@ public class UITest {
 
 	@Test
 	public void testListProjects() {
-		HashMap<String, String> p = new HashMap<>();
-		p.put("name", "test 1");
-		p.put("description", "testdesc");
-		p.put("creationTime", "22/02/2011 12:12");
-		p.put("dueTime", "23/05/2011 12:00");
-		HashMap<String, String> p2 = new HashMap<>(); 
-		p2.put("name", "test 2"); 
-		p2.put("description", "testdesc"); 
-		p2.put("creationTime", "09/04/2015 11:11"); 
-		p2.put("dueTime", "11/11/2019 19:00");
-		c.addProject(p);
-		c.addProject(p2);
+		Project p1 = new Project("test 1", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
+		projects.put("test 1", p1);
+		Project p2 = new Project("test 2", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
+		projects.put("test 2", p2);
 		try {
 			ui.listProjects();
 		} catch (UnsupportedOperationException e) {}
@@ -108,7 +107,7 @@ public class UITest {
 	}
 	
 	@Test
-	public void addProjectInvalidData()
+	public void testAddProjectInvalidData()
 	{
 		ui.setInput("22/02/2032");
 		ui.setInput("22/02/2022 10:10");
@@ -123,13 +122,8 @@ public class UITest {
 	@Test
 	public void testOpenProject()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "09/03/2018 20:00", "04/12/2019 09:00");
+		projects.put("test", p);
 		ui.setInput("test");
 		try {
 			ui.showProjectMenu();
@@ -144,39 +138,28 @@ public class UITest {
 		try {
 			ui.showProjectMenu();
 		} catch (UnsupportedOperationException e) {}
-		System.out.println(ui.getOutput());
 		Assert.assertTrue(ui.getOutput().contains("exist"));
 	}
 	
 	@Test
 	public void testShowProjectDetails()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
 		ui.setInput("1");
 		ui.setInput("test");
-		ui.setInput("2");
+		ui.setInput("1");
 		try {
-			ui.showMainMenu();
+			ui.showProjectMenu("test");
 		} catch (UnsupportedOperationException e) {}
-		Assert.assertTrue(ui.getOutput().contains("name:"));
+		Assert.assertTrue(ui.getOutput().contains("description:"));
 	}
 	
 	@Test
 	public void testAddTask()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
 		ui.setInput("5");
 		ui.setInput("10");
 		ui.setInput("testtask");
@@ -189,13 +172,8 @@ public class UITest {
 	@Test
 	public void addTaskInvalidData()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
 		ui.setInput("5");
 		ui.setInput("noNumber");
 		ui.setInput("testtask");
@@ -212,19 +190,10 @@ public class UITest {
 		try {
 			ui.showUserChoiceDialog();
 		} catch (UnsupportedOperationException e) {}
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -232,7 +201,6 @@ public class UITest {
 		try {
 			ui.updateTaskStatus("test");
 		} catch (UnsupportedOperationException e) {}
-		System.out.println(ui.getOutput());
 		Assert.assertTrue(ui.getOutput().contains("updated successfully"));
 	}
 
@@ -243,19 +211,10 @@ public class UITest {
 		try {
 			ui.showUserChoiceDialog();
 		} catch (UnsupportedOperationException e) {}
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
 		ui.setInput("finished");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -263,7 +222,6 @@ public class UITest {
 		try {
 			ui.updateTaskStatus("test");
 		} catch (UnsupportedOperationException e) {}
-		System.out.println(ui.getOutput());
 		Assert.assertTrue(ui.getOutput().contains("Error"));
 	}
 
@@ -274,19 +232,10 @@ public class UITest {
 		try {
 			ui.showUserChoiceDialog();
 		} catch (UnsupportedOperationException e) {}
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -301,19 +250,10 @@ public class UITest {
 	@Test
 	public void testShowTaskDetails()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
 		ui.setInput("1");
 		try {
 			ui.showTaskDetails("test");
@@ -325,19 +265,6 @@ public class UITest {
 
 	@Test
 	public void testExport() {
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
 		try {
 			ui.setInput(os_path + "file.xml");
 			ui.setInput("6");
@@ -349,19 +276,10 @@ public class UITest {
 	@Test
 	public void testExportInvalidPath()
 	{
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
 		try {
 			ui.setInput(os_path + "fil:e.xml");
 			ui.setInput("6");
@@ -419,25 +337,12 @@ public class UITest {
 		try {
 			ui.showUserChoiceDialog();
 		} catch (UnsupportedOperationException e) {}
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask 2");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
+		Task t2 = new Task("testtask 2", "5", "5");
+		p.addTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
 		try {
@@ -456,25 +361,12 @@ public class UITest {
 		try {
 			ui.showUserChoiceDialog();
 		} catch (UnsupportedOperationException e) {}
-		ui.setInput("22/02/2032 22:22");
-		ui.setInput("22/02/2022 10:10");
-		ui.setInput("testdesc");
-		ui.setInput("test");
-		try {
-			ui.createProject();
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask2");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
-		ui.setInput("5");
-		ui.setInput("10");
-		ui.setInput("testtask2");
-		try {
-			ui.createTask("test");
-		} catch (UnsupportedOperationException e) {}
+		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		projects.put("test", p);
+		Task t = new Task("testtask", "5", "5");
+		p.addTask(t);
+		Task t2 = new Task("testtask 2", "5", "10");
+		p.addTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
 		try {
