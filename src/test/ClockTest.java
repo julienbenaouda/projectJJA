@@ -32,11 +32,11 @@ public class ClockTest {
 
     @Test
     public void getSystemTime() {
-        LocalDateTime time = clock.getSystemTime();
+        LocalDateTime time = clock.getTime();
         Assert.assertEquals("Initial SystemTime must be minimal!", LocalDateTime.MIN, time);
         LocalDateTime forceTime = LocalDateTime.of(0, 1, 1, 0, 0);
         time.adjustInto(forceTime);
-        Assert.assertNotEquals("SystemTime can be adjusted outside clock!", forceTime, clock.getSystemTime());
+        Assert.assertNotEquals("SystemTime can be adjusted outside clock!", forceTime, clock.getTime());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ClockTest {
         }
         LocalDateTime time = LocalDateTime.of(2000, 1, 1, 0, 0);
         clock.updateSystemTime(time.format(dateFormatter));
-        Assert.assertEquals("SystemTime is not updated!", time, clock.getSystemTime());
+        Assert.assertEquals("SystemTime is not updated!", time, clock.getTime());
         try {
             clock.updateSystemTime(LocalDateTime.of(1999, 12, 31,23, 59).format(dateFormatter));
             Assert.fail("The clock can be updated to the past!");

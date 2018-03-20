@@ -1,62 +1,34 @@
 package taskman;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 
 /**
- * This class is responsible for storing a consistent system time.
+ * This class is responsible for storing a consistent time for the system.
  */
 public class Clock {
 
     /**
      * Represents the time of the clock.
      */
-    private LocalDateTime systemTime = LocalDateTime.MIN;
-
-    /**
-     * The notation used for the time.
-     */
-    private final DateTimeFormatter dateFormatter =
-            DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
-
-    /**
-     * Sets the time of the clock to the given time.
-     * @param newSystemTime a LocalDatTime object.
-     * @post the time will be set to the given time.
-     */
-    private void setSystemTime(LocalDateTime newSystemTime) {
-        systemTime = newSystemTime;
-    }
+    private LocalDateTime time = LocalDateTime.MIN;
 
     /**
      * Returns the time of the clock.
      * @return a LocalDateTime object.
      */
-    public LocalDateTime getSystemTime() {
-        return systemTime; // LocalDateTime is immutable!
+    public LocalDateTime getTime() {
+        return time; // LocalDateTime is immutable!
     }
 
     /**
-     * Returns the time of the clock.
-     * @return a String.
-     */
-    public String getSystemTimeString() {
-        return systemTime.format(dateFormatter);
-    }
-
-    /**
-     * Updates the time of the clock.
-     * @param s the new time of the clock.
-     * @throws DateTimeParseException   if the text cannot be parsed.
+     * Updates the time of the clock to a later time.
+     * @param newTime a LocalDateTime with the new time of the clock.
      * @throws IllegalArgumentException if the new time if before the old time.
      * @post the time of the clock will be set to the given time.
      */
-    public void updateSystemTime(String s) throws DateTimeParseException, IllegalArgumentException {
-        LocalDateTime newSystemTime = LocalDateTime.parse(s, dateFormatter);
-        if (newSystemTime.isAfter(systemTime)) {
-            setSystemTime(newSystemTime);
+    public void updateSystemTime(LocalDateTime newTime) throws IllegalArgumentException {
+        if (newTime.isAfter(time)) {
+            this.time = newTime;
         }
         else {
             throw new IllegalArgumentException("New system time must be after the current system time!");
