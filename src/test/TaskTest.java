@@ -7,6 +7,9 @@ import taskman.Status;
 import taskman.Task;
 import taskman.XmlObject;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
@@ -20,11 +23,10 @@ import java.util.HashMap;
 public class TaskTest {
 
     private static Task task;
-    private static String duration;
-    private static String deviation;
-    private static String start;
-    private static String end;
-    private final static DateTimeFormatter dateFormatter =DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
+    private static Long duration;
+    private static Double deviation;
+    private static LocalDateTime start;
+    private static LocalDateTime end;
 
     private static Task root;
     private static Task alternative1_3;
@@ -35,14 +37,14 @@ public class TaskTest {
 
     @BeforeClass
     public static void setUp(){
-        duration = "22";
-        deviation = "0.15";
+        duration = (long) 22;
+        deviation = 0.15;
         task = new Task("Very interesting description.", duration, deviation);
 
-        String estimatedDuration = "5";
-        String acceptableDeviation = "0.2356";
-        String startTime = "11/03/2018 01:36";
-        String endTime = "11/03/2018 01:45";
+        Long estimatedDuration = (long) 5;
+        Double acceptableDeviation = 0.2356;
+        LocalDate startTime = ;
+        LocalDateTime endTime = new LocalDateTime(new LocalDate(11,3, 2010), new LocalTime(1, 45));
 
         root = new Task("root description", estimatedDuration, acceptableDeviation) {
             private Status status;
@@ -244,14 +246,6 @@ public class TaskTest {
     }
 
 
-    @Test
-    public void testLastTaskID(){
-        int prevLastTaskId = Task.getLastTaskID();
-        Task newTask = new Task("Less interesting description.", duration, deviation);
-        Assert.assertEquals("Last task ID does not equal the ID of the latest task.", Integer.valueOf(prevLastTaskId + 1), Task.getLastTaskID());
-        Assert.assertEquals("ID of the new task does not equal the latest task ID", Task.getLastTaskID(), newTask.getID());
-    }
-
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidEndTime(){
         Task invalidUpdateStatusTask = new Task("description 1234", duration, deviation);
@@ -421,49 +415,7 @@ public class TaskTest {
         root.addDependency(dependency1_1_3);
     }
 
-    @Test
-    public void testGetTaskDetails(){
-        HashMap<String, String> taskDetails = task.getTaskDetails();
 
-        Assert.assertEquals("The task ID is not correct", task.getID().toString(), taskDetails.get("id"));
-        Assert.assertEquals("The descriptions are not equal", "Very interesting description.", taskDetails.get("description"));
-        Assert.assertEquals("The estimated durations are not equal", duration, taskDetails.get("estimatedDuration"));
-        Assert.assertEquals("The acceptable deviations are not equal", deviation, taskDetails.get("acceptableDeviation"));
-    }
-
-    @Test
-    public void testCompareTo(){
-        Assert.assertEquals("The task is not equal to itself.", 0, task.compareTo(task));
-        Assert.assertEquals("The task is not equal to itself ID.", 0, task.compareTo(task.getID()));
-
-        Assert.assertEquals("The task it's ID is not smaller than root.", -1, task.compareTo(root));
-        Assert.assertEquals("The task it's ID is not smaller than root ID.", -1, task.compareTo(root.getID()));
-
-        Assert.assertEquals("The dependency it's ID is not larger than dependent.", 1, dependency1_1_3.compareTo(dependency1_2));
-        Assert.assertEquals("The dependency it's ID is not smaller than dependent ID.", 1, dependency1_1_3.compareTo(dependency1_2.getID()));
-    }
-
-
-    @Test
-    public void testExportXML()
-    {
-        try {
-            Task taskXml = new Task("task description", "103", "0.32");
-            XmlObject object = new XmlObject();
-            taskXml.addToXml(object.addXmlObject("task"));
-            Task tNew = Task.getFromXml(object.getXmlObjects("task").get(0));
-            Assert.assertEquals("ID is not equal.", taskXml.getID(), tNew.getID());
-            Assert.assertEquals("Description is not equal.",taskXml.getDescription(), tNew.getDescription());
-            Assert.assertEquals("Estimated duration is not equal.", taskXml.getEstimatedDuration(), tNew.getEstimatedDuration());
-            Assert.assertEquals("Acceptable deviation is not equal.", taskXml.getAcceptableDeviation(), tNew.getAcceptableDeviation());
-            Assert.assertEquals("Status is not equal.", taskXml.getStatus(), tNew.getStatus());
-            Assert.assertEquals("Start time is not equal.", taskXml.getStartTime(), tNew.getStartTime());
-            Assert.assertEquals("End time is not equal", taskXml.getEndTime(), tNew.getEndTime());
-        } catch (Exception e) {
-            // Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void getDelayTest() {
