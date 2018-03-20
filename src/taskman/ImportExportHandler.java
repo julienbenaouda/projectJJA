@@ -18,15 +18,10 @@ public class ImportExportHandler {
     private XmlObject xml;
 
     /**
-     * The parser used to
-     */
-    private Parser parser;
-
-    /**
      * Create an empty ImportExportHandler.
      * @throws ImportExportException if the ImportExportHandler cannot be created.
      */
-    public ImportExportHandler(Parser parser) throws ImportExportException {
+    public ImportExportHandler() throws ImportExportException {
         this.xml = new XmlObject();
     }
 
