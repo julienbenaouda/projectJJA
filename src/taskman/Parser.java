@@ -22,7 +22,7 @@ public static class Parser {
     }
 
     public static LongToMinutesString(Long minutes) {
-        
+
     }
 
 }

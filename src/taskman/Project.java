@@ -11,22 +11,21 @@ import java.util.*;
 /**
  * This class represents a project.
  *
- * @author Julien Benaouda
+ * @author Julien Benaouda, Jeroen Van Der Donckt
  */
 public class Project {
 
     /**
      * creates a new project with the given values
      *
-     * @param name         the project name
-     * @param description  the project description
+     * @param name the project name
+     * @param description the project description
      * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
-     * @param dueTime      the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
+     * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
      * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
      * @post a new project is created with the given attributes
      */
-    public Project(String name, String description, String creationTime, String dueTime) throws IllegalArgumentException
-	{
+    public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
 		setName(name);
 		setDescription(description);
 		setCreationTime(creationTime);
@@ -34,60 +33,38 @@ public class Project {
 		taskList = new ArrayList<>();
 	}
 
-    /**
-     * Creates a new project with parameters from the given hashmap.
-     *
-     * @param form the HashMap from which to extract the parameters.
-     * @throws IllegalArgumentException when one of the parameters is abscent or not valid.
-     * @post a new project is created with the given parameters
-     */
-    public Project(HashMap<String, String> form) throws IllegalArgumentException {
-		this(form.get("name"), form.get("description"), form.get("creationTime"), form.get("dueTime"));
-	}
     
     /**
      * Create a new task with the given parameters
-     * @param form the form from which to create a task
+	 *
+	 * @param description the description of the task
+	 * @param estimatedDuration the estimated duration of the task (in minutes)
+	 * @param acceptableDeviation the acceptable deviation of the task
+     * @post a new task is created and added to the project
      */
-    public void createTask(HashMap<String, String> form) {
-    	Task t = new Task(form);
+    public void createTask(String description, Long estimatedDuration, Double acceptableDeviation) {
+    	Task t = new Task(description, estimatedDuration, acceptableDeviation);
     	addTaskToList(t);
     }
 
     /**
-     * adds a new task to the projects task list
+     * Adds a new task to the projects task list.
      *
      * @param task the task to add
      * @throws IllegalStateException the illegal state exception
      * @post The given task is added to the project
      */
-    private void addTaskToList(Task task) throws IllegalStateException {
-		int low = 0;
-		int high = taskList.size();
-		int middle = (low + high) / 2;
-	 	while (low < high) {
-		 	Task middleTask = taskList.get(middle);
-		 	if(middleTask.getID().equals(task.getID())) {
-				 break;
-		 	}
-		 	else if (middleTask.getID() > task.getID()) {
-				 high = middle - 1;
-		 	}
-		 	else {
-				 low = middle + 1;
-		 	}
-			middle = (low + high) / 2;
-	 	}
-	 	taskList.add(middle, task);
+    private void addTaskToList(Task task) throws IllegalStateException { // TODO: waarom gooit dit illegal state exception?
+	 	taskList.add(task);
 	}
 
     /**
-     * Return if the project is finished
+     * Returns if the project is finished
      *
      * @return a Boolean
      */
     public Boolean isFinished() {
-		for (Task task: this.taskList) {
+		for (Task task: taskList) {
 			if (task.getStatus() != Status.FINISHED) {
 				return false;
 			}
@@ -98,45 +75,17 @@ public class Project {
     /**
      * This method removes a task from the projects task list.
      *
-     * @param id the ID of the task to remove
-     * @throws IllegalArgumentException If a task with the given ID does not exist in the project.
+     * @param task the task to remove from the project
+	 * @post the task is removed from the project
      */
-    public void removeTask(int id) throws IllegalArgumentException
-	{
-		taskList.remove(getTaskIndex(id));
+    public void removeTask(Task task) {
+		taskList.remove(task);
 	}
 
-    /**
-     * Returns the task details of the task
-     *
-     * @param id the id of the task
-     * @return a HashMap containing as keys the detail name and as value the corresponding detail value
-     * @throws IllegalArgumentException when a task with the given ID does not exist in this project.
-     */
-    public HashMap<String, String> getTaskDetails(Integer id) throws IllegalArgumentException {
-		int index = getTaskIndex(id);
-		Task t = taskList.get(index);
-		return t.getTaskDetails();
-	}
+	// TODO: getTaskDetails() en getAvailableTaskDetails() heb ik verwijderd
 
     /**
-     * Returns a list of task details of the available tasks
-     *
-     * @return a List containing for each available task a HashMap containing as key the detail name and as value the corresponding detail value
-     */
-    public ArrayList<HashMap<String, String>> getAvailableTaskDetails(){
-        ArrayList<HashMap<String, String>> availableTaskDetailsList = new ArrayList<>();
-        for (int id : getTaskIds()){
-            HashMap<String, String> taskDetails = getTaskDetails(id);
-            if (Status.fromString(taskDetails.get("status")) == Status.AVAILABLE){
-                availableTaskDetailsList.add(taskDetails);
-            }
-        }
-        return availableTaskDetailsList;
-    }
-
-    /**
-     * returns the name of the project
+     * Returns the name of the project.
      *
      * @return the name of the project
      */
@@ -145,7 +94,8 @@ public class Project {
 	}
 
 	/**
-	 * sets the name of the project to the given name
+	 * Sets the name of the project to the given name.
+	 *
 	 * @param name the name of the project.
 	 * @throws IllegalArgumentException when the name is empty
 	 * @post the name of the project is set to the given name
@@ -164,7 +114,7 @@ public class Project {
 	private String name;
 
     /**
-     * returns the project description
+     * Returns the project description.
      *
      * @return the project description
      */
@@ -173,13 +123,14 @@ public class Project {
 	}
 
 	/**
-	 * Sets the project description to the given description
+	 * Sets the project description to the given description.
+	 *
 	 * @param description the description of the project
 	 * @throws IllegalArgumentException when de project description is null
 	 * @post the project description is set to the given description
 	 */
 	private void setDescription(String description) {
-		if(description == null)
+		if(description == null) // TODO is dit echt nodig? Anders moet dit ook bij task gebeuren
 		{
 			throw new IllegalArgumentException("The description can't be null");
 		}
@@ -191,6 +142,7 @@ public class Project {
 	 */
 	private String description;
 
+
     /**
      * returns the creation time of the project
      *
@@ -201,22 +153,18 @@ public class Project {
 	}
 
 	/**
-	 * sets the creation time of the project
+	 * Sets the creation time of the project.
+	 *
 	 * @param creationTime the creationTime of the project
-	 * @throws IllegalArgumentException when the given date is not valid or null.
+	 * @throws IllegalArgumentException when the given date is null
 	 * @post the creation time of the project is set to the given creation time
 	 */
-	private void setCreationTime(String creationTime) {
-		if(creationTime == null)
-		{
+	private void setCreationTime(LocalDateTime creationTime) {
+		if(creationTime == null) { // TODO: moet dit? anders moet dit ook in TASK
 			throw new IllegalArgumentException("The creation time can't be null");
 		}
-		try {
-			this.creationTime = LocalDateTime.parse(creationTime, dateFormatter);
-		} catch (DateTimeParseException e)
-		{
-			throw new IllegalArgumentException("the value " +creationTime +" doesn't match the expected format. Please correct the error and try again.");
-		}
+		this.creationTime = creationTime;
+
 	}
 
 	/**
@@ -225,7 +173,7 @@ public class Project {
 	private LocalDateTime creationTime;
 
     /**
-     * returns the due time of the project
+     * Returns the due time of the project.
      *
      * @return the dueTime of the project
      */
@@ -235,20 +183,20 @@ public class Project {
 
 	/**
 	 * Sets the due time of the project.
+	 *
 	 * @param dueTime the dueTime of the project
 	 * @throws IllegalArgumentException when the due time is earlier or equal than the creation time or when the due time is null
 	 * @post the due time of the project is set to the given due time
 	 */
-	private void setDueTime(String dueTime) {
-		try {
-			this.dueTime = LocalDateTime.parse(dueTime, dateFormatter);
-		} catch (DateTimeParseException e) {
-			throw new IllegalArgumentException("The provided value " +dueTime +" doesn't match the expected format. Please correct the error and try again.");
+	private void setDueTime(LocalDateTime dueTime) {
+		if (dueTime == null){ // TODO: moet dit anders bij Task dit ook
+			throw new IllegalArgumentException("The due time can't be null");
 		}
-		if(this.dueTime.compareTo(creationTime) <= 0)
+		if(dueTime.compareTo(creationTime) <= 0) // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
 		{
-			throw new IllegalArgumentException("The due time can't be before or equal to the start time. Correct the error and try again.");
+			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
+		this.dueTime = dueTime;
 	}
 
 	/**
@@ -265,108 +213,13 @@ public class Project {
 		return ((ArrayList<Task>)taskList.clone());
 	}
 
-    /**
-     * This method returns a list with all the task IDs contained in the project
-     *
-     * @return the task ids
-     * @returns A list of task IDs
-     */
-    public List<Integer> getTaskIds()
-	{
-		List<Integer> IDs = new ArrayList<>();
-		for(Task t: taskList)
-		{
-			IDs.add(t.getID());
-		}
-		return IDs;
-	}
 
-    /**
-     * returns the task with the given ID
-     *
-     * @param id the id of the task
-     * @return the task with the given ID
-     * @throws IllegalArgumentException When the project doesn't contain a task with the given ID.
-     */
-    public Task getTask(int id) {
-		return taskList.get(getTaskIndex(id));
-	}
-
-	/**
-	 * Get the task index of a task id.
-	 * @param id the id of the taks
-	 * @return a task index.
-	 * @throws IllegalArgumentException if the id isn't found.
-	 */
-	private int getTaskIndex(int id) throws IllegalArgumentException
-	{
-		int low = 0;
-		int high = taskList.size() - 1;
-		int middle = (low + high) / 2;
-		while(low <= high) {
-			Task middleTask = taskList.get(middle);
-			if(middleTask.getID().equals(id)) {
-				return middle;
-			}
-			else if(middleTask.getID() > id) {
-				high = middle - 1;
-			}
-			else {
-				low = middle + 1;
-			}
-			middle = (low + high) / 2;
-		}
-		throw new IllegalArgumentException("A task with the given id does not exist in this project.");
-	}
+	// TODO: de andere functies met ID's en getTask(id) heb ik verwijderd
 
 	/**
 	 * The list of tasks for the project.
 	 */
 	private ArrayList<Task> taskList;
-	
-	/**
-	 * The DateTimeFormatter used to convert LocalDateTimes to Strings and Strings to LocalDateTimes.
-	 */
-	private final static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
-    /**
-     * This method returns a hashmap containing the project properties.
-     *
-     * @return A HashMap containing each property of the project. It also returns a comma separated list of all task IDs contained in the project. The property names can be used as keys.
-     */
-    public HashMap<String, String> getProjectDetails()
-	{
-		HashMap<String, String> details = new LinkedHashMap<>();
-		details.put("name", getName());
-		details.put("description", getDescription());
-		details.put("creationTime", getCreationTime().format(dateFormatter));
-		details.put("dueTime", getDueTime().format(dateFormatter));
-		StringBuilder sb = new StringBuilder();
-		for(Integer i: getTaskIds()) {
-			sb.append(i.toString() +",");
-		}
-		// delete the last comma if it is present
-		int index = sb.lastIndexOf(",");
-		if(index != -1) {
-			sb.deleteCharAt(index);
-		}
-		details.put("tasks", sb.toString());
-		return details;
-	}
-
-    /**
-     * This method generates a form containing all parameters needed to create a new project. All values are empty and can be filled in, and then passed back to the project.
-     *
-     * @return A HashMap containing all elements that need to be filled in to create a new project
-     */
-    public static HashMap<String, String> getCreationForm()
-	{
-		HashMap<String, String> form = new LinkedHashMap<>();
-		form.put("name", "");
-		form.put("description", "");
-		form.put("creationTime", "");
-		form.put("dueTime", "");
-		return form;
-	}
-
+	// TODO: getProjectDetails() heb ik ook verwijdered
 }
