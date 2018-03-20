@@ -4,25 +4,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.Clock;
-import taskman.Controller;
-import taskman.Project;
-import taskman.Task;
+import taskman.*;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
-public class UITest {
-	private UIMock ui;
+public class UserInterfaceTest {
+	private UserInterfaceMock ui;
 	private Controller c;
 	private HashMap<String, Project> projects; 
-	class UIMock extends taskman.UI {
+	class UserInterfaceMock extends UserInterface {
 		ArrayDeque<String> input;
 		String output;
 		
-		public UIMock(Controller c) {
+		public UserInterfaceMock(Controller c) {
 			super(c);
 			input = new ArrayDeque<>();
 			emptyOutput();
@@ -67,7 +64,7 @@ public class UITest {
 		Clock clock = new Clock();
 		projects = new HashMap<>();
 		c = new Controller(projects, clock);
-		ui = new UIMock(c);
+		ui = new UserInterfaceMock(c);
 	}
 	
 	@Test

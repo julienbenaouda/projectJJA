@@ -4,7 +4,7 @@ package taskman;
  * This enum is responsible for storing the status of a Task.
  * @author Alexander Braekevelt, Jeroen Van Der Donckt
  */
-public enum Status {
+public enum TaskStatus {
     /**
      * Available status.
      */
@@ -23,13 +23,13 @@ public enum Status {
     FAILED;
 
     /**
-     * Returns the Status with as name the given String.
-     * @param s the String with the name of the Status.
-     * @return the Status of the given string.
-     * @throws IllegalArgumentException if the Status does not exist.
+     * Returns the TaskStatus with as name the given String.
+     * @param s the String with the name of the TaskStatus.
+     * @return the TaskStatus of the given string.
+     * @throws IllegalArgumentException if the TaskStatus does not exist.
      */
-    public static Status fromString(String s) throws IllegalArgumentException{
-        for (Status status: Status.values()) {
+    public static TaskStatus fromString(String s) throws IllegalArgumentException{
+        for (TaskStatus status: TaskStatus.values()) {
             if (s.equals(status.name())) {
                 return status;
             }
@@ -47,10 +47,10 @@ public enum Status {
     }
 
     /**
-     * Return if the Status is a final Status.
+     * Return if the TaskStatus is a final TaskStatus.
      * @return a Boolean.
      */
     public Boolean isFinal() {
-        return this.equals(Status.FINISHED) || this.equals(Status.FAILED);
+        return this.equals(TaskStatus.FINISHED) || this.equals(TaskStatus.FAILED);
     }
 }

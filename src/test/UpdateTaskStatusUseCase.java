@@ -7,21 +7,20 @@ import org.junit.Test;
 import taskman.Clock;
 import taskman.Controller;
 import taskman.Project;
-import taskman.UI;
-import test.CreateTaskUseCase.UIMock;
+import taskman.UserInterface;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
 public class UpdateTaskStatusUseCase {
 
-    private static UpdateTaskStatusUseCase.UIMock ui;
+    private static UserInterfaceMock ui;
 
-    class UIMock extends taskman.UI {
+    class UserInterfaceMock extends UserInterface {
         ArrayDeque<String> input;
         String output;
 
-        public UIMock(Controller c) {
+        public UserInterfaceMock(Controller c) {
             super(c);
             input = new ArrayDeque<>();
             emptyOutput();
@@ -68,7 +67,7 @@ public class UpdateTaskStatusUseCase {
 					Clock clock = new Clock();
 					HashMap<String, Project> projects = new HashMap<>();
 					Controller c = new Controller(projects, clock);
-					UIMock ui = new UIMock(c);
+					UserInterfaceMock ui = new UserInterfaceMock(c);
     }
 
 
@@ -77,7 +76,7 @@ public class UpdateTaskStatusUseCase {
 								Clock clock = new Clock();
 								HashMap<String, Project> projects = new HashMap<>();
 								Controller c = new Controller(projects, clock);
-								UIMock ui = new UIMock(c);
+								UserInterfaceMock ui = new UserInterfaceMock(c);
         ui.setInput("22/02/2032 22:22");
         ui.setInput("22/02/2022 10:10");
         ui.setInput("testdesc");

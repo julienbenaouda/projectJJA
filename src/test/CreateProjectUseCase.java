@@ -7,20 +7,21 @@ import taskman.Project;
 
 import org.junit.Before;
 import org.junit.Test;
+import taskman.UserInterface;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
 public class CreateProjectUseCase {
 
-    private CreateProjectUseCase.UIMock ui;
+    private UserInterfaceMock ui;
 
 
-    class UIMock extends taskman.UI {
+    class UserInterfaceMock extends UserInterface {
         ArrayDeque<String> input;
         String output;
 
-        public UIMock(Controller c) {
+        public UserInterfaceMock(Controller c) {
             super(c);
             input = new ArrayDeque<>();
             emptyOutput();
@@ -65,7 +66,7 @@ public class CreateProjectUseCase {
     	Clock clock = new Clock();
     	HashMap<String, Project> projects = new HashMap<>();
     	Controller c = new Controller(projects, clock);
-        ui = new CreateProjectUseCase.UIMock(c);
+        ui = new UserInterfaceMock(c);
     }
 
     @Test

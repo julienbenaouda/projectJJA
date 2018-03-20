@@ -3,7 +3,7 @@ package test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import taskman.Status;
+import taskman.TaskStatus;
 import taskman.Task;
 import taskman.XmlObject;
 
@@ -45,15 +45,15 @@ public class TaskTest {
         String endTime = "11/03/2018 01:45";
 
         root = new Task("root description", estimatedDuration, acceptableDeviation) {
-            private Status status;
+            private TaskStatus status;
 
             @Override
             public void updateStatus(HashMap<String, String> form) {
-                this.status = Status.fromString(form.get("status"));
+                this.status = TaskStatus.fromString(form.get("status"));
             }
 
             @Override
-            public Status getStatus(){
+            public TaskStatus getStatus(){
                 return status;
             }
         };
@@ -272,11 +272,11 @@ public class TaskTest {
         form.put("endTime", "11/03/2018 21:34");
         form.put("status", "FINISHED");
 
-        Assert.assertEquals("The status is not correct.", Status.AVAILABLE, updateStatusTask.getStatus());
+        Assert.assertEquals("The status is not correct.", TaskStatus.AVAILABLE, updateStatusTask.getStatus());
         updateStatusTask.updateStatus(form);
         Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime());
         Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime());
-        Assert.assertEquals("The status is not correctly updated.", Status.FINISHED, updateStatusTask.getStatus());
+        Assert.assertEquals("The status is not correctly updated.", TaskStatus.FINISHED, updateStatusTask.getStatus());
 
     }
 
@@ -304,15 +304,15 @@ public class TaskTest {
         Assert.assertEquals("There is already an alternative", null, task.getAlternative());
 
         Task setAlternative = new Task("description of this task", duration, deviation){
-            private Status status;
+            private TaskStatus status;
 
             @Override
             public void updateStatus(HashMap<String, String> form) {
-                this.status = Status.fromString(form.get("status"));
+                this.status = TaskStatus.fromString(form.get("status"));
             }
 
             @Override
-            public Status getStatus(){
+            public TaskStatus getStatus(){
                 return status;
             }
         };
@@ -338,15 +338,15 @@ public class TaskTest {
         Assert.assertEquals("There is already an alternative", null, task.getAlternative());
 
         Task setAlternative = new Task("description of this task", duration, deviation){
-            private Status status;
+            private TaskStatus status;
 
             @Override
             public void updateStatus(HashMap<String, String> form) {
-                this.status = Status.fromString(form.get("status"));
+                this.status = TaskStatus.fromString(form.get("status"));
             }
 
             @Override
-            public Status getStatus(){
+            public TaskStatus getStatus(){
                 return status;
             }
         };
@@ -456,7 +456,7 @@ public class TaskTest {
             Assert.assertEquals("Description is not equal.",taskXml.getDescription(), tNew.getDescription());
             Assert.assertEquals("Estimated duration is not equal.", taskXml.getEstimatedDuration(), tNew.getEstimatedDuration());
             Assert.assertEquals("Acceptable deviation is not equal.", taskXml.getAcceptableDeviation(), tNew.getAcceptableDeviation());
-            Assert.assertEquals("Status is not equal.", taskXml.getStatus(), tNew.getStatus());
+            Assert.assertEquals("TaskStatus is not equal.", taskXml.getStatus(), tNew.getStatus());
             Assert.assertEquals("Start time is not equal.", taskXml.getStartTime(), tNew.getStartTime());
             Assert.assertEquals("End time is not equal", taskXml.getEndTime(), tNew.getEndTime());
         } catch (Exception e) {

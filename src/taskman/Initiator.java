@@ -23,7 +23,7 @@ public class Initiator {
 		HashMap<String, Project> projects = new HashMap<>();
 		Clock clock = new Clock();
 		Controller c = new Controller(projects, clock);
-		UI ui = new UI(c);
+		UserInterface ui = new UserInterface(c);
 		ui.welcomeDialog();
 	}
 

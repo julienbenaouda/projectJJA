@@ -1,7 +1,7 @@
 package test;
 
 import taskman.Project;
-import taskman.Status;
+import taskman.TaskStatus;
 import taskman.Task;
 import taskman.XmlObject;
 
@@ -161,15 +161,15 @@ public class ProjectTest {
 	public void testXMLTaskWithAlternative()
 	{
 		Task t = new Task("test", "10", "20"){
-			private Status status;
+			private TaskStatus status;
 
 			@Override
 			public void updateStatus(HashMap<String, String> form) {
-				this.status = Status.fromString(form.get("status"));
+				this.status = TaskStatus.fromString(form.get("status"));
 			}
 
 			@Override
-			public Status getStatus(){
+			public TaskStatus getStatus(){
 				return status;
 			}
 		};

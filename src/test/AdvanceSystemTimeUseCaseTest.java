@@ -1,7 +1,5 @@
 package test;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayDeque;
 import java.util.HashMap;
 
@@ -11,13 +9,14 @@ import junit.framework.Assert;
 import taskman.Clock;
 import taskman.Controller;
 import taskman.Project;
+import taskman.UserInterface;
 
 public class AdvanceSystemTimeUseCaseTest {
-	class UIMock extends taskman.UI {
+	class UserInterfaceMock extends UserInterface {
 		ArrayDeque<String> input;
 		String output;
 		
-		public UIMock(Controller c) {
+		public UserInterfaceMock(Controller c) {
 			super(c);
 			input = new ArrayDeque<>();
 			emptyOutput();
@@ -63,7 +62,7 @@ public class AdvanceSystemTimeUseCaseTest {
 		Clock clock = new Clock();
 		HashMap<String, Project> projects = new HashMap<>();
 		Controller controller = new Controller(projects, clock);
-		UIMock ui = new UIMock(controller);
+		UserInterfaceMock ui = new UserInterfaceMock(controller);
 		ui.setInput("11/11/2017 16:20");
 		ui.setInput("4");
 		try {
@@ -78,7 +77,7 @@ public class AdvanceSystemTimeUseCaseTest {
 		Clock clock = new Clock();
 		HashMap<String, Project> projects = new HashMap<>();
 		Controller c = new Controller(projects, clock);
-		UIMock ui = new UIMock(c);
+		UserInterfaceMock ui = new UserInterfaceMock(c);
 		ui.setInput("11/11/2017");
 		ui.setInput("7");
 		try {

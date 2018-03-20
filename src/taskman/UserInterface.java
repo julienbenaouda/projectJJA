@@ -14,15 +14,15 @@ import java.util.Scanner;
  *
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
-public class UI {
+public class UserInterface {
     private Controller controller;
 
     /**
-     * Creates a new UI object.
-     * @param c the controller that the UI may use.
-     * @post a new UI object is created with the given controller. If the controller is null, the system exits.
+     * Creates a new UserInterface object.
+     * @param c the controller that the UserInterface may use.
+     * @post a new UserInterface object is created with the given controller. If the controller is null, the system exits.
      */
-    public UI(Controller c)
+    public UserInterface(Controller c)
     {
     	if(c != null)
     	{
@@ -419,7 +419,7 @@ public class UI {
                 HashMap<String, String> form = fillInTaskUpdateForm();
                 if (form != null){
                     controller.updateTaskStatus(name, id, form);
-                    print("Status updated successfully.\n");
+                    print("TaskStatus updated successfully.\n");
                     showProjectMenu(name);
                 }
                 else{

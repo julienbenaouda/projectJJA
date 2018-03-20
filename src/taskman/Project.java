@@ -3,9 +3,6 @@ package taskman;
 
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.*;
 
 /**
@@ -65,7 +62,7 @@ public class Project {
      */
     public Boolean isFinished() {
 		for (Task task: taskList) {
-			if (task.getStatus() != Status.FINISHED) {
+			if (task.getStatus() != TaskStatus.FINISHED) {
 				return false;
 			}
 		}

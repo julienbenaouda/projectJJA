@@ -25,7 +25,7 @@ public class Task {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStatus(Status.AVAILABLE);
+        setStatus(TaskStatus.AVAILABLE);
         dependencies = new ArrayList<>();
     }
 
@@ -39,7 +39,7 @@ public class Task {
      * @param endTime the end time of the task
      * @post a new task is created with the given attributes
      */
-    private Task(String description, Long estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, Status status) {
+    private Task(String description, Long estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
@@ -189,7 +189,7 @@ public class Task {
     /**
      * The status of the task.
      */
-    private Status status;
+    private TaskStatus status;
 
 
     /**
@@ -197,7 +197,7 @@ public class Task {
      *
      * @return the task status
      */
-    public Status getStatus(){
+    public TaskStatus getStatus(){
         return status;
     }
 
@@ -207,7 +207,7 @@ public class Task {
      * @param status the task status
      * @post the task status is set to the given status
      */
-    private void setStatus(Status status){
+    private void setStatus(TaskStatus status){
         this.status = status;
     }
 
@@ -221,8 +221,8 @@ public class Task {
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time or
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, Status status) throws IllegalArgumentException {
-        if (status != Status.FINISHED && status != Status.FAILED){
+    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) throws IllegalArgumentException {
+        if (status != TaskStatus.FINISHED && status != TaskStatus.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
         if (startTime.isAfter(endTime)){
@@ -246,7 +246,7 @@ public class Task {
      * @throws IllegalStateException if the task is not yet finished.
      */
     public Long getDelay() throws IllegalStateException {
-        if (this.getStatus() != Status.FINISHED) {
+        if (this.getStatus() != TaskStatus.FINISHED) {
             throw new IllegalStateException("Cannot calculate delay of task if not fininshed!");
         }
         else {
@@ -280,7 +280,7 @@ public class Task {
      * @post the alternative task of the task is set to the given task
      */
     public void setAlternative(Task alternative) throws IllegalStateException, IllegalArgumentException {
-        if (getStatus() != Status.FAILED){
+        if (getStatus() != TaskStatus.FAILED){
             throw new IllegalStateException("The task must be failed to set an alternative.");
         }
         if (containsLoop(this, alternative)){
@@ -328,19 +328,19 @@ public class Task {
         if (containsLoop(this, dependency)){
             throw new IllegalArgumentException("The alternative may not be one of the dependencies or the alternative of this or of its dependendecies recursivley");
         }
-        if (getStatus() == Status.FAILED || getStatus() == Status.FINISHED){
+        if (getStatus() == TaskStatus.FAILED || getStatus() == TaskStatus.FINISHED){
             throw new IllegalStateException("No dependencies may be added to failed or finished tasks.");
         }
-        if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
-            setStatus(Status.UNAVAILABLE);
+        if (dependency.getStatus() == TaskStatus.AVAILABLE || dependency.getStatus() == TaskStatus.UNAVAILABLE){
+            setStatus(TaskStatus.UNAVAILABLE);
         }
-        else if (dependency.getStatus() == Status.FAILED){
+        else if (dependency.getStatus() == TaskStatus.FAILED){
             Task alternative = dependency;
-            while (alternative.getAlternative() !=  null && alternative.getStatus() == Status.FAILED){
+            while (alternative.getAlternative() !=  null && alternative.getStatus() == TaskStatus.FAILED){
                 alternative = alternative.getAlternative();
             }
-            if (alternative.getStatus() != Status.FINISHED){
-                setStatus(Status.UNAVAILABLE);
+            if (alternative.getStatus() != TaskStatus.FINISHED){
+                setStatus(TaskStatus.UNAVAILABLE);
             }
         }
         dependencies.add(dependency);
@@ -367,24 +367,24 @@ public class Task {
             throw new IllegalArgumentException("The given task is not a dependency of the task.");
         }
         dependencies.remove(dependency);
-        if (dependency.getStatus() == Status.AVAILABLE || dependency.getStatus() == Status.UNAVAILABLE){
+        if (dependency.getStatus() == TaskStatus.AVAILABLE || dependency.getStatus() == TaskStatus.UNAVAILABLE){
             boolean becomesAvailable = true;
             for (Task d : getDependencies()){
-                if (d.getStatus() == Status.AVAILABLE || d.getStatus() == Status.UNAVAILABLE){
+                if (d.getStatus() == TaskStatus.AVAILABLE || d.getStatus() == TaskStatus.UNAVAILABLE){
                     becomesAvailable = false;
                 }
-                else if (d.getStatus() == Status.FAILED){
+                else if (d.getStatus() == TaskStatus.FAILED){
                     Task alternative = d;
-                    while (alternative.getAlternative() != null && alternative.getStatus() == Status.FAILED){
+                    while (alternative.getAlternative() != null && alternative.getStatus() == TaskStatus.FAILED){
                         alternative = alternative.getAlternative();
                     }
-                    if (alternative.getStatus() != Status.FINISHED){
+                    if (alternative.getStatus() != TaskStatus.FINISHED){
                         becomesAvailable = false;
                     }
                 }
             }
             if (becomesAvailable){
-                setStatus(Status.AVAILABLE);
+                setStatus(TaskStatus.AVAILABLE);
             }
         }
     }
