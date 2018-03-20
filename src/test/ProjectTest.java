@@ -103,14 +103,18 @@ public class ProjectTest {
 		Assert.assertEquals("There is a different number of available tasks",1, p.getAvailableTaskDetails().size());
 		Assert.assertEquals("The task is not the available task", t.getID().toString(), p.getAvailableTaskDetails().get(0).get("id"));
 	}
+
+	@Test (expected = IndexOutOfBoundsException.class)
+	public void testIllegalIndexGetTask() {
+		p.getTask(25);
+	}
 	
 	@Test
 	public void testGetTask()
 	{
-		Task t = new Task("testdesc", "10", "10");
-		int id = t.getID();
+		Task t = new Task("testdesc", (long) 10, (double) 1);
 		p = new Project("test", "testdesc", "22/02/2011 10:00", "22/05/2012 11:00");
-		p.addTask(t);
+		p.createTask("testdesc", (long) 10, (double) 1);
 		HashMap<String, String> h = new HashMap<>();
 		h.put("startTime", "22/02/2011 10:00");
 		h.put("endTime", "22/05/2012 11:00");
@@ -123,13 +127,7 @@ public class ProjectTest {
 		Assert.assertEquals("22/02/2011 10:00", h.get("startTime"));
 		Assert.assertEquals("22/05/2012 11:00", h.get("endTime"));
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testGetTaskIllegalID()
-	{
-		Project p = new Project("test", "testdesc", "22/02/2018 22:00", "22/05/2018 22:00");
-		p.getTaskDetails(25);
-	}
+
 	
 	@Test
 	public void testRemoveTask()
@@ -140,63 +138,6 @@ public class ProjectTest {
 		p.addTask(t);
 		p.removeTask(id);
 		Assert.assertEquals(0, p.getTaskIds().size());
-	}
-	
-	@Test
-	public void testExportXML()
-	{
-		try {
-			Project project = new Project("test", "testdesc", "22/03/2018 12:00", "24/03/2018 12:00");
-			XmlObject object = new XmlObject();
-			project.addToXml(object.createXmlObject("project"));
-			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
-			Assert.assertEquals(project.getName(), pnew.getName());
-			Assert.assertEquals(project.getDescription(), pnew.getDescription());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testXMLTaskWithAlternative()
-	{
-		Task t = new Task("test", "10", "20"){
-			private TaskStatus status;
-
-			@Override
-			public void updateStatus(HashMap<String, String> form) {
-				this.status = TaskStatus.fromString(form.get("status"));
-			}
-
-			@Override
-			public TaskStatus getStatus(){
-				return status;
-			}
-		};
-
-		Task alternative = new Task("test alternative", "5", "10");
-		p = new Project("test", "testdesc", "19/09/2015 15:15", "20/09/2015 19:00");
-		p.addTask(t);
-		p.addTask(alternative);
-
-		HashMap<String, String> form = new HashMap<>();
-		form.put("status", "FAILED");
-		t.updateStatus(form);
-		t.setAlternative(alternative);
-		int id = t.getID();
-		int altID = alternative.getID();
-		try {
-			
-			XmlObject object = new XmlObject();
-			p.addToXml(object.createXmlObject("project"));
-			Project pnew = Project.getFromXml(object.getXmlObjects("project").get(0));
-			Task check = pnew.getTask(id).getAlternative();
-			Assert.assertEquals(new Integer(altID), check.getID());
-			Task checkFromProject = p.getTask(altID);
-			Assert.assertEquals(check.getID(), checkFromProject.getID());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

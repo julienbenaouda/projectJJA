@@ -201,6 +201,18 @@ public class Project {
 	 */
 	private LocalDateTime dueTime;
 
+
+	/**
+	 * Returns the task at the given index.
+	 *
+	 * @param index the index of the task
+	 * @return the task at the given index in the tasklist
+	 * @throws IndexOutOfBoundsException if the index is not in range of the tasklist
+	 */
+	public Task getTask(int index) throws IndexOutOfBoundsException{
+		return taskList.get(index);
+	}
+
     /**
      * Returns a list with all tasks of a project
      *
@@ -210,8 +222,6 @@ public class Project {
 		return ((ArrayList<Task>)taskList.clone());
 	}
 
-
-	// TODO: de andere functies met ID's en getTask(id) heb ik verwijderd
 
 	/**
 	 * The list of tasks for the project.
