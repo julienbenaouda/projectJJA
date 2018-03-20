@@ -415,7 +415,7 @@ public class TaskTest {
         root.addDependency(dependency1_1_3);
     }
 
-    
+
     public void getDelayTest() {
         HashMap<String,String> taskForm = Task.getCreationForm();
         taskForm.put("description", "test task description");
