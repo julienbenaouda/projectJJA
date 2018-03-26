@@ -12,6 +12,19 @@ import java.time.LocalDateTime;
  */
 public class Timespan {
 	/**
+	 * creates a new timespan object with given starttime, endtime and status
+	 * @param startTime the start time of the timespan
+	 * @param endTime the end time of the timespan
+	 * @param status the status of the timespan
+	 * @post a new timespan is created with given parameters
+	 */
+	public TimeSpan(LocalDateTime startTime, LocalDateTime endtime, TaskStatus status) {
+		setStartTime(startTime);
+		setEndTime(endTime);
+		setStatus(status);
+	}
+	
+	/**
 	 * returns the start time of this time span object
 	 * @return the startTime of the timespan
 	 */
@@ -45,7 +58,7 @@ public class Timespan {
 	 * @param endTime the endTime of the timespan7@post the end time of the time span is set to the given end time.
 	 * @throws IllegalArgumentException if the end time comes before the start time
 	 */
-	public void setEndTime(LocalDateTime endTime) {
+	public void setEndTime(LocalDateTime endTime) throws IllegalArgumentException {
 		if(canHaveAsEndTime(endTime)) {
 			this.endTime = endTime;
 		} else {
@@ -60,7 +73,7 @@ public class Timespan {
 	 */
 	public boolean canHaveAsEndTime(LocalDateTime endTime)
 	{
-		if(endTime.isAfter(startTime)) {
+		if(endTime == null || endTime.isAfter(startTime)) {
 			return true;
 		}
 		return false;

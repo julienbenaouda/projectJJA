@@ -247,7 +247,7 @@ public class Task {
      */
     public Long getDelay() throws IllegalStateException {
         if (this.getStatus() != TaskStatus.FINISHED) {
-            throw new IllegalStateException("Cannot calculate delay of task if not fininshed!");
+            throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
         else {
             return Duration.between(getStartTime(), getEndTime()).toMinutes() - getEstimatedDuration();
