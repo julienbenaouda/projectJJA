@@ -1,0 +1,37 @@
+@startuml
+
+title "Show Projects - Sequence Diagram"
+
+
+Activate ":UI"
+
+":UI" -> ":Controller": getProjectNames()
+Activate ":Controller"
+":Controller" --> ":UI": projectNames
+
+":UI" -> ":Controller": getProjectDetails(projectName)
+":Controller" -> ":Project": getProjectDetails()
+Activate ":Project"
+":Project" -> ":Task": getID()
+Activate ":Task"
+":Task" --> ":Project": ID
+Deactivate ":Task"
+":Project" --> ":Controller": projectDetails
+":Controller" --> ":UI": projectDetails
+
+":UI" -> ":Controller": getTaskDetails(projectName, ID)
+":Controller" -> ":Project": getTaskDetails(ID)
+
+":Project" -> ":Task": getTaskDetails()
+Activate ":Task"
+":Task" --> ":Project": taskDetails
+Deactivate ":Task"
+
+
+":Project" --> ":Controller": taskDetails
+Deactivate ":Project"
+
+":Controller" --> ":UI": taskDetails
+Deactivate ":Controller"
+
+@enduml

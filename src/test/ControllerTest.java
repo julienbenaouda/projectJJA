@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import taskman.Controller;
 import taskman.User;
+import taskman.XmlException;
 
+import java.io.File;
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 
@@ -58,26 +60,22 @@ public class ControllerTest {
         Assert.assertEquals("Project already has tasks!", 0, controller.getTasksOfProject(projectName).size());
         HashMap<String,String> taskForm = controller.getTaskCreationForm();
         taskForm.put("description", "test task description");
-        taskForm.put("estimatedDuration", "7d 1h 30m 25s");
-        taskForm.put("acceptableDeviation", "1d 0h 0m 0s");
+        taskForm.put("estimatedDuration", "709");
+        taskForm.put("acceptableDeviation", "1.345");
         controller.addTask(projectName, taskForm);
         Assert.assertEquals("The task is not added!", 1, controller.getTasksOfProject(projectName).size());
         Integer taskId = controller.getLastTaskID();
         Assert.assertNotNull("Task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
         controller.addTask(projectName, taskForm);
-        Integer alternativeTaskId = controller.getLastTaskID();
-        Assert.assertNotEquals("The last task id is not updated!", taskId, alternativeTaskId);
-        controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
-
-        controller.addTask(projectName, taskForm);
         Integer dependencyTaskId = controller.getLastTaskID();
+        Assert.assertNotEquals("The last task id is not updated!", taskId, dependencyTaskId);
         controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
 
         HashMap<String,String> updateForm = controller.getUpdateTaskStatusForm();
         updateForm.put("startTime", "01/02/2003 05:05");
         updateForm.put("endTime", "01/01/2100 00:00");
-        updateForm.put("status", "FINISHED");
+        updateForm.put("status", "FAILED");
         try {
             User.setUserType("REGULARUSER");
             controller.updateTaskStatus(projectName, taskId, updateForm);
@@ -88,6 +86,9 @@ public class ControllerTest {
         User.setUserType("DEVELOPER");
         controller.updateTaskStatus(projectName, taskId, updateForm);
 
+        controller.addTask(projectName, taskForm);
+        Integer alternativeTaskId = controller.getLastTaskID();
+        controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
     }
 
     @Test
@@ -116,13 +117,26 @@ public class ControllerTest {
         Assert.assertEquals("The user type isn't correct!", "DEVELOPER", controller.getUserType());
     }
 
-    @Test
-    public void importXML() {
-        Assert.fail("Not implemented!"); // TODO
+    private void deleteFile(String path) throws AccessDeniedException {
+        File file = new File(path);
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new AccessDeniedException("Cannot write file to '" + path + "'!");
+            }
+        }
     }
 
     @Test
-    public void exportToXML() {
-        Assert.fail("Not implemented!"); // TODO
+    public void import_export() throws XmlException, AccessDeniedException {
+        String path = System.getProperty("user.dir") + File.separator + "test.xml";
+        deleteFile(path);
+        controller.exportToXML(path);
+        System.out.println("A file is temporally saved to '" + path + "'");
+        Assert.assertTrue("XML file cannot be saved!", new File(path).exists());
+        controller = null;
+        controller = Controller.importFromXML(path);
+        deleteFile(path);
+        System.out.println("A file is deleted from '" + path + "'");
+        Assert.assertNotNull("Controller cannot be restored!", controller);
     }
 }
