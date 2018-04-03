@@ -3,8 +3,9 @@ package test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import taskman.TaskStatus;
 import taskman.Task;
+import taskman.TaskStatus;
+import taskman.TimeSpan;
 import taskman.XmlObject;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,11 +24,6 @@ import java.util.HashMap;
  */
 public class TaskTest {
 
-    private static Task task;
-    private static Long duration;
-    private static Double deviation;
-    private static LocalDateTime start;
-    private static LocalDateTime end;
 
     private static Task root;
     private static Task alternative1_3;
@@ -37,29 +34,30 @@ public class TaskTest {
 
     @BeforeClass
     public static void setUp(){
-        duration = (long) 22;
-        deviation = 0.15;
-        task = new Task("Very interesting description.", duration, deviation);
+        long duration = 22;
+        double deviation = 0.15;
+        Task task = new Task("Very interesting description.", duration, deviation);
 
-        Long estimatedDuration = (long) 5;
-        Double acceptableDeviation = 0.2356;
-        LocalDate startTime = ;
-        LocalDateTime endTime = new LocalDateTime(new LocalDate(11,3, 2010), new LocalTime(1, 45));
+        long estimatedDuration = 5;
+        double acceptableDeviation = 0.2356;
 
         root = new Task("root description", estimatedDuration, acceptableDeviation) {
-            private TaskStatus status;
+            private TimeSpan timeSpan;
 
             @Override
-            public void updateStatus(HashMap<String, String> form) {
-                this.status = TaskStatus.fromString(form.get("status"));
+            public void updateStatus(TimeSpan timeSpan){
+                this.timeSpan = timeSpan;
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TimeSpan getTimeSpan(){
+                return timeSpan;
             }
+
         };
 
+        TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
+        root.updateStatus(timeSpan);
 
         Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
@@ -223,190 +221,153 @@ public class TaskTest {
         dependency1_2_2.setAlternative(alternative1_2_2);
     }
 
+
+
     @Test
     public void testTask(){
+        Task task = new Task("Very interesting description.", 22, 0.15);
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
-        Assert.assertEquals("The estimated durations are not equal", duration, task.getEstimatedDuration());
+        Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getTimeSpan().getStatus());
     }
-
-
-    @Test
-    public void testTaskHashMap(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("description", "another description");
-        form.put("estimatedDuration", "1076");
-        form.put("acceptableDeviation", "1.34");
-        Task taskHM = new Task(form);
-
-        Assert.assertEquals("The task ID is not the last task ID", (int) Task.getLastTaskID(), (int) taskHM.getID());
-        Assert.assertEquals("The descriptions are not equal", "another description", taskHM.getDescription());
-        Assert.assertEquals("The estimated durations are not equal", "1076", taskHM.getEstimatedDuration());
-        Assert.assertEquals("The acceptable deviations are not equal", 1.34 , taskHM.getAcceptableDeviation(), 0);
-    }
-
-
-    @Test (expected = IllegalArgumentException.class)
-    public void testInvalidEndTime(){
-        Task invalidUpdateStatusTask = new Task("description 1234", duration, deviation);
-        HashMap<String, String> form = new HashMap<>();
-        form.put("startTime", "10/03/2018 10:49");
-        form.put("endTime", "10/03/2018 10:48");
-        form.put("status", "FINISHED");
-
-        invalidUpdateStatusTask.updateStatus(form);
-    }
-
 
     @Test
     public void testUpdateStatus(){
-        Task updateStatusTask = new Task("description 1234", duration, deviation);
-        HashMap<String, String> form = new HashMap<>();
-        form.put("startTime", "10/03/2018 23:34");
-        form.put("endTime", "11/03/2018 21:34");
-        form.put("status", "FINISHED");
+        Task updateStatusTask = new Task("Very inspiring description.", 33, 1.0589);
+        LocalDateTime starTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
+        TimeSpan timeSpan = new TimeSpan(starTime, endTime, TaskStatus.FINISHED);
 
-        Assert.assertEquals("The status is not correct.", TaskStatus.AVAILABLE, updateStatusTask.getStatus());
-        updateStatusTask.updateStatus(form);
-        Assert.assertEquals("The start time is not correctly updated.", "10/03/2018 23:34", updateStatusTask.getStartTime());
-        Assert.assertEquals("The end time is not correctly updated.", "11/03/2018 21:34", updateStatusTask.getEndTime());
-        Assert.assertEquals("The status is not correctly updated.", TaskStatus.FINISHED, updateStatusTask.getStatus());
-
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, updateStatusTask.getTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not null", null, updateStatusTask.getTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not null", null, updateStatusTask.getTimeSpan().getEndTime());
+        updateStatusTask.updateStatus(timeSpan);
+        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getTimeSpan().getEndTime());
+        // Firt 3 tests above this comment are not necessary but I will leave them here
+        Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getTimeSpan());
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testInvalidTimeUpdateStatus(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("startTime", "10/03/2018 10:49");
-        form.put("endTime", "10/03/2018 10:48");
-        form.put("status", "FINISHED");
-        task.updateStatus(form);
+    public void testInvalidEndTimeUpdateStatus(){
+        Task invalidUpdateStatusTask = new Task("description 1234", 15, 0.13);
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime, TaskStatus.FAILED);
+
+        invalidUpdateStatusTask.updateStatus(timeSpan);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidStatusUpdateStatus(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("startTime", "10/03/2018 23:34");
-        form.put("endTime", "11/03/2018 21:34");
-        form.put("status", "AVAILABLE");
-        task.updateStatus(form);
+        Task invalidUpdateStatusTask = new Task("description 1234", 15, 0.13);
+        LocalDateTime starTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
+        TimeSpan timeSpan = new TimeSpan(starTime, endTime, TaskStatus.UNAVAILABLE);
+
+        invalidUpdateStatusTask.updateStatus(timeSpan);
     }
 
-
     @Test
-    public void testSetAlternative(){
-        Assert.assertEquals("There is already an alternative", null, task.getAlternative());
-
-        Task setAlternative = new Task("description of this task", duration, deviation){
-            private TaskStatus status;
+    public void testAlternative(){
+        Task setAlternative = new Task("description of this task", 24, 1){
+            private TimeSpan timeSpan;
 
             @Override
-            public void updateStatus(HashMap<String, String> form) {
-                this.status = TaskStatus.fromString(form.get("status"));
+            public void updateStatus(TimeSpan timeSpan){
+                this.timeSpan = timeSpan;
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TimeSpan getTimeSpan(){
+                return timeSpan;
             }
+
         };
+        TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
+        setAlternative.updateStatus(timeSpan);
 
-        Task alternative = new Task("Alternative interesting description.", duration, deviation);
-
-        HashMap<String, String> form = new HashMap<>();
-        form.put("status", "FAILED");
-        setAlternative.updateStatus(form);
-
+        Assert.assertEquals("There is already an alternative", null, setAlternative.getAlternative());
+        Task alternative = new Task("DescRiPTioNNNNN", 245, 0.015);
         setAlternative.setAlternative(alternative);
-        Assert.assertEquals("The alternative does not equal the newly added alternative", alternative, setAlternative.getAlternative());
+        Assert.assertEquals("The alternative is not correctly set", alternative, setAlternative.getAlternative());
     }
 
     @Test (expected = IllegalStateException.class)
     public void testInvaladSetAlternative(){
-        Task alternative = new Task("alternative task", duration, deviation);
+        Task task = new Task("DescRiPTioNNNNN", 245, 0.015);
+        Task alternative = new Task("alternative task", 2, 0.25);
         task.setAlternative(alternative);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void testInvalidSetAlternativeRoot(){
-        Assert.assertEquals("There is already an alternative", null, task.getAlternative());
-
-        Task setAlternative = new Task("description of this task", duration, deviation){
-            private TaskStatus status;
+    @Test (expected = IllegalStateException.class)
+    public void testInvalidSetAlternativeToItself(){
+        Task setAlternative = new Task("description of this task", 24, 1){
+            private TimeSpan timeSpan;
 
             @Override
-            public void updateStatus(HashMap<String, String> form) {
-                this.status = TaskStatus.fromString(form.get("status"));
+            public void updateStatus(TimeSpan timeSpan){
+                this.timeSpan = timeSpan;
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TimeSpan getTimeSpan(){
+                return timeSpan;
             }
+
         };
-
-        Task alternative = new Task("Alternative interesting description.", duration, deviation);
-
-        HashMap<String, String> form = new HashMap<>();
-        form.put("status", "FAILED");
-        setAlternative.updateStatus(form);
+        TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
+        setAlternative.updateStatus(timeSpan);
         setAlternative.setAlternative(setAlternative);
     }
 
+    // TODO: loop nog keer testen
+
     @Test
     public void testAddDepedency_RemoveDepedency(){
-        ArrayList<Task> dependecies = task.getDependencies();
-        Assert.assertEquals("The depedencies list is not empty", 0, dependecies.size());
+        Task task = new Task("DescRiPTioNNNNN", 245, 0.015);
+        Assert.assertEquals("The depedencies list is not empty", 0, task.getDependencies().size());
 
-        Task dependency = new Task("Another interesting description.", duration, deviation);
+        Task dependency = new Task("Another interesting description.", 2, 0);
         task.addDependency(dependency);
-        dependecies = task.getDependencies();
-        Assert.assertEquals("The depedencies list does not contains 1 depedency", 1, dependecies.size());
-        Assert.assertEquals("The depedency in the list is not the newly added depedency", dependency, dependecies.get(0));
+        Assert.assertEquals("The depedencies list does not contains 1 depedency", 1, task.getDependencies().size());
+        Assert.assertEquals("The depedency in the list is not the newly added depedency", dependency, task.getDependencies().get(0));
 
         task.removeDependency(dependency);
-        dependecies = task.getDependencies();
-        Assert.assertEquals("The dependencies list is not empty", 0, dependecies.size());
+        Assert.assertEquals("The dependencies list is not empty", 0, task.getDependencies().size());
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testInvalidAddDependencyRoot(){
+    public void testIllegalAddItself(){
+        Task task = new Task("DescRiPTioNNNNN", 245, 0.015);
         task.addDependency(task);
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testInvalidRemoveDependency(){
+    public void testIllegalRemoveDependency(){
+        Task task = new Task("DescRiPTioNNNNN", 245, 0.015);
         task.removeDependency(task);
     }
 
-
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("status", "FAILED");
-        root.updateStatus(form);
         root.setAlternative(alternative1_3);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive2(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("status", "FAILED");
-        root.updateStatus(form);
         root.setAlternative(alternative1_2_1);
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testIllegalSetAlternativeRecursive3(){
-        HashMap<String, String> form = new HashMap<>();
-        form.put("status", "FAILED");
-        root.updateStatus(form);
+    public void testIllegalSetAlternativeRecursive3(){ ;
         root.setAlternative(alternative1_3d);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalAddDependencyRecursive1(){
-
         root.addDependency(dependency1_2);
     }
 
@@ -415,21 +376,5 @@ public class TaskTest {
         root.addDependency(dependency1_1_3);
     }
 
-
-    public void getDelayTest() {
-        HashMap<String,String> taskForm = Task.getCreationForm();
-        taskForm.put("description", "test task description");
-        taskForm.put("estimatedDuration", "60");
-        taskForm.put("acceptableDeviation", "0.1");
-        Task delayTask = new Task(taskForm);
-
-        HashMap<String, String> updateForm = Task.getUpdateStatusForm();
-        updateForm.put("status", "FINISHED");
-        updateForm.put("startTime", "01/01/2000 00:00");
-        updateForm.put("endTime", "01/01/2000 02:00");
-        delayTask.updateStatus(updateForm);
-
-        Assert.assertEquals( "Wrong delay!","60", delayTask.getDelay());
-    }
 
 }
