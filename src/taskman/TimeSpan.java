@@ -10,15 +10,27 @@ import java.time.LocalDateTime;
  * @author Julien Benaouda
  *
  */
-public class Timespan {
+public class TimeSpan {
+
 	/**
-	 * creates a new timespan object with given starttime, endtime and status
+	 * Creates a new timespan object with given status
+	 *
+	 * @param status the status of the timespan
+	 */
+	public TimeSpan(TaskStatus status){
+		setStatus(status);
+	}
+	// TODO: kan dit er niet voor zorgen dat er null exception optreed bij updateStatus() im Task
+
+	/**
+	 * Creates a new timespan object with given starttime, endtime and status
+	 *
 	 * @param startTime the start time of the timespan
 	 * @param endTime the end time of the timespan
 	 * @param status the status of the timespan
 	 * @post a new timespan is created with given parameters
 	 */
-	public Timespan(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
+	public TimeSpan(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
 		setStartTime(startTime);
 		setEndTime(endTime);
 		setStatus(status);
