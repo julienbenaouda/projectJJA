@@ -37,7 +37,7 @@ public class Timespan {
 	 * @param startTime the startTime of the timeSpan
 	 * @post The startTime is set to the given start time 
 	 */
-	public void setStartTime(LocalDateTime startTime) {
+	private void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -58,7 +58,7 @@ public class Timespan {
 	 * @param endTime the endTime of the timespan7@post the end time of the time span is set to the given end time.
 	 * @throws IllegalArgumentException if the end time comes before the start time
 	 */
-	public void setEndTime(LocalDateTime endTime) throws IllegalArgumentException {
+	private void setEndTime(LocalDateTime endTime) throws IllegalArgumentException {
 		if(canHaveAsEndTime(endTime)) {
 			this.endTime = endTime;
 		} else {
@@ -96,7 +96,7 @@ public class Timespan {
 	 * @param status the status of the timespan
 	 * @post the status of this timespan is set to the given status
 	 */
-	public void setStatus(TaskStatus status) {
+	private void setStatus(TaskStatus status) {
 		this.status = status;
 	}
 
