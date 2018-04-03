@@ -9,10 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.TaskStatus;
-import taskman.Timespan;
+import taskman.TimeSpan;
 
+/**
+ * This is a test class for the TimeSpan class.
+ * @author Julien Benaouda
+ *
+ */
 public class TimespanTest {
-	Timespan timespan;
+	TimeSpan timespan;
 	LocalDateTime start;
 	LocalDateTime end;
 
@@ -20,7 +25,7 @@ public class TimespanTest {
 	public void setUp() {
 		start = LocalDateTime.of(2003, Month.FEBRUARY, 20, 15, 0);
 		end = LocalDateTime.of(2005, Month.MARCH, 22, 10, 0);
-		timespan = new Timespan(start, end, TaskStatus.FINISHED);
+		timespan = new TimeSpan(start, end, TaskStatus.FINISHED);
 	}
 
 	@Test
@@ -33,7 +38,7 @@ public class TimespanTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testTimeSpan_illegalCase() {
 		end = LocalDateTime.of(1999, Month.DECEMBER, 1, 11, 0);
-		timespan = new Timespan(start, end, TaskStatus.FINISHED);
+		timespan = new TimeSpan(start, end, TaskStatus.FINISHED);
 	}
 	
 	@Test
