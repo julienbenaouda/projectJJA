@@ -7,18 +7,26 @@ package taskman;
  */
 public class User {
 
-    // Initializing with a regular user avoids null!
-    private static UserType userType = UserType.REGULARUSER;
+    public enum UserType {
+        REGULARUSER,
+        DEVELOPPER,
+        PROJECTMANAGER;
+    }
+
+    public User(UserType userType){
+        setUserType(userType);
+    }
+
+    private UserType userType;
 
     /**
      * Sets the active user type to the given user type.
      *
-     * @param s the name of the user type to change to.
-     * @throws IllegalArgumentException if the user type does not exist.
+     * @param userType user type of the user
      * @post the user type will be set to the given user type.
      */
-    public static void setUserType(String s) throws IllegalArgumentException{
-        userType = UserType.fromString(s);
+    private void setUserType(UserType userType){
+        this.userType = userType;
     }
 
     /**
@@ -26,8 +34,8 @@ public class User {
      *
      * @return user type
      */
-    public static String getUserType() {
-        return userType.toString();
+    public UserType getUserType() {
+        return userType;
     }
 
     /**
@@ -35,8 +43,8 @@ public class User {
      *
      * @return if the current user type can change the task status.
      */
-    public static boolean canChangeTaskStatus(){
-        return userType == UserType.DEVELOPER;
+    public boolean canChangeTaskStatus(){
+        return userType == UserType.DEVELOPPER;
     }
 
 }

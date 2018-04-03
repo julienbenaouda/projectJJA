@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * This class represents a time span containing a start time, end time and status
- * @author Julien Benaouda
+ * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
 public class TimeSpan {

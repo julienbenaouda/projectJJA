@@ -39,11 +39,11 @@ Cohesion: iedere class enkel zijn eigen informatie
 ---------------------------------------------------------------------------------------------------------------------
 3/04
 TimeSpan: tests
-Task: tests
+Task: tests -> CHECK
 Project: tests
 Clock: tests
 Initiator: OK
 Controller: fixen en tests
 Export tijdelijk weglaten
-User en UserType samenvoegen
+User en UserType samenvoegen + tests -> CHECK
 UI naar ander package en testen
