@@ -16,16 +16,16 @@ public class Task {
     /**
      * Creates a new task with the given values.
      *
-     * @param description         the task description
-     * @param estimatedDuration   the estimated duration of the task in minutes
+     * @param description the task description
+     * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
      * @post a new task is created with the given attributes an available status
      */
-    public Task(String description, Long estimatedDuration, Double acceptableDeviation) {
+    public Task(String description, long estimatedDuration, double acceptableDeviation) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStatus(TaskStatus.AVAILABLE);
+        initializeTimeSpan(TaskStatus.AVAILABLE);
         dependencies = new ArrayList<>();
     }
 
@@ -35,17 +35,14 @@ public class Task {
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable deviation of the task
-     * @param startTime the start time of the task
-     * @param endTime the end time of the task
+     * @param timeSpan the time span of the task
      * @post a new task is created with the given attributes
      */
-    private Task(String description, Long estimatedDuration, Double acceptableDeviation, LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
+    private Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setStartTime(startTime);
-        setEndTime(endTime);
-        setStatus(status);
+        setTimeSpan(timeSpan);
         dependencies = new ArrayList<>();
     }
 
@@ -76,11 +73,10 @@ public class Task {
     }
 
 
-
     /**
      * The estimated duration of the task in minutes.
      */
-    private Long estimatedDuration;
+    private long estimatedDuration;
 
 
     /**
@@ -88,7 +84,7 @@ public class Task {
      *
      * @return the estimated duration of the task in minutes
      */
-    public Long getEstimatedDuration(){
+    public long getEstimatedDuration(){
         return estimatedDuration;
     }
 
@@ -98,16 +94,15 @@ public class Task {
      * @param estimatedDuration the estimated duration of the task in minutes
      * @post the estimated duration of the task is set to the given duration
      */
-    private void setEstimatedDuration(Long estimatedDuration){
+    private void setEstimatedDuration(long estimatedDuration){
         this.estimatedDuration = estimatedDuration;
     }
-
 
 
     /**
      * The acceptable deviation of the task.
      */
-    private Double acceptableDeviation;
+    private double acceptableDeviation;
 
 
     /**
@@ -115,7 +110,7 @@ public class Task {
      *
      * @return the acceptable deviation of the task
      */
-    public Double getAcceptableDeviation(){
+    public double getAcceptableDeviation(){
         return acceptableDeviation;
     }
 
@@ -124,7 +119,7 @@ public class Task {
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
-    private void setAcceptableDeviation(Double acceptableDeviation){
+    private void setAcceptableDeviation(double acceptableDeviation){
         this.acceptableDeviation = acceptableDeviation;
     }
 
@@ -132,7 +127,7 @@ public class Task {
     /**
      * The start time of the task.
      */
-    private LocalDateTime startTime;
+    private TimeSpan timeSpan;
 
 
     /**
@@ -140,102 +135,58 @@ public class Task {
      *
      * @return the start time of the task
      */
-    public LocalDateTime getStartTime(){
-        return startTime;
+    public TimeSpan getTimeSpan(){
+        return timeSpan;
     }
 
-
     /**
-     * Sets the start time of the task to the given start time.
-     * @param startTime the start time of the task
-     * @post the start time of the task is set to the given start time
-     */
-    private void setStartTime(LocalDateTime startTime){
-        this.startTime = startTime;
-    }
-
-
-
-    /**
-     * The end time of the task.
-     */
-    private LocalDateTime endTime;
-
-
-    /**
-     * Returns the end time of the task.
+     * Initializes the time span for a new task with the given status
      *
-     * @return the end time of the task
+     * @param status the status of the time span
+     * @post a new time span is created with the given status
      */
-    public LocalDateTime getEndTime(){
-        return endTime;
+    private void initializeTimeSpan(TaskStatus status){
+        timeSpan = new TimeSpan(status);
     }
 
     /**
-     * Sets the end time of the task tot the given end time.
-     * @param endTime the end time of the task
-     * @throws IllegalArgumentException when the end time is not later than the start time
-     * @post the end time of the task is set to the given end time
-     */
-    private void setEndTime(LocalDateTime endTime){
-        if (endTime.compareTo(getStartTime()) <= 0) {
-            throw new IllegalArgumentException("The end time can't be before or equal to the start time.");
-        }
-        this.endTime = endTime;
-    }
-
-
-
-    /**
-     * The status of the task.
-     */
-    private TaskStatus status;
-
-
-    /**
-     * Returns the task status.
+     * Sets the status of the time span of the task to the given status
      *
-     * @return the task status
+     * @param status the status of the time span of the task
+     * @post the status of the time span of the task is set to the the given status
      */
-    public TaskStatus getStatus(){
-        return status;
+    private void setTimeSpanStatus(TaskStatus status){
+        getTimeSpan().setStatus(status);
     }
-
 
     /**
-     * Sets the task status to the given status.
-     * @param status the task status
-     * @post the task status is set to the given status
+     * Sets the time span of the task to the given time span.
+     * @param timeSpan the time span of the task
+     * @post the time span of the task is set to the given time span
      */
-    private void setStatus(TaskStatus status){
-        this.status = status;
+    private void setTimeSpan(TimeSpan timeSpan){
+        this.timeSpan = timeSpan;
     }
+    // TODO: in TimeSpan moet er gechecked worden of het wel een valid timespan is
 
 
     /**
      * Updates the status of the task.
      *
-     * @param startTime the start time of the task
-     * @param endTime the end time of the task
-     * @param status the new status of the task
-     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the end time is before the start time or
+     * @param timeSpan the time span of the task
+     * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the timeSpan is invalid
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) throws IllegalArgumentException {
-        if (status != TaskStatus.FINISHED && status != TaskStatus.FAILED){
+    public void updateStatus(TimeSpan timeSpan) throws IllegalArgumentException {
+        if (timeSpan.getStatus() != TaskStatus.FINISHED && timeSpan.getStatus() != TaskStatus.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
-        if (startTime.isAfter(endTime)){
-            throw new IllegalArgumentException("The end time can't be before the start time.");
-        }
         for (Task dependency: this.getDependencies()) {
-            if (dependency.getStatus().isFinal() && startTime.isBefore(dependency.getEndTime())) {
+            if (dependency.getTimeSpan().getStatus().isFinal() && timeSpan.getStartTime().isBefore(dependency.getTimeSpan().getEndTime())) {
                 throw new IllegalArgumentException("The task must start after its dependencies!");
             }
         }
-        setStartTime(startTime);
-        setEndTime(endTime);
-        setStatus(status);
+        setTimeSpan(timeSpan);
     }
 
 
@@ -246,11 +197,11 @@ public class Task {
      * @throws IllegalStateException if the task is not yet finished.
      */
     public Long getDelay() throws IllegalStateException {
-        if (this.getStatus() != TaskStatus.FINISHED) {
+        if (this.getTimeSpan().getStatus() != TaskStatus.FINISHED) {
             throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
         else {
-            return Duration.between(getStartTime(), getEndTime()).toMinutes() - getEstimatedDuration();
+            return Duration.between(getTimeSpan().getStartTime(), getTimeSpan().getEndTime()).toMinutes() - getEstimatedDuration();
         }
     }
 
@@ -280,7 +231,7 @@ public class Task {
      * @post the alternative task of the task is set to the given task
      */
     public void setAlternative(Task alternative) throws IllegalStateException, IllegalArgumentException {
-        if (getStatus() != TaskStatus.FAILED){
+        if (getTimeSpan().getStatus() != TaskStatus.FAILED){
             throw new IllegalStateException("The task must be failed to set an alternative.");
         }
         if (containsLoop(this, alternative)){
@@ -328,19 +279,19 @@ public class Task {
         if (containsLoop(this, dependency)){
             throw new IllegalArgumentException("The alternative may not be one of the dependencies or the alternative of this or of its dependendecies recursivley");
         }
-        if (getStatus() == TaskStatus.FAILED || getStatus() == TaskStatus.FINISHED){
+        if (getTimeSpan().getStatus() == TaskStatus.FAILED || getTimeSpan().getStatus() == TaskStatus.FINISHED){
             throw new IllegalStateException("No dependencies may be added to failed or finished tasks.");
         }
-        if (dependency.getStatus() == TaskStatus.AVAILABLE || dependency.getStatus() == TaskStatus.UNAVAILABLE){
-            setStatus(TaskStatus.UNAVAILABLE);
+        if (dependency.getTimeSpan().getStatus() == TaskStatus.AVAILABLE || dependency.getTimeSpan().getStatus() == TaskStatus.UNAVAILABLE){
+            setTimeSpanStatus(TaskStatus.UNAVAILABLE);
         }
-        else if (dependency.getStatus() == TaskStatus.FAILED){
+        else if (dependency.getTimeSpan().getStatus() == TaskStatus.FAILED){
             Task alternative = dependency;
-            while (alternative.getAlternative() !=  null && alternative.getStatus() == TaskStatus.FAILED){
+            while (alternative.getAlternative() !=  null && alternative.getTimeSpan().getStatus() == TaskStatus.FAILED){
                 alternative = alternative.getAlternative();
             }
-            if (alternative.getStatus() != TaskStatus.FINISHED){
-                setStatus(TaskStatus.UNAVAILABLE);
+            if (alternative.getTimeSpan().getStatus() != TaskStatus.FINISHED){
+                setTimeSpanStatus(TaskStatus.UNAVAILABLE);
             }
         }
         dependencies.add(dependency);
@@ -367,24 +318,24 @@ public class Task {
             throw new IllegalArgumentException("The given task is not a dependency of the task.");
         }
         dependencies.remove(dependency);
-        if (dependency.getStatus() == TaskStatus.AVAILABLE || dependency.getStatus() == TaskStatus.UNAVAILABLE){
+        if (dependency.getTimeSpan().getStatus() == TaskStatus.AVAILABLE || dependency.getTimeSpan().getStatus() == TaskStatus.UNAVAILABLE){
             boolean becomesAvailable = true;
             for (Task d : getDependencies()){
-                if (d.getStatus() == TaskStatus.AVAILABLE || d.getStatus() == TaskStatus.UNAVAILABLE){
+                if (d.getTimeSpan().getStatus() == TaskStatus.AVAILABLE || d.getTimeSpan().getStatus() == TaskStatus.UNAVAILABLE){
                     becomesAvailable = false;
                 }
-                else if (d.getStatus() == TaskStatus.FAILED){
+                else if (d.getTimeSpan().getStatus() == TaskStatus.FAILED){
                     Task alternative = d;
-                    while (alternative.getAlternative() != null && alternative.getStatus() == TaskStatus.FAILED){
+                    while (alternative.getAlternative() != null && alternative.getTimeSpan().getStatus() == TaskStatus.FAILED){
                         alternative = alternative.getAlternative();
                     }
-                    if (alternative.getStatus() != TaskStatus.FINISHED){
+                    if (alternative.getTimeSpan().getStatus() != TaskStatus.FINISHED){
                         becomesAvailable = false;
                     }
                 }
             }
             if (becomesAvailable){
-                setStatus(TaskStatus.AVAILABLE);
+                setTimeSpanStatus(TaskStatus.AVAILABLE);
             }
         }
     }
