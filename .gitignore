@@ -3,6 +3,7 @@
 /.idea/
 /bin/
 /out/
+/classes/
 .classpath
 .project
 .DS_Store
