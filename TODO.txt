@@ -34,3 +34,16 @@ TODO:
 
 Cohesion: iedere class enkel zijn eigen informatie
 -> Geen extra info toevoegen voor door te geven nr de UI
+
+
+---------------------------------------------------------------------------------------------------------------------
+3/04
+TimeSpan: tests
+Task: tests
+Project: tests
+Clock: tests
+Initiator: OK
+Controller: fixen en tests
+Export tijdelijk weglaten
+User en UserType samenvoegen
+UI naar ander package en testen

@@ -18,7 +18,7 @@ public class Timespan {
 	 * @param status the status of the timespan
 	 * @post a new timespan is created with given parameters
 	 */
-	public TimeSpan(LocalDateTime startTime, LocalDateTime endtime, TaskStatus status) {
+	public Timespan(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
 		setStartTime(startTime);
 		setEndTime(endTime);
 		setStatus(status);
