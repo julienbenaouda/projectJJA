@@ -1,6 +1,7 @@
 package test;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import taskman.User;
 
@@ -12,33 +13,40 @@ import taskman.User;
  */
 public class UserTest {
 
+    private User regularUser, developper, projectManager;
+
+    @BeforeClass
+    private void setUp(){
+        regularUser = new User(User.UserType.REGULARUSER);
+        developper = new User(User.UserType.DEVELOPPER);
+        projectManager = new User(User.UserType.PROJECTMANAGER);
+    }
+
     @Test
     public void testUserType() {
-        Assert.assertNotNull("Initial user type cannot be null!", User.getUserType());
-        for (String s: new String[]{"", "ldksfjqlkjf"}) {
-            try {
-                User.setUserType(s);
-                Assert.fail("Exception expected when passing '" + s + "'!");
-            } catch (Exception e) {
-                Assert.assertEquals(e.getClass(), IllegalArgumentException.class);
-            }
-        }
-        for (String s: new String[]{"REGULARUSER", "DEVELOPER"}) {
-            User.setUserType(s);
-            Assert.assertEquals(s + " is not recognized!", s, User.getUserType());
-        }
+        Assert.assertTrue("There should be at least one user type!", 0 < User.UserType.values().length);
+    }
+
+    @Test
+    public void testUser() {
+        Assert.assertEquals("Usertype does not match", User.UserType.REGULARUSER, regularUser.getUserType());
+        Assert.assertEquals("Usertype does not match", User.UserType.DEVELOPPER, developper.getUserType());
+        Assert.assertEquals("Usertype does not match", User.UserType.PROJECTMANAGER, projectManager.getUserType());
     }
 
     @Test
     public void testRegularUser(){
-        User.setUserType("REGULARUSER");
-        Assert.assertFalse(User.canChangeTaskStatus());
+        Assert.assertFalse(regularUser.canChangeTaskStatus());
     }
 
     @Test
     public void testDevelopper(){
-        User.setUserType("DEVELOPER");
-        Assert.assertTrue(User.canChangeTaskStatus());
+        Assert.assertTrue(developper.canChangeTaskStatus());
+    }
+
+    @Test
+    public void testProjectManager(){
+        Assert.assertFalse(projectManager.canChangeTaskStatus());
     }
 
     // TODO: test XML
