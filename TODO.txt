@@ -38,11 +38,11 @@ Cohesion: iedere class enkel zijn eigen informatie
 
 ---------------------------------------------------------------------------------------------------------------------
 3/04
-TimeSpan: tests
+TimeSpan: tests -> CHECK
 Task: tests -> CHECK
 Project: tests
 Clock: tests
-Initiator: OK
+Initiator: laten we efkes -> CHECK
 Controller: fixen en tests
 Export tijdelijk weglaten
 User en UserType samenvoegen + tests -> CHECK
