@@ -316,15 +316,6 @@ public class Task {
     }
 
     /**
-     * Restores the dependencies of the task without checks.
-     *
-     * @param dependencies an ArrayList of Task on which this task is dependant.
-     */
-    public void restoreDependencies(ArrayList<Task> dependencies) { // TODO: wordt deze functie wel echt gebruikt of moet die in de andere public constructor gebruikt worden
-        this.setDependencies(dependencies);
-    }
-
-    /**
      * Removes dependency of the given task.
      *
      * @param dependency task that needs to be removed as dependency of the task
