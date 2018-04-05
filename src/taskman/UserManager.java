@@ -89,13 +89,13 @@ public class UserManager {
 	{
 		if(!getUsers().containsKey(name))
 		{
-			throw new IllegalArgumentException("a user with this specific name does not exist");
+			throw new IllegalArgumentException("There exists no user with the given name.");
 		}
 		User u = getUsers().get(name);
 		if(password.equals(u.getPassword())) {
 			setCurrentUser(u);
 		} else {
-			throw new IllegalArgumentException("The password for user " +name +" is incorrect. Please try again.");
+			throw new IllegalArgumentException("The password for user " + name +" is incorrect. Please try again.");
 		}
 	}
 }
