@@ -54,12 +54,6 @@ public class ProjectTest {
 		Assert.assertEquals(5.0, added.getAcceptableDeviation(), 0.0);
 	}
 	
-	@Test
-	public void testCreateProjectWithForm()
-	{
-		Assert.fail("not implemented");
-	}
-	
 	@Test (expected = IndexOutOfBoundsException.class)
 	public void testIllegalIndexGetTask() {
 		p.getTask(25);
