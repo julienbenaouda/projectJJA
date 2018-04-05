@@ -149,7 +149,7 @@ title TASKMAN\n
 
 
   package taskman {
-    class UI {
+    class UserInterface {
         # UI()
         + void welcomeDialog()
         + void showUserChoiceDialog()
@@ -175,29 +175,6 @@ title TASKMAN\n
         # String inputString()
         + Controller getController()
         {static} + void main()
-    }
-  }
-  
-
-  package taskman {
-    class User {
-        {static} - userType : UserType
-        {static} + void setUserType(String userType)
-        {static} + String getUserType()
-        {static} + boolean canChangeTaskStatus()
-        {static} + void addToXml(XmlObject obj)
-        {static} + void setFromXml(XmlObject obj)
-    }
-  }
-  
-
-  package taskman {
-    enum UserType {
-      REGULARUSER
-      DEVELOPER
-
-     + {static} UserType fromString(String s)
-     + String toString()
     }
   }
   
