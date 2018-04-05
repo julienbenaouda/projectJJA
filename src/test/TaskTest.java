@@ -10,6 +10,7 @@ import taskman.TimeSpan;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 /**
  * This is a test class for the Task class.
@@ -47,6 +48,18 @@ public class TaskTest {
             public ArrayDeque<TimeSpan> getTimeSpans(){
                 return timeSpans;
             }
+
+            private ArrayList<Task> dependencies = new ArrayList<>();
+
+            @Override
+            public void addDependency(Task dependency){
+                dependencies.add(dependency);
+            }
+
+            @Override
+            public ArrayList<Task> getDependencies(){
+                return (ArrayList<Task>) dependencies.clone();
+            }
         };
 
         Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
@@ -71,6 +84,7 @@ public class TaskTest {
         };
         Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
+
             @Override
             public void setAlternative(Task alternative){
                 this.alternative = alternative;

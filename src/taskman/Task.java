@@ -267,7 +267,7 @@ public class Task {
      * @return the dependencies of the task
      */
     public ArrayList<Task> getDependencies(){
-        return (ArrayList<Task>) this.dependencies.clone();
+        return (ArrayList<Task>) dependencies.clone();
     }
 
 
@@ -331,7 +331,7 @@ public class Task {
      * @post the dependency is deleted from the task and the task status is updated accordingly
      */
     public void removeDependency(Task dependency){
-        if (! dependencies.contains(dependency)){
+        if (! getDependencies().contains(dependency)){
             throw new IllegalArgumentException("The given task is not a dependency of the task.");
         }
         dependencies.remove(dependency);
