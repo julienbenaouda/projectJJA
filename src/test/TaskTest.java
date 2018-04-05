@@ -6,16 +6,9 @@ import org.junit.Test;
 import taskman.Task;
 import taskman.TaskStatus;
 import taskman.TimeSpan;
-import taskman.XmlObject;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This is a test class for the Task class.
@@ -50,7 +43,7 @@ public class TaskTest {
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
+            public TimeSpan getLastTimeSpan(){
                 return timeSpan;
             }
 
@@ -229,7 +222,7 @@ public class TaskTest {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
-        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getTimeSpan().getStatus());
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getLastTimeSpan().getStatus());
     }
 
     @Test
@@ -239,15 +232,15 @@ public class TaskTest {
         LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
         TimeSpan timeSpan = new TimeSpan(starTime, endTime, TaskStatus.FINISHED);
 
-        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, updateStatusTask.getTimeSpan().getStatus());
-        Assert.assertEquals("The start time is not null", null, updateStatusTask.getTimeSpan().getStartTime());
-        Assert.assertEquals("The end time is not null", null, updateStatusTask.getTimeSpan().getEndTime());
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, updateStatusTask.getLastTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not null", null, updateStatusTask.getLastTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not null", null, updateStatusTask.getLastTimeSpan().getEndTime());
         updateStatusTask.updateStatus(timeSpan);
-        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getTimeSpan().getStatus());
-        Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getTimeSpan().getStartTime());
-        Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getTimeSpan().getEndTime());
+        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getLastTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getLastTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getLastTimeSpan().getEndTime());
         // Firt 3 tests above this comment are not necessary but I will leave them here
-        Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getTimeSpan());
+        Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getLastTimeSpan());
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -281,7 +274,7 @@ public class TaskTest {
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
+            public TimeSpan getLastTimeSpan(){
                 return timeSpan;
             }
 
@@ -313,7 +306,7 @@ public class TaskTest {
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
+            public TimeSpan getLastTimeSpan(){
                 return timeSpan;
             }
 
