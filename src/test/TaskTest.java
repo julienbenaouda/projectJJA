@@ -6,16 +6,12 @@ import org.junit.Test;
 import taskman.Task;
 import taskman.TaskStatus;
 import taskman.TimeSpan;
-import taskman.XmlObject;
 
-import java.time.LocalDate;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This is a test class for the Task class.
@@ -24,8 +20,8 @@ import java.util.HashMap;
  */
 public class TaskTest {
 
-
     private static Task root;
+    private static Task parentRoot;
     private static Task alternative1_3;
     private static Task alternative1_2_1;
     private static Task dependency1_2;
@@ -41,23 +37,36 @@ public class TaskTest {
         long estimatedDuration = 5;
         double acceptableDeviation = 0.2356;
 
-        root = new Task("root description", estimatedDuration, acceptableDeviation) {
-            private TimeSpan timeSpan;
+        root = new Task("root description", estimatedDuration, acceptableDeviation);
+
+        TimeSpan parentRootTS = new TimeSpan(TaskStatus.FAILED);
+        parentRoot = new Task("Parent Root", 34, 0.23){
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
 
             @Override
             public void updateStatus(TimeSpan timeSpan){
-                this.timeSpan = timeSpan;
+                timeSpans.push(timeSpan);
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
-                return timeSpan;
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
             }
 
-        };
+            private ArrayList<Task> dependencies = new ArrayList<>();
 
-        TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
-        root.updateStatus(timeSpan);
+            @Override
+            public void addDependency(Task dependency){
+                dependencies.add(dependency);
+            }
+
+            @Override
+            public ArrayList<Task> getDependencies(){
+                return (ArrayList<Task>) dependencies.clone();
+            }
+        };
+        parentRoot.addDependency(root);
+        parentRoot.updateStatus(parentRootTS);
 
         Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
@@ -81,6 +90,7 @@ public class TaskTest {
         };
         Task dependency1_3 = new Task ("dependency 1_3 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
+
             @Override
             public void setAlternative(Task alternative){
                 this.alternative = alternative;
@@ -229,7 +239,59 @@ public class TaskTest {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
-        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getTimeSpan().getStatus());
+        Assert.assertEquals("There is no time span added", 1, task.getTimeSpans().size());
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getLastTimeSpan().getStatus());
+    }
+
+    @Test
+    public void testIsFinished(){
+        Task taskNotFinished = new Task("blabla", 13, 0.23);
+        Assert.assertEquals("The status is finished", false, taskNotFinished.isFinished());
+
+        Task taskFinished = new Task("blablabla", 33, 0.08){
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan){
+                timeSpans.push(timeSpan);
+            }
+
+            @Override
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
+            }
+        };
+        TimeSpan timeSpanFinished = new TimeSpan(TaskStatus.FINISHED);
+        taskFinished.updateStatus(timeSpanFinished);
+        Assert.assertEquals("The status is no finished", true, taskFinished.isFinished());
+    }
+
+    @Test
+    public void testDelay(){
+        Task task = new Task("Description1", 20, 0.5){
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan){
+                timeSpans.push(timeSpan);
+            }
+
+            @Override
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
+            }
+        };
+        LocalDateTime startTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime, TaskStatus.FINISHED);
+        task.updateStatus(timeSpan);
+        Assert.assertEquals("The delay is not correctly calculated", 5, task.getDelay(), 0);
+    }
+
+    @Test (expected = IllegalStateException.class)
+    public void testIlegalStateDelay(){
+        Task task = new Task("Descr", 14, 0.2315);
+        task.getDelay();
     }
 
     @Test
@@ -239,15 +301,16 @@ public class TaskTest {
         LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
         TimeSpan timeSpan = new TimeSpan(starTime, endTime, TaskStatus.FINISHED);
 
-        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, updateStatusTask.getTimeSpan().getStatus());
-        Assert.assertEquals("The start time is not null", null, updateStatusTask.getTimeSpan().getStartTime());
-        Assert.assertEquals("The end time is not null", null, updateStatusTask.getTimeSpan().getEndTime());
+        Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, updateStatusTask.getLastTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not null", null, updateStatusTask.getLastTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not null", null, updateStatusTask.getLastTimeSpan().getEndTime());
         updateStatusTask.updateStatus(timeSpan);
-        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getTimeSpan().getStatus());
-        Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getTimeSpan().getStartTime());
-        Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getTimeSpan().getEndTime());
-        // Firt 3 tests above this comment are not necessary but I will leave them here
-        Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getTimeSpan());
+        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getLastTimeSpan().getStatus());
+        Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getLastTimeSpan().getStartTime());
+        Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getLastTimeSpan().getEndTime());
+        // First 3 tests above this comment are not necessary but I will leave them here
+        Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getLastTimeSpan());
+        Assert.assertEquals("The timespan is not added", 2, updateStatusTask.getTimeSpans().size());
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -281,7 +344,7 @@ public class TaskTest {
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
+            public TimeSpan getLastTimeSpan(){
                 return timeSpan;
             }
 
@@ -302,7 +365,7 @@ public class TaskTest {
         task.setAlternative(alternative);
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void testInvalidSetAlternativeToItself(){
         Task setAlternative = new Task("description of this task", 24, 1){
             private TimeSpan timeSpan;
@@ -313,7 +376,7 @@ public class TaskTest {
             }
 
             @Override
-            public TimeSpan getTimeSpan(){
+            public TimeSpan getLastTimeSpan(){
                 return timeSpan;
             }
 
@@ -353,17 +416,17 @@ public class TaskTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
-        root.setAlternative(alternative1_3);
+        parentRoot.setAlternative(alternative1_3);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive2(){
-        root.setAlternative(alternative1_2_1);
+        parentRoot.setAlternative(alternative1_2_1);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive3(){ ;
-        root.setAlternative(alternative1_3d);
+        parentRoot.setAlternative(alternative1_3d);
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -375,6 +438,5 @@ public class TaskTest {
     public void testIllegalAddDependencyRecursive2(){
         root.addDependency(dependency1_1_3);
     }
-
 
 }

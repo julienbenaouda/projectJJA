@@ -13,10 +13,10 @@ import taskman.User;
  */
 public class UserTest {
 
-    private User regularUser, developper, projectManager;
+    private static User regularUser, developper, projectManager;
 
     @BeforeClass
-    private void setUp(){
+    public static void setUp(){
         regularUser = new User(User.UserType.REGULARUSER);
         developper = new User(User.UserType.DEVELOPPER);
         projectManager = new User(User.UserType.PROJECTMANAGER);
