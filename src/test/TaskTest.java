@@ -7,6 +7,7 @@ import taskman.Task;
 import taskman.TaskStatus;
 import taskman.TimeSpan;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
  */
 public class TaskTest {
 
-
     private static Task root;
+    private static Task parentRoot;
     private static Task alternative1_3;
     private static Task alternative1_2_1;
     private static Task dependency1_2;
@@ -36,7 +37,10 @@ public class TaskTest {
         long estimatedDuration = 5;
         double acceptableDeviation = 0.2356;
 
-        root = new Task("root description", estimatedDuration, acceptableDeviation) {
+        root = new Task("root description", estimatedDuration, acceptableDeviation);
+
+        TimeSpan parentRootTS = new TimeSpan(TaskStatus.FAILED);
+        parentRoot = new Task("Parent Root", 34, 0.23){
             private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
 
             @Override
@@ -61,6 +65,8 @@ public class TaskTest {
                 return (ArrayList<Task>) dependencies.clone();
             }
         };
+        parentRoot.addDependency(root);
+        parentRoot.updateStatus(parentRootTS);
 
         Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
@@ -239,7 +245,10 @@ public class TaskTest {
 
     @Test
     public void testIsFinished(){
-        Task task = new Task("blabla", 13, 0.23){
+        Task taskNotFinished = new Task("blabla", 13, 0.23);
+        Assert.assertEquals("The status is finished", false, taskNotFinished.isFinished());
+
+        Task taskFinished = new Task("blablabla", 33, 0.08){
             private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
 
             @Override
@@ -252,10 +261,9 @@ public class TaskTest {
                 return timeSpans;
             }
         };
-        Assert.assertEquals("The status is finished", false, task.isFinished());
-        TimeSpan timeSpan = new TimeSpan(TaskStatus.FINISHED);
-        task.updateStatus(timeSpan);
-        Assert.assertEquals("The status is no finished", true, task.isFinished());
+        TimeSpan timeSpanFinished = new TimeSpan(TaskStatus.FINISHED);
+        taskFinished.updateStatus(timeSpanFinished);
+        Assert.assertEquals("The status is no finished", true, taskFinished.isFinished());
     }
 
     @Test
@@ -357,7 +365,7 @@ public class TaskTest {
         task.setAlternative(alternative);
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test (expected = IllegalArgumentException.class)
     public void testInvalidSetAlternativeToItself(){
         Task setAlternative = new Task("description of this task", 24, 1){
             private TimeSpan timeSpan;
@@ -408,19 +416,17 @@ public class TaskTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
-        TimeSpan timeSpan = new TimeSpan(TaskStatus.AVAILABLE);
-        root.updateStatus(timeSpan);
-        root.setAlternative(alternative1_3);
+        parentRoot.setAlternative(alternative1_3);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive2(){
-        root.setAlternative(alternative1_2_1);
+        parentRoot.setAlternative(alternative1_2_1);
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive3(){ ;
-        root.setAlternative(alternative1_3d);
+        parentRoot.setAlternative(alternative1_3d);
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -432,6 +438,5 @@ public class TaskTest {
     public void testIllegalAddDependencyRecursive2(){
         root.addDependency(dependency1_1_3);
     }
-
 
 }

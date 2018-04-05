@@ -68,6 +68,7 @@ public class Task {
 
     /**
      * Sets the task description to the given description.
+     *
      * @param description the description of the task
      * @post the task description is set to the given description
      */
