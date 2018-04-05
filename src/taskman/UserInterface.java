@@ -305,6 +305,7 @@ public class UserInterface {
      * @param name the name of the project to show details for
      */
     public void showProjectDetails(String name) {
+        /* TODO:
         StringBuilder sb = new StringBuilder();
         try {
             HashMap<String, String> details = controller.getProjectDetails(name);
@@ -317,6 +318,7 @@ public class UserInterface {
             print("A project with the specified name does not exist. Please try again");
             showMainMenu();
         }
+        */
     }
 
     /**
@@ -325,6 +327,7 @@ public class UserInterface {
      * @param name the name of the project to show the tasks details for
      */
     public void showTaskDetails(String name) {
+        /* TODO:
         StringBuilder sb = new StringBuilder();
         try {
             for (int id : controller.getTasksOfProject(name)){
@@ -339,6 +342,7 @@ public class UserInterface {
             print("A project with the specified name does not exist. Please try again");
             showMainMenu();
         }
+        */
     }
 
     /**
@@ -446,6 +450,7 @@ public class UserInterface {
      * @post a new project is created in the system with the entered parameters.
      */
     public void createProject() {
+        /* TODO:
         HashMap<String, String> form = controller.getProjectCreationForm();
         for(String key: form.keySet()) {
             print(key + ": ");
@@ -460,6 +465,7 @@ public class UserInterface {
             print("Error while creating project: " +e.getMessage());
             showMainMenu();
         }
+        */
     }
 
     /**

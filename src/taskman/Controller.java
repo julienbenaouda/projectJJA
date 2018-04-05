@@ -94,7 +94,8 @@ public class Controller {
      * @return A Map containing all elements that need to be filled in to create a new Project.
      */
     public Map<String,String> getProjectCreationForm() {
-        return Project.getCreationForm();
+        // TODO: return Project.getCreationForm();
+        return null;
     }
 
     /**
@@ -104,8 +105,8 @@ public class Controller {
      * @post a Project with the properties from a given form will be added to the Controller.
      */
     public void addProject(HashMap<String, String> form) throws IllegalArgumentException {
-        Project project = new Project(form);
-        addProject(project.getName(), project);
+        // TODO: Project project = new Project(form);
+        // addProject(project.getName(), project);
     }
 
     /**
@@ -115,7 +116,8 @@ public class Controller {
      * @throws IllegalArgumentException if no Project is found with the given name.
      */
     public Map<String, String> getProjectDetails(String name) throws IllegalArgumentException {
-        return getProject(name).getProjectDetails();
+        // TODO: return getProject(name).getProjectDetails();
+        return null;
     }
 
     /**
@@ -125,7 +127,8 @@ public class Controller {
      * @throws IllegalArgumentException if no Project is found with the given name.
      */
     public Collection<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException {
-        return getProject(projectName).getTaskIds();
+        // TODO: return getProject(projectName).getTaskIds();
+        return null;
     }
 
     /**
@@ -136,7 +139,8 @@ public class Controller {
      * @throws IllegalArgumentException if the project does not exist.
      */
     public Map<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException {
-        return getProject(projectName).getTaskDetails(taskId);
+        // TODO: return getProject(projectName).getTaskDetails(taskId);
+        return null;
     }
 
     /**
@@ -146,7 +150,8 @@ public class Controller {
      * @throws IllegalArgumentException if the project does not exist
      */
     public ArrayList<HashMap<String, String>> getAvailableTaskDetails(String projectName) throws IllegalArgumentException {
-        return getProject(projectName).getAvailableTaskDetails();
+        // TODO: return getProject(projectName).getAvailableTaskDetails();
+        return null;
     }
 
     /**
@@ -155,7 +160,8 @@ public class Controller {
      * @return A map containing all elements that need to be filled in to create a new task
      */
     public HashMap<String,String> getTaskCreationForm() {
-        return Task.getCreationForm();
+        // TODO: return Task.getCreationForm();
+        return null;
     }
 
     /**
@@ -166,7 +172,7 @@ public class Controller {
      * @post a project with the properties from a given form will be added to the controller.
      */
     public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException {
-        getProject(projectName).addTask(form);
+        // TODO: getProject(projectName).addTask(form);
     }
 
     /**
@@ -174,7 +180,8 @@ public class Controller {
      * @return the ID of the latest task
      */
     public Integer getLastTaskID() {
-        return Task.getLastTaskID();
+        // TODO: return Task.getLastTaskID();
+        return null;
     }
 
     /**
@@ -211,7 +218,8 @@ public class Controller {
      * @return A map containing all elements that need to be filled in to update a task status
      */
     public HashMap<String, String> getUpdateTaskStatusForm() {
-        return Task.getUpdateStatusForm();
+        // TODO: return Task.getUpdateStatusForm();
+        return null;
     }
 
     /**
@@ -224,12 +232,13 @@ public class Controller {
      * @post the start time, end time and status of the task will be updated
      */
     public void updateTaskStatus(String projectName, Integer taskId, HashMap<String, String> form) throws IllegalArgumentException, AccessDeniedException {
+        /* TODO:
         if (User.canChangeTaskStatus()) {
             getProject(projectName).getTask(taskId).updateStatus(form);
         }
         else {
             throw new AccessDeniedException("The active user type cannot edit tasks!");
-        }
+        }*/
     }
 
     /**
@@ -240,7 +249,8 @@ public class Controller {
      * @throws IllegalStateException if the task is not yet finished.
      */
     public String getDelay(String projectName, Integer taskId) throws IllegalStateException {
-        return this.getProject(projectName).getTask(taskId).getDelay();
+        // TODO: return this.getProject(projectName).getTask(taskId).getDelay();
+        return null;
     }
 
     /**
@@ -248,7 +258,8 @@ public class Controller {
      * @return the time of the system.
      */
     public String getSystemTime() {
-        return clock.getSystemTimeString();
+        // TODO: return clock.getSystemTimeString();
+        return null;
     }
 
     /**
@@ -259,7 +270,7 @@ public class Controller {
      * @post the time of the system will be set to the given time
      */
     public void updateSystemTime(String newTime) throws DateTimeParseException, IllegalArgumentException {
-        clock.updateSystemTime(newTime);
+        // TODO: clock.updateSystemTime(newTime);
     }
 
     /**
@@ -267,7 +278,8 @@ public class Controller {
      * @return a string.
      */
     public String getUserType() {
-        return User.getUserType();
+        // TODO: return User.getUserType();
+        return null;
     }
 
     /**
@@ -277,7 +289,7 @@ public class Controller {
      * @post the user type will be set to the given user type.
      */
     public void setUserType(String user) throws IllegalArgumentException{
-        User.setUserType(user);
+        // TODO: User.setUserType(user);
     }
 
     /**
@@ -286,11 +298,13 @@ public class Controller {
      * @throws ImportExportException if the system can't be saved to the file.
      */
     public void exportSystem(String path) throws ImportExportException {
+        /* TODO:
         ImportExportHandler exporter = new ImportExportHandler();
         exporter.addClock(this.clock);
         exporter.addUser(this.user);
         exporter.addProjects(this.projects.values());
         exporter.exportToPath(path);
+        */
     }
 
     /**
@@ -300,9 +314,12 @@ public class Controller {
      * @throws ImportExportException if the system can't be restored from the file.
      */
     public static Controller importSystem(String path) throws ImportExportException {
+        /* TODO:
         ImportExportHandler importer = new ImportExportHandler();
         importer.importFromPath(path);
         return new Controller(importer.getClock(), importer.getUser(), importer.getProjects());
+        */
+        return null;
     }
 
 }
