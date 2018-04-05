@@ -75,10 +75,23 @@ public class ProjectTest {
 	}
 	
 	@Test
-	public void testIsFhnishedTrue()
+	public void testIsFinishedTrue()
 	{
-		Assert.fail("not implemented");
+		TimeSpan timespan = new TimeSpan(creation, due, TaskStatus.FINISHED);
+		p.createTask("taskdesc", 20l, 5.0);
+		Task t = p.getTasks().get(0);
+		t.updateStatus(timespan);
+		Assert.assertTrue(p.isFinished());
 	}
 	
+	@Test
+	public void testIsFinishedFalse()
+	{
+		TimeSpan timespan = new TimeSpan(creation, due, TaskStatus.FAILED);
+		p.createTask("taskdesc", 20l, 5.0);
+		Task t = p.getTasks().get(0);
+		t.updateStatus(timespan);
+		Assert.assertFalse(p.isFinished());
+	}
 
 }
