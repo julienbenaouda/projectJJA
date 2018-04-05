@@ -16,9 +16,5 @@ public class TaskStatusTest {
         Assert.assertEquals("Incorrectly parsed status!", "AVAILABLE", TaskStatus.AVAILABLE.toString());
     }
 
-    @Test
-    public void testFromString() {
-        Assert.assertEquals("Incorrectly parsed status!", TaskStatus.AVAILABLE, TaskStatus.fromString("AVAILABLE"));
-    }
 
 }

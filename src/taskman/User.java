@@ -62,7 +62,7 @@ public abstract class User {
 	 */
 	private void setPassword(String password) throws IllegalArgumentException {
 		if(password == null || password.equals("")) {
-			throw new IllegalArgumemntException("The password can't be empty. Please chose another password.");
+			throw new IllegalArgumentException("The password can't be empty. Please chose another password.");
 		}
 		this.password = password;
 	}

@@ -136,10 +136,15 @@ title TASKMAN\n
 
   package taskman {
      class UserManager {
-        - users: list<User>
+        - users: HashMap<String, User>
         - currentUser: User
+        + UserManager()
+        + User getCurrentUser()
+        + void setCurrentUser(User user)
+        - Map<String, User> getUsers()
         + createDeveloper(String name, String password)
-        + creatProjectManager(String name, String password)
+        + createProjectManager(String name, String password)
+        + void login(String name, String password)
      }
   }
 
