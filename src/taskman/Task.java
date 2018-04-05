@@ -25,6 +25,7 @@ public class Task {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
+        timeSpans = new ArrayDeque<>();
         initializeTimeSpan(TaskStatus.AVAILABLE);
         dependencies = new ArrayList<>();
     }
@@ -32,6 +33,7 @@ public class Task {
 
     /**
      * Creates a new task with thte given values.
+     *
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable deviation of the task
@@ -42,6 +44,7 @@ public class Task {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
+        timeSpans = new ArrayDeque<>();
         addTimeSpan(timeSpan);
         dependencies = new ArrayList<>();
     }
@@ -91,6 +94,7 @@ public class Task {
 
     /**
      * Sets the estimated duration of the task to the given duration in minutes.
+     *
      * @param estimatedDuration the estimated duration of the task in minutes
      * @post the estimated duration of the task is set to the given duration
      */
@@ -116,6 +120,7 @@ public class Task {
 
     /**
      * Sets the acceptable deviation of the task to the given deviation.
+     *
      * @param acceptableDeviation the acceptable deviation of the task
      * @post the acceptable deviation of the task is set to the given deviation
      */
@@ -167,6 +172,15 @@ public class Task {
      */
     public TimeSpan getLastTimeSpan(){
         return timeSpans.getFirst();
+    }
+
+    /**
+     * Returns if the task is finished.
+     *
+     * @return true of the task is finished, otherwise false
+     */
+    public boolean isFinished(){
+        return getLastTimeSpan().getStatus() == TaskStatus.FINISHED;
     }
 
 
@@ -350,6 +364,7 @@ public class Task {
 
     /**
      * Checks if the searched task is equal to the root or one of its dependencies or alternatives (recursively).
+     * 
      * @param root the root task whose dependencies and alternatives will be further searched
      * @param searchedTask the task we want to search for
      * @return true if the task is found, false otherwise
