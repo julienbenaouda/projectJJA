@@ -62,7 +62,7 @@ public class Project {
      */
     public Boolean isFinished() {
 		for (Task task: taskList) {
-			if (task.getStatus() != TaskStatus.FINISHED) {
+			if (!task.isFinished()) {
 				return false;
 			}
 		}
