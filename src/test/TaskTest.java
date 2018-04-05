@@ -9,6 +9,7 @@ import taskman.TimeSpan;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayDeque;
 
 /**
  * This is a test class for the Task class.
@@ -35,18 +36,17 @@ public class TaskTest {
         double acceptableDeviation = 0.2356;
 
         root = new Task("root description", estimatedDuration, acceptableDeviation) {
-            private TimeSpan timeSpan;
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
 
             @Override
             public void updateStatus(TimeSpan timeSpan){
-                this.timeSpan = timeSpan;
+                timeSpans.push(timeSpan);
             }
 
             @Override
-            public TimeSpan getLastTimeSpan(){
-                return timeSpan;
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
             }
-
         };
 
         TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
@@ -222,7 +222,57 @@ public class TaskTest {
         Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
         Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
         Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
+        Assert.assertEquals("There is no time span added", 1, task.getTimeSpans().size());
         Assert.assertEquals("The status is not available", TaskStatus.AVAILABLE, task.getLastTimeSpan().getStatus());
+    }
+
+    @Test
+    public void testIsFinished(){
+        Task task = new Task("blabla", 13, 0.23){
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan){
+                timeSpans.push(timeSpan);
+            }
+
+            @Override
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
+            }
+        };
+        Assert.assertEquals("The status is finished", false, task.isFinished());
+        TimeSpan timeSpan = new TimeSpan(TaskStatus.FINISHED);
+        task.updateStatus(timeSpan);
+        Assert.assertEquals("The status is no finished", true, task.isFinished());
+    }
+
+    @Test
+    public void testDelay(){
+        Task task = new Task("Description1", 20, 0.5){
+            private ArrayDeque<TimeSpan> timeSpans = new ArrayDeque<>();
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan){
+                timeSpans.push(timeSpan);
+            }
+
+            @Override
+            public ArrayDeque<TimeSpan> getTimeSpans(){
+                return timeSpans;
+            }
+        };
+        LocalDateTime startTime = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime, TaskStatus.FINISHED);
+        task.updateStatus(timeSpan);
+        Assert.assertEquals("The delay is not correctly calculated", 5, task.getDelay(), 0);
+    }
+
+    @Test (expected = IllegalStateException.class)
+    public void testIlegalStateDelay(){
+        Task task = new Task("Descr", 14, 0.2315);
+        task.getDelay();
     }
 
     @Test
@@ -239,8 +289,9 @@ public class TaskTest {
         Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getLastTimeSpan().getStatus());
         Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getLastTimeSpan().getStartTime());
         Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getLastTimeSpan().getEndTime());
-        // Firt 3 tests above this comment are not necessary but I will leave them here
+        // First 3 tests above this comment are not necessary but I will leave them here
         Assert.assertEquals("The time span is not correctly set", timeSpan, updateStatusTask.getLastTimeSpan());
+        Assert.assertEquals("The timespan is not added", 2, updateStatusTask.getTimeSpans().size());
     }
 
     @Test (expected = IllegalArgumentException.class)

@@ -151,7 +151,7 @@ public class Task {
      */
     private void initializeTimeSpan(TaskStatus status){
         TimeSpan timeSpan = new TimeSpan(status);
-        timeSpans.push(timeSpan);
+        addTimeSpan(timeSpan);
     }
 
     /**
@@ -171,7 +171,7 @@ public class Task {
      * @return the latest time span of the task
      */
     public TimeSpan getLastTimeSpan(){
-        return timeSpans.getFirst();
+        return getTimeSpans().getFirst();
     }
 
     /**
@@ -215,7 +215,7 @@ public class Task {
             throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
         else {
-            return Duration.between(getLastTimeSpan().getStartTime(), getLastTimeSpan().getEndTime()).toMinutes() - getEstimatedDuration();
+            return Math.round(Duration.between(getLastTimeSpan().getStartTime(), getLastTimeSpan().getEndTime()).toMinutes() - getEstimatedDuration()*(1+getAcceptableDeviation()));
         }
     }
 
