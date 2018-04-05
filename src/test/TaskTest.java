@@ -49,9 +49,6 @@ public class TaskTest {
             }
         };
 
-        TimeSpan timeSpan = new TimeSpan(TaskStatus.FAILED);
-        root.updateStatus(timeSpan);
-
         Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
             private Task alternative;
             @Override
@@ -397,6 +394,8 @@ public class TaskTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void testIllegalSetAlternativeRecursive1(){
+        TimeSpan timeSpan = new TimeSpan(TaskStatus.AVAILABLE);
+        root.updateStatus(timeSpan);
         root.setAlternative(alternative1_3);
     }
 
