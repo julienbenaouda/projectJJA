@@ -179,16 +179,14 @@ public class Task {
         this.status = status;
     }
 
-    /*
-    *//**
+    /**
      * Returns if the task is finished.
      *
      * @return true of the task is finished, otherwise false
-     *//*
+     */
     public boolean isFinished(){
         return getStatus() == TaskStatus.FINISHED;
     }
-    */
 
     /**
      * Returns if the task is available or unavailable.
@@ -236,8 +234,8 @@ public class Task {
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the timeSpan is invalid
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateStatus(TimeSpan timeSpan) throws IllegalArgumentException {
-        if (timeSpan.getStatus() != TaskStatus.FINISHED && timeSpan.getStatus() != TaskStatus.FAILED){
+    public void updateStatus(TimeSpan timeSpan, TaskStatus status) throws IllegalArgumentException {
+        if (status != TaskStatus.FINISHED && status != TaskStatus.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }
         for (Task dependency: this.getDependencies()) {
@@ -359,8 +357,7 @@ public class Task {
         dependencies.remove(dependency);
     }
 
-
-
+    
     // LOOP CHECKING CODE
 
     /**
