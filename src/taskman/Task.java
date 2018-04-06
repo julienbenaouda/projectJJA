@@ -392,4 +392,16 @@ public class Task {
         return false;
     }
 
+
+    // VISITOR PATTERN
+
+    /**
+     * Accepts a visitor
+     *
+     * @param v the visitor to be accepted
+     */
+    public void accept(Visitor v) {
+        v.visitTask(this);
+    }
+
 }
