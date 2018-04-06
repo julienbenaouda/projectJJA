@@ -15,7 +15,7 @@ public final class TimeParser {
     /**
      * The notation used for the time.
      */
-    private static final DateTimeFormatter dateFormatter =
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
     /**
@@ -25,7 +25,7 @@ public final class TimeParser {
      * @return a String.
      */
     public static String convertLocalDateTimeToString(LocalDateTime time) {
-        return time.format(dateFormatter);
+        return time.format(DATE_TIME_FORMATTER);
     }
 
     /**
@@ -36,28 +36,7 @@ public final class TimeParser {
      * @throws DateTimeParseException if the text cannot be parsed.
      */
     public static LocalDateTime convertStringToLocalDateTime(String time) throws DateTimeParseException {
-        return LocalDateTime.parse(time, dateFormatter);
-    }
-
-    /**
-     * Convert a Duration to a String.
-     *
-     * @param duration a Duration.
-     * @return a String with the time in minutes.
-     */
-    public static String convertDurationToString(Duration duration) {
-        return Long.toString(duration.toMinutes()) + " minutes";
-    }
-
-    /**
-     * Convert a String to a Duration.
-     *
-     * @param duration a String in minutes.
-     * @return a Duration.
-     * @throws ArithmeticException if the input minutes exceeds the capacity of Duration.
-     */
-    public static Duration convertStringToDuration(String duration) throws ArithmeticException {
-        return Duration.ofMinutes(Long.parseLong(duration.replace("minutes", "").trim()));
+        return LocalDateTime.parse(time, DATE_TIME_FORMATTER);
     }
 
 }
