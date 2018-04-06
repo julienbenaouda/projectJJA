@@ -235,6 +235,14 @@ public class Project {
 	 * The list of tasks for the project.
 	 */
 	private ArrayList<Task> taskList;
+	
+	/**
+	 * accepts a visitor 
+	 * @param v the visitor to be accepted
+	 */
+	public void accept(Visitor v) {
+		v.visitProject(this);
+	}
 
-	// TODO: getProjectDetails() heb ik ook verwijdered
+	// TODO: getProjectDetails() heb ik ook verwijderd
 }
