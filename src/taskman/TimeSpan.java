@@ -13,27 +13,15 @@ import java.time.LocalDateTime;
 public class TimeSpan {
 
 	/**
-	 * Creates a new timespan object with given status
-	 *
-	 * @param status the status of the timespan
-	 */
-	public TimeSpan(TaskStatus status){
-		setStatus(status);
-	}
-	// TODO: kan dit er niet voor zorgen dat er null exception optreed bij updateStatus() im Task
-
-	/**
-	 * Creates a new timespan object with given starttime, endtime and status
+	 * Creates a new timespan object with given starttime and endtime
 	 *
 	 * @param startTime the start time of the timespan
 	 * @param endTime the end time of the timespan
-	 * @param status the status of the timespan
 	 * @post a new timespan is created with given parameters
 	 */
-	public TimeSpan(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
+	public TimeSpan(LocalDateTime startTime, LocalDateTime endTime) {
 		setStartTime(startTime);
 		setEndTime(endTime);
-		setStatus(status);
 	}
 	
 	/**
@@ -95,25 +83,5 @@ public class TimeSpan {
 	 * represents the end time of the timespan
 	 */
 	private LocalDateTime endTime;
-	
-	/**
-	 * @return the status of the timespan
-	 */
-	public TaskStatus getStatus() {
-		return status;
-	}
 
-	/**
-	 * sets the status of the timespan to the given status
-	 * @param status the status of the timespan
-	 * @post the status of this timespan is set to the given status
-	 */
-	private void setStatus(TaskStatus status) {
-		this.status = status;
-	}
-
-	/**
-	 * represents the status of the time span
-	 */
-	private TaskStatus status;
 }

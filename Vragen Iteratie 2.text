@@ -3,4 +3,6 @@
   -> If in controller: not really the responsibility of controller but easier to maintain and it's just 
      collecting information and passing to the UI
 
+--------------------------------------------------------------------------------------
+* Is voor Status state pattern beter of is enum goed genoeg?
 

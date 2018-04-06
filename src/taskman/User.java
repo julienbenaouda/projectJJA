@@ -1,50 +1,74 @@
+/**
+ * 
+ */
 package taskman;
 
 /**
- * Class to hold the currently active user type.
+ * This class represents a user in the system.
+ * @author Julien Benaouda
  *
- * @author Jeroen Van Der Donckt, Alexander Braekevelt
  */
-public class User {
+public abstract class User {
+	/**
+	 * creates a new user with the given name and password
+	 * @param name the name of the user
+	 * @param password the password of the user
+	 * @post a new user is created with the given name and password
+	 */
+	public User(String name, String password) {
+		setName(name);
+		setPassword(password);
+	}
 
-    public enum UserType {
-        REGULARUSER,
-        DEVELOPPER,
-        PROJECTMANAGER;
-    }
+	/**
+	 * returns the name of the user
+	 * @return the name of the user
+	 */
+	public String getName() {
+		return name;
+	}
 
-    public User(UserType userType){
-        setUserType(userType);
-    }
+	/**
+	 * sets the name of the user to the given name
+	 * @param name the name of the user
+	 * @throws IllegalArgumentException when the given name is empty
+	 * @post the name of the user is set to the given name
+	 */
+	private void setName(String name) throws IllegalArgumentException {
+		if(name == null || name.equals("")) {
+			throw new IllegalArgumentException("The name can't be empty. Please chose another name");
+		}
+		this.name = name;
+	}
 
-    private UserType userType;
+	/**
+	 * represents the name of the user
+	 */
+	private String name;
+	
+	/**
+	 * returns the password of the user
+	 * @return the password of the user
+	 */
+	public String getPassword() {
+		return password;
+	}
 
-    /**
-     * Sets the active user type to the given user type.
-     *
-     * @param userType user type of the user
-     * @post the user type will be set to the given user type.
-     */
-    private void setUserType(UserType userType){
-        this.userType = userType;
-    }
+	/**
+	 * sets the password of the user to the given password
+	 * @param password the password of the user
+	 * @throws IllegalArgumentException when the password is empty
+	 * @post the password is set to the given password
+	 */
+	private void setPassword(String password) throws IllegalArgumentException {
+		if(password == null || password.equals("")) {
+			throw new IllegalArgumentException("The password can't be empty. Please chose another password.");
+		}
+		this.password = password;
+	}
 
-    /**
-     * Returns the name of the active user type.
-     *
-     * @return user type
-     */
-    public UserType getUserType() {
-        return userType;
-    }
-
-    /**
-     * Returns if the current user type can change the task status.
-     *
-     * @return if the current user type can change the task status.
-     */
-    public boolean canChangeTaskStatus(){
-        return userType == UserType.DEVELOPPER;
-    }
-
+	/**
+	 * represents the password of the user
+	 */
+	private String password;
 }

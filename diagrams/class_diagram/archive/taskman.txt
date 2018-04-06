@@ -5,13 +5,8 @@ title TASKMAN\n
   package taskman {
     class Clock {
         - systemTime : LocalDateTime
-        - dateFormatter : DateTimeFormatter
-        - void setSystemTime(LocalDateTime time)
         + LocalDateTime getSystemTime()
-        + String getSystemTimeString()
-        + void updateSystemTime(String timestamp)
-        + void addToXml(XmlObject obj)
-        {static} + Clock getFromXml(XmlObject obj)
+        + void updateSystemTime(LocalDateTime timestamp)
     }
   }
   
@@ -57,30 +52,21 @@ title TASKMAN\n
         - creationTime : LocalDateTime
         - dueTime : LocalDateTime
         - taskList : ArrayList<Task>
-        {static} - dateFormatter : DateTimeFormatter
-        + Project(String name, String description, String startTime, String dueTime)
-        + Project(HashMap<String, String> form)
-        + void addTask(Task t)
+        + Project(String name, String description, LocalDateTime startTime, LocalDateTime dueTime)
+        - void addTask(Task t)
+        + createTask(String description, long estimatedDuration, double acceptableDeviation)
         + boolean isFinished()
-        + void removeTask(Integer taskID)
-        + HashMap<String, String> getTaskDetails(Integer taskID)
-        + ArrayList<HashMap<String, String>> getAvailableTaskDetails()
+        + void removeTask(Task task)
         + String getName()
         - void setName(String name)
         + String getDescription()
         - void setDescription(String description)
         + LocalDateTime getCreationTime()
-        - void setCreationTime(String creationTime)
+        - void setCreationTime(LocalDateTime creationTime)
         + LocalDateTime getDueTime()
-        - void setDueTime(String dueTime)
+        - void setDueTime(LocalDateTime dueTime)
         + List<Task> getTasks()
-        + List<Integer> getTaskIds()
-        + Task getTask(Integer id)
-        - Integer getTaskIndex(Integer id)
-        + HashMap<String, String> getProjectDetails()
-        + void addToXml(XmlObject obj)
-        {static} + void getFromXml(XmlObject obj)
-        {static} + getCreationForm()
+        + Task getTask(int index)
     }
   }
   
@@ -92,8 +78,6 @@ title TASKMAN\n
       FINISHED
       FAILED
 
-      {static} + Status fromString(String s)
-     + String toString()
      + boolean isFinal()
     }
   }
@@ -105,30 +89,30 @@ title TASKMAN\n
         - estimatedDuration : Duration
         - acceptableDeviation : Double
         - dependencies : ArrayList<Task>
-        + Task(HashMap<String, String> form)
-        + Task(String description, String estimatedDuration, String acceptableDeviation))
-        - Task(String lastTaskID, String ID, String description, String estimatedDuration, String acceptableDeviation, String startTime, String endTime, String status)
+        - TimeSpan timesSpan
+        - TaskStatus status
+        + Task(String description, String estimatedDuration, String acceptableDeviation)
+        + Task(String description, String estimatedDuration, String acceptableDeviation, TimeSpan timeSpan)
+        + getStatus()
+        - setStatus(TaskStatus status)
         + String getDescription()
         - void setDescription(String description)
         + String getEstimatedDuration()
         - void setEstimatedDuration(String duration)
         + String getAcceptableDeviation()
         - void setAcceptableDeviation(String acceptableDeviation)
-        + void updateStatus(HashMap<String, String> form)
+        - void setTimeSpan(TimeSpan timeSpan)
+        + timeSpan getTimeSpan()
+        + void updateStatus(TimeSpan timespan)
         + String getDelay()
         + Task getAlternative()
         + void setAlternative(Task t)
         + ArrayList<Task> getDependencies()
         - void setDependencies(ArayList<Task> tasks)
         + void addDependency(Task t)
-        + void restoreDependencies(ArrayList<Task> tasks)
         + void removeDependency(Task task)
-        + HashMap<String, String> getTaskDetails()
+        + isFinished()
         {static} - boolean containsLoop(Task task, Task other)
-        + void addToXml(XmlObject obj)
-        {static} + void getFromXml(XmlObject obj)
-        {static} + HashMap<String, String> getCreationForm()
-        {static} + HashMap<String, String> getUpdateStatusForm()
     }
   }
 
@@ -137,19 +121,59 @@ title TASKMAN\n
     class TimeSpan {
         - startTime: LocalDateTime
         - endTime: LocalDateTime
-        + TimeSpan(LocalDateTime startTime, LocalDateTime endtime, TaskStatus status)
+        + TimeSpan(LocalDateTime startTime, LocalDateTime endtime)
         + LocalDateTime getStartTime()
         + LocalDateTime getEndTime()
-        + TaskStatus getStatus()
         - void setStartTime(LocalDateTime startTime)
         - void setEndTime(LocalDateTime endTime)
-        - void setStatus(TaskStatus status)
     }
   }  
 
+  package taskman {
+     class ResourceType {
+     }
+  }
 
   package taskman {
-    class UI {
+     class UserManager {
+        - users: HashMap<String, User>
+        - currentUser: User
+        + UserManager()
+        + User getCurrentUser()
+        + void setCurrentUser(User user)
+        - Map<String, User> getUsers()
+        + createDeveloper(String name, String password)
+        + createProjectManager(String name, String password)
+        + void login(String name, String password)
+     }
+  }
+
+  package taskman {
+     abstract class User {
+        - name: String
+        - password: String
+        + String getName()
+        + String getPassword()
+        + User(name, password)
+        - void setName()
+        - void setPassword()
+     }
+  }
+
+  package taskman {
+     class ProjectManager {
+        + ProjectManager(name, password)
+     }
+  }
+
+  package taskman {
+     class Developer {
+        Developer(name, password)
+     }
+  }
+
+  package taskman {
+    class UserInterface {
         # UI()
         + void welcomeDialog()
         + void showUserChoiceDialog()
@@ -175,29 +199,6 @@ title TASKMAN\n
         # String inputString()
         + Controller getController()
         {static} + void main()
-    }
-  }
-  
-
-  package taskman {
-    class User {
-        {static} - userType : UserType
-        {static} + void setUserType(String userType)
-        {static} + String getUserType()
-        {static} + boolean canChangeTaskStatus()
-        {static} + void addToXml(XmlObject obj)
-        {static} + void setFromXml(XmlObject obj)
-    }
-  }
-  
-
-  package taskman {
-    enum UserType {
-      REGULARUSER
-      DEVELOPER
-
-     + {static} UserType fromString(String s)
-     + String toString()
     }
   }
   
@@ -244,7 +245,15 @@ title TASKMAN\n
   XmlObject o-- Clock
   XmlObject o-- XmlException
   UI o-- XmlException
-
+  controller o-- UserManager
+  UserManager o-- User
+  UserManager o-- Developer
+  UserManager o-- ProjectManager
+  Developer <|-- User
+  ProjectManager <|-- User
+  Task o-- User
+  Project o-- User
+  Controller o-- User
 
 
 @enduml
