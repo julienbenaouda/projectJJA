@@ -254,6 +254,103 @@ public class TaskTest {
     }
 
     @Test
+    public void testIsAvailable(){
+        Task availableTask = new Task("available task", 23, 2);
+        Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
+        Task dependencyFinished = new Task("dependency finished", 23, 1.45){
+            private TaskStatus status;
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan ,TaskStatus status) {
+                this.status = status;
+            }
+
+            @Override
+            public TaskStatus getStatus(){
+                return status;
+            }
+        };
+        availableTask.addDependency(dependencyFinished);
+        TimeSpan timeSpanNull = new TimeSpan(null, null);
+
+        dependencyFinished.updateStatus(timeSpanNull, TaskStatus.FINISHED);
+        Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
+        Task dependencyFailed =  new Task("dependency failed", 23, 1.45){
+            private TaskStatus status;
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan ,TaskStatus status) {
+                this.status = status;
+            }
+
+            @Override
+            public TaskStatus getStatus(){
+                return status;
+            }
+        };
+        dependencyFinished.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
+        dependencyFinished.addDependency(dependencyFailed);
+        dependencyFinished.updateStatus(timeSpanNull, TaskStatus.FINISHED);
+        Task alternativeFinished = new Task("alternative finished", 25, 5.6){
+            private TaskStatus status;
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan ,TaskStatus status) {
+                this.status = status;
+            }
+
+            @Override
+            public TaskStatus getStatus(){
+                return status;
+            }
+        };
+        dependencyFailed.updateStatus(timeSpanNull, TaskStatus.FAILED);
+        dependencyFailed.setAlternative(alternativeFinished);
+        alternativeFinished.updateStatus(timeSpanNull, TaskStatus.FINISHED);
+        Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
+
+        Task unavailableTask = new Task("unavailable task", 789, 1.25);
+        Task unavialableTask2 = new Task("unavailable task 2", 4, 0.003);
+        unavailableTask.addDependency(unavialableTask2);
+        Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
+        unavailableTask.removeDependency(unavialableTask2);
+        dependencyFinished.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
+        unavailableTask.addDependency(dependencyFinished);
+        dependencyFinished.removeDependency(dependencyFailed);
+        dependencyFailed.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
+        dependencyFailed.addDependency(unavialableTask2);
+        dependencyFinished.updateStatus(timeSpanNull, TaskStatus.FINISHED);
+        dependencyFailed.updateStatus(timeSpanNull, TaskStatus.FAILED);
+        Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
+        dependencyFailed.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
+        dependencyFailed.removeDependency(unavialableTask2);
+        dependencyFailed.setAlternative(unavialableTask2);
+        dependencyFailed.updateStatus(timeSpanNull, TaskStatus.FAILED);
+        Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
+
+    }
+
+    @Test (expected = IllegalStateException.class)
+    public void testIllegalStateIsAvailable(){
+        Task failedTask = new Task("failed task", 1, 0.03){
+            private TaskStatus status;
+
+            @Override
+            public void updateStatus(TimeSpan timeSpan ,TaskStatus status) {
+                this.status = status;
+            }
+
+            @Override
+            public TaskStatus getStatus(){
+                return status;
+            }
+        };
+        TimeSpan timeSpanNull = new TimeSpan(null, null);
+        failedTask.updateStatus(timeSpanNull, TaskStatus.FAILED);
+        failedTask.isAvailable();
+    }
+
+    @Test
     public void testDelay(){
         Task task = new Task("Description1", 20, 0.5);
         LocalDateTime startTime = LocalDateTime.now();
