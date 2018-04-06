@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
  */
 public class TimeSpan {
 
-
-
 	/**
 	 * Creates a new timespan object with given starttime and endtime
 	 *
@@ -85,5 +83,5 @@ public class TimeSpan {
 	 * represents the end time of the timespan
 	 */
 	private LocalDateTime endTime;
-	
+
 }
