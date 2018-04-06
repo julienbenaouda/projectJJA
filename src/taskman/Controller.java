@@ -1,8 +1,8 @@
 package taskman;
 
-import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.Map;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -11,102 +11,101 @@ import java.util.*;
 public class Controller {
 
     /**
-     * Represents the Clock.
+     * Represents the system time.
      */
     private Clock clock;
 
     /**
-     * Represents the User.
+     * Represents the user management system.
      */
-    private User user;
+    private UserManager userManager;
 
     /**
-     * Represents the Projects with their unique ids.
+     * Represents the project management system.
      */
-    private Map<String, Project> projects;
+    private ProjectOrganizer projectOrganizer;
 
     /**
      * Create a Controller for the given objects.
      * @param clock a Clock.
-     * @param user a User.
-     * @param projects a Collection of Projects.
+     * @param userManager a user management system.
+     * @param projectOrganizer a project management system.
+     * @throws NullPointerException if an argument is null.
      */
-    public Controller(Clock clock, User user, Collection<Project> projects) {
-        this.clock = clock;
-        this.user = user;
-        this.projects = new HashMap<>();
-        for (Project project: projects) {
-            this.projects.put(project.getName(), project);
+    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer) throws NullPointerException{
+        if (clock == null || userManager == null || projectOrganizer == null) {
+            throw new NullPointerException("Arguments cannot be null!");
         }
+        this.clock = clock;
+        this.userManager = userManager;
+        this.projectOrganizer = projectOrganizer;
     }
 
     /**
-     * Returns all Project names.
-     * @return a Collection of Strings.
+     * Return the time of the system.
+     * @return the time of the system.
      */
-    public Collection<String> getProjectNames() {
-        return new ArrayList<>(this.projects.keySet());
+    public String getSystemTime() {
+        return TimeParser.convertLocalDateTimeToString(clock.getTime());
     }
 
     /**
-     * Returns if a Project with the given name exists.
-     * @param name a String with a possible name of a Project.
+     * Updates the time of the system.
+     * @param newTime the new time of the system.
+     * @throws DateTimeParseException if the text cannot be parsed.
+     * @throws IllegalArgumentException if the new time if before the old time.
+     * @post the time of the system will be set to the given time
+     */
+    public void updateSystemTime(String newTime) throws DateTimeParseException, IllegalArgumentException {
+        clock.updateSystemTime(TimeParser.convertStringToLocalDateTime(newTime));
+    }
+
+    /**
+     * Returns the name of the active user.
+     * @return a string.
+     * @throws NotPermittedException if no user is logged in.
+     */
+    public String getCurrentUserName() throws NotPermittedException {
+        return this.userManager.getCurrentUser().getName();
+    }
+
+    /**
+     * If a user is logged in into the system.
      * @return a Boolean.
      */
-    public Boolean projectExists(String name) {
-        return projects.containsKey(name);
+    public Boolean hasCurrentUser() {
+        return this.userManager.hasCurrentUser();
     }
 
     /**
-     * Returns the Project with the given name.
-     * @param name the name of the Project as String.
-     * @return a Project.
-     * @throws IllegalArgumentException if no Project is found with the given name.
+     * Adds a new user to the system.
+     * @param name the name of the user.
+     * @param password the password of the user.
+     * @param type the type of user.
+     * @throws IllegalArgumentException if the type is not valid.
+     * @post a new user is added to the system.
      */
-    private Project getProject(String name) throws IllegalArgumentException {
-        if (projectExists(name)) {
-            return projects.get(name);
-        }
-        else {
-            throw new IllegalArgumentException("No Project found with name '"+ name + "'!");
-        }
+    public void createUser(String name, String password, String type) throws IllegalArgumentException {
+        this.userManager.createUser(name, password, type);
     }
 
     /**
-     * Add a Project to the Controller.
-     * @param name the name of the Project
-     * @param project the Project to add
-     * @post the Project will be added to the Controller.
-     * @throws IllegalArgumentException if a Project with the given name already exists.
+     * Logs in with the given username and password.
+     * @param name the name of the user to log in.
+     * @param password the password of the user to log in with.
+     * @throws IllegalArgumentException when an user with the given name can't be found.
+     * @throws IllegalArgumentException when the password for the user with the given name is incorrect.
+     * @post the user is logged in and is now used in the system.
      */
-    private void addProject(String name, Project project) throws IllegalArgumentException {
-        if (projectExists(name)) {
-            throw new IllegalArgumentException("A Project with name '"+ name + "' already exists!");
-        }
-        else {
-            projects.put(name, project);
-        }
+    public void login(String name, String password) throws IllegalArgumentException {
+        this.userManager.login(name, password);
     }
 
     /**
-     * This method generates a form containing all parameters needed to create a new Project.
-     * All values are empty and can be filled in, and then passed back to create a Project.
-     * @return A Map containing all elements that need to be filled in to create a new Project.
+     * Logout the current user in the system.
      */
-    public Map<String,String> getProjectCreationForm() {
-        // TODO: return Project.getCreationForm();
-        return null;
-    }
-
-    /**
-     * Add a Project with the properties from a given form.
-     * @param form the creation form for the Project
-     * @throws IllegalArgumentException when one of the parameters is absent or invalid.
-     * @post a Project with the properties from a given form will be added to the Controller.
-     */
-    public void addProject(HashMap<String, String> form) throws IllegalArgumentException {
-        // TODO: Project project = new Project(form);
-        // addProject(project.getName(), project);
+    public void logout() {
+        this.userManager.logout();
     }
 
     /**
@@ -121,175 +120,85 @@ public class Controller {
     }
 
     /**
-     * Returns the ids of Tasks that belong to a given Project.
-     * @param projectName the name of the Project as String.
-     * @return a Collection of Integers.
-     * @throws IllegalArgumentException if no Project is found with the given name.
-     */
-    public Collection<Integer> getTasksOfProject(String projectName) throws IllegalArgumentException {
-        // TODO: return getProject(projectName).getTaskIds();
-        return null;
-    }
-
-    /**
      * Returns the details of the given task
      * @param projectName the name of the project of the task
-     * @param taskId      the id of the task of which the details should be returned.
+     * @param taskIndex the index of the task of which the details should be returned.
      * @return the details of the given task
      * @throws IllegalArgumentException if the project does not exist.
      */
-    public Map<String, String> getTaskDetails(String projectName, Integer taskId) throws IllegalArgumentException {
-        // TODO: return getProject(projectName).getTaskDetails(taskId);
-        return null;
-    }
-
-    /**
-     * Returns a list of details of the available tasks of the given project
-     * @param projectName the name of the project of the available tasks
-     * @return the details of the available tasks of the given project
-     * @throws IllegalArgumentException if the project does not exist
-     */
-    public ArrayList<HashMap<String, String>> getAvailableTaskDetails(String projectName) throws IllegalArgumentException {
-        // TODO: return getProject(projectName).getAvailableTaskDetails();
-        return null;
-    }
-
-    /**
-     * This method generates a form containing all parameters needed to create a new taks.
-     * All values are empty and can be filled in, and then passed back to create a task.
-     * @return A map containing all elements that need to be filled in to create a new task
-     */
-    public HashMap<String,String> getTaskCreationForm() {
-        // TODO: return Task.getCreationForm();
+    public Map<String, String> getTaskDetails(String projectName, Integer taskIndex) throws IllegalArgumentException {
+        // TODO: return getProject(projectName).getTaskDetails(taskIndex);
         return null;
     }
 
     /**
      * Adds a project with the properties from a given form.
-     * @param projectName the project name
-     * @param form        the creation form for the project
-     * @throws IllegalArgumentException if the project does not exist.
-     * @post a project with the properties from a given form will be added to the controller.
+     * @param projectName the project name.
+     * @param description the description of the task.
+     * @param estimatedDuration the estimated duration of the task.
+     * @param acceptableDeviation the acceptable deviation of the task.
+     * @throws IllegalArgumentException if no Project is found with the given name.
+     * @post a new task is created and added to the project in the system.
      */
-    public void addTask(String projectName, HashMap<String, String> form) throws IllegalArgumentException {
-        // TODO: getProject(projectName).addTask(form);
-    }
-
-    /**
-     * Return the ID of the latest task.
-     * @return the ID of the latest task
-     */
-    public Integer getLastTaskID() {
-        // TODO: return Task.getLastTaskID();
-        return null;
+    public void addTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException {
+        this.projectOrganizer.getProject(projectName).createTask(description, estimatedDuration, acceptableDeviation);
     }
 
     /**
      * Sets the alternative of the given task to the given alternative task
-     * @param projectName       the name of the project which holds both tasks
-     * @param taskId            the id of the task
-     * @param alternativeTaskId the id of the alternative task
+     * @param projectName the name of the project which holds both tasks
+     * @param taskIndex the index of the task
+     * @param alternativeTaskIndex the index of the alternative task
      * @throws IllegalArgumentException if the project does not exist.
-     * @post the alternative task of the task is set to the given task
+     * @throws IndexOutOfBoundsException if the project does not contain the task or its alternative.
+     * @throws IllegalStateException the task must be failed to set the alternative task.
+     * @throws IllegalArgumentException the alternative may not be the same task or its alternative or
+     *                                  one of its dependencies or one of these alternatives recursively.
+     * @post the alternative task of the task is set to the given task.
      */
-    public void addAlternativeToTask(String projectName, Integer taskId, Integer alternativeTaskId) throws IllegalArgumentException {
-        Project project = getProject(projectName);
-        project.getTask(taskId).setAlternative(project.getTask(alternativeTaskId));
+    public void addAlternativeToTask(String projectName, Integer taskIndex, Integer alternativeTaskIndex) throws IllegalArgumentException {
+        Project project = this.projectOrganizer.getProject(projectName);
+        project.getTask(taskIndex).setAlternative(project.getTask(alternativeTaskIndex));
     }
 
     /**
      * Adds the given dependency to the given task
-     * @param projectName      the name of the project which holds both tasks
-     * @param taskId           the id of the task
-     * @param dependencyTaskId the id of the dependency
+     * @param projectName the name of the project which holds both tasks.
+     * @param taskIndex the index of the task.
+     * @param dependencyTaskIndex the index of the dependency.
      * @throws IllegalArgumentException if the project does not exist.
-     * @throws AccessDeniedException    if the task is already finished or failed.
+     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
+     * @throws IllegalArgumentException when the dependency is the task or its alternative or
+     *                                  one of its dependencies or one of these alternatives recursively.
+     * @throws IllegalStateException if the task is already finished or failed.
      * @post the dependency is added to the task.
      */
-    public void addDependencyToTask(String projectName, Integer taskId, Integer dependencyTaskId) throws IllegalArgumentException, AccessDeniedException {
-        Project project = getProject(projectName);
-        project.getTask(taskId).addDependency(project.getTask(dependencyTaskId));
-    }
-
-
-    /**
-     * This method generates a form containing all parameters needed to update a task status
-     * All values are empty and can be filled in, and then passed back to update a task status.
-     * @return A map containing all elements that need to be filled in to update a task status
-     */
-    public HashMap<String, String> getUpdateTaskStatusForm() {
-        // TODO: return Task.getUpdateStatusForm();
-        return null;
+    public void addDependencyToTask(String projectName, Integer taskIndex, Integer dependencyTaskIndex) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
+        Project project = this.projectOrganizer.getProject(projectName);
+        project.getTask(taskIndex).addDependency(project.getTask(dependencyTaskIndex));
     }
 
     /**
      * Updates the status of the given task.
      * @param projectName the name of the project of the task
-     * @param taskId      the id of the task to update
-     * @param form        the HashMap containing the new values necessary to update the task status
+     * @param taskIndex the index of the task to update
+     * @param startTime the start time of the task
+     * @param endTime the end time of the task
+     * @param status the new status of the task
+     * @throws DateTimeParseException if the start or end time cannot be parsed.
+     * @throws IllegalArgumentException if the status does not exist.
      * @throws IllegalArgumentException if the project does not exist.
-     * @throws AccessDeniedException    if the active user type cannot edit tasks
+     * @throws IndexOutOfBoundsException if the project does not contain the task index.
+     * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateTaskStatus(String projectName, Integer taskId, HashMap<String, String> form) throws IllegalArgumentException, AccessDeniedException {
-        /* TODO:
-        if (User.canChangeTaskStatus()) {
-            getProject(projectName).getTask(taskId).updateStatus(form);
-        }
-        else {
-            throw new AccessDeniedException("The active user type cannot edit tasks!");
-        }*/
-    }
-
-    /**
-     * Return the delay between the end time and the estimated end time in minutes.
-     * @param projectName the project name
-     * @param taskId      the task id
-     * @return a String with the time between the end time and the estimated end time in minutes.
-     * @throws IllegalStateException if the task is not yet finished.
-     */
-    public String getDelay(String projectName, Integer taskId) throws IllegalStateException {
-        // TODO: return this.getProject(projectName).getTask(taskId).getDelay();
-        return null;
-    }
-
-    /**
-     * Return the time of the system.
-     * @return the time of the system.
-     */
-    public String getSystemTime() {
-        // TODO: return clock.getSystemTimeString();
-        return null;
-    }
-
-    /**
-     * Updates the time of the system.
-     * @param newTime the new time of the system.
-     * @throws DateTimeParseException if the text cannot be parsed.
-     * @throws IllegalArgumentException if the new time if before the old time.
-     * @post the time of the system will be set to the given time
-     */
-    public void updateSystemTime(String newTime) throws DateTimeParseException, IllegalArgumentException {
-        // TODO: clock.updateSystemTime(newTime);
-    }
-
-    /**
-     * Returns the name of the active user type.
-     * @return a string.
-     */
-    public String getUserType() {
-        // TODO: return User.getUserType();
-        return null;
-    }
-
-    /**
-     * Changes the active user type to the given type.
-     * @param user the name of the user type to change to.
-     * @throws IllegalArgumentException if the user type does not exist.
-     * @post the user type will be set to the given user type.
-     */
-    public void setUserType(String user) throws IllegalArgumentException{
-        // TODO: User.setUserType(user);
+    public void updateTaskStatus(String projectName, Integer taskIndex, String startTime, String endTime, String status) throws IllegalArgumentException {
+        // TODO: check user
+        LocalDateTime startTimeObject = TimeParser.convertStringToLocalDateTime(startTime);
+        LocalDateTime endTimeObject = TimeParser.convertStringToLocalDateTime(endTime);
+        TaskStatus taskStatus = TaskStatus.fromString(status);
+        Task task = this.projectOrganizer.getProject(projectName).getTask(taskIndex);
+        task.updateStatus(startTimeObject, endTimeObject, taskStatus);
     }
 
     /**

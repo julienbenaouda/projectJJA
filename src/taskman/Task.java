@@ -1,7 +1,7 @@
 package taskman;
 
 import java.time.Duration;
-import java.util.ArrayDeque;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -230,11 +230,13 @@ public class Task {
     /**
      * Updates the status of the task.
      *
-     * @param timeSpan the time span of the task
+     * @param startTime the start time of the task
+     * @param endTime the end time of the task
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the timeSpan is invalid
      * @post the time span and status of the task will be updated
      */
-    public void updateStatus(TimeSpan timeSpan, TaskStatus status) throws IllegalArgumentException {
+    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) throws IllegalArgumentException {
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime);
         if (status != TaskStatus.FINISHED && status != TaskStatus.FAILED){
             throw new IllegalArgumentException("The status may only be finished or failed.");
         }

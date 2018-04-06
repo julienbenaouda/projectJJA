@@ -41,7 +41,7 @@ public class ControllerTest {
         projectForm.put("description", "test description");
         projectForm.put("creationTime", "01/02/2003 04:05");
         projectForm.put("dueTime", "06/07/2008 09:10");
-        controller.addProject(projectForm);
+        controller.createProject(projectForm);
         Assert.assertTrue("The added project does not exist!", controller.projectExists(projectName));
         Assert.assertEquals("Project list should contain one project!", 1, controller.getProjectNames().size());
         Assert.assertEquals("The project name is incorrect!", projectName, controller.getProjectNames().get(0));

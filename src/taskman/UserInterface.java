@@ -1,6 +1,3 @@
-/**
- *
- */
 package taskman;
 
 import java.nio.file.AccessDeniedException;
@@ -15,6 +12,10 @@ import java.util.Scanner;
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
 public class UserInterface {
+
+    /**
+     * Represents the controller of the backend.
+     */
     private Controller controller;
 
     /**
@@ -457,7 +458,7 @@ public class UserInterface {
             form.put(key, inputString());
         }
         try {
-            controller.addProject(form);
+            controller.createProject(form);
             print("Project created successfully.\n");
             showMainMenu();
         } catch (IllegalArgumentException e)

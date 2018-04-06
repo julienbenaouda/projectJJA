@@ -4,6 +4,7 @@
 package taskman;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class represents the user manager in the taskman system.
@@ -23,7 +24,7 @@ public class UserManager {
 	 * returns the list of users
 	 * @return the list of users
 	 */
-	private HashMap<String, User> getUsers() {
+	private Map<String, User> getUsers() {
 		return users;
 	}
 
@@ -31,12 +32,25 @@ public class UserManager {
 	 * represents the list of users
 	 */
 	private HashMap<String, User> users;
-	
+
 	/**
 	 * @return the currentUser
+	 * @throws NotPermittedException if no user is logged in.
 	 */
-	public User getCurrentUser() {
-		return currentUser;
+	public User getCurrentUser() throws NotPermittedException {
+		if (this.currentUser == null) {
+			throw new NotPermittedException("No user is logged in!");
+		} else {
+			return currentUser;
+		}
+	}
+
+	/**
+	 * If a user is logged in.
+	 * @return a Boolean.
+	 */
+	public Boolean hasCurrentUser() {
+		return this.currentUser != null;
 	}
 
 	/**
@@ -52,14 +66,35 @@ public class UserManager {
 	 * represents the current user logged in
 	 */
 	private User currentUser;
-	
+
+	/**
+	 * adds a new user to the list of users
+	 * @param name the name of the user
+	 * @param password the password of the user
+	 * @param type the type of user
+	 * @throws IllegalArgumentException if the type is not valid
+	 * @post a new user is added to the list of users.
+	 */
+	public void createUser(String name, String password, String type) throws IllegalArgumentException {
+		switch (type) {
+			case "developer":
+				createDeveloper(name, password);
+				break;
+			case "projectmanager":
+				createProjectManager(name, password);
+				break;
+			default:
+				throw new IllegalArgumentException("'" + type + "' is not a valid user type!");
+		}
+	}
+
 	/**
 	 * adds a new developer to the list of users
 	 * @param name the name of the developer
 	 * @param password the password of the user
 	 * @post a new developer is added to the list of users
 	 */
-	public void createDeveloper(String name, String password)
+	private void createDeveloper(String name, String password)
 	{
 		Developer d = new Developer(name, password);
 		users.put(name, d);
@@ -71,7 +106,7 @@ public class UserManager {
 	 * @param password the password of the project manager
 	 * @post a project manager with the given name and password is added to the list of users
 	 */
-	public void createProjectManager(String name, String password)
+	private void createProjectManager(String name, String password)
 	{
 		ProjectManager pm = new ProjectManager(name, password);
 		users.put(name, pm);
@@ -98,4 +133,12 @@ public class UserManager {
 			throw new IllegalArgumentException("The password for user " + name +" is incorrect. Please try again.");
 		}
 	}
+
+	/**
+	 * Logout the current user.
+	 */
+	public void logout() {
+		setCurrentUser(null);
+	}
+
 }

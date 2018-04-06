@@ -3,6 +3,7 @@ package taskman;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 
 /**
@@ -32,8 +33,9 @@ public final class TimeParser {
      *
      * @param time a String.
      * @return a LocalDateTime.
+     * @throws DateTimeParseException if the text cannot be parsed.
      */
-    public static LocalDateTime convertStringToLocalDateTime(String time) {
+    public static LocalDateTime convertStringToLocalDateTime(String time) throws DateTimeParseException {
         return LocalDateTime.parse(time, dateFormatter);
     }
 
@@ -52,8 +54,9 @@ public final class TimeParser {
      *
      * @param duration a String in minutes.
      * @return a Duration.
+     * @throws ArithmeticException if the input minutes exceeds the capacity of Duration.
      */
-    public static Duration convertStringToDuration(String duration) {
+    public static Duration convertStringToDuration(String duration) throws ArithmeticException {
         return Duration.ofMinutes(Long.parseLong(duration.replace("minutes", "").trim()));
     }
 
