@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 /**
  * This class is responsible for storing a consistent time for the system.
  */
-public class Clock {
+public class Clock implements Entity {
 
     /**
      * Represents the time of the clock.
@@ -33,5 +33,14 @@ public class Clock {
         else {
             throw new IllegalArgumentException("New system time must be after the current system time!");
         }
+    }
+    
+    /**
+     * accepts a visitor
+     * @param v the visitor to accept
+     */
+    @Override
+    public void accept(Visitor v) {
+    	v.visitClock(this);
     }
 }

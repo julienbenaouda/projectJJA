@@ -11,7 +11,7 @@ import java.util.Stack;
  *
  * @author Jeroen Van Der Donckt
  */
-public class Task {
+public class Task implements Entity {
 
     /**
      * Creates a new task with the given values.
@@ -402,6 +402,7 @@ public class Task {
      *
      * @param v the visitor to be accepted
      */
+    @Override
     public void accept(Visitor v) {
         v.visitTask(this);
     }

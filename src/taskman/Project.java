@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
-public class Project {
+public class Project implements Entity {
 
 	/**
 	 * creates a new project with the given values
@@ -240,6 +240,7 @@ public class Project {
 	 * accepts a visitor 
 	 * @param v the visitor to be accepted
 	 */
+	@Override
 	public void accept(Visitor v) {
 		v.visitProject(this);
 	}

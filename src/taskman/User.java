@@ -8,7 +8,7 @@ package taskman;
  * @author Julien Benaouda
  *
  */
-public abstract class User {
+public abstract class User implements Entity {
 	/**
 	 * creates a new user with the given name and password
 	 * @param name the name of the user
@@ -71,4 +71,14 @@ public abstract class User {
 	 * represents the password of the user
 	 */
 	private String password;
+	
+	/**
+	 * accepts a visitor
+	 * @para v the visitor to accept
+	 */
+	@Override
+	public void accept(Visitor v)
+	{
+		v.visitUser(this);
+	}
 }
