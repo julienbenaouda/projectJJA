@@ -22,5 +22,5 @@ public class Initiator {
 		UserInterface ui = new UserInterface(controller);
 		ui.welcomeDialog();
 	}
-
+	// TODO: waarom is deze methode public?
 }
