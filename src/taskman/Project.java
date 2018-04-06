@@ -44,7 +44,7 @@ public class Project implements Entity {
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project
      */
-    public void createTask(String description, Long estimatedDuration, Double acceptableDeviation, User user) {
+    public void createTask(String description, long estimatedDuration, double acceptableDeviation, User user) {
     	if(!(user instanceof ProjectManager)) {
     		throw new OperationNotPermittedException("you are not allowed to created tasks!");
     	}
