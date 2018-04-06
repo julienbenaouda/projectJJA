@@ -5,14 +5,11 @@ package taskman;
  * @author Alexander Braekevelt, Jeroen Van Der Donckt
  */
 public enum TaskStatus {
+
     /**
-     * Available status.
+     * Inactive status.
      */
-    AVAILABLE,
-    /**
-     * Unavailable status.
-     */
-    UNAVAILABLE,
+    INACTIVE,
     /**
      * Finished status.
      */
