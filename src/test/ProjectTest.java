@@ -85,20 +85,18 @@ public class ProjectTest {
 	@Test
 	public void testIsFinishedTrue()
 	{
-		TimeSpan timespan = new TimeSpan(creation, due);
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(timespan, TaskStatus.FINISHED);
+		t.updateStatus(creation, due, TaskStatus.FINISHED);
 		Assert.assertTrue(p.isFinished());
 	}
 	
 	@Test
 	public void testIsFinishedFalse()
 	{
-		TimeSpan timespan = new TimeSpan(creation, due);
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(timespan, TaskStatus.FAILED);
+		t.updateStatus(creation, due, TaskStatus.FAILED);
 		Assert.assertFalse(p.isFinished());
 	}
 
