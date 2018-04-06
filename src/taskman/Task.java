@@ -212,6 +212,7 @@ public class Task {
                         return false;
                     }
                     else{
+                        checkStack.push(d);
                         checkStack.push(alternative);
                     }
                 }
