@@ -357,7 +357,7 @@ public class Task {
         dependencies.remove(dependency);
     }
 
-    
+
     // LOOP CHECKING CODE
 
     /**
