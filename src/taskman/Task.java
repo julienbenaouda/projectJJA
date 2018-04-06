@@ -232,7 +232,7 @@ public class Task {
      *
      * @param timeSpan the time span of the task
      * @throws IllegalArgumentException when the status is not FINISHED and not FAILED or when the timeSpan is invalid
-     * @post the start time, end time and status of the task will be updated
+     * @post the time span and status of the task will be updated
      */
     public void updateStatus(TimeSpan timeSpan, TaskStatus status) throws IllegalArgumentException {
         if (status != TaskStatus.FINISHED && status != TaskStatus.FAILED){
@@ -244,6 +244,7 @@ public class Task {
             }
         }
         setTimeSpan(timeSpan);
+        setStatus(status);
     }
 
 
@@ -258,7 +259,7 @@ public class Task {
             throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
         else {
-            return Math.round(Duration.between(getTimeSpan().getStartTime(), getTimeSpan().getEndTime()).toMinutes() - getEstimatedDuration()*(1+getAcceptableDeviation()));
+            return Math.round(Duration.between(getTimeSpan().getStartTime(), getTimeSpan().getEndTime()).toMinutes() - getEstimatedDuration()*(1 + getAcceptableDeviation()));
         }
     }
 
