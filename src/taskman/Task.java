@@ -257,7 +257,7 @@ public class Task implements Entity {
      * @return the time between the end time and the estimated end time in minutes
      * @throws IllegalStateException if the task is not yet finished.
      */
-    public Long getDelay() throws IllegalStateException {
+    public long getDelay() throws IllegalStateException {
         if (getStatus() != TaskStatus.FINISHED) {
             throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
