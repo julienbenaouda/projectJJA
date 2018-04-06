@@ -316,7 +316,7 @@ public class TaskTest {
         unavailableTask.removeDependency(unavialableTask2);
         dependencyFinished.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
         unavailableTask.addDependency(dependencyFinished);
-        dependencyFinished.removeDependency(dependencyFailed);
+        //dependencyFinished.removeDependency(dependencyFailed);
         dependencyFailed.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
         dependencyFailed.addDependency(unavialableTask2);
         dependencyFinished.updateStatus(timeSpanNull, TaskStatus.FINISHED);
@@ -324,8 +324,8 @@ public class TaskTest {
         Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
         dependencyFailed.updateStatus(timeSpanNull, TaskStatus.INACTIVE);
         dependencyFailed.removeDependency(unavialableTask2);
-        dependencyFailed.setAlternative(unavialableTask2);
         dependencyFailed.updateStatus(timeSpanNull, TaskStatus.FAILED);
+        dependencyFailed.setAlternative(unavialableTask2);
         Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
 
     }
