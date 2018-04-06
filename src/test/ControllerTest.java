@@ -109,9 +109,11 @@ public class ControllerTest {
 
     @Test
     public void user() {
-        assertNotNull("User cannot be null!", controller.getCurrentUserName());
+        assertTrue("User cannot be null!", controller.hasCurrentUser());
         assertNotEquals("User cannot be ''!", "", controller.getCurrentUserName());
-        assertEquals("The user type isn't correct!", "test", controller.getCurrentUserName());
+        controller.createUser("testUser", "testPassword", "developer");
+        controller.login("testUser", "testPassword");
+        assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUserName());
     }
 
     private void deleteFile(String path) throws AccessDeniedException {
