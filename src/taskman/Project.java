@@ -12,17 +12,22 @@ import java.util.*;
  */
 public class Project {
 
-    /**
-     * creates a new project with the given values
-     *
-     * @param name the project name
-     * @param description the project description
-     * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
-     * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
-     * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
-     * @post a new project is created with the given attributes
-     */
-    public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
+	/**
+	 * creates a new project with the given values
+	 *
+	 * @param name the project name
+	 * @param description the project description
+	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
+	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
+	 * @param user the current user
+	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+	 * @throws OperationNotPermittedException when the user doesn't have access to create a project
+	 * @post a new project is created with the given attributes
+	 */
+	public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) {
+		if(!(user instanceof ProjectManager)) {
+			throw new OperationNotPermittedException("You don't have permission to create a project!");
+		}
 		setName(name);
 		setDescription(description);
 		setCreationTime(creationTime);
@@ -33,13 +38,16 @@ public class Project {
     
     /**
      * Create a new task with the given parameters
-	 *
-	 * @param description the description of the task
-	 * @param estimatedDuration the estimated duration of the task (in minutes)
-	 * @param acceptableDeviation the acceptable deviation of the task
+     * @param description the description of the task
+     * @param estimatedDuration the estimated duration of the task (in minutes)
+     * @param acceptableDeviation the acceptable deviation of the task
+     * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project
      */
-    public void createTask(String description, Long estimatedDuration, Double acceptableDeviation) {
+    public void createTask(String description, Long estimatedDuration, Double acceptableDeviation, User user) {
+    	if(!(user instanceof ProjectManager)) {
+    		throw new OperationNotPermittedException("you are not allowed to created tasks!");
+    	}
     	Task t = new Task(description, estimatedDuration, acceptableDeviation);
     	addTaskToList(t);
     }
@@ -52,9 +60,9 @@ public class Project {
      * @post The given task is added to the project
      */
     private void addTaskToList(Task task) throws IllegalStateException { // TODO: waarom gooit dit illegal state exception?
-	 	taskList.add(task);
-	}
-
+    	taskList.add(task);
+    }
+    
     /**
      * Returns if the project is finished
      *
