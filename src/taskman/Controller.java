@@ -63,9 +63,9 @@ public class Controller {
     /**
      * Returns the name of the active user.
      * @return a string.
-     * @throws NotPermittedException if no user is logged in.
+     * @throws OperationNotPermittedException if no user is logged in.
      */
-    public String getCurrentUserName() throws NotPermittedException {
+    public String getCurrentUserName() throws OperationNotPermittedException {
         return this.userManager.getCurrentUser().getName();
     }
 
@@ -138,10 +138,12 @@ public class Controller {
      * @param estimatedDuration the estimated duration of the task.
      * @param acceptableDeviation the acceptable deviation of the task.
      * @throws IllegalArgumentException if no Project is found with the given name.
+     * @throws OperationNotPermittedException if no user is logged in.
+     * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project in the system.
      */
-    public void addTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException {
-        this.projectOrganizer.getProject(projectName).createTask(description, estimatedDuration, acceptableDeviation);
+    public void addTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException {
+        this.projectOrganizer.getProject(projectName).createTask(description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
     }
 
     /**
@@ -156,7 +158,7 @@ public class Controller {
      *                                  one of its dependencies or one of these alternatives recursively.
      * @post the alternative task of the task is set to the given task.
      */
-    public void addAlternativeToTask(String projectName, Integer taskIndex, Integer alternativeTaskIndex) throws IllegalArgumentException {
+    public void addAlternativeToTask(String projectName, Integer taskIndex, Integer alternativeTaskIndex) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
         Project project = this.projectOrganizer.getProject(projectName);
         project.getTask(taskIndex).setAlternative(project.getTask(alternativeTaskIndex));
     }
@@ -192,8 +194,8 @@ public class Controller {
      * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateTaskStatus(String projectName, Integer taskIndex, String startTime, String endTime, String status) throws IllegalArgumentException {
-        // TODO: check user
+    public void updateTaskStatus(String projectName, Integer taskIndex, String startTime, String endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
+        // TODO: check if developer is member of task team!
         LocalDateTime startTimeObject = TimeParser.convertStringToLocalDateTime(startTime);
         LocalDateTime endTimeObject = TimeParser.convertStringToLocalDateTime(endTime);
         TaskStatus taskStatus = TaskStatus.fromString(status);

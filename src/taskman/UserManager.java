@@ -35,11 +35,11 @@ public class UserManager {
 
 	/**
 	 * @return the currentUser
-	 * @throws NotPermittedException if no user is logged in.
+	 * @throws OperationNotPermittedException if no user is logged in.
 	 */
-	public User getCurrentUser() throws NotPermittedException {
+	public User getCurrentUser() throws OperationNotPermittedException {
 		if (this.currentUser == null) {
-			throw new NotPermittedException("No user is logged in!");
+			throw new OperationNotPermittedException("No user is logged in!");
 		} else {
 			return currentUser;
 		}
