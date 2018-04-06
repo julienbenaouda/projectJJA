@@ -16,12 +16,14 @@ public class ProjectTest {
 	private Project p;
 	private LocalDateTime creation;
 	private LocalDateTime due;
+	private User u;
 
 	@Before
 	public void setUp() {
+		u = new ProjectManager("test", "test");
 		creation = LocalDateTime.of(2018, Month.MARCH, 03, 12,0);
 		due = LocalDateTime.of(2018, Month.MARCH, 9, 19, 0);
-		p = new Project("test", "testdesc", creation, due);
+		p = new Project("test", "testdesc", creation, due, u);
 	}
 
 	@Test
@@ -35,23 +37,35 @@ public class ProjectTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testProjectEarlyEndDate() {
 		due = LocalDateTime.of(2018, Month.MARCH, 1, 14, 0);
-		p = new Project("test", "testdesc", creation, due);
+		p = new Project("test", "testdesc", creation, due, u);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testProjectNoName()
 	{
-		p = new Project("", "testdesc", creation, due);
+		p = new Project("", "testdesc", creation, due, u);
+	}
+	
+	@Test(expected=OperationNotPermittedException.class)
+	public void testProjectIllegalUser() {
+		u = new Developer("test", "test");
+		p = new Project("test", "testdesc", creation, due, u);
 	}
 	
 	@Test
-	public void testAddTask()
+	public void testAddTask_legal()
 	{
-		p.createTask("taskdesc", 20l, 5.0);
+		p.createTask("taskdesc", 20l, 5.0, u);
 		Task added = p.getTasks().get(0);
 		Assert.assertEquals("taskdesc", added.getDescription());
 		Assert.assertEquals(20l, added.getEstimatedDuration());
 		Assert.assertEquals(5.0, added.getAcceptableDeviation(), 0.0);
+	}
+	
+	@Test(expected=OperationNotPermittedException.class)
+	public void testAddTask_illegalUser() {
+		u = new Developer("test", "test");
+		p.createTask("taskdesc", 20l, 5.0, u);
 	}
 	
 	@Test (expected = IndexOutOfBoundsException.class)
@@ -63,7 +77,7 @@ public class ProjectTest {
 	@Test
 	public void testRemoveTask()
 	{
-		p.createTask("test", 5l, 5.0);
+		p.createTask("test", 5l, 5.0, u);
 		p.removeTask(p.getTasks().get(0));
 		Assert.assertTrue(p.getTasks().size() == 0);
 	}
@@ -72,7 +86,7 @@ public class ProjectTest {
 	public void testIsFinishedTrue()
 	{
 		TimeSpan timespan = new TimeSpan(creation, due);
-		p.createTask("taskdesc", 20l, 5.0);
+		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		t.updateStatus(timespan, TaskStatus.FINISHED);
 		Assert.assertTrue(p.isFinished());
@@ -82,7 +96,7 @@ public class ProjectTest {
 	public void testIsFinishedFalse()
 	{
 		TimeSpan timespan = new TimeSpan(creation, due);
-		p.createTask("taskdesc", 20l, 5.0);
+		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		t.updateStatus(timespan, TaskStatus.FAILED);
 		Assert.assertFalse(p.isFinished());
