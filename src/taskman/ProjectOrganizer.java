@@ -69,11 +69,12 @@ public class ProjectOrganizer {
      * @param description the project description
      * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
      * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
+     * @param user the user logged in
      * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
      * @post a Project with the given properties will be added to the ProjectOrganizer.
      */
-    public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) throws IllegalArgumentException {
-        this.projects.add(new Project(name, description, creationTime, dueTime));
+    public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) throws IllegalArgumentException {
+        this.projects.add(new Project(name, description, creationTime, dueTime, user));
     }
 
 }
