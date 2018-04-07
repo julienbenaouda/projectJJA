@@ -25,7 +25,7 @@ public class UserManagerTest {
 
 	@Test
 	public void testCreateDeveloper() {
-		u.createDeveloper("test", "myPassword");
+		u.createUser("test", "myPassword", "developer");
 		u.login("test", "myPassword");
 		assertEquals("test", u.getCurrentUser().getName());
 		assertEquals("myPassword", u.getCurrentUser().getPassword());
@@ -33,7 +33,7 @@ public class UserManagerTest {
 
 	@Test
 	public void testCreateProjectManager() {
-		u.createProjectManager("test", "myPassword");
+		u.createUser("test", "myPassword", "projectmanager");
 		u.login("test", "myPassword");
 		assertEquals("test", u.getCurrentUser().getName());
 		assertEquals("myPassword", u.getCurrentUser().getPassword());
@@ -46,7 +46,7 @@ public class UserManagerTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testLogin_illegalPassword() {
-		u.createDeveloper("test", "myPassword");
+		u.createUser("test", "myPassword", "developer");
 		u.login("test", "test");
 	}
 }

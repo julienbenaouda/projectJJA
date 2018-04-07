@@ -11,7 +11,7 @@ import java.util.Stack;
  *
  * @author Jeroen Van Der Donckt
  */
-public class Task {
+public class Task implements Entity {
 
     /**
      * Creates a new task with the given values.
@@ -257,7 +257,7 @@ public class Task {
      * @return the time between the end time and the estimated end time in minutes
      * @throws IllegalStateException if the task is not yet finished.
      */
-    public Long getDelay() throws IllegalStateException {
+    public long getDelay() throws IllegalStateException {
         if (getStatus() != TaskStatus.FINISHED) {
             throw new IllegalStateException("Cannot calculate delay of task if not finished!");
         }
@@ -402,6 +402,7 @@ public class Task {
      *
      * @param v the visitor to be accepted
      */
+    @Override
     public void accept(Visitor v) {
         v.visitTask(this);
     }

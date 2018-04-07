@@ -81,23 +81,23 @@ public class ProjectTest {
 	}
 	
 	@Test
-	public void testIsFinishedTrue()
+	public void testGetStatusFinished()
 	{
-		TimeSpan timespan = new TimeSpan(creation, due);
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(timespan, TaskStatus.FINISHED);
-		Assert.assertTrue(p.getStatus());
+		t.updateStatus(creation, due, TaskStatus.FINISHED);
+		Assert.assertEquals("active", p.getStatus(creation));
+		Assert.assertEquals("finished", p.getStatus(due));
 	}
 	
 	@Test
-	public void testIsFinishedFalse()
+	public void testGetStatusFailed()
 	{
-		TimeSpan timespan = new TimeSpan(creation, due);
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(timespan, TaskStatus.FAILED);
-		Assert.assertFalse(p.getStatus());
+		t.updateStatus(creation, due, TaskStatus.FAILED);
+		Assert.assertEquals("active", p.getStatus(creation));
+		Assert.assertEquals("failed", p.getStatus(due));
 	}
 
 }

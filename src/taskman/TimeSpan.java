@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
-public class TimeSpan {
+public class TimeSpan implements Entity {
 
 	/**
 	 * Creates a new timespan object with given starttime and endtime
@@ -83,5 +83,15 @@ public class TimeSpan {
 	 * represents the end time of the timespan
 	 */
 	private LocalDateTime endTime;
+	
+	/**
+	 * accepts a visitor
+	 * @param v the visitor to accept
+	 */
+	@Override
+	public void accept(Visitor v)
+	{
+		v.visitTimeSpan(this);
+	}
 
 }

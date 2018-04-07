@@ -3,10 +3,45 @@
 title TASKMAN\n
 
   package taskman {
+    class Initiator {
+        {static} + void main(String[] args)
+        {static} + void initialize()        
+    }
+  }
+
+  package taskman {
     class Clock {
-        - systemTime : LocalDateTime
-        + LocalDateTime getSystemTime()
-        + void updateSystemTime(LocalDateTime timestamp)
+        - time : LocalDateTime
+
+        + LocalDateTime getTime()
+        + void updateSystemTime(LocalDateTime newTime)
+        + accept(Visitor v)
+    }
+  }
+
+  package taskman {
+    class TimeParser {
+        {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+
+        {static} + String convertLocalDateTimeToString(LocalDateTime time)
+        {static} + LocalDateTime convertStringToLocalDateTime(String time)       
+    }
+  }
+
+  package taskman {
+    interface call Entity {
+        + void accept(Visitor v)
+    }
+  }
+
+
+  package taskman {
+    interface class Visitor {
+        + void visitProject(Project p)
+        + void visitTask(Task t)
+        + void visitTimeSpan(TimeSpan t)
+        + void visitClock(Clock c)
+        + void visitUser(User u)
     }
   }
   
@@ -43,6 +78,8 @@ title TASKMAN\n
         {static} + void importFromXML(String path)
     }
   }
+
+
   
 
   package taskman {
@@ -52,11 +89,9 @@ title TASKMAN\n
         - creationTime : LocalDateTime
         - dueTime : LocalDateTime
         - taskList : ArrayList<Task>
-        + Project(String name, String description, LocalDateTime startTime, LocalDateTime dueTime)
-        - void addTask(Task t)
-        + createTask(String description, long estimatedDuration, double acceptableDeviation)
-        + boolean isFinished()
-        + void removeTask(Task task)
+
+        + Project(String name, String description, LocalDateTime startTime, LocalDateTime dueTime, User user)
+        + createTask(String description, long estimatedDuration, double acceptableDeviation, User user)
         + String getName()
         - void setName(String name)
         + String getDescription()
@@ -67,18 +102,36 @@ title TASKMAN\n
         - void setDueTime(LocalDateTime dueTime)
         + List<Task> getTasks()
         + Task getTask(int index)
+        - void addTaskToList(Task t)
+        + void removeTask(Task task)
+        + boolean isFinished()
+        + void accept(Visitor v)
+    }
+  }
+
+
+  package taskman {
+    class ProjectOrganizer {
+        - projects : Collection<Project>
+
+        + ProjectOrganizer()
+        + Project getProject(String name)
+        + createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user
+        + Collection<String> getProjectNames()
+        + boolean projectExists())
     }
   }
   
 
   package taskman {
     enum TaskStatus {
-      AVAILABLE
-      UNAVAILABLE
-      FINISHED
-      FAILED
+        INACTIVE
+        FINISHED
+        FAILED
 
-     + boolean isFinal()
+        {static} + TaskStatus fromString(String s)
+        + String toString()
+        + boolean isFinal()
     }
   }
   
@@ -86,33 +139,36 @@ title TASKMAN\n
   package taskman {
     class Task {
         - description : String
-        - estimatedDuration : Duration
-        - acceptableDeviation : Double
+        - estimatedDuration : long
+        - acceptableDeviation : double
         - dependencies : ArrayList<Task>
         - TimeSpan timesSpan
         - TaskStatus status
-        + Task(String description, String estimatedDuration, String acceptableDeviation)
-        + Task(String description, String estimatedDuration, String acceptableDeviation, TimeSpan timeSpan)
-        + getStatus()
-        - setStatus(TaskStatus status)
+
+        + Task(String description, long estimatedDuration, double acceptableDeviation)
+        - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskStatus status)
         + String getDescription()
         - void setDescription(String description)
-        + String getEstimatedDuration()
-        - void setEstimatedDuration(String duration)
-        + String getAcceptableDeviation()
-        - void setAcceptableDeviation(String acceptableDeviation)
-        - void setTimeSpan(TimeSpan timeSpan)
+        + long getEstimatedDuration()
+        - void setEstimatedDuration(long duration)
+        + double getAcceptableDeviation()
+        - void setAcceptableDeviation(double acceptableDeviation)
         + timeSpan getTimeSpan()
-        + void updateStatus(TimeSpan timespan)
-        + String getDelay()
+        - void setTimeSpan(TimeSpan timeSpan)
+        + getStatus()
+        - setStatus(TaskStatus status)
+        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status)
+        + boolean isAvailable()
+        + isFinished()
+        + long getDelay()
         + Task getAlternative()
-        + void setAlternative(Task t)
+        + void setAlternative(Task task)
         + ArrayList<Task> getDependencies()
         - void setDependencies(ArayList<Task> tasks)
-        + void addDependency(Task t)
+        + void addDependency(Task task)
         + void removeDependency(Task task)
-        + isFinished()
-        {static} - boolean containsLoop(Task task, Task other)
+        {static} - boolean containsLoop(Task root, Task searchedTask)
+        + void accept(Visitor v)
     }
   }
 
@@ -121,11 +177,14 @@ title TASKMAN\n
     class TimeSpan {
         - startTime: LocalDateTime
         - endTime: LocalDateTime
+
         + TimeSpan(LocalDateTime startTime, LocalDateTime endtime)
         + LocalDateTime getStartTime()
-        + LocalDateTime getEndTime()
         - void setStartTime(LocalDateTime startTime)
+        + LocalDateTime getEndTime()
         - void setEndTime(LocalDateTime endTime)
+        + boolean canHaveAsEndTime(LocalDateTime endtime)
+        + accept(Visitor v)
     }
   }  
 
@@ -138,13 +197,17 @@ title TASKMAN\n
      class UserManager {
         - users: HashMap<String, User>
         - currentUser: User
+
         + UserManager()
+        - Map<String, User> getUsers()
         + User getCurrentUser()
         + void setCurrentUser(User user)
-        - Map<String, User> getUsers()
-        + createDeveloper(String name, String password)
-        + createProjectManager(String name, String password)
+        + boolean hasCurrentUser()
+        + void createUser(String name, String password, String type)
+        - void createDeveloper(String name, String password)
+        - void createProjectManager(String name, String password)
         + void login(String name, String password)
+        + void logout()
      }
   }
 
@@ -152,23 +215,25 @@ title TASKMAN\n
      abstract class User {
         - name: String
         - password: String
+
+        + User(String name, String password)
         + String getName()
+        - void setName(String name)
         + String getPassword()
-        + User(name, password)
-        - void setName()
-        - void setPassword()
+        - void setPassword(String password)
+        + accept(Visitor v)
      }
   }
 
   package taskman {
      class ProjectManager {
-        + ProjectManager(name, password)
+         + ProjectManager(String name, String password)
      }
   }
 
   package taskman {
      class Developer {
-        Developer(name, password)
+        + Developer(String name, String password)
      }
   }
 
@@ -204,8 +269,14 @@ title TASKMAN\n
   
 
   package taskman {
-    class XmlException {
-        + XmlException(String message)
+    class ImportExportException {
+        + ImportExportException(String message)
+    }
+  }
+
+  package taskman {
+    class OperationNetPermittedException {
+        + OperationNotPermittedException(String message)
     }
   }  
    
@@ -213,16 +284,19 @@ title TASKMAN\n
     class XmlObject {
         - doc : Document
         - element : Element
+
         + XmlObject()
         - XmlObject(Document doc, Element e)
         + void exportTo(String path)
         {static} + XmlObject importFrom(String path)
-        + XmlObject addXmlObject(String name)
         + List<XmlObject> getXmlObjects(String name)
-        + void addAttribute(String name, String content)
+        + XmlObject getXmlObject(String name)
+        + XmlObject createXmlLObject(String name)
         + String getAttribute(String name)
-        + void addText(String element, String text)
+        + void addAttribute(String name, String value)        
         + List<String> getTexts(String name)
+        + String getText(String name)
+        + void addText(String element, String value)
     }
   }
   
