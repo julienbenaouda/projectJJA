@@ -1,6 +1,6 @@
 package test;
 
-import taskman.TaskStatus;
+import taskman.Backend.TaskStatus;
 import org.junit.Assert;
 import org.junit.Test;
 

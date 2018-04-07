@@ -1,7 +1,7 @@
 /**
  * 
  */
-package taskman;
+package taskman.Backend;
 
 /**
  * This class reprents an OperationNotPermittedException. It is thrown when a user doesn't have permission to perform an operation.

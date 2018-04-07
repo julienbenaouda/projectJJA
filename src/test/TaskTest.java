@@ -3,8 +3,8 @@ package test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import taskman.Task;
-import taskman.TaskStatus;
+import taskman.Backend.Task;
+import taskman.Backend.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

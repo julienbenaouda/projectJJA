@@ -1,4 +1,4 @@
-package taskman;
+package taskman.Backend;
 
 /**
  * This enum is responsible for storing the status of a Task.

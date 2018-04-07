@@ -1,7 +1,9 @@
 /**
  * 
  */
-package taskman;
+package taskman.Backend;
+
+import taskman.Frontend.UserInterface;
 
 /**
  * This class is responsible for the program initialisation. It does the initial setup when the program starts up.

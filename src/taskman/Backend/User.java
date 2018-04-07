@@ -1,7 +1,7 @@
 /**
  * 
  */
-package taskman;
+package taskman.Backend;
 
 /**
  * This class represents a user in the system.
