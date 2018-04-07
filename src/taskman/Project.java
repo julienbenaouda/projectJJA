@@ -20,7 +20,7 @@ public class Project {
 	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
 	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
 	 * @param user the current user
-	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format. TODO: is dit nodig?
 	 * @throws OperationNotPermittedException when the user doesn't have access to create a project
 	 * @post a new project is created with the given attributes
 	 */
@@ -64,17 +64,19 @@ public class Project {
     }
     
     /**
-     * Returns if the project is finished
-     *
-     * @return a Boolean
+     * Returns the status of the project (active, finished, failed)
+     * @return a String
      */
-    public Boolean isFinished() {
+    public String getStatus(LocalDateTime systemtime) {
+    	if (systemtime.isBefore(this.dueTime)) {
+    		return "active";
+		}
 		for (Task task: taskList) {
 			if (!task.isFinished()) {
-				return false;
+				return "failed";
 			}
 		}
-		return true;
+		return "finished";
 	}
 
     /**
@@ -228,6 +230,14 @@ public class Project {
      */
     public ArrayList<Task> getTasks() {
 		return ((ArrayList<Task>)taskList.clone());
+	}
+
+	/**
+	 * Return the number of tasks in the project.
+	 * @return an Integer.
+	 */
+	public Integer getNumberOfTasks() {
+    	return this.taskList.size();
 	}
 
 

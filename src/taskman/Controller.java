@@ -2,6 +2,7 @@ package taskman;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -70,14 +71,6 @@ public class Controller {
     }
 
     /**
-     * If a user is logged in into the system.
-     * @return a Boolean.
-     */
-    public Boolean hasCurrentUser() {
-        return this.userManager.hasCurrentUser();
-    }
-
-    /**
      * Adds a new user to the system.
      * @param name the name of the user.
      * @param password the password of the user.
@@ -109,6 +102,24 @@ public class Controller {
     }
 
     /**
+     * Returns all Project names.
+     * @return a Collection of Strings.
+     */
+    public Collection<String> getProjectNames() {
+        return this.projectOrganizer.getProjectNames();
+    }
+
+    /**
+     * Return the status (active, finished, failed) of the project with the given name.
+     * @param projectname a String.
+     * @return a String.
+     * @throws IllegalArgumentException if no Project is found with the given name.
+     */
+    public String getProjectStatus(String projectname) throws IllegalArgumentException {
+        return this.projectOrganizer.getProject(projectname).getStatus(this.clock.getTime());
+    }
+
+    /**
      * Returns the details of the Project with the given name.
      * @param name a String with the name of the Project.
      * @return a Map with the details of the Project with the given name.
@@ -117,6 +128,32 @@ public class Controller {
     public Map<String, String> getProjectDetails(String name) throws IllegalArgumentException {
         // TODO: return getProject(name).getProjectDetails();
         return null;
+    }
+
+    /**
+     * Add a Project with the properties.
+     * @param name the project name.
+     * @param description the project description.
+     * @param dueTime the due time of the project. (dd/mm/yyyy hh:mm)
+     * @throws DateTimeParseException if the dueTime cannot be parsed.
+     * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+     * @post a Project with the given properties will be added to the ProjectOrganizer.
+     */
+    public void createProject(String name, String description, String dueTime) throws DateTimeParseException, IllegalArgumentException {
+        LocalDateTime creationTimeObject = clock.getTime();
+        LocalDateTime dueTimeObject = TimeParser.convertStringToLocalDateTime(dueTime);
+        User user = this.userManager.getCurrentUser();
+        this.projectOrganizer.createProject(name, description, creationTimeObject, dueTimeObject, user);
+    }
+
+    /**
+     * Return the number of tasks of a project.
+     * @param projectName the name of the project.
+     * @return an Integer.
+     * @throws IllegalArgumentException if no Project is found with the given name.
+     */
+    public Integer getNumberOfTasks(String projectName) {
+        return this.projectOrganizer.getProject(projectName).getNumberOfTasks();
     }
 
     /**
@@ -142,7 +179,7 @@ public class Controller {
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project in the system.
      */
-    public void addTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException {
+    public void createTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException {
         this.projectOrganizer.getProject(projectName).createTask(description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
     }
 

@@ -1,10 +1,8 @@
 package taskman;
 
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 /**
  * This class represents the user interface of the taskman program.
@@ -35,225 +33,218 @@ public class UserInterface {
     }
 
     /**
-     * Prints the welcome dialog
+     * Starts the user interface.
      */
-    public void welcomeDialog()
+    public void start()
     {
-        StringBuilder message = new StringBuilder("Welcome to the taskman project manager.\n");
-        print(message.toString());
-        showUserChoiceDialog();
+        println("Welcome to the taskman project manager!\n");
+        startMenu();
+        println("\nThank you for using the taskman project manager!");
     }
 
     /**
-     * Shows a dialog where a user type can be chosen.
-     *
+     * Shows a dialog where a user can login to the system.
      * @post the user type is set to the specified type.
      */
-    public void showUserChoiceDialog()
+    private void startMenu()
     {
-        StringBuilder message = new StringBuilder();
-        message.append("In which user mode would you like to run the program\n");
-        message.append("options:\n");
-        message.append("1 - regular user\n2 - developer\n");
-        message.append("Choose option:");
-        print(message.toString());
-        int input = inputInt();
-        try {
-            switch (input) {
-                case 1: controller.setUserType("REGULARUSER");
-                    break;
-                case 2: controller.setUserType("DEVELOPER");
-                    break;
-                default: print("Invalid argument, please try again.\n");
-                    showUserChoiceDialog();
-                    break;
+        String[] options = new String[]{
+                "login",
+                "create user",
+                "import system from file",
+                "export system to file",
+                "exit"
+        };
+        while (true) {
+            printTitle("start");
+            switch (inputOption(options)) {
+                case 0: login(); break;
+                case 1: userCreationMenu(); break;
+                case 2: importFromFile(); break;
+                case 3: exportToFile(); break;
+                default: return;
             }
-        } catch(IllegalArgumentException e) {
-            print("Invalid option, please try again");
-            showUserChoiceDialog();
         }
-        showMainMenu();
+    }
+
+    /**
+     * Let the user log in to the system and go to the main menu.
+     */
+    private void login() {
+        String[] questions = new String[]{"username", "password"};
+        String[] answers = inputAnswers(questions);
+        try {
+            controller.login(answers[0], answers[1]);
+        } catch (IllegalArgumentException e) {
+            println(e.getMessage());
+            return;
+        }
+        mainMenu();
+        controller.logout();
+    }
+
+    /**
+     * Let the user create a new account.
+     */
+    private void userCreationMenu() {
+        String[] questions = new String[]{"username", "password", "type"};
+        String[] answers = inputAnswers(questions);
+        try {
+            controller.createUser(answers[0], answers[1], answers[2]);
+        } catch (IllegalArgumentException e) {
+            println(e.getMessage());
+        }
+    }
+
+    /**
+     * Lets the user import a path to an xml file and converts that xml file into project data.
+     * @post all system and project data is restored from the xml file.
+     */
+    private void importFromFile()
+    {
+        try {
+            controller = Controller.importSystem(inputString("Path to xml file:"));
+            println("Data imported successfully.");
+        } catch(ImportExportException e) {
+            println("Error while parsing the xml file: " +e.getMessage());
+        }
+    }
+
+    /**
+     * Exports all system and project data to a file with the entered path.
+     * @post all system and project data is exported to an xml file.
+     */
+    private void exportToFile()
+    {
+        try {
+            controller.exportSystem(inputString("Path to file:"));
+            print("Data exported successfully.\n");
+        } catch (ImportExportException e) {
+            print("Error while exporting data: " +e.getMessage() +"\n");
+        }
     }
 
     /**
      * Shows the main menu of the program and lets the user chose an option. If the user enters a non valid number, the menu is shown again.
      */
-    public void showMainMenu()
+    private void mainMenu()
     {
-        String[] items = new String[9];
-        items[0] = "list all projects";
-        items[1] = "open project";
-        items[2] = "add new project";
-        items[3] = "4 - advance system time";
-        items[4] = "import data";
-        items[5] = "export data";
-        items[6] = "change user";
-        items[7] = "get system time";
-        items[8] = "9 - quit";
-        showMenu(items);
-        int input = inputInt();
-        switch (input) {
-            case 1: listProjects();
-                break;
-            case 2: showProjectMenu();
-                break;
-            case 3: createProject();
-                break;
-            case 4: advanceSystemTime();
-                break;
-            case 5: importFile();
-                break;
-            case 6: exportFile();
-                break;
-            case 7: showUserChoiceDialog();
-                break;
-            case 8: showSystemTime();
-                break;
-            case 9: System.exit(0);
-                break;
-            default: print("Invalid number, please try again\n");
-                showMainMenu();
-                break;
+        String[] options = new String[]{
+                "show project details",
+                "create project",
+                "create task",
+                "plan task",
+                "update task status",
+                "add alternative to task",
+                "add dependency to task",
+                "show system time",
+                "advance system time",
+                "logout"
+        };
+        while (true) {
+            printTitle("main menu");
+            switch (inputOption(options)) {
+                case 0: showProjectDetails(); break;
+                case 1: createProject(); break;
+                case 2: createTask(); break;
+                case 3: planTask(); break;
+                case 4: updateTaskStatus(); break;
+                case 5: addAlternativeToTask(); break;
+                case 6: addDependencyToTask(); break;
+                case 7: showSystemTime(); break;
+                case 8: advanceSystemTime(); break;
+                default: return;
+            }
+        }
+    }
+
+    /**
+     * Select a project.
+     * @return the name of the project.
+     */
+    public String selectProject() {
+        String[] names = (String[]) controller.getProjectNames().toArray();
+        String[] options = new String[names.length];
+        for (int i = 0; i < names.length; i++){
+            options[i] = names[i] + " (Status: " + controller.getProjectStatus(names[i]) + ")";
+        }
+        return names[inputOption(options)];
+    }
+
+    /**
+     * Prints the list of projects.
+     */
+    private void showProjectDetails() {
+        printTitle("projects");
+        String project = selectProject();
+
+        printTitle("project details of '" + project + "'");
+        println(mapToString(controller.getProjectDetails(project)));
+
+        String[] options = new String[controller.getNumberOfTasks(project)];
+        for (int index = 0; index < options.length; index++) {
+            options[index] = mapToString(controller.getTaskDetails(project, index));
+        }
+        Integer taskIndex = inputOption(options);
+
+
+    }
+
+    /**
+     * Creates a new project.
+     * @post a new project is created in the system with the entered parameters.
+     */
+    private void createProject() {
+        String[] questions = new String[]{"name:", "description:", "dueTime:"};
+        String[] answers = inputAnswersWithCancel(questions);
+        if (answers == null) return; // Cancelled
+        try {
+            controller.createProject(answers[0], answers[1], answers[2]);
+            println("Project created successfully.");
+        } catch (DateTimeParseException | IllegalArgumentException e) {
+            println("Error while creating project: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a task.
+     * @post a new task is created.
+     */
+    private void createTask() {
+        String[] names = (String[]) controller.getProjectNames().toArray();
+        String project = names[inputOption(names)];
+        if (inputCancel()) return; // Cancelled
+        String[] questions = new String[]{"description:", "estimatedDuration:", "acceptableDeviation:"};
+        String[] answers = inputAnswersWithCancel(questions);
+        if (answers == null) return; // Cancelled
+        try {
+            Long estimatedDuration = Long.parseLong(answers[2]);
+            Double acceptableDeviation = Double.parseDouble(answers[3]);
+            controller.createTask(project, answers[0], estimatedDuration, acceptableDeviation);
+            println("Task created successfully.");
+        } catch (DateTimeParseException | IllegalArgumentException e) {
+            println("Error while creating task: " + e.getMessage());
         }
     }
 
     /**
      * Show system time.
      */
-    public void showSystemTime() {
-        StringBuilder sb = new StringBuilder("The system time is: ");
-        sb.append(controller.getSystemTime());
-        sb.append("\n");
-        print(sb.toString());
-        showMainMenu();
-
+    private void showSystemTime() {
+        println("The system time is: " + controller.getSystemTime());
     }
 
     /**
-     * Prints the list of projects. Only the project names are printed.
+     * Advances the system time to the new time.
+     * @post the system time is set to the entered time.
      */
-    public void listProjects() {
-        StringBuilder message = new StringBuilder();
-        for (String projectName : controller.getProjectNames()){
-            message.append(projectName + "\n");
-        }
-        print(message.toString());
-        showMainMenu();
-    }
-
-    /**
-     * Lets the user import a path to an xml file and converts that xml file into project data.
-     *
-     * @post all system and project data is restored from the xml file.
-     */
-    public void importFile()
+    private void advanceSystemTime()
     {
-        print("Path to xml file: ");
-        String path = inputString();
         try {
-            controller = Controller.importSystem(path);
-            print("Data imported successfully.");
-            showMainMenu();
-        }
-        catch(ImportExportException e)
-        {
-            print("Error while parsing the xml file: " +e.getMessage() +"\n");
-            showMainMenu();
-        }
-    }
-
-    /**
-     * Exports all system and project data to a file with the entered path
-     *
-     * @post all system and project data is exported to an xml file.
-     */
-    public void exportFile()
-    {
-        print("Path to file: ");
-        String path = inputString();
-        try {
-            controller.exportSystem(path);
-            print("Data exported successfully.\n");
-            showMainMenu();
-        } catch (ImportExportException e)
-        {
-            print("Error while exporting data: " +e.getMessage() +"\n");
-            showMainMenu();
-        }
-    }
-
-    /**
-     * lets the user enter a project.
-     */
-    public void showProjectMenu()
-    {
-        print("Project name: ");
-        String name = inputString();
-        if(controller.projectExists(name)) {
-            showProjectMenu(name);
-        } else
-        {
-            print("A project with the given name does not exist, please try again.\n");
-            showMainMenu();
-        }
-    }
-
-    /**
-     * Shows the project menu for a given project and let's the user choose an option.
-     *
-     * @param name the name of the project to show options for.
-     */
-    public void showProjectMenu(String name)
-    {
-        String[] items = new String[7];
-        items[0] = "view project details";
-        items[1] = "view task details";
-        items[2] = "add task\n";
-        items[3] = "update task status";
-        items[4] = "add dependency";
-        items[5] = "add alternative to task";
-        items[6] = "back to main menu";
-        showMenu(items);
-        int option = inputInt();
-        switch (option)
-        {
-            case 1: showProjectDetails(name);
-                break;
-            case 2: showTaskDetails(name);
-                break;
-            case 3: try {
-                createTask(name);
-            } catch (IllegalArgumentException e) {
-                print("Invalid arguments while creating task: " + e.getMessage());
-                showProjectMenu(name);
-            }
-                break;
-            case 4: try {
-                updateTaskStatus(name);
-            } catch (IllegalArgumentException e) {
-                print("Invalid argument while updating task status: " + e.getMessage());
-                showProjectMenu(name);
-            }
-                break;
-            case 5: try {
-                addDependency(name);
-                showProjectMenu(name);
-            } catch (IllegalArgumentException e)
-            {
-                print("Error wile adding dependency: " +e.getMessage() +"\n");
-                showProjectMenu(name);
-            } catch(AccessDeniedException e) {
-                print("You don't have enough rights to add a dependency.\n");
-                showProjectMenu(name);
-            }
-                break;
-            case 6: addAlternative(name);
-                break;
-            case 7: showMainMenu();
-                break;
-            default: print("Invalid option, please try again.");
-                showProjectMenu(name);
-                break;
+            controller.updateSystemTime(inputString("New system time:"));
+            print("Time updated successfully.\n");
+        } catch (DateTimeParseException | IllegalArgumentException e) {
+            println(e.getMessage());
         }
     }
 
@@ -262,23 +253,15 @@ public class UserInterface {
      *
      * @param name the name of the project
      */
-    public void addAlternative(String name)
+    public void addAlternativeToTask(String name)
     {
-        print("Enter the id of the task for which to add an alternative: ");
-        int taskID = inputInt();
-        print("Enter the id of the alaternative task: ");
-        int alternativeID = inputInt();
+        int taskID = inputInteger("Enter the index of the task for which to add an alternative:");
+        int alternativeID = inputInteger("Enter the index of the alaternative task:");
         try {
             controller.addAlternativeToTask(name, taskID, alternativeID);
             print("Alternative added successfully.\n");
-            showProjectMenu(name);
-        } catch (IllegalArgumentException e)
-        {
-            print("Error when adding the alternative: " +e.getMessage());
-            showProjectMenu(name);
-        } catch( IllegalStateException e){
-            print ("Error while adding the alternative: " + e.getMessage());
-            showProjectMenu(name);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            print("Error when adding the alternative: " + e.getMessage());
         }
     }
 
@@ -289,83 +272,15 @@ public class UserInterface {
      * @throws AccessDeniedException    the access denied exception
      * @throws IllegalArgumentException the illegal argument exception
      */
-    public void addDependency(String name) throws AccessDeniedException, IllegalArgumentException
+    public void addDependencyToTask(String name) throws AccessDeniedException, IllegalArgumentException
     {
         print("enter the ID of the task for which to add a dependency: ");
-        int taskID = inputInt();
+        int taskID = inputInteger();
         print("Enter the id of the dependency: ");
-        int dependencyID = inputInt();
+        int dependencyID = inputInteger();
         controller.addDependencyToTask(name, taskID, dependencyID);
         print("Dependency added successfully.\n");
         showProjectMenu(name);
-    }
-
-    /**
-     * Shows the details of the given project.
-     *
-     * @param name the name of the project to show details for
-     */
-    public void showProjectDetails(String name) {
-        /* TODO:
-        StringBuilder sb = new StringBuilder();
-        try {
-            HashMap<String, String> details = controller.getProjectDetails(name);
-            for (String key: details.keySet()) {
-                sb.append(key + ": " + details.get(key) + "\n");
-            }
-            print(sb.toString());
-            showProjectMenu(name);
-        } catch (IllegalArgumentException e) {
-            print("A project with the specified name does not exist. Please try again");
-            showMainMenu();
-        }
-        */
-    }
-
-    /**
-     * Shows the task details of the given project.
-     *
-     * @param name the name of the project to show the tasks details for
-     */
-    public void showTaskDetails(String name) {
-        /* TODO:
-        StringBuilder sb = new StringBuilder();
-        try {
-            for (int id : controller.getTasksOfProject(name)){
-                HashMap<String, String> details = controller.getTaskDetails(name, id);
-                for (String key : details.keySet()){
-                    sb.append(key + ": " + details.get(key) + "\n");
-                }
-            }
-            print(sb.toString());
-            showProjectMenu(name);
-        } catch (IllegalArgumentException e) {
-            print("A project with the specified name does not exist. Please try again");
-            showMainMenu();
-        }
-        */
-    }
-
-    /**
-     * Creates a task for the given project.
-     *
-     * @param name the name of the project to create the task for
-     * @post a new task is created and added to the given project
-     */
-    public void createTask(String name) {
-        HashMap<String, String> form =  controller.getTaskCreationForm();
-        for (String key: form.keySet()){
-            print(key + ": ");
-            form.put(key, inputString());
-        }
-        try{
-            controller.addTask(name, form);
-            print("Task added successfully\n");
-            showProjectMenu(name);
-        } catch (IllegalArgumentException e){
-            print("Error while creating task: " + e.getMessage());
-            showProjectMenu(name);
-        }
     }
 
     /**
@@ -419,7 +334,7 @@ public class UserInterface {
         try{
             showAvailableTasks(name);
             print("task ID (in case you want to cancel updating the task status type 0): "); // task ID will never be 0 (lowest possible value = 1)
-            int id = inputInt();
+            int id = inputInteger();
             if (id != 0) {
                 HashMap<String, String> form = fillInTaskUpdateForm();
                 if (form != null){
@@ -446,117 +361,165 @@ public class UserInterface {
     }
 
     /**
-     * creates a new project
-     *
-     * @post a new project is created in the system with the entered parameters.
+     * Converts a map with strings to a string.
+     * @param map tha map with strings.
+     * @return the resulting string.
      */
-    public void createProject() {
-        /* TODO:
-        HashMap<String, String> form = controller.getProjectCreationForm();
-        for(String key: form.keySet()) {
-            print(key + ": ");
-            form.put(key, inputString());
+    private String mapToString(Map<String, String> map) {
+        String str = "";
+        for (Map.Entry<String, String> entry: map.entrySet()) {
+            str += entry.getKey() + ": " + entry.getValue() + "\n";
         }
-        try {
-            controller.createProject(form);
-            print("Project created successfully.\n");
-            showMainMenu();
-        } catch (IllegalArgumentException e)
-        {
-            print("Error while creating project: " +e.getMessage());
-            showMainMenu();
-        }
-        */
-    }
-
-    /**
-     * Advances the system time to the new time.
-     *
-     * @post the system time is set to the entered time.
-     */
-    public void advanceSystemTime()
-    {
-        print("New system time: ");
-        String time = inputString();
-        try {
-            controller.updateSystemTime(time);
-            print("Time updated successfully.\n");
-            showMainMenu();
-        } catch (IllegalArgumentException e)
-        {
-            print("The given time is not valid. Please try again");
-            showMainMenu();
-        }
+        return str;
     }
 
     /**
      * Prints the given text to the console.
-     *
      * @param text the text to print
      */
-    public void print(String text)
+    private void print(String text)
     {
         System.out.print(text);
+    }
+
+    /**
+     * Prints the given text to the console and starts a new line.
+     * @param text the text to print
+     */
+    private void println(String text)
+    {
+        print(text + "\n");
+    }
+
+    /**
+     * Prints the given text to the console as a title.
+     * @param text the text to print
+     */
+    private void printTitle(String text) {
+        String decoration = "----------";
+        println(decoration + ' ' + text.toUpperCase() + ' ' + decoration);
+    }
+
+    /**
+     * Reads a string from the user input.
+     * @return the string the user entered.
+     */
+    private String inputString() {
+        try (Scanner sc = new Scanner(System.in)) {
+            return sc.nextLine();
+        }
+    }
+
+    /**
+     * Reads a string from the user input.
+     * @return the string the user entered.
+     */
+    private String inputString(String question) {
+        print(question + ' ');
+        return inputString();
     }
 
     /**
      * Lets the user input an integer value.
      * @return the integer the user inputted.
      */
-    private int inputInt()
-    {
-        String input = inputString();
-        int inputInt = 0;
-        try {
-            inputInt = Integer.parseInt(input);
-        } catch (Exception e)
-        {
-            print("This is not a valid number, please try again.");
-            inputInt();
+    private Integer inputInteger(String question) {
+        while (true) {
+            try {
+                return Integer.parseInt(inputString(question));
+            } catch (NumberFormatException e) {
+                println("This is not a valid number, please try again.");
+            }
         }
-        return inputInt;
     }
 
     /**
-     * Reads a string from the user input.
-     *
-     * @return the string the user entered.
+     * Lets the user input an integer value between min and max.
+     * @param min the minimum valid value.
+     * @param max the maximum valid value.
+     * @return the integer the user inputted.
      */
-    protected String inputString()
-    {
-        Scanner sc = new Scanner(System.in);
-        String input = "";
-        try {
-            input = sc.nextLine();
-        } catch (NoSuchElementException e)
-        {
-            input = inputString();
-        } 
-        return input;
-    }
-    
-    /**
-     * Shows a menu to the user
-     * @param items an array representing the menu items
-     */
-    private void showMenu(String[] items)
-    {
-    	StringBuilder sb = new StringBuilder("Options:\n");
-    	for(int i = 0; i < items.length; i++) {
-    		sb.append((i+1) +" - " +items[i] +"\n");
-    	}
-    	sb.append("Chose option: ");
-    	print(sb.toString());
+    private Integer inputIntegerBetween(String question, Integer min, Integer max) {
+        Integer input;
+        while (true) {
+            input = inputInteger("Choose option:");
+            if (min <= input && input <= max) {
+                return input;
+            } else {
+                println("Only inputs between " + min + " and " + max + " are allowed!");
+            }
+        }
     }
 
     /**
-     * Gets controller.
-     *
-     * @return the controller
+     * Only lets the user enter a valid answer.
+     * @param question the question to answer.
+     * @param answers the valid answers.
+     * @return a valid answer.
      */
-    public Controller getController()
+    private String inputValidAnswer(String question, Collection<String> answers) {
+        String answer;
+        while (true) {
+            answer = inputString(question);
+            if (answers.contains(answer)) {
+                return answer;
+            } else {
+                println("Invalid answer! Allowed: " + Arrays.toString(answers.toArray()));
+            }
+        }
+    }
+
+    /**
+     * Asks a series of questions with the option to cancel.
+     * @param questions the questions to ask.
+     * @return a series of answers.
+     */
+    private String[] inputAnswers(String[] questions) {
+        String[] answers = new String[questions.length];
+        for (int i = 0; i < questions.length; i++) {
+            answers[i] = inputString(questions[i]);
+        }
+        return answers;
+    }
+
+    /**
+     * Asks a series of questions with the option to cancel.
+     * @param questions the questions to ask.
+     * @return a series of answers or null if canceled.
+     */
+    private String[] inputAnswersWithCancel(String[] questions) {
+        String[] answers = new String[questions.length];
+        for (int i = 0; i < questions.length; i++) {
+            answers[i] = inputString(questions[i]);
+            if (inputCancel()) {
+                return null;
+            }
+        }
+        return answers;
+    }
+
+    /**
+     * Let the user decide if he want to cancel.
+     * @return if the user wants to cancel.
+     */
+    private Boolean inputCancel() {
+        ArrayList<String> yn = new ArrayList<>();
+        yn.add("Y");
+        yn.add("N");
+        return inputValidAnswer("Cancel? [Y/N]", yn).equals("Y");
+    }
+
+    /**
+     * Lets the user choose between options.
+     * @return the index of the selected option.
+     */
+    private Integer inputOption(String[] items)
     {
-        return controller;
+        println("Options:");
+        for(int i = 0; i < items.length; i++) {
+            println((i + 1) + " - " + items[i]);
+        }
+        return inputIntegerBetween("Choose option:", 1, items.length) - 1;
     }
 
 }

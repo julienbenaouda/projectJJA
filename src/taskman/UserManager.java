@@ -1,10 +1,9 @@
 /**
- * 
+ *
  */
 package taskman;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class represents the user manager in the taskman system.
@@ -21,17 +20,22 @@ public class UserManager {
 	}
 
 	/**
-	 * returns the list of users
-	 * @return the list of users
-	 */
-	private Map<String, User> getUsers() {
-		return users;
-	}
-
-	/**
 	 * represents the list of users
 	 */
 	private HashMap<String, User> users;
+
+	/**
+	 * returns a user
+	 * @return a user
+	 * @throws IllegalArgumentException when an user with the given name can't be found
+	 */
+	private User getUser(String name) {
+		if(!this.users.containsKey(name))
+		{
+			throw new IllegalArgumentException("There exists no user with name '" + name + "'.");
+		}
+		return this.users.get(name);
+	}
 
 	/**
 	 * @return the currentUser
@@ -122,11 +126,7 @@ public class UserManager {
 	 */
 	public void login(String name, String password) throws IllegalArgumentException
 	{
-		if(!getUsers().containsKey(name))
-		{
-			throw new IllegalArgumentException("There exists no user with the given name.");
-		}
-		User u = getUsers().get(name);
+		User u = getUser(name);
 		if(password.equals(u.getPassword())) {
 			setCurrentUser(u);
 		} else {

@@ -65,7 +65,7 @@ public class UserInterfaceTest {
 	{
 		try {
 			ui.setInput("1");
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("project"));
 	}
@@ -77,7 +77,7 @@ public class UserInterfaceTest {
 		Project p2 = new Project("test 2", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
 		projects.put("test 2", p2);
 		try {
-			ui.listProjects();
+			ui.showProjectsAndTasks();
 		} catch (UnsupportedOperationException e) {}
 		String actual = ui.getOutput();
 		Assert.assertTrue(actual.contains("test 2") && actual.contains("test 1"));
@@ -178,12 +178,12 @@ public class UserInterfaceTest {
 	{
 		ui.setInput("2");
 		try {
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -199,12 +199,12 @@ public class UserInterfaceTest {
 	{
 		ui.setInput("2");
 		try {
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		ui.setInput("finished");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -220,12 +220,12 @@ public class UserInterfaceTest {
 	{
 		ui.setInput("1");
 		try {
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
 		ui.setInput("11/01/2017 15:00");
@@ -243,7 +243,7 @@ public class UserInterfaceTest {
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		ui.setInput("1");
 		try {
 			ui.showTaskDetails("test");
@@ -258,7 +258,7 @@ public class UserInterfaceTest {
 		try {
 			ui.setInput(os_path + "file.xml");
 			ui.setInput("6");
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch(UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("successfully"));
 	}
@@ -269,11 +269,11 @@ public class UserInterfaceTest {
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		try {
 			ui.setInput(os_path + "fil:e.xml");
 			ui.setInput("6");
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch(UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("Error"));
 	}
@@ -284,7 +284,7 @@ public class UserInterfaceTest {
 		ui.setInput(os_path + "file.xml");
 		ui.setInput("5");
 		try {
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("successfully"));
 	}
@@ -294,7 +294,7 @@ public class UserInterfaceTest {
 		ui.setInput(os_path + "file2.xml");
 		ui.setInput("5");
 		try {
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("Error"));
 	}
@@ -305,7 +305,7 @@ public class UserInterfaceTest {
 		ui.setInput("11/11/2017 16:20");
 		ui.setInput("4");
 		try {
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("successfully"));
 	}
@@ -316,7 +316,7 @@ public class UserInterfaceTest {
 		ui.setInput("11/11/2017");
 		ui.setInput("7");
 		try {
-			ui.showMainMenu();
+			ui.mainMenu();
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("valid"));
 	}
@@ -325,18 +325,18 @@ public class UserInterfaceTest {
 	public void testAddDependencyToTask() {
 		ui.setInput("2");
 		try {
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		Task t2 = new Task("testtask 2", "5", "5");
-		p.addTask(t2);
+		p.createTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
 		try {
-			ui.addDependency("test");
+			ui.addDependencyToTask("test");
 		} catch (UnsupportedOperationException e) {} catch (AccessDeniedException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -349,18 +349,18 @@ public class UserInterfaceTest {
 	public void addAlternativeToTask() {
 		ui.setInput("2");
 		try {
-			ui.showUserChoiceDialog();
+			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
 		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		Task t = new Task("testtask", "5", "5");
-		p.addTask(t);
+		p.createTask(t);
 		Task t2 = new Task("testtask 2", "5", "10");
-		p.addTask(t2);
+		p.createTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
 		try {
-			ui.addAlternative("test");
+			ui.addAlternativeToTask("test");
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("Alternative added successfully"));
 	}

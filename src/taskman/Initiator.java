@@ -20,7 +20,7 @@ public class Initiator {
 	public static void initialize() {
 		Controller controller = new Controller(new Clock(), new UserManager(), new ProjectOrganizer());
 		UserInterface ui = new UserInterface(controller);
-		ui.welcomeDialog();
+		ui.start();
 	}
 
 }

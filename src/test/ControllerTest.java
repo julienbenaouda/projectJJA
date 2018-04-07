@@ -52,12 +52,12 @@ public class ControllerTest {
         taskForm.put("description", "test task description");
         taskForm.put("estimatedDuration", "709");
         taskForm.put("acceptableDeviation", "1.345");
-        controller.addTask(projectName, taskForm);
+        controller.createTask(projectName, taskForm);
         Assert.assertEquals("The task is not added!", 1, controller.getTasksOfProject(projectName).size());
         Integer taskId = controller.getLastTaskID();
         Assert.assertNotNull("Task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
-        controller.addTask(projectName, taskForm);
+        controller.createTask(projectName, taskForm);
         Integer dependencyTaskId = controller.getLastTaskID();
         Assert.assertNotEquals("The last task id is not updated!", taskId, dependencyTaskId);
         controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
@@ -76,7 +76,7 @@ public class ControllerTest {
         User.setUserType("DEVELOPER");
         controller.updateTaskStatus(projectName, taskId, updateForm);
 
-        controller.addTask(projectName, taskForm);
+        controller.createTask(projectName, taskForm);
         Integer alternativeTaskId = controller.getLastTaskID();
         controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
     }

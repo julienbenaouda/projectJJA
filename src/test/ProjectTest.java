@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class ProjectTest {
@@ -89,7 +87,7 @@ public class ProjectTest {
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		t.updateStatus(timespan, TaskStatus.FINISHED);
-		Assert.assertTrue(p.isFinished());
+		Assert.assertTrue(p.getStatus());
 	}
 	
 	@Test
@@ -99,7 +97,7 @@ public class ProjectTest {
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		t.updateStatus(timespan, TaskStatus.FAILED);
-		Assert.assertFalse(p.isFinished());
+		Assert.assertFalse(p.getStatus());
 	}
 
 }
