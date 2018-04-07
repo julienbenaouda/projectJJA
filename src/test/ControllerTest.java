@@ -7,9 +7,6 @@ import taskman.Backend.*;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
-import java.time.Month;
-
 import static org.junit.Assert.*;
 
 public class ControllerTest {
@@ -56,11 +53,10 @@ public class ControllerTest {
         String projectName = "test name";
 
         assertEquals("Initial project list should be empty!", 0, projectOrganizer.getProjectNames().size());
-        LocalDateTime creation = LocalDateTime.of(2003, Month.FEBRUARY, 1, 4, 5);
         String due = "06/07/2008 09:10";
         controller.createProject(projectName, "test description", due);
         assertEquals("Project list should contain one project!", 1, projectOrganizer.getProjectNames().size());
-        assertEquals("The project name is incorrect!", projectName, controller.getProjectNames().contains(projectName));
+        assertTrue("The project name is incorrect!", controller.getProjectNames().contains(projectName));
         assertNotNull("Project details cannot be null!", controller.getProjectDetails(projectName));
 
         assertEquals("Project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
