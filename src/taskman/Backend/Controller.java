@@ -240,9 +240,8 @@ public class Controller {
         // TODO: check if developer is member of task team!
         LocalDateTime startTimeObject = TimeParser.convertStringToLocalDateTime(startTime);
         LocalDateTime endTimeObject = TimeParser.convertStringToLocalDateTime(endTime);
-        TaskStatus taskStatus = TaskStatus.fromString(status);
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskIndex);
-        task.updateStatus(startTimeObject, endTimeObject, taskStatus);
+        task.updateStatus(startTimeObject, endTimeObject, status);
     }
 
     /**
