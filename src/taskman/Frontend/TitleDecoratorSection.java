@@ -40,7 +40,7 @@ public class TitleDecoratorSection extends Section {
      */
     @Override
     public void show() throws Cancel {
-        println(String.format("%s %-10s %s", decoration, this.title.toUpperCase(), decoration));
+        println("\n" + decoration + ' ' + this.title.toUpperCase() + ' ' + decoration);
         this.section.show();
     }
 

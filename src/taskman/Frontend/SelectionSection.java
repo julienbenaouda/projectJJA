@@ -90,7 +90,7 @@ public class SelectionSection extends Section {
 		if (selection == 0) {
 			throw new Cancel();
 		} else {
-			this.answer = selection;
+			this.answer = selection - 1;
 		}
 	}
 

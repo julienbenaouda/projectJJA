@@ -1,7 +1,9 @@
 package taskman.Frontend;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collection;
-import java.util.Scanner;
 
 /**
  * This class is responsible for providing a uniform interface for showing sections.
@@ -36,9 +38,16 @@ public abstract class Section {
      * @return the string the user entered.
      */
     String inputString() {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            return br.readLine();
+        } catch (IOException ignored) {
+            return "";
+        }
+        /* TODO: waarom werkt scanner niet?
         try (Scanner sc = new Scanner(System.in)) {
             return sc.nextLine();
-        }
+        }*/
     }
 
     /**
