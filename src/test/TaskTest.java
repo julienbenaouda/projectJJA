@@ -3,7 +3,7 @@ package test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import taskman.Backend.Task.Task;
+import taskman.Backend.Task.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -32,16 +32,23 @@ public class TaskTest {
         double acceptableDeviation = 0.2356;
 
         root = new Task("root description", estimatedDuration, acceptableDeviation){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                    case "inactive" : state = new TaskStateInactive();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
 
@@ -210,7 +217,7 @@ public class TaskTest {
         dependency1_2_1.setAlternative(alternative1_2_1);
         dependency1_2_2.setAlternative(alternative1_2_2);
 
-        root.updateStatus(null, null, TaskStatus.FAILED);
+        root.updateStatus(null, null, "failed");
     }
 
 
@@ -230,19 +237,24 @@ public class TaskTest {
         Assert.assertEquals("The status is finished", false, taskNotFinished.isFinished());
 
         Task taskFinished = new Task("blablabla", 33, 0.08){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        taskFinished.updateStatus(null, null, TaskStatus.FINISHED);
+        taskFinished.updateStatus(null, null, "finished");
         Assert.assertEquals("The status is no finished", true, taskFinished.isFinished());
     }
 
@@ -251,54 +263,69 @@ public class TaskTest {
         Task availableTask = new Task("available task", 23, 2);
         Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
         Task dependencyFinished = new Task("dependency finished", 23, 1.45){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
         availableTask.addDependency(dependencyFinished);
 
-        dependencyFinished.updateStatus(null, null, TaskStatus.FINISHED);
+        dependencyFinished.updateStatus(null, null, "finished");
         Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
         Task dependencyFailed =  new Task("dependency failed", 23, 1.45){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        dependencyFinished.updateStatus(null, null, TaskStatus.INACTIVE);
+        dependencyFinished.updateStatus(null, null, "inactive");
         dependencyFinished.addDependency(dependencyFailed);
-        dependencyFinished.updateStatus(null, null , TaskStatus.FINISHED);
+        dependencyFinished.updateStatus(null, null , "finished");
         Task alternativeFinished = new Task("alternative finished", 25, 5.6){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        dependencyFailed.updateStatus(null, null, TaskStatus.FAILED);
+        dependencyFailed.updateStatus(null, null, "failed");
         dependencyFailed.setAlternative(alternativeFinished);
-        alternativeFinished.updateStatus(null, null, TaskStatus.FINISHED);
+        alternativeFinished.updateStatus(null, null, "finished");
         Assert.assertEquals("The task is not available", true, availableTask.isAvailable());
 
         Task unavailableTask = new Task("unavailable task", 789, 1.25);
@@ -306,17 +333,17 @@ public class TaskTest {
         unavailableTask.addDependency(unavialableTask2);
         Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
         unavailableTask.removeDependency(unavialableTask2);
-        dependencyFinished.updateStatus(null, null, TaskStatus.INACTIVE);
+        dependencyFinished.updateStatus(null, null, "inactive");
         unavailableTask.addDependency(dependencyFinished);
         //dependencyFinished.removeDependency(dependencyFailed);
-        dependencyFailed.updateStatus(null, null, TaskStatus.INACTIVE);
+        dependencyFailed.updateStatus(null, null, "inactive");
         dependencyFailed.addDependency(unavialableTask2);
-        dependencyFinished.updateStatus(null, null, TaskStatus.FINISHED);
-        dependencyFailed.updateStatus(null, null, TaskStatus.FAILED);
+        dependencyFinished.updateStatus(null, null, "finished");
+        dependencyFailed.updateStatus(null, null, "failed");
         Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
-        dependencyFailed.updateStatus(null, null, TaskStatus.INACTIVE);
+        dependencyFailed.updateStatus(null, null, "inactive");
         dependencyFailed.removeDependency(unavialableTask2);
-        dependencyFailed.updateStatus(null, null, TaskStatus.FAILED);
+        dependencyFailed.updateStatus(null, null, "failed");
         dependencyFailed.setAlternative(unavialableTask2);
         Assert.assertEquals("The task is available", false, unavailableTask.isAvailable());
 
@@ -325,19 +352,24 @@ public class TaskTest {
     @Test (expected = IllegalStateException.class)
     public void testIllegalStateIsAvailable(){
         Task failedTask = new Task("failed task", 1, 0.03){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        failedTask.updateStatus(null, null, TaskStatus.FAILED);
+        failedTask.updateStatus(null, null, "failed");
         failedTask.isAvailable();
     }
 
@@ -346,7 +378,7 @@ public class TaskTest {
         Task task = new Task("Description1", 20, 0.5);
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
-        task.updateStatus(startTime, endTime, TaskStatus.FINISHED);
+        task.updateStatus(startTime, endTime, "finished");
         Assert.assertEquals("The delay is not correctly calculated", 5, task.getDelay(), 0);
     }
 
@@ -364,8 +396,8 @@ public class TaskTest {
 
         Assert.assertEquals("The status is not available", true, updateStatusTask.isAvailable());
         Assert.assertEquals("The time span is not null", null, updateStatusTask.getTimeSpan());
-        updateStatusTask.updateStatus(starTime, endTime, TaskStatus.FINISHED);
-        Assert.assertEquals("The status is not finished", TaskStatus.FINISHED, updateStatusTask.getStatus());
+        updateStatusTask.updateStatus(starTime, endTime, "finished");
+        Assert.assertEquals("The status is not finished", TaskStateFinished.class, updateStatusTask.getState().getClass());
         Assert.assertEquals("The start time is not correctly set", starTime, updateStatusTask.getTimeSpan().getStartTime());
         Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getTimeSpan().getEndTime());
     }
@@ -376,7 +408,7 @@ public class TaskTest {
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime startTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
 
-        invalidUpdateStatusTask.updateStatus(startTime, endTime,  TaskStatus.FAILED);
+        invalidUpdateStatusTask.updateStatus(startTime, endTime,  "failed");
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -385,25 +417,30 @@ public class TaskTest {
         LocalDateTime starTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
-        invalidUpdateStatusTask.updateStatus(starTime, endTime, TaskStatus.INACTIVE);
+        invalidUpdateStatusTask.updateStatus(starTime, endTime, "inactive");
     }
 
     @Test
     public void testAlternative(){
         Task setAlternative = new Task("description of this task", 24, 1){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        setAlternative.updateStatus(null, null, TaskStatus.FAILED);
+        setAlternative.updateStatus(null, null, "failed");
 
         Assert.assertEquals("There is already an alternative", null, setAlternative.getAlternative());
         Task alternative = new Task("DescRiPTioNNNNN", 245, 0.015);
@@ -421,19 +458,24 @@ public class TaskTest {
     @Test (expected = IllegalArgumentException.class)
     public void testInvalidSetAlternativeToItself(){
         Task setAlternative = new Task("description of this task", 24, 1){
-            private TaskStatus status;
+            private TaskState state;
 
             @Override
-            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime ,TaskStatus status) {
-                this.status = status;
+            public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) {
+                switch (status){
+                    case "finished" : state = new TaskStateFinished();
+                        break;
+                    case "failed" : state = new TaskStateFailed();
+                        break;
+                }
             }
 
             @Override
-            public TaskStatus getStatus(){
-                return status;
+            public TaskState getState(){
+                return state;
             }
         };
-        setAlternative.updateStatus(null, null, TaskStatus.FAILED);
+        setAlternative.updateStatus(null, null, "failed");
         setAlternative.setAlternative(setAlternative);
     }
 
@@ -476,7 +518,7 @@ public class TaskTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testIllegalSetAlternativeRecursive3(){ ;
+    public void testIllegalSetAlternativeRecursive3(){
         root.setAlternative(alternative1_3d);
     }
 
