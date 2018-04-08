@@ -1,5 +1,7 @@
 package taskman.Backend;
 
+import taskman.Backend.Task.Task;
+
 /**
  * This interface represents a visitor
  * @author Julien Benaouda

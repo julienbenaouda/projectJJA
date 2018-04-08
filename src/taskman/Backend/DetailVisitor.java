@@ -3,6 +3,8 @@
  */
 package taskman.Backend;
 
+import taskman.Backend.Task.Task;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -47,7 +49,7 @@ public class DetailVisitor implements Visitor {
 	}
 
 	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitTask(taskman.Backend.Task)
+	 * @see taskman.Backend.Visitor#visitTask(taskman.Backend.Task.Task)
 	 */
 	@Override
 	public void visitTask(Task t) {
