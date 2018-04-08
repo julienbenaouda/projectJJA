@@ -172,15 +172,21 @@ public class Controller {
      * Adds a project with the properties from a given form.
      * @param projectName the project name.
      * @param description the description of the task.
-     * @param estimatedDuration the estimated duration of the task.
-     * @param acceptableDeviation the acceptable deviation of the task.
+     * @param estimatedDuration the estimated duration of the task as Long.
+     * @param acceptableDeviation the acceptable deviation of the task as Double.
      * @throws IllegalArgumentException if no Project is found with the given name.
      * @throws OperationNotPermittedException if no user is logged in.
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
+     * @throws NumberFormatException if estimatedDuration is not a Long or acceptableDeviation is not a Double.
      * @post a new task is created and added to the project in the system.
      */
-    public void createTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException {
-        this.projectOrganizer.getProject(projectName).createTask(description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
+    public void createTask(String projectName, String description, String estimatedDuration, String acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
+        this.projectOrganizer.getProject(projectName).createTask(
+                description,
+                Long.parseLong(estimatedDuration),
+                Double.parseDouble(acceptableDeviation),
+                this.userManager.getCurrentUser()
+        );
     }
 
     /**

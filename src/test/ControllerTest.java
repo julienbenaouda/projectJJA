@@ -64,12 +64,12 @@ public class ControllerTest {
         assertNotNull("Project details cannot be null!", controller.getProjectDetails(projectName));
 
         assertEquals("Project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
-        controller.createTask(projectName, "test task description", 709l, 1.345);
+        controller.createTask(projectName, "test task description", Long.toString(709l), Double.toString(1.345));
         assertEquals("The task is not added!", (Integer) 1, controller.getNumberOfTasks(projectName));
         int taskId = 0;
         assertNotNull("Task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
-        controller.createTask(projectName, "test task description", 888l, 1.45);
+        controller.createTask(projectName, "test task description", Long.toString(888l), Double.toString(1.45));
         int dependencyTaskId = 1;
         controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
 
@@ -77,7 +77,7 @@ public class ControllerTest {
         String startTime = "01/01/2003 05:05";
         String endTime = "01/01/2100 00:00";
         controller.updateTaskStatus(projectName, taskId, startTime, endTime, "FAILED");
-        controller.createTask(projectName, "test", 200L, 1.1);
+        controller.createTask(projectName, "test", Long.toString(200L), Double.toString(1.1));
         Integer alternativeTaskId = 2;
         controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
     }
