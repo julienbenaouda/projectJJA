@@ -83,6 +83,7 @@ public class DetailVisitor implements Visitor {
 			getDetails().put("description", t.getDescription());
 			getDetails().put("estimatedDuration", Long.toString(t.getEstimatedDuration()));
 			getDetails().put("acceptableDeviation", Double.toString(t.getAcceptableDeviation()));
+			// TODO: alternative en dependency toevoegen. Tasks moeten hun index weten!
 		}
 
 	}

@@ -8,7 +8,7 @@ import taskman.Backend.User.User;
 
 public class ExportVisitor implements Visitor {
 
-	
+
 
 	/**
 	 * visits a project

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package taskman.Backend.User;
 
 /**

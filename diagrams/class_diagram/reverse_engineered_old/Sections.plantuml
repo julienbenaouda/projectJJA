@@ -144,7 +144,6 @@ title __SECTIONS's Class Diagram__\n
         class TitleDecoratorSection {
             - title : String
             {static} - decoration : char
-            {static} - length : int
             + TitleDecoratorSection()
             + show()
             - repeat()

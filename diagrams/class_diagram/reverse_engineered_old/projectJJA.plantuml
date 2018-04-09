@@ -14,9 +14,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Time {
-        class Clock {
-        }
+      class Clock {
       }
     }
   }
@@ -32,9 +30,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Visitor {
-        class DetailVisitor {
-        }
+      class DetailVisitor {
       }
     }
   }
@@ -42,9 +38,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.User {
-        class Developer {
-        }
+      class Developer {
       }
     }
   }
@@ -52,19 +46,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Visitor {
-        interface Entity {
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Visitor {
-        class ExportVisitor {
-        }
+      interface Entity {
       }
     }
   }
@@ -82,9 +64,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.ImportExport {
-        class ImportExportException {
-        }
+      class ImportExportException {
       }
     }
   }
@@ -128,9 +108,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.User {
-        class OperationNotPermittedException {
-        }
+      class OperationNotPermittedException {
       }
     }
   }
@@ -138,9 +116,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Project {
-        class Project {
-        }
+      class Project {
       }
     }
   }
@@ -148,9 +124,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.User {
-        class ProjectManager {
-        }
+      class ProjectManager {
       }
     }
   }
@@ -158,9 +132,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Project {
-        class ProjectOrganizer {
-        }
+      class ProjectOrganizer {
       }
     }
   }
@@ -248,9 +220,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Time {
-        class TimeParser {
-        }
+      class TimeParser {
       }
     }
   }
@@ -258,9 +228,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Time {
-        class TimeSpan {
-        }
+      class TimeSpan {
       }
     }
   }
@@ -278,9 +246,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.User {
-        abstract class User {
-        }
+      abstract class User {
       }
     }
   }
@@ -296,9 +262,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.User {
-        class UserManager {
-        }
+      class UserManager {
       }
     }
   }
@@ -306,9 +270,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.Visitor {
-        interface Visitor {
-        }
+      interface Visitor {
       }
     }
   }
@@ -316,9 +278,7 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.Backend {
-      package taskman.Backend.ImportExport {
-        class XmlObject {
-        }
+      class XmlObject {
       }
     }
   }
@@ -330,7 +290,6 @@ title __PROJECTJJA's Class Diagram__\n
   Controller o-- ProjectOrganizer : projectOrganizer
   DetailVisitor -up-|> Visitor
   Developer -up-|> User
-  ExportVisitor -up-|> Visitor
   FormSection -up-|> Section
   InfoSection -up-|> Section
   MenuSection -up-|> Section
