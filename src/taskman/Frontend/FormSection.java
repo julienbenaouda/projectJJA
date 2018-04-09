@@ -71,12 +71,12 @@ public class FormSection extends Section {
      * Returns an answer of the user.
      * @param nr the number of the answer.
      * @return a String.
-     * @throws InvalidStateException if the form does not contain answers.
+     * @throws IllegalStateException if the form does not contain answers.
      * @throws IndexOutOfBoundsException if no answer corresponds to this number.
      */
-    public String getAnswer(int nr) throws InvalidStateException, IndexOutOfBoundsException {
+    public String getAnswer(int nr) throws IllegalStateException, IndexOutOfBoundsException {
         if (!hasAnswers()) {
-            throw new InvalidStateException("Form does not contain answers.");
+            throw new IllegalStateException("Form does not contain answers.");
         }
         return this.answers.get(nr);
     }

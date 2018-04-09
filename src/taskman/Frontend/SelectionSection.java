@@ -1,7 +1,5 @@
 package taskman.Frontend;
 
-import sun.plugin.dom.exception.InvalidStateException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,11 +103,11 @@ public class SelectionSection extends Section {
 	/**
 	 * Returns the answer of the user.
 	 * @return a String.
-	 * @throws InvalidStateException if the selection does not contain an answer.
+	 * @throws IllegalStateException if the selection does not contain an answer.
 	 */
-	public String getAnswer() throws InvalidStateException {
+	public String getAnswer() throws IllegalStateException {
 		if (!hasAnswer()) {
-			throw new InvalidStateException("Selection does not contain an answer.");
+			throw new IllegalStateException("Selection does not contain an answer.");
 		}
 		return this.options.get(this.answer);
 	}
@@ -117,11 +115,11 @@ public class SelectionSection extends Section {
 	/**
 	 * Returns the answer of the user.
 	 * @return an Integer.
-	 * @throws InvalidStateException if the selection does not contain an answer.
+	 * @throws IllegalStateException if the selection does not contain an answer.
 	 */
-	public Integer getAnswerNumber() throws InvalidStateException {
+	public Integer getAnswerNumber() throws IllegalStateException {
 		if (!hasAnswer()) {
-			throw new InvalidStateException("Selection does not contain an answer.");
+			throw new IllegalStateException("Selection does not contain an answer.");
 		}
 		return this.answer;
 	}
