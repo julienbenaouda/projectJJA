@@ -150,7 +150,7 @@ public class Task implements Entity {
     }
 
     protected void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
-        TimeSpan timeSpan = new TimeSpan(startTime, endTime);
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime); // Task creates the time span, because task stores time span ==> GRASP: Creator
         this.timeSpan = timeSpan;
     }
     // TODO: moet er hier geen throws IllegalArugmentException bij en moet dit ook niet bij constructor timespan?
