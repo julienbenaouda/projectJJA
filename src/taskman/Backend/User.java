@@ -36,7 +36,7 @@ public abstract class User implements Entity {
 	 */
 	private void setName(String name) throws IllegalArgumentException {
 		if(name == null || name.equals("")) {
-			throw new IllegalArgumentException("The name can't be empty. Please chose another name");
+			throw new IllegalArgumentException("The name can't be empty. Please choose another name");
 		}
 		this.name = name;
 	}
