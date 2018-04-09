@@ -137,7 +137,7 @@ public class Controller {
      * @throws IllegalArgumentException if no Project is found with the given name.
      */
     public Map<String, String> getProjectDetails(String name) throws IllegalArgumentException {
-    	DetailVisitor v = new DetailVisitor();
+    	DetailVisitor v = new DetailVisitor(this.clock.getTime());
     	projectOrganizer.getProject(name).accept(v);
     	return v.getDetails();
     }
@@ -176,7 +176,7 @@ public class Controller {
      * @throws IllegalArgumentException if the project does not exist.
      */
     public Map<String, String> getTaskDetails(String projectName, Integer taskIndex) throws IllegalArgumentException {
-    	DetailVisitor v = new DetailVisitor();
+    	DetailVisitor v = new DetailVisitor(this.clock.getTime());
     	Task t = projectOrganizer.getProject(projectName).getTask(taskIndex);
     	t.accept(v);
     	return v.getDetails();
