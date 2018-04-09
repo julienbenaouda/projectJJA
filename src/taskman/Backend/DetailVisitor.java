@@ -5,6 +5,7 @@ package taskman.Backend;
 
 import taskman.Backend.Task.Task;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -13,6 +14,13 @@ import java.util.LinkedHashMap;
  *
  */
 public class DetailVisitor implements Visitor {
+	/**
+	 * creates a new detail visitor with the given system time
+	 * @param currentSystemTime the current system time
+	 */
+	public DetailVisitor(LocalDateTime currentSystemTime) {
+		this.currentSystemTime = currentSystemTime;
+	}
 	/**
 	 * returns the list of details
 	 */
@@ -27,10 +35,23 @@ public class DetailVisitor implements Visitor {
 		details = new LinkedHashMap<>();
 	}
 	
+	
 	/**
 	 * Represents the list of details from an entity
 	 */
 	private HashMap<String, String> details;
+
+	/**
+	 * returns the current system time
+	 */
+	private LocalDateTime getCurrentSystemTime() {
+		return currentSystemTime;
+	}
+
+	/**
+	 * Represents the current system time
+	 */
+	private final LocalDateTime currentSystemTime;
 
 	/* (non-Javadoc)
 	 * @see taskman.Backend.Visitor#visitProject(taskman.Backend.Project)
@@ -43,7 +64,7 @@ public class DetailVisitor implements Visitor {
 			getDetails().put("description", p.getDescription());
 			getDetails().put("creationTime", TimeParser.convertLocalDateTimeToString(p.getCreationTime()));
 			getDetails().put("dueTime", TimeParser.convertLocalDateTimeToString(p.getDueTime()));
-			// TODO: add the Project status to the map
+			getDetails().put("status", p.getStatus(getCurrentSystemTime()));
 		}
 
 	}
