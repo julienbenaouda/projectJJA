@@ -3,6 +3,8 @@
  */
 package taskman.Backend;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -84,12 +86,20 @@ public class UserManager {
 			case "developer":
 				createDeveloper(name, password);
 				break;
-			case "projectmanager":
+			case "project manager":
 				createProjectManager(name, password);
 				break;
 			default:
 				throw new IllegalArgumentException("'" + type + "' is not a valid user type!");
 		}
+	}
+
+	/**
+	 * Return the possible user types.
+	 * @return a collection of user types.
+	 */
+	public Collection<String> getUserTypes() {
+		return Arrays.asList("developer", "project manager");
 	}
 
 	/**

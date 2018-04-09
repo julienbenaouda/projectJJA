@@ -3,6 +3,7 @@ package taskman.Backend;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * This class is responsible for creating, storing and retrieving projects of the system.
@@ -23,9 +24,9 @@ public class ProjectOrganizer {
 
     /**
      * Returns all Project names.
-     * @return a Collection of Strings.
+     * @return a List of Strings.
      */
-    public Collection<String> getProjectNames() {
+    public List<String> getProjectNames() {
         ArrayList<String> names = new ArrayList<>();
         for (Project project: this.projects) {
             names.add(project.getName());

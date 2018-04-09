@@ -257,5 +257,4 @@ public class Project implements Entity {
 		v.visitProject(this);
 	}
 
-	// TODO: getProjectDetails() heb ik ook verwijderd
 }

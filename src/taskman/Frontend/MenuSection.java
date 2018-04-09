@@ -43,21 +43,16 @@ public class MenuSection extends Section {
 
     /**
      * Shows the menu.
+     * @throws Cancel when the user cancels the section.
      */
     @Override
-    public void show() {
-        while (true) {
-            try {
-                this.selectionSection.show();
-            } catch (Cancel e) {
-                return;
-            }
-            try {
-                this.actions.get(this.selectionSection.getAnswer()).call();
-            } catch (Cancel ignored) {
-            } catch (Exception e) {
-                println("An error occurred: " + e.getMessage());
-            }
+    public void show() throws Cancel {
+        this.selectionSection.show();
+        try {
+            this.actions.get(this.selectionSection.getAnswer()).call();
+        } catch (Cancel ignored) {
+        } catch (Exception e) {
+            println("An error occurred: " + e.getMessage());
         }
     }
 }

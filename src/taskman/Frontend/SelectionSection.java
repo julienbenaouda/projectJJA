@@ -1,6 +1,7 @@
 package taskman.Frontend;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,6 +60,20 @@ public class SelectionSection extends Section {
 			throw new NullPointerException("Option cannot be null!");
 		}
 		this.options.add(option);
+	}
+
+	/**
+	 * Add a collection of options to the selection.
+	 * @param options the collection of options.
+	 * @throws NullPointerException if an argument is null.
+	 */
+	public void addOptions(Collection<String> options) {
+		if (options == null) {
+			throw new NullPointerException("Options cannot be null!");
+		}
+		for (String option: options) {
+			addOption(option);
+		}
 	}
 
 	/**

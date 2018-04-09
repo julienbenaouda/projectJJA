@@ -5,6 +5,7 @@ import taskman.Backend.Task.Task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,6 +74,14 @@ public class Controller {
     }
 
     /**
+     * Return the possible user types.
+     * @return a collection of user types.
+     */
+    public Collection<String> getUserTypes() {
+        return this.userManager.getUserTypes();
+    }
+
+    /**
      * Adds a new user to the system.
      * @param name the name of the user.
      * @param password the password of the user.
@@ -105,9 +114,9 @@ public class Controller {
 
     /**
      * Returns all Project names.
-     * @return a Collection of Strings.
+     * @return a List of Strings.
      */
-    public Collection<String> getProjectNames() {
+    public List<String> getProjectNames() {
         return this.projectOrganizer.getProjectNames();
     }
 
