@@ -1,7 +1,7 @@
 /**
  * 
  */
-package taskman.Backend;
+package taskman.Backend.User;
 
 /**
  * This class represents a project manager in the taskman system.

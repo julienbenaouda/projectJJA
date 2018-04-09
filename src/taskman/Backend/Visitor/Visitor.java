@@ -1,6 +1,10 @@
-package taskman.Backend;
+package taskman.Backend.Visitor;
 
+import taskman.Backend.Project.Project;
 import taskman.Backend.Task.Task;
+import taskman.Backend.Time.Clock;
+import taskman.Backend.Time.TimeSpan;
+import taskman.Backend.User.User;
 
 /**
  * This interface represents a visitor

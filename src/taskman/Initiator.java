@@ -1,9 +1,9 @@
 package taskman;
 
-import taskman.Backend.Clock;
+import taskman.Backend.Time.Clock;
 import taskman.Backend.Controller;
-import taskman.Backend.ProjectOrganizer;
-import taskman.Backend.UserManager;
+import taskman.Backend.Project.ProjectOrganizer;
+import taskman.Backend.User.UserManager;
 import taskman.Frontend.UserInterface;
 
 /**

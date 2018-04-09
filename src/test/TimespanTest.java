@@ -8,7 +8,7 @@ import java.time.Month;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.Backend.TimeSpan;
+import taskman.Backend.Time.TimeSpan;
 
 /**
  * This is a test class for the TimeSpan class.

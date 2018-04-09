@@ -1,4 +1,6 @@
-package taskman.Backend;
+package taskman.Backend.Project;
+
+import taskman.Backend.User.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

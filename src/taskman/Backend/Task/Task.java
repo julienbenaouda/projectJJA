@@ -1,10 +1,9 @@
 package taskman.Backend.Task;
 
-import taskman.Backend.Entity;
-import taskman.Backend.TimeSpan;
-import taskman.Backend.Visitor;
+import taskman.Backend.Visitor.Entity;
+import taskman.Backend.Time.TimeSpan;
+import taskman.Backend.Visitor.Visitor;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Stack;

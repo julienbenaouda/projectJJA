@@ -17,6 +17,11 @@ public class TitleDecoratorSection extends Section {
     private static final char decoration = '-';
 
     /**
+     * Represents the length of the title.
+     */
+    private static final int length = 50;
+
+    /**
      * Represents the section that is decorated.
      */
     private final Section section;
@@ -40,9 +45,10 @@ public class TitleDecoratorSection extends Section {
      */
     @Override
     public void show() throws Cancel {
-        int before = Math.max(0, 20 - Math.floorDiv(this.title.length(), 2));
-        int after = 40 - this.title.length() - before;
-        println("\n" + repeat(decoration, before) + ' ' + this.title.toUpperCase() + ' ' + repeat(decoration, after));
+        int lineLength = length - this.title.length();
+        int div = Math.floorDiv(lineLength, 2);
+        int mod = Math.floorMod(lineLength, 2);
+        println("\n" + repeat(decoration, div) + ' ' + this.title.toUpperCase() + ' ' + repeat(decoration, div + mod));
         this.section.show();
     }
 

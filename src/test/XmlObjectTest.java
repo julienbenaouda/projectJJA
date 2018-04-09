@@ -4,8 +4,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.ImportExportException;
-import taskman.Backend.XmlObject;
+import taskman.Backend.ImportExport.ImportExportException;
+import taskman.Backend.ImportExport.XmlObject;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
@@ -35,9 +35,9 @@ public class XmlObjectTest {
 
     @Test
     public void import_export() throws ImportExportException, AccessDeniedException {
-        XmlObject sub1 = object.createXmlObject("object");
-        XmlObject sub2 = object.createXmlObject("object");
-        XmlObject sub3 = sub2.createXmlObject("object");
+        XmlObject sub1 = object.createChild("object");
+        XmlObject sub2 = object.createChild("object");
+        XmlObject sub3 = sub2.createChild("object");
 
         object.addAttribute("attribute", "attribute value");
         object.addText("text", "text value 1");

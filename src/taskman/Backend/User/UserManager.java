@@ -1,7 +1,7 @@
 /**
  *
  */
-package taskman.Backend;
+package taskman.Backend.User;
 
 import java.util.Arrays;
 import java.util.Collection;

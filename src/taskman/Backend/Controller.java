@@ -1,6 +1,15 @@
 package taskman.Backend;
 
+import taskman.Backend.ImportExport.ImportExportException;
+import taskman.Backend.Project.Project;
+import taskman.Backend.Project.ProjectOrganizer;
 import taskman.Backend.Task.Task;
+import taskman.Backend.Time.Clock;
+import taskman.Backend.Time.TimeParser;
+import taskman.Backend.User.OperationNotPermittedException;
+import taskman.Backend.User.User;
+import taskman.Backend.User.UserManager;
+import taskman.Backend.Visitor.DetailVisitor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -235,6 +244,32 @@ public class Controller {
     public void addDependencyToTask(String projectName, Integer taskIndex, Integer dependencyTaskIndex) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
         Project project = this.projectOrganizer.getProject(projectName);
         project.getTask(taskIndex).addDependency(project.getTask(dependencyTaskIndex));
+    }
+
+    /**
+     * Return the status of the task.
+     * @param projectName the project fo the task.
+     * @param taskIndex the index of the task.
+     * @return the status of the task.
+     * @throws IllegalArgumentException if the project does not exist.
+     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
+     */
+    public String getTaskStatus(String projectName, Integer taskIndex) {
+        // TODO: @Jeroen
+        return "available";
+    }
+
+    /**
+     * Return the possible statuses of a task.
+     * @param projectName the project fo the task.
+     * @param taskIndex the index of the task.
+     * @return a list of task statuses.
+     * @throws IllegalArgumentException if the project does not exist.
+     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
+     */
+    public List<String> getTaskStatuses(String projectName, Integer taskIndex) {
+        // TODO: @Jeroen
+        return null;
     }
 
     /**

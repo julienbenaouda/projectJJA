@@ -1,7 +1,10 @@
 /**
  * 
  */
-package taskman.Backend;
+package taskman.Backend.User;
+
+import taskman.Backend.Visitor.Entity;
+import taskman.Backend.Visitor.Visitor;
 
 /**
  * This class represents a user in the system.

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package taskman.Backend;
+package taskman.Backend.User;
 
 /**
  * This class represents a developer in the taskman system.

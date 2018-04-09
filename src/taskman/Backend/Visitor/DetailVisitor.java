@@ -1,9 +1,11 @@
-/**
- * 
- */
-package taskman.Backend;
+package taskman.Backend.Visitor;
 
+import taskman.Backend.Project.Project;
 import taskman.Backend.Task.Task;
+import taskman.Backend.Time.Clock;
+import taskman.Backend.Time.TimeParser;
+import taskman.Backend.Time.TimeSpan;
+import taskman.Backend.User.User;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,8 +55,9 @@ public class DetailVisitor implements Visitor {
 	 */
 	private final LocalDateTime currentSystemTime;
 
-	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitProject(taskman.Backend.Project)
+	/**
+	 * visits a project
+	 * @param p the project to visit
 	 */
 	@Override
 	public void visitProject(Project p) {
@@ -69,8 +72,9 @@ public class DetailVisitor implements Visitor {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitTask(taskman.Backend.Task.Task)
+	/**
+	 * visits a task
+	 * @param t the task to visit
 	 */
 	@Override
 	public void visitTask(Task t) {
@@ -83,8 +87,9 @@ public class DetailVisitor implements Visitor {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitTimeSpan(taskman.Backend.TimeSpan)
+	/**
+	 * visits a timeSpan
+	 * @param t the time span to visit
 	 */
 	@Override
 	public void visitTimeSpan(TimeSpan t) {
@@ -95,8 +100,9 @@ public class DetailVisitor implements Visitor {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitClock(taskman.Backend.Clock)
+	/**
+	 * visits the system clock
+	 * @param c the system clock
 	 */
 	@Override
 	public void visitClock(Clock c) {
@@ -107,8 +113,9 @@ public class DetailVisitor implements Visitor {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see taskman.Backend.Visitor#visitUser(taskman.Backend.User)
+	/**
+	 * visits a user
+	 * @param u the user to visit
 	 */
 	@Override
 	public void visitUser(User u) {

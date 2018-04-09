@@ -1,4 +1,4 @@
-package taskman.Backend;
+package taskman.Backend.ImportExport;
 
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -90,7 +90,7 @@ public class XmlObject {
     }
 
     /**
-     * Create a XmlObject from a given XML file.
+     * Create an XmlObject from a given XML file.
      * @param path a String with the path of the file
      * @return the created XmlObject
      * @throws ImportExportException if the object can't be created.
@@ -117,12 +117,12 @@ public class XmlObject {
     }
 
     /**
-     * Create a XmlObject as child of this XmlObject.
+     * Create an XmlObject as child of this XmlObject.
      * @param name a String with the name of the child object.
-     * @return a XmlObject with the given name and parent.
+     * @return an XmlObject with the given name and parent.
      * @throws NullPointerException if the name is null.
      */
-    public XmlObject createXmlObject(String name) throws NullPointerException {
+    public XmlObject createChild(String name) throws NullPointerException {
         if (name == null) {
             throw new NullPointerException("Name of XmlObject is null!");
         }
@@ -134,8 +134,8 @@ public class XmlObject {
     /**
      * Get an XmlObject with the given name that is a child of this object.
      * @param name a String with the name of the object.
-     * @return an XmlObjects.
-     * @throws ImportExportException if a child with the given name is not a XmlObject.
+     * @return an XmlObject.
+     * @throws ImportExportException if a child with the given name is not an XmlObject.
      * @throws NullPointerException if the name is null.
      */
     public XmlObject getXmlObject(String name) throws ImportExportException, NullPointerException {
@@ -152,7 +152,7 @@ public class XmlObject {
      * Get all XmlObject with the given name that are a child of this object.
      * @param name a String with the name of the objects.
      * @return a list of XmlObjects.
-     * @throws ImportExportException if a child with the given name is not a XmlObject.
+     * @throws ImportExportException if a child with the given name is not an XmlObject.
      * @throws NullPointerException if the name is null.
      */
     public List<XmlObject> getXmlObjects(String name) throws ImportExportException, NullPointerException {

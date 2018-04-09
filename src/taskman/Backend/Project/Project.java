@@ -1,8 +1,13 @@
 
-package taskman.Backend;
+package taskman.Backend.Project;
 
 
+import taskman.Backend.User.OperationNotPermittedException;
 import taskman.Backend.Task.Task;
+import taskman.Backend.User.ProjectManager;
+import taskman.Backend.User.User;
+import taskman.Backend.Visitor.Entity;
+import taskman.Backend.Visitor.Visitor;
 
 import java.time.LocalDateTime;
 import java.util.*;

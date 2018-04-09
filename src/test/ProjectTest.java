@@ -3,8 +3,12 @@ package test;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.*;
+import taskman.Backend.Project.Project;
 import taskman.Backend.Task.Task;
+import taskman.Backend.User.Developer;
+import taskman.Backend.User.OperationNotPermittedException;
+import taskman.Backend.User.ProjectManager;
+import taskman.Backend.User.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
