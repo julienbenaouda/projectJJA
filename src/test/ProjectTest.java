@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.Backend.*;
+import taskman.Backend.Task.Task;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -84,7 +85,7 @@ public class ProjectTest {
 	{
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, TaskStatus.FINISHED);
+		t.updateStatus(creation, due, "finished");
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("finished", p.getStatus(due));
 	}
@@ -94,7 +95,7 @@ public class ProjectTest {
 	{
 		p.createTask("taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, TaskStatus.FAILED);
+		t.updateStatus(creation, due, "failed");
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("failed", p.getStatus(due));
 	}
