@@ -14,7 +14,7 @@ public class TitleDecoratorSection extends Section {
     /**
      * Represents the decoration around the title of the sections.
      */
-    private static final String decoration = "----------";
+    private static final char decoration = '-';
 
     /**
      * Represents the section that is decorated.
@@ -40,8 +40,22 @@ public class TitleDecoratorSection extends Section {
      */
     @Override
     public void show() throws Cancel {
-        println("\n" + decoration + ' ' + this.title.toUpperCase() + ' ' + decoration);
+        int before = Math.max(0, 20 - Math.floorDiv(this.title.length(), 2));
+        int after = 40 - this.title.length() - before;
+        println("\n" + repeat(decoration, before) + ' ' + this.title.toUpperCase() + ' ' + repeat(decoration, after));
         this.section.show();
+    }
+
+    /**
+     * Repeat a char c n times.
+     * @param c the char
+     * @param n the number of times
+     * @return a String with n time char c.
+     */
+    private String repeat(char c, int n) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < n; i++) result.append(c);
+        return result.toString();
     }
 
 }
