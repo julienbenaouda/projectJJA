@@ -1,0 +1,436 @@
+@startuml
+
+title TASKMAN\n
+  
+
+
+  package Frontend {
+    class Composite {
+
+    }
+  }
+
+  package Frontend {
+    class Form {
+
+    }
+  }
+
+  package Frontend {
+    abstract class GraphicSection {
+        - title : String
+        {static} - decoration : String
+        
+        + GraphicSection(String title)
+        + void show()
+        {abstract} # void showContent()
+        # void print(String text)
+        # void println(String text)
+        - void printTitle(String text)
+        # String inputString()
+        # String inputString(String question)
+        # String inputValidAnswer(String question, Collection<String> answers)
+    }
+  }
+
+  package Frontend {
+    class Info {
+
+    }
+  }
+
+  package Frontend {
+    class Menu {
+        - names : ArrayList<String>
+        - actions : ArrayList<GraphicSection
+
+        + Menu(String title)
+        + void addOption(String name, GraphicSection action)
+        # void showContent()
+    }
+  }
+
+  package Frontend {
+    class UserInterface {
+        - Controller controller
+
+        + UserInterface(Controller c)
+        + void start()
+        - void startMenu()
+        - void login()
+        - void userCreationMenu()
+        - void importFromFile()
+        - void exportToFile()
+        - void mainMenu()
+        + String selectProject()
+        - void showProjectDetails()
+        - void createProject()
+        - void createTask()
+        - void showSystemTime()
+        - void advanceSystemTime()
+        + void addAlternativeToTask(String name)
+        + void addDependencyToTask(String name)
+        + void showAvailableTasks(String name)
+        - HashMap<String, String> fillInTaskUpdateForm()
+        + void updateTaskStatus(String name)
+        - String mapToString(Map<String, String> map)
+        - void print(String text)
+        - void println(String text)
+        - void printTitle(String text)
+        - String inputString()
+        - String inputString(String question)
+        - Integer inputInteger(String question)
+        - Integer inputIntegerBetween(String question, Integer min, Integer max)
+        - String inputValidAnswer(String question, Collection<String> answers)
+        - String[] inputAnswers(String[] questions)
+        - String[] inputAnswersWithCancel(String[] questions)
+        - boolean inputCancel()
+        - Integer inputOption(String[] items)
+    }
+  }
+  
+
+
+  package Backend {
+    class Initiator {
+        {static} + void main(String[] args)
+        {static} + void initialize()        
+    }
+  }
+
+
+  package Backend {
+    class Controller {
+        - Clock clock
+        - UserManager userManager
+        - ProjectOrganizer projectOrganizer
+
+        + Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer)
+        + String getSystemTime()
+        + void updateSystemTime(String newTime)
+        + String getCurrentUserName()
+        + void createUser(String name, String password, String type)
+        + void login(String name, String password)
+        + void logout()
+        + Collection<String> getProjectNames()
+        + String getProjectStatus(String projectname)
+        + Map<String, String> getProjectDetails(String name)
+        + void createProject(String name, String description, String dueTime)
+        + Integer getNumberOfTasks(String projectName)
+        + Map<String, String> getTaskDetails(String projectName, Integer taskIndex)
+        + void createTask(String projectName, String description, Long estimatedDuration, Double acceptableDeviation)
+        + void addAlternativeToTask(String projectName, Integer taskIndex, Integer alternativeTaskIndex)
+        + void addDependencyToTask(String projectName, Integer taskIndex, Integer dependencyTaskIndex)
+        + void updateTaskStatus(String projectName, Integer taskIndex, String startTime, String endTime, String status)
+        + void exportSystem(String path)
+        {static} + Controller importSystem(String path)
+    }
+  }
+
+
+  package Backend {
+    class Clock {
+        - time : LocalDateTime
+
+        + LocalDateTime getTime()
+        + void updateSystemTime(LocalDateTime newTime)
+        + accept(Visitor v)
+    }
+  }
+
+
+  package Backend {
+    class TimeParser {
+        {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+
+        {static} + String convertLocalDateTimeToString(LocalDateTime time)
+        {static} + LocalDateTime convertStringToLocalDateTime(String time)       
+    }
+  }
+
+
+  package Backend {
+    interface Entity {
+        + void accept(Visitor v)
+    }
+  }
+
+
+  package Backend {
+    interface Visitor {
+        + void visitProject(Project p)
+        + void visitTask(Task t)
+        + void visitTimeSpan(TimeSpan t)
+        + void visitClock(Clock c)
+        + void visitUser(User u)
+    }
+  }
+  
+
+  package Backend {
+    class Project {
+        - name : String
+        - description : String
+        - creationTime : LocalDateTime
+        - dueTime : LocalDateTime
+        - taskList : ArrayList<Task>
+
+        + Project(String name, String description, LocalDateTime startTime, LocalDateTime dueTime, User user)
+        + createTask(String description, long estimatedDuration, double acceptableDeviation, User user)
+        + String getName()
+        - void setName(String name)
+        + String getDescription()
+        - void setDescription(String description)
+        + LocalDateTime getCreationTime()
+        - void setCreationTime(LocalDateTime creationTime)
+        + LocalDateTime getDueTime()
+        - void setDueTime(LocalDateTime dueTime)
+        + List<Task> getTasks()
+        + Task getTask(int index)
+        - void addTaskToList(Task t)
+        + void removeTask(Task task)
+        + boolean isFinished()
+        + void accept(Visitor v)
+    }
+  }
+
+
+  package Backend {
+    class ProjectOrganizer {
+        - projects : Collection<Project>
+
+        + ProjectOrganizer()
+        + Project getProject(String name)
+        + createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user
+        + Collection<String> getProjectNames()
+        + boolean projectExists())
+    }
+  }
+  
+
+  package Backend {
+    enum TaskStatus {
+        INACTIVE
+        FINISHED
+        FAILED
+
+        {static} + TaskStatus fromString(String s)
+        + String toString()
+        + boolean isFinal()
+    }
+  }
+  
+
+  package Backend {
+    class Task {
+        - description : String
+        - estimatedDuration : long
+        - acceptableDeviation : double
+        - dependencies : ArrayList<Task>
+        - TimeSpan timesSpan
+        - reservations: Lisst<Reservation>
+
+        + Task(String description, long estimatedDuration, double acceptableDeviation)
+        - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskStatus status)
+        + String getDescription()
+        - void setDescription(String description)
+        + long getEstimatedDuration()
+        - void setEstimatedDuration(long duration)
+        + double getAcceptableDeviation()
+        - void setAcceptableDeviation(double acceptableDeviation)
+        + timeSpan getTimeSpan()
+        - void setTimeSpan(TimeSpan timeSpan)
+        + getStatus()
+        - setStatus(TaskStatus status)
+        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status)
+        + boolean isAvailable()
+        + isFinished()
+        + long getDelay()
+        + Task getAlternative()
+        + void setAlternative(Task task)
+        + ArrayList<Task> getDependencies()
+        - void setDependencies(ArayList<Task> tasks)
+        + void addDependency(Task task)
+        + void removeDependency(Task task)
+        {static} - boolean containsLoop(Task root, Task searchedTask)
+        + void accept(Visitor v)
+    }
+  }
+
+
+  package Backend {
+    class TimeSpan {
+        - startTime: LocalDateTime
+        - endTime: LocalDateTime
+
+        + TimeSpan(LocalDateTime startTime, LocalDateTime endtime)
+        + LocalDateTime getStartTime()
+        - void setStartTime(LocalDateTime startTime)
+        + LocalDateTime getEndTime()
+        - void setEndTime(LocalDateTime endTime)
+        + boolean canHaveAsEndTime(LocalDateTime endtime)
+        + accept(Visitor v)
+    }
+  }  
+
+
+  package Backend {
+     interface Resource {
+          + getAvailability()
+          - isAvailable(LocalDateTime currentTime)
+     }
+  }
+
+  package Backend {
+     class ResourceItem {
+          - type: String
+          - getAvailability()
+          - boolean isAvailable(LocalDateTime currentTime)
+     }
+  }
+
+  package Backend {
+     class ResourceItemWorkingDays {
+          - getAvailability()
+     }
+  }
+
+  package Backend {
+     class ResourceManager {
+          - resources: Map<int, Resource>
+          - reservations: List<Reservation>
+          + Set<String> getResourceTypes()
+     }
+  }
+
+  package Backend {
+     class ResourceInterpreter {
+        + testConstraint(String resource, String other)
+     }
+  }
+
+  package Backend {
+     class Reservation {
+          - resource: Resource
+          - task: Task
+          - timeSpan: TimeSpan
+     }
+  }
+
+  package Backend {
+     class UserManager {
+        - users: HashMap<String, User>
+        - currentUser: User
+
+        + UserManager()
+        - Map<String, User> getUsers()
+        + User getCurrentUser()
+        + void setCurrentUser(User user)
+        + boolean hasCurrentUser()
+        + void createUser(String name, String password, String type)
+        - void createDeveloper(String name, String password)
+        - void createProjectManager(String name, String password)
+        + void login(String name, String password)
+        + void logout()
+     }
+  }
+
+
+  package Backend {
+     abstract class User {
+        - name: String
+        - password: String
+
+        + User(String name, String password)
+        + String getName()
+        - void setName(String name)
+        + String getPassword()
+        - void setPassword(String password)
+        + accept(Visitor v)
+     }
+  }
+
+
+  package Backend {
+     class ProjectManager {
+         + ProjectManager(String name, String password)
+     }
+  }
+
+
+  package Backend {
+     class Developer {
+          + Developer(String name, String password)
+          - void getAvailability()
+     }
+  }
+  
+
+  package Backend {
+    class ImportExportException {
+        + ImportExportException(String message)
+    }
+  }
+
+
+  package Backend {
+    class OperationNotPermittedException {
+        + OperationNotPermittedException(String message)
+    }
+  }  
+   
+
+  package Backend {
+    class XmlObject {
+        - doc : Document
+        - element : Element
+
+        + XmlObject()
+        - XmlObject(Document doc, Element e)
+        + void exportTo(String path)
+        {static} + XmlObject importFrom(String path)
+        + List<XmlObject> getXmlObjects(String name)
+        + XmlObject getXmlObject(String name)
+        + XmlObject createXmlLObject(String name)
+        + String getAttribute(String name)
+        + void addAttribute(String name, String value)        
+        + List<String> getTexts(String name)
+        + String getText(String name)
+        + void addText(String element, String value)
+    }
+  }
+  
+
+
+  GraphicSection <|-- Menu
+  UserInterface o-- Controller
+
+  Task *-- TimeSpan
+  Task *-- Reservation
+  ResourseManager *-- Reservation
+  ResourceManager *-- Resource
+  Resource *-- Reservation
+  ResourceItem <|-- Resource
+  ResourceItemWorkingDays <|-- ResourceItem
+  Developer <|-- Resource
+  ResourceManager o-- ResourceInterpreter
+
+  Controller *-- Clock 
+  Controller *-- ProjectOrganizer
+  Controller o-- Project
+  Controller o-- Task
+  Controller o-- User
+  Project *-- Task: task
+  Task *-- Task : alternative
+  Task *-- Task: dependencies
+  Task *-- TimeSpan: timespans
+  controller *-- UserManager
+  UserManager *-- User
+  Developer <|-- User
+  ProjectManager <|-- User
+  Task o-- User
+  Project o-- User
+  Controller o-- User
+
+
+@enduml
