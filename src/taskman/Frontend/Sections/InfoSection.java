@@ -1,4 +1,4 @@
-package taskman.Frontend;
+package taskman.Frontend.Sections;
 
 /**
  * This class is responsible for showing a piece of information to the user.

@@ -1,4 +1,4 @@
-package taskman.Frontend;
+package taskman.Frontend.Sections;
 
 import java.io.BufferedReader;
 import java.io.IOException;

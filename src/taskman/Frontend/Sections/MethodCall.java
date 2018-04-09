@@ -1,4 +1,4 @@
-package taskman.Frontend;
+package taskman.Frontend.Sections;
 
 @FunctionalInterface
 public interface MethodCall {

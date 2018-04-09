@@ -1,4 +1,4 @@
-package taskman.Frontend;
+package taskman.Frontend.Sections;
 
 /**
  * This class represents an error that is thrown when a user cancels a section.

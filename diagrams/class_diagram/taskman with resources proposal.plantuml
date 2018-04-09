@@ -1,7 +1,7 @@
 @startuml
 
 title TASKMAN\n
-  
+
 
 
   package Frontend {
@@ -20,7 +20,7 @@ title TASKMAN\n
     abstract class GraphicSection {
         - title : String
         {static} - decoration : String
-        
+
         + GraphicSection(String title)
         + void show()
         {abstract} # void showContent()
@@ -88,13 +88,13 @@ title TASKMAN\n
         - Integer inputOption(String[] items)
     }
   }
-  
+
 
 
   package Backend {
     class Initiator {
         {static} + void main(String[] args)
-        {static} + void initialize()        
+        {static} + void initialize()
     }
   }
 
@@ -144,7 +144,7 @@ title TASKMAN\n
         {static} - DATE_TIME_FORMATTER : DateTimeFormatter
 
         {static} + String convertLocalDateTimeToString(LocalDateTime time)
-        {static} + LocalDateTime convertStringToLocalDateTime(String time)       
+        {static} + LocalDateTime convertStringToLocalDateTime(String time)
     }
   }
 
@@ -165,7 +165,7 @@ title TASKMAN\n
         + void visitUser(User u)
     }
   }
-  
+
 
   package Backend {
     class Project {
@@ -206,7 +206,7 @@ title TASKMAN\n
         + boolean projectExists())
     }
   }
-  
+
 
   package Backend {
     enum TaskStatus {
@@ -219,7 +219,7 @@ title TASKMAN\n
         + boolean isFinal()
     }
   }
-  
+
 
   package Backend {
     class Task {
@@ -228,7 +228,7 @@ title TASKMAN\n
         - acceptableDeviation : double
         - dependencies : ArrayList<Task>
         - TimeSpan timesSpan
-        - reservations: Lisst<Reservation>
+        - reservations: List<Reservation>
 
         + Task(String description, long estimatedDuration, double acceptableDeviation)
         - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskStatus status)
@@ -271,7 +271,7 @@ title TASKMAN\n
         + boolean canHaveAsEndTime(LocalDateTime endtime)
         + accept(Visitor v)
     }
-  }  
+  }
 
 
   package Backend {
@@ -364,7 +364,7 @@ title TASKMAN\n
           - void getAvailability()
      }
   }
-  
+
 
   package Backend {
     class ImportExportException {
@@ -377,8 +377,8 @@ title TASKMAN\n
     class OperationNotPermittedException {
         + OperationNotPermittedException(String message)
     }
-  }  
-   
+  }
+
 
   package Backend {
     class XmlObject {
@@ -393,13 +393,13 @@ title TASKMAN\n
         + XmlObject getXmlObject(String name)
         + XmlObject createXmlLObject(String name)
         + String getAttribute(String name)
-        + void addAttribute(String name, String value)        
+        + void addAttribute(String name, String value)
         + List<String> getTexts(String name)
         + String getText(String name)
         + void addText(String element, String value)
     }
   }
-  
+
 
 
   GraphicSection <|-- Menu
@@ -407,7 +407,7 @@ title TASKMAN\n
 
   Task *-- TimeSpan
   Task *-- Reservation
-  ResourseManager *-- Reservation
+  ResourceManager *-- Reservation
   ResourceManager *-- Resource
   Resource *-- Reservation
   ResourceItem <|-- Resource
@@ -415,7 +415,7 @@ title TASKMAN\n
   Developer <|-- Resource
   ResourceManager o-- ResourceInterpreter
 
-  Controller *-- Clock 
+  Controller *-- Clock
   Controller *-- ProjectOrganizer
   Controller o-- Project
   Controller o-- Task
@@ -424,7 +424,7 @@ title TASKMAN\n
   Task *-- Task : alternative
   Task *-- Task: dependencies
   Task *-- TimeSpan: timespans
-  controller *-- UserManager
+  Controller *-- UserManager
   UserManager *-- User
   Developer <|-- User
   ProjectManager <|-- User

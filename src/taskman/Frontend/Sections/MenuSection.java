@@ -1,4 +1,4 @@
-package taskman.Frontend;
+package taskman.Frontend.Sections;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,8 @@ public class MenuSection extends Section {
         this.selectionSection.show();
         try {
             this.actions.get(this.selectionSection.getAnswer()).call();
-        } catch (Cancel ignored) {
+        } catch (Cancel e) {
+            println("Cancelled!");
         } catch (Exception e) {
             println("An error occurred: " + e.getMessage());
         }
