@@ -367,7 +367,7 @@ title TASKMAN\n
   GraphicSection <|-- Menu
   UserInterface o-- Controller
 
-  Task *-- TimeSpan (moet volle ruit zijn)
+  Task *-- TimeSpan
 
   Controller *-- Clock 
   Controller *-- Project
