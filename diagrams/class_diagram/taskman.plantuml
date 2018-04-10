@@ -166,6 +166,21 @@ title TASKMAN\n
     }
   }
   
+  package Backend {
+    class DetailVisitor {
+        - Map<String, String> details
+        - LocalDateTime currentSystemTime
+        + DetailVisitor(LocalDateTime currentSystemTime)
+        + getCurrentSystemTime()
+        - createDetailsMap()
+        + Map<String, String> getDetails()
+        + void visitProject(Project p)
+        + void visitTask(Task t)
+        + void visitTimeSpan(TimeSpan t)
+        + void visitClock(Clock c)
+        + void visitUser(User u)
+    }
+  }
 
   package Backend {
     class Project {
@@ -208,17 +223,6 @@ title TASKMAN\n
   }
   
 
-  package Backend {
-    enum TaskStatus {
-        INACTIVE
-        FINISHED
-        FAILED
-
-        {static} + TaskStatus fromString(String s)
-        + String toString()
-        + boolean isFinal()
-    }
-  }
   
 
   package Backend {
@@ -228,10 +232,10 @@ title TASKMAN\n
         - acceptableDeviation : double
         - dependencies : ArrayList<Task>
         - TimeSpan timesSpan
-        - TaskStatus status
+        - State: state
 
         + Task(String description, long estimatedDuration, double acceptableDeviation)
-        - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskStatus status)
+        - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan)
         + String getDescription()
         - void setDescription(String description)
         + long getEstimatedDuration()
@@ -240,16 +244,22 @@ title TASKMAN\n
         - void setAcceptableDeviation(double acceptableDeviation)
         + timeSpan getTimeSpan()
         - void setTimeSpan(TimeSpan timeSpan)
-        + getStatus()
-        - setStatus(TaskStatus status)
-        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status)
+        # setTimeSpan(LocalDateTime startTime, LocalDateTime endTime)
+        + TaskState getState()
+        # void setState()
+        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status)
         + boolean isAvailable()
-        + isFinished()
+        + boolean getUnavailable()
+        + boolean isExecuting()
+        + boolean isFinished()
+        + boolean isFailed()
         + long getDelay()
         + Task getAlternative()
         + void setAlternative(Task task)
+        # void setAlternativeTask(Task task)
         + ArrayList<Task> getDependencies()
         - void setDependencies(ArayList<Task> tasks)
+        # addDependencyTask(Task task)
         + void addDependency(Task task)
         + void removeDependency(Task task)
         {static} - boolean containsLoop(Task root, Task searchedTask)
@@ -257,6 +267,76 @@ title TASKMAN\n
     }
   }
 
+  package taskman {
+    package taskman.Backend {
+      package taskman.Backend.Task {
+        abstract class TaskState {
+            + boolean isAvailable(Task task)
+            + boolean isUnavailable(Task task)
+            + boolean isExecuting(Task task)
+            + boolean isFinished(Task task)
+            + boolean isFailed(Task task)
+            + long getDelay(Task task)
+            + boolean updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus)
+            + void setAlternative(Task task, Task alternative)
+            + void addDependency(Task task, Task dependency)
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.Backend {
+      package taskman.Backend.Task {
+        class TaskStateExecuting {
+            + TaskStateExecuting()
+            + boolean isExecuting()
+            + void updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime)
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.Backend {
+      package taskman.Backend.Task {
+        class TaskStateFailed {
+            + TaskStateFailed()
+            + boolean isFailed()
+            + void setAlternative(Task task, Task alternative)
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.Backend {
+      package taskman.Backend.Task {
+        class TaskStateFinished {
+            + TaskStateFinished()
+            + boolean isFinished()
+            + long getDelay(Task task)
+        }
+      }
+    }
+  }
+  
+  package taskman {
+    package taskman.Backend {
+      package taskman.Backend.Task {
+        class TaskStateInactive {
+            + TaskStateInactive()
+            + boolean isAvailable(Task task)
+            + boolean isUnavailable(Task task)
+            + void addDependency(Task task, Task dependency)
+        }
+      }
+    }
+  }
+  
 
   package Backend {
     class TimeSpan {
@@ -370,32 +450,39 @@ title TASKMAN\n
   Task *-- TimeSpan
 
   Controller *-- Clock 
-  Controller *-- Project
+  Controller *-- ProjectOrganizer
+  Controller o-- Project
   Controller o-- Task
   Controller o-- XmlObject
   Controller o-- User
+  ProjectOrganizer *-- Project
   Project *-- Task: task
   Task *-- Task : alternative
   Task *-- Task: dependencies
   Task *-- TimeSpan: timespans
-  TimeSpan *-- TaskStatus : status
-  UI *-- Controller : controller
-  User *-- UserType: usertype
+  Task *-- TaskState
+  TaskStateInactive <|-- TaskState
+  TaskStateExecuting <|-- TaskState
+  TaskStateFailed <|-- TaskState
+  TaskStateFinished <|-- TaskState
   XmlObject o-- Project
   XmlObject o-- Task
   XmlObject o-- User
   XmlObject o-- Clock
   XmlObject o-- XmlException
-  UI o-- XmlException
   controller o-- UserManager
   UserManager o-- User
-  UserManager o-- Developer
-  UserManager o-- ProjectManager
   Developer <|-- User
   ProjectManager <|-- User
   Task o-- User
   Project o-- User
   Controller o-- User
+  Project o-- Visitor
+  Task o-- Visitor
+  TimeSpan o-- Visitor
+  User o-- Visitor
+  Controller o-- Visitor
+  DetailVisitor <|-- Visitor
 
 
 @enduml
