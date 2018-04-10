@@ -256,7 +256,9 @@ public class Controller {
      */
     public String getTaskStatus(String projectName, Integer taskIndex) {
         // TODO: @Jeroen
-        return "available";
+        Project project = this.projectOrganizer.getProject(projectName);
+        Task task = project.getTask(taskIndex);
+        return task.getState().getStatus();
     }
 
     /**

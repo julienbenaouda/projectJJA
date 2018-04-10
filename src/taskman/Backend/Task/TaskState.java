@@ -6,6 +6,16 @@ public abstract class  TaskState {
 
     // TODO: moet niet alles protected staan?
 
+    private String status;
+
+    public String getStatus(){
+        return status;
+    }
+
+    protected void setStatus(String status){
+        this.status = status;
+    }
+
     public  boolean isAvailable(Task task){
         return false;
     }

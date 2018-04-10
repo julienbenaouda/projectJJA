@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 
 public class TaskStateExecuting extends TaskState{
 
-    public TaskStateExecuting(){}
+    public TaskStateExecuting(){
+        setState("executing");
+    }
 
     @Override
     public boolean isExecuting(){
