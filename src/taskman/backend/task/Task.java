@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
@@ -32,7 +33,7 @@ public class Task implements Entity {
         setAcceptableDeviation(acceptableDeviation);
         setState(new TaskStateInactive());
         dependencies = new ArrayList<>();
-        requirements = new HashMap<ResourceType, Integer>;
+        requirements = new HashMap<ResourceType, Integer>();
     }
 
 
@@ -388,7 +389,7 @@ public class Task implements Entity {
      */
     public Map<ResourceType, Integer> getRequirements()
     {
-    	return requirements.clone();
+    	return (Map<ResourceType, Integer>) requirements.clone();
     }
     
     /**

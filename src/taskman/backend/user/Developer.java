@@ -72,6 +72,6 @@ public class Developer extends User implements Resource {
 	/**
 	 * represents the resource type
 	 */
-	private ResourceType Type;
+	private ResourceType type;
 
 }
