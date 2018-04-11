@@ -41,6 +41,7 @@ public class Reservation {
     public Task getTask(){
         return task;
     }
+    // TODO: dit de verantwoordelijkheid geven over de bidirectioneele verbinding
 
     /**
      * Sets the task of the reservation to the given task.
