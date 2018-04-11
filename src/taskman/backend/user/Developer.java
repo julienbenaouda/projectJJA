@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import taskman.backend.resource.Reservation;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.AvailabilityPeriod;
@@ -59,7 +60,7 @@ public class Developer extends User implements Resource {
 	private AvailabilityPeriod breakTime;
 
 	@Override
-	public LocalDateTime firstAvailableTime(LocalDateTime time, ArrayList<Resource> resources) {
+	public LocalDateTime firstAvailableTime(LocalDateTime time) {
 		// TODO add implementation for this method
 		return null;
 	}
@@ -74,4 +75,24 @@ public class Developer extends User implements Resource {
 	 */
 	private ResourceType type;
 
+	/**
+	 * adds a reservation to the list of reservations
+	 * @param reservation the reservation to add
+	 */
+	public void addReservation(Reservation r)
+	{
+		reservations.add(r);
+	}
+	
+	/**
+	 * returns all reservations for this resource
+	 */
+	private ArrayList<Reservation> getReservations() {
+		return reservations;
+	}
+	
+	/**
+	 * represents the list of reservations
+	 */
+	private ArrayList<Reservation> reservations;
 }

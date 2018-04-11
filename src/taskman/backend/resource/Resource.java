@@ -20,7 +20,7 @@ public interface Resource {
 	 * @param resources the list of resources to search in
 	 * @return The first available time to plan the task
 	 */
-	LocalDateTime firstAvailableTime(LocalDateTime time, ArrayList<Resource> resources);
+	LocalDateTime firstAvailableTime(LocalDateTime time, long duration);
 	
 	/**
 	 * Returns the type of the resource.
