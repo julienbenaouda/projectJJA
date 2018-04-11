@@ -304,7 +304,6 @@
             - alternative: Task
             - dependencies: List<Task>
             - requirements: Map<ResourceType, Integer>
-            - reservations: Collection<Reservation>
 
             + Task(String, long, double)
             - Task(String, long, double, TimeSpan, TaskState)
@@ -335,6 +334,8 @@
             + addDependency(Task): void
             + removeDependency(Task): void
             {static} # containsLoop(Task, Task): void
+            + getRequirements(): Map<ResourceType, Integer>
+            + addRequirements(ResourceType, int): void
             + accept(Visitor): void
         }
 
@@ -376,43 +377,59 @@
         }
       }
 
-      package taskman.backend.resources {
+      package taskman.backend.resource {
+
+        class Reservation {
+             - task: Task
+             - resource: Resource
+             - timeSpan: TimeSpan
+             - isSpecifiedByUser: boolean
+
+             + Reservation(Task, Resource, LocalDateTime, LocalDateTime)
+             + getTask(): Task
+             - setTask(Task): void
+             + getResource(): Resource
+             - setResource(Resource): void
+             + getTimeSpan(): TimeSpan
+             - setTimeSpan(LocalDateTime, LocalDateTime): void
+        }
+
+        interface Resource {
+           + firstAvailableTime(LocalDateTime, long): LocalDateTime
+           + getType(): ResourceType
+        }
+
+        class ResourceItem {
+           - type: ResourceType
+           - reservations: List<Reservation>
+           - availibility: Map<Integer, AvailibilityPeriod>
+
+           + ResourceItem(ResourceType)
+           + firstAvailableTime(LocalDateTime, long): LocalDateTime
+           - calculateStartTime(LocalDateTime): LocalDateTime
+           - calculateEndTime(LocalDateTime, long): LocalDateTime
+           + getType(): ResourceType
+           - setType(): void
+           + addReservation(Reservation): void
+           - getReservations(): List<Reservation>
+           - getAvailability(): Map<Integer, AvailabilityPeriod>
+        }
 
         class ResourceManager {
-           - resourceTypes: List<ResourceType>
-           - reservations: List<Reservation>
+           - resourceType: Collection<ResourceType>
 
-           + createResourceType(String, Collection<Constraint>): void
-           + assignReservations(Task): void
-           + getReservations(Task): Collection<Reservation>
+           + ResourceManager()
+           + getResourceType(String): ResourceType
+           + addResourceType(String): void
         }
 
         class ResourceType {
            - name: String
-           - constraints: Collection<Constraint>
-           - resources: List<Resource>
-        }
-
-        interface Resource {
-           + isAvailable(LocalDateTime time)
-           + ResourceType getType()
-           + isReserved(WeekTimeSpan timeSpan)
-        }
-
-        class ResourceItem {
-           - unavailableTimes: Collection<WeekTimeSpan>
-           - reservations: Collection<Reservation>
-           - type: ResourceType
-
-           + isAvailable(LocalDateTime currentTime)
-           + ResourceType getType()
-           + isReserved(WeekTimeSpan timeSpan)
-        }
-
-        class Reservation {
-             - resource: Resource
-             - timeSpan: TimeSpan
-             - isSpecifiedByUser: boolean
+           
+           + ResourceType(String)
+           + getName(): String
+           - setName(String): void
+           + hashCode(): int
         }
 
         interface Constraint {
