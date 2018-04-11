@@ -3,13 +3,14 @@ package test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import taskman.Backend.Task.*;
+
+import taskman.backend.task.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 /**
- * This is a test class for the Task class.
+ * This is a test class for the task class.
  * @author Jeroen Van Der Donckt
  *
  */

@@ -4,8 +4,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.ImportExport.ImportExportException;
-import taskman.Backend.ImportExport.XmlObject;
+
+import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importExport.XmlObject;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;

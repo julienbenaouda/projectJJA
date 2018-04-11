@@ -1,0 +1,10 @@
+* getTaskDetails() not in task but in controller or UI:
+  -> If in UI at least all getters and setters in controller
+  -> If in controller: not really the responsibility of controller but easier to maintain and it's just 
+     collecting information and passing to the UI
+
+--------------------------------------------------------------------------------------
+* Is voor Status state pattern beter of is enum goed genoeg?
+* isAvailable(), isUnavailable(), isFinished() etc... geprogrammeerd
+  maar ik heb ook overal nu als string status bijgehouden,
+  biedt dit echt nog meerwaarde?

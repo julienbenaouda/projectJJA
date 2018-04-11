@@ -8,7 +8,7 @@
         {static} + main(): void
     }
 
-    package taskman.Frontend {
+    package taskman.frontend {
 
       class UserInterface {
           - controller: Controller
@@ -35,7 +35,7 @@
           - mapToString(Map<String, String>): String
       }
 
-      package taskman.Frontend.Sections {
+      package taskman.frontend.sections {
 
         class Cancel {
         }
@@ -112,7 +112,7 @@
       }
     }
 
-    package taskman.Backend {
+    package taskman.backend {
 
       class Controller {
           - clock: Clock
@@ -142,7 +142,7 @@
           {static} + importSystem(String): void
       }
 
-      package taskman.Backend.Time {
+      package taskman.backend.time {
 
         class Clock {
             - time : LocalDateTime
@@ -173,7 +173,7 @@
         }
       }
 
-      package taskman.Backend.ImportExport {
+      package taskman.backend.importExport {
         class ImportExportException {
             + ImportExportException(String)
         }
@@ -197,7 +197,7 @@
         }
       }
 
-      package taskman.Backend.Visitor {
+      package taskman.backend.visitor {
 
         interface Entity {
             {abstract} + accept(Visitor): void
@@ -236,7 +236,7 @@
         }
       }
 
-      package taskman.Backend.Project {
+      package taskman.backend.project {
 
         class ProjectOrganizer {
             - projects : Collection<Project>
@@ -275,7 +275,7 @@
         }
       }
 
-      package taskman.Backend.Task {
+      package taskman.backend.task {
         class Task {
             - description : String
             - estimatedDuration : long
@@ -355,7 +355,7 @@
         }
       }
 
-      package taskman.Backend.User {
+      package taskman.backend.user {
 
         class OperationNotPermittedException {
             + OperationNotPermittedException()

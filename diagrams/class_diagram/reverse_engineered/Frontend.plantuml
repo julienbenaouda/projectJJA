@@ -3,7 +3,7 @@
 title __FRONTEND's Class Diagram__\n
 
   package taskman {
-    package taskman.Frontend {
+    package taskman.frontend {
       class UserInterface {
           + UserInterface()
           + start()

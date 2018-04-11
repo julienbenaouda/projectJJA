@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.Backend.User.ProjectManager;
+import taskman.backend.user.ProjectManager;
 
 /**
  * @author Julien Benaouda

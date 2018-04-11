@@ -3,12 +3,13 @@ package test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.*;
-import taskman.Backend.ImportExport.ImportExportException;
-import taskman.Backend.Project.ProjectOrganizer;
-import taskman.Backend.Time.Clock;
-import taskman.Backend.Time.TimeParser;
-import taskman.Backend.User.UserManager;
+
+import taskman.backend.*;
+import taskman.backend.importExport.ImportExportException;
+import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.time.Clock;
+import taskman.backend.time.TimeParser;
+import taskman.backend.user.UserManager;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
@@ -49,7 +50,7 @@ public class ControllerTest {
 
     @Test
     public void project_and_task() {
-        // Project and task are only tested to make sure that the controller works correctly.
+        // project and task are only tested to make sure that the controller works correctly.
         // More extended tests are located in separate test classes.
         userManager.createUser("pm", "test", "projectmanager");
         userManager.createUser("d", "test", "developer");
@@ -60,15 +61,15 @@ public class ControllerTest {
         assertEquals("Initial project list should be empty!", 0, projectOrganizer.getProjectNames().size());
         String due = "06/07/2008 09:10";
         controller.createProject(projectName, "test description", due);
-        assertEquals("Project list should contain one project!", 1, projectOrganizer.getProjectNames().size());
+        assertEquals("project list should contain one project!", 1, projectOrganizer.getProjectNames().size());
         assertTrue("The project name is incorrect!", controller.getProjectNames().contains(projectName));
-        assertNotNull("Project details cannot be null!", controller.getProjectDetails(projectName));
+        assertNotNull("project details cannot be null!", controller.getProjectDetails(projectName));
 
-        assertEquals("Project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
+        assertEquals("project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
         controller.createTask(projectName, "test task description", Long.toString(709l), Double.toString(1.345));
         assertEquals("The task is not added!", (Integer) 1, controller.getNumberOfTasks(projectName));
         int taskId = 0;
-        assertNotNull("Task details cannot be null!", controller.getTaskDetails(projectName, taskId));
+        assertNotNull("task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
         controller.createTask(projectName, "test task description", Long.toString(888l), Double.toString(1.45));
         int dependencyTaskId = 1;
@@ -89,10 +90,10 @@ public class ControllerTest {
         String newTime = "09/03/2018 17:13";
         assertNotEquals("Initial time is equal to example time!", newTime, time);
         controller.updateSystemTime(newTime);
-        assertEquals("Time is not updated!", newTime, controller.getSystemTime());
+        assertEquals("time is not updated!", newTime, controller.getSystemTime());
         try {
             controller.updateSystemTime(time);
-            fail("Time should not be updated to the past!");
+            fail("time should not be updated to the past!");
         }
         catch (Exception e) {
             assertEquals("Wrong exception when updating time to past! (" + e.getMessage() + ")", IllegalArgumentException.class, e.getClass());
@@ -101,8 +102,8 @@ public class ControllerTest {
 
     @Test
     public void user() {
-        assertNotNull("User cannot be null!", controller.getCurrentUserName());
-        assertNotEquals("User cannot be ''!", "", controller.getCurrentUserName());
+        assertNotNull("user cannot be null!", controller.getCurrentUserName());
+        assertNotEquals("user cannot be ''!", "", controller.getCurrentUserName());
         controller.createUser("testUser", "testPassword", "developer");
         controller.login("testUser", "testPassword");
         assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUserName());

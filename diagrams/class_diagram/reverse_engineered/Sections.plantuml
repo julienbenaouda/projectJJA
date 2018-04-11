@@ -3,8 +3,8 @@
 title __SECTIONS's Class Diagram__\n
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class Cancel {
         }
       }
@@ -43,8 +43,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class FormSection {
             - withCancel : Boolean
             - questions : List<String>
@@ -61,8 +61,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class InfoSection {
             - text : String
             - halt : boolean
@@ -75,8 +75,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class MenuSection {
             - actions : Map<String, MethodCall>
             + MenuSection()
@@ -89,8 +89,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         interface MethodCall {
             {abstract} + call()
         }
@@ -100,8 +100,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         abstract class Section {
             {abstract} + show()
             ~ print()
@@ -116,8 +116,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class SelectionSection {
             - withCancel : Boolean
             - cancelText : String
@@ -139,8 +139,8 @@ title __SECTIONS's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.sections {
         class TitleDecoratorSection {
             - title : String
             {static} - decoration : char

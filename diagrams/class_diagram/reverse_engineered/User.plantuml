@@ -3,8 +3,8 @@
 title __USER's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.User {
+    package taskman.backend {
+      package taskman.backend.user {
         class Developer {
             + Developer()
         }
@@ -14,8 +14,8 @@ title __USER's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.User {
+    package taskman.backend {
+      package taskman.backend.user {
         class OperationNotPermittedException {
             + OperationNotPermittedException()
         }
@@ -55,8 +55,8 @@ title __USER's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.User {
+    package taskman.backend {
+      package taskman.backend.user {
         class ProjectManager {
             + ProjectManager()
         }
@@ -66,8 +66,8 @@ title __USER's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.User {
+    package taskman.backend {
+      package taskman.backend.user {
         abstract class User {
             - name : String
             - password : String
@@ -84,8 +84,8 @@ title __USER's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.User {
+    package taskman.backend {
+      package taskman.backend.user {
         class UserManager {
             - users : HashMap<String, User>
             + UserManager()

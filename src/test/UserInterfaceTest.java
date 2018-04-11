@@ -7,7 +7,7 @@ public class UserInterfaceTest {
 
 	private UserInterfaceMock ui;
 	private Controller c;
-	private HashMap<String, Project> projects; 
+	private HashMap<String, project> projects;
 	class UserInterfaceMock extends UserInterface {
 		ArrayDeque<String> input;
 		String output;
@@ -72,9 +72,9 @@ public class UserInterfaceTest {
 
 	@Test
 	public void testListProjects() {
-		Project p1 = new Project("test 1", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
+		project p1 = new project("test 1", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
 		projects.put("test 1", p1);
-		Project p2 = new Project("test 2", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
+		project p2 = new project("test 2", "testdesc", "22/02/2016 22:00", "22/03/2017 12:00");
 		projects.put("test 2", p2);
 		try {
 			ui.showProjectsAndTasks();
@@ -93,7 +93,7 @@ public class UserInterfaceTest {
 		try {
 			ui.createProject();
 		} catch (UnsupportedOperationException e) {}
-		Assert.assertTrue(ui.getOutput().contains("Project created successfully"));
+		Assert.assertTrue(ui.getOutput().contains("project created successfully"));
 	}
 	
 	@Test
@@ -112,7 +112,7 @@ public class UserInterfaceTest {
 	@Test
 	public void testOpenProject()
 	{
-		Project p = new Project("test", "testdesc", "09/03/2018 20:00", "04/12/2019 09:00");
+		project p = new project("test", "testdesc", "09/03/2018 20:00", "04/12/2019 09:00");
 		projects.put("test", p);
 		ui.setInput("test");
 		try {
@@ -134,7 +134,7 @@ public class UserInterfaceTest {
 	@Test
 	public void testShowProjectDetails()
 	{
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		ui.setInput("1");
 		ui.setInput("test");
@@ -148,7 +148,7 @@ public class UserInterfaceTest {
 	@Test
 	public void testAddTask()
 	{
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		ui.setInput("5");
 		ui.setInput("10");
@@ -156,13 +156,13 @@ public class UserInterfaceTest {
 		try {
 			ui.createTask("test");
 		} catch (UnsupportedOperationException e) {}
-		Assert.assertTrue(ui.getOutput().contains("Task added successfully"));
+		Assert.assertTrue(ui.getOutput().contains("task added successfully"));
 	}
 	
 	@Test
 	public void addTaskInvalidData()
 	{
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
 		ui.setInput("5");
 		ui.setInput("noNumber");
@@ -180,9 +180,9 @@ public class UserInterfaceTest {
 		try {
 			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
@@ -201,9 +201,9 @@ public class UserInterfaceTest {
 		try {
 			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
 		ui.setInput("finished");
 		ui.setInput("12/02/2018 12:00");
@@ -222,9 +222,9 @@ public class UserInterfaceTest {
 		try {
 			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
 		ui.setInput("FINISHED");
 		ui.setInput("12/02/2018 12:00");
@@ -240,9 +240,9 @@ public class UserInterfaceTest {
 	@Test
 	public void testShowTaskDetails()
 	{
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
 		ui.setInput("1");
 		try {
@@ -266,9 +266,9 @@ public class UserInterfaceTest {
 	@Test
 	public void testExportInvalidPath()
 	{
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
 		try {
 			ui.setInput(os_path + "fil:e.xml");
@@ -327,11 +327,11 @@ public class UserInterfaceTest {
 		try {
 			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
-		Task t2 = new Task("testtask 2", "5", "5");
+		task t2 = new task("testtask 2", "5", "5");
 		p.createTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
@@ -351,11 +351,11 @@ public class UserInterfaceTest {
 		try {
 			ui.loginDialog();
 		} catch (UnsupportedOperationException e) {}
-		Project p = new Project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
+		project p = new project("test", "testdesc", "17/03/2018 11:00", "17/04/2018 11:00");
 		projects.put("test", p);
-		Task t = new Task("testtask", "5", "5");
+		task t = new task("testtask", "5", "5");
 		p.createTask(t);
-		Task t2 = new Task("testtask 2", "5", "10");
+		task t2 = new task("testtask 2", "5", "10");
 		p.createTask(t2);
 		ui.setInput("1");
 		ui.setInput("2");
