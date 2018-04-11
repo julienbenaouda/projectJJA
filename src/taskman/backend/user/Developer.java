@@ -2,8 +2,10 @@ package taskman.backend.user;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import taskman.backend.resource.Resource;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.time.AvailabilityPeriod;
 
 /**
@@ -36,6 +38,20 @@ public class Developer extends User implements Resource {
 	private void setBreakTime(AvailabilityPeriod breakTime) {
 		this.breakTime = breakTime;
 	}
+	
+	/**
+	 * adds a new break time for this developer
+	 * @param startTime the start time of his break
+	 */
+	public void addBreakTime(LocalTime startTime) {
+		LocalTime startBreak = LocalTime.of(11, 0);
+		LocalTime endBreak = LocalTime.of(13, 0);
+		LocalTime endTime = startTime.plusHours(1);
+		if(startTime.isBefore(startBreak) || endTime.isAfter(endBreak)) {
+			throw new IllegalArgumentException("The break time must be tetween 11:00 end 13:00");
+		}
+		setBreakTime(new AvailabilityPeriod(startTime, endTime));
+	}
 
 	/**
 	 * represents the break of the developer
@@ -43,28 +59,19 @@ public class Developer extends User implements Resource {
 	private AvailabilityPeriod breakTime;
 
 	@Override
-	public boolean isAvailable(LocalDateTime startTime, LocalDateTime endTime) {
-		LocalTime morning = LocalTime.of(8, 0);
-		LocalTime evening = LocalTime.of(17, 0);
-		if(startTime.isBefore(morning.atDate(startTime.toLocalDate())) || startTime.isAfter(evening.atDate(startTime.toLocalDate()))) {
-			return false;
-		}
-		if(endTime.isBefore(morning.atDate(endTime.toLocalDate())) || endTime.isAfter(evening.atDate(endTime.toLocalDate()))) {
-			return false;
-		}
-		if(startTime.isAfter(getBreakTime().getStartTime().atDate(startTime.toLocalDate())) && startTime.isBefore(getBreakTime().getEndTime().atDate(startTime.toLocalDate()))) {
-			return false;
-		}
-		if(endTime.isAfter(getBreakTime().getStartTime().atDate(endTime.toLocalDate())) && endTime.isBefore(getBreakTime().getEndTime().atDate(endTime.toLocalDate()))) {
-			return false;
-		}
-		return true;
+	public LocalDateTime firstAvailableTime(LocalDateTime time, ArrayList<Resource> resources) {
+		// TODO add implementation for this method
+		return null;
 	}
 
 	@Override
-	public boolean isAvailable(LocalDateTime time) {
-		// TODO Auto-generated method stub
-		return false;
+	public ResourceType getType() {
+		return type;
 	}
+	
+	/**
+	 * represents the resource type
+	 */
+	private ResourceType Type;
 
 }

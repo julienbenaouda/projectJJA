@@ -3,6 +3,8 @@ package taskman.backend.resource;
 import taskman.backend.task.Task;
 import taskman.backend.time.TimeSpan;
 
+import java.time.LocalDateTime;
+
 /**
  * This class represents a reservation.
  *
@@ -15,13 +17,14 @@ public class Reservation {
      *
      * @param task the task of the reservation
      * @param resource the resource of the reservation
-     * @param timeSpan the time span of the reservation
+     * @param startTime the start time of the reservation
+     * @param endTime the end time of the reservation
      * @post a new reservation is created with given attributes
      */
-    public Reservation(Task task, Resource resource, TimeSpan timeSpan){
+    public Reservation(Task task, Resource resource, LocalDateTime startTime, LocalDateTime endTime){
         setTask(task);
         setResource(resource);
-        setTimeSpan(timeSpan);
+        setTimeSpan(startTime, endTime);
     }
 
 
@@ -90,12 +93,14 @@ public class Reservation {
     }
 
     /**
-     * Sets the time span of the reservation to the given time span.
+     * Creates a time span and sets the time span of the reservation to the new created time span.
      *
-     * @param timeSpan the time span of the reservation
-     * @post the time span of the reservation is set to the given time span
+     * @param startTime the start time of the reservation its time span
+     * @param endTime the end time of the reservation its time span
+     * @post a new time span is created with given attributes and the time span of the reservation is set to this time span
      */
-    private void setTimeSpan(TimeSpan timeSpan){
+    private void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
+        TimeSpan timeSpan = new TimeSpan(startTime, endTime); // Reservation creates the time span, because reservation stores time span ==> GRASP: Creator
         this.timeSpan = timeSpan;
     }
 }

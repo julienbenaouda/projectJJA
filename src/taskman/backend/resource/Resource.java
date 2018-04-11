@@ -4,6 +4,7 @@
 package taskman.backend.resource;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * This interface represents a resource
@@ -12,17 +13,16 @@ import java.time.LocalDateTime;
  */
 public interface Resource {
 	/**
-	 * checks if a resource is available during the given period
-	 * @param startTime the start time of the period
-	 * @param endTime the end time of the period
-	 * @return true if the resource is available, else false.
+	 * returns the first available time to start the task
+	 * @param Time the time to start searching from
+	 * @param resources the list of resources to search in
+	 * @return The first available time to plan the task
 	 */
-	boolean isAvailable(LocalDateTime startTime, LocalDateTime endTime);
+	LocalDateTime firstAvailableTime(LocalDateTime time, ArrayList<Resource> resources);
 	
 	/**
-	 * checks if the resource is available at the given time
-	 * @param time the time to check with
-	 * @return true if thee resource is available, else false
+	 * returns the type of the resource
+	 * @return the type of the resource
 	 */
-	boolean isAvailable(LocalDateTime time);
+	public ResourceType getType();
 }
