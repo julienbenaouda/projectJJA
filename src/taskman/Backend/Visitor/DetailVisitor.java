@@ -2,6 +2,7 @@ package taskman.Backend.Visitor;
 
 import taskman.Backend.Project.Project;
 import taskman.Backend.Task.Task;
+import taskman.Backend.Time.AvailabilityPeriod;
 import taskman.Backend.Time.Clock;
 import taskman.Backend.Time.TimeParser;
 import taskman.Backend.Time.TimeSpan;
@@ -23,6 +24,7 @@ public class DetailVisitor implements Visitor {
 	public DetailVisitor(LocalDateTime currentSystemTime) {
 		this.currentSystemTime = currentSystemTime;
 	}
+
 	/**
 	 * returns the list of details
 	 */
@@ -126,6 +128,16 @@ public class DetailVisitor implements Visitor {
 			getDetails().put("type", u.getClass().getName());
 		}
 
+	}
+	
+	/**
+	 * Visits an availability period
+	 * @param availabilityPeriod the availability period to visit
+	 */
+	@Override
+	public void visitAvailabilityPeriod(AvailabilityPeriod availabilityPeriod) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
