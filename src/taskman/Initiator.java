@@ -1,10 +1,10 @@
 package taskman;
 
-import taskman.Backend.Time.Clock;
-import taskman.Backend.Controller;
-import taskman.Backend.Project.ProjectOrganizer;
-import taskman.Backend.User.UserManager;
-import taskman.Frontend.UserInterface;
+import taskman.backend.Controller;
+import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.time.Clock;
+import taskman.backend.user.UserManager;
+import taskman.frontend.UserInterface;
 
 /**
  * This class is responsible for the program initialisation. It does the initial setup when the program starts up.

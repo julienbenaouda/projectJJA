@@ -1,17 +1,18 @@
 package test;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.Project.Project;
-import taskman.Backend.Task.Task;
-import taskman.Backend.User.Developer;
-import taskman.Backend.User.OperationNotPermittedException;
-import taskman.Backend.User.ProjectManager;
-import taskman.Backend.User.User;
 
-import java.time.LocalDateTime;
-import java.time.Month;
+import taskman.backend.project.Project;
+import taskman.backend.task.Task;
+import taskman.backend.user.Developer;
+import taskman.backend.user.OperationNotPermittedException;
+import taskman.backend.user.ProjectManager;
+import taskman.backend.user.User;
 
 
 public class ProjectTest {

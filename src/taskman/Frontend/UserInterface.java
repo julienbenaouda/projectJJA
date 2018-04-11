@@ -1,8 +1,8 @@
-package taskman.Frontend;
+package taskman.frontend;
 
-import taskman.Backend.Controller;
-import taskman.Backend.ImportExport.ImportExportException;
-import taskman.Frontend.Sections.*;
+import taskman.backend.Controller;
+import taskman.backend.importExport.ImportExportException;
+import taskman.frontend.sections.*;
 
 import java.util.ArrayList;
 import java.util.List;

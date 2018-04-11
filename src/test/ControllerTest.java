@@ -3,12 +3,13 @@ package test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import taskman.Backend.*;
-import taskman.Backend.ImportExport.ImportExportException;
-import taskman.Backend.Project.ProjectOrganizer;
-import taskman.Backend.Time.Clock;
-import taskman.Backend.Time.TimeParser;
-import taskman.Backend.User.UserManager;
+
+import taskman.backend.*;
+import taskman.backend.importExport.ImportExportException;
+import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.time.Clock;
+import taskman.backend.time.TimeParser;
+import taskman.backend.user.UserManager;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;

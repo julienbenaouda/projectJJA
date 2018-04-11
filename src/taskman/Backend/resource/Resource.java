@@ -1,7 +1,7 @@
 /**
  * 
  */
-package taskman.Backend.resource;
+package taskman.backend.resource;
 
 import java.time.LocalDateTime;
 

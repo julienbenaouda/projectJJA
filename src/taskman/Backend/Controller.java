@@ -1,21 +1,21 @@
-package taskman.Backend;
-
-import taskman.Backend.ImportExport.ImportExportException;
-import taskman.Backend.Project.Project;
-import taskman.Backend.Project.ProjectOrganizer;
-import taskman.Backend.Task.Task;
-import taskman.Backend.Time.Clock;
-import taskman.Backend.Time.TimeParser;
-import taskman.Backend.User.OperationNotPermittedException;
-import taskman.Backend.User.User;
-import taskman.Backend.User.UserManager;
-import taskman.Backend.Visitor.DetailVisitor;
+package taskman.backend;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import taskman.backend.importExport.ImportExportException;
+import taskman.backend.project.Project;
+import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.task.Task;
+import taskman.backend.time.Clock;
+import taskman.backend.time.TimeParser;
+import taskman.backend.user.OperationNotPermittedException;
+import taskman.backend.user.User;
+import taskman.backend.user.UserManager;
+import taskman.backend.visitor.DetailVisitor;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
