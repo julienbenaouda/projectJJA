@@ -5,4 +5,6 @@
 
 --------------------------------------------------------------------------------------
 * Is voor Status state pattern beter of is enum goed genoeg?
-
+* isAvailable(), isUnavailable(), isFinished() etc... geprogrammeerd
+  maar ik heb ook overal nu als string status bijgehouden,
+  biedt dit echt nog meerwaarde?
