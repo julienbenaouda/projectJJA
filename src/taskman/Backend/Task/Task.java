@@ -169,7 +169,7 @@ public class Task implements Entity {
     // STATE PATTERN
 
     /**
-     * The task state of the task
+     * The task state of the task.
      */
     private TaskState state;
 
