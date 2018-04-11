@@ -461,10 +461,10 @@ title TASKMAN\n
   Task *-- Task: dependencies
   Task *-- TimeSpan: timespans
   Task *-- TaskState
-  TaskStateInactive <|-- TaskState
-  TaskStateExecuting <|-- TaskState
-  TaskStateFailed <|-- TaskState
-  TaskStateFinished <|-- TaskState
+  TaskStateInactive --|> TaskState
+  TaskStateExecuting --|> TaskState
+  TaskStateFailed --|> TaskState
+  TaskStateFinished --|> TaskState
   XmlObject o-- Project
   XmlObject o-- Task
   XmlObject o-- User
@@ -472,8 +472,8 @@ title TASKMAN\n
   XmlObject o-- XmlException
   controller o-- UserManager
   UserManager o-- User
-  Developer <|-- User
-  ProjectManager <|-- User
+  Developer --|> User
+  ProjectManager --|> User
   Task o-- User
   Project o-- User
   Controller o-- User
@@ -482,7 +482,7 @@ title TASKMAN\n
   TimeSpan o-- Visitor
   User o-- Visitor
   Controller o-- Visitor
-  DetailVisitor <|-- Visitor
+  DetailVisitor --|> Visitor
 
 
 @enduml

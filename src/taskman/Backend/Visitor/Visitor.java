@@ -2,6 +2,7 @@ package taskman.Backend.Visitor;
 
 import taskman.Backend.Project.Project;
 import taskman.Backend.Task.Task;
+import taskman.Backend.Time.AvailabilityPeriod;
 import taskman.Backend.Time.Clock;
 import taskman.Backend.Time.TimeSpan;
 import taskman.Backend.User.User;
@@ -42,5 +43,11 @@ public interface Visitor {
 	 * @param u the user to visit
 	 */
 	void visitUser(User u);
+
+	/**
+	 * visits an availability period
+	 * @param v the availability period to visit
+	 */
+	void visitAvailabilityPeriod(AvailabilityPeriod availabilityPeriod);
 
 }

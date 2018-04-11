@@ -260,6 +260,9 @@ public class Project implements Entity {
 	@Override
 	public void accept(Visitor v) {
 		v.visitProject(this);
+		for(Task t: this.getTasks()) {
+			t.accept(v);
+		}
 	}
 
 }
