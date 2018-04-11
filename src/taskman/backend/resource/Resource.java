@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public interface Resource {
 	/**
-	 * checks if a resource is available during the given period
+	 * Checks if a resource is available during the given period
 	 * @param startTime the start time of the period
 	 * @param endTime the end time of the period
 	 * @return true if the resource is available, else false.
@@ -20,7 +20,7 @@ public interface Resource {
 	boolean isAvailable(LocalDateTime startTime, LocalDateTime endTime);
 	
 	/**
-	 * checks if the resource is available at the given time
+	 * Checks if the resource is available at the given time
 	 * @param time the time to check with
 	 * @return true if thee resource is available, else false
 	 */

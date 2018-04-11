@@ -148,6 +148,13 @@ public class Task implements Entity {
         return timeSpan;
     }
 
+    /**
+     * Creates a time span and sets the time span of the task to the new created time span.
+     *
+     * @param startTime the start time of the task its time span
+     * @param endTime the end time of the task its time span
+     * @post a new time span is created with given attributes and the time span of the task is set to this time span
+     */
     protected void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
         TimeSpan timeSpan = new TimeSpan(startTime, endTime); // Task creates the time span, because task stores time span ==> GRASP: Creator
         this.timeSpan = timeSpan;
