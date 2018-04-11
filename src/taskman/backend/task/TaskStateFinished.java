@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class TaskStateFinished extends TaskState {
 
     public TaskStateFinished(){
-        setState("finished");
+        setStatus("finished");
     }
 
     @Override

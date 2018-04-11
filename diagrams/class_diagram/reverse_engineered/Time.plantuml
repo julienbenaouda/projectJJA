@@ -3,8 +3,8 @@
 title __TIME's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Time {
+    package taskman.backend {
+      package taskman.backend.Time {
         class Clock {
             - time : LocalDateTime
             + getTime()
@@ -17,8 +17,8 @@ title __TIME's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Time {
+    package taskman.backend {
+      package taskman.backend.Time {
         class TimeParser {
             {static} - DATE_TIME_FORMATTER : DateTimeFormatter
             {static} + convertLocalDateTimeToString()
@@ -30,8 +30,8 @@ title __TIME's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Time {
+    package taskman.backend {
+      package taskman.backend.Time {
         class TimeSpan {
             - startTime : LocalDateTime
             - endTime : LocalDateTime

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class TaskStateFailed extends TaskState {
 
     public TaskStateFailed(){
-        setState("failed");
+        setStatus("failed");
     }
 
     @Override

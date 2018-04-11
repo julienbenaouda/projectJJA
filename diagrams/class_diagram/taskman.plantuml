@@ -268,8 +268,8 @@ title TASKMAN\n
   }
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         abstract class TaskState {
             + boolean isAvailable(Task task)
             + boolean isUnavailable(Task task)
@@ -287,8 +287,8 @@ title TASKMAN\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateExecuting {
             + TaskStateExecuting()
             + boolean isExecuting()
@@ -300,8 +300,8 @@ title TASKMAN\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFailed {
             + TaskStateFailed()
             + boolean isFailed()
@@ -313,8 +313,8 @@ title TASKMAN\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFinished {
             + TaskStateFinished()
             + boolean isFinished()
@@ -325,8 +325,8 @@ title TASKMAN\n
   }
   
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateInactive {
             + TaskStateInactive()
             + boolean isAvailable(Task task)

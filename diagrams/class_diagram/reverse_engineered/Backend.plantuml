@@ -3,7 +3,7 @@
 title __BACKEND's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Controller {
           + Controller()
           + getSystemTime()

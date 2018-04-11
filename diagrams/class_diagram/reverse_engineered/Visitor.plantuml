@@ -3,8 +3,8 @@
 title __VISITOR's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Visitor {
+    package taskman.backend {
+      package taskman.backend.Visitor {
         class DetailVisitor {
             - details : HashMap<String, String>
             - currentSystemTime : LocalDateTime
@@ -24,8 +24,8 @@ title __VISITOR's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Visitor {
+    package taskman.backend {
+      package taskman.backend.Visitor {
         interface Entity {
             {abstract} + accept()
         }
@@ -35,8 +35,8 @@ title __VISITOR's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Visitor {
+    package taskman.backend {
+      package taskman.backend.Visitor {
         class ExportVisitor {
             + visitProject()
             + visitTask()
@@ -50,8 +50,8 @@ title __VISITOR's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Visitor {
+    package taskman.backend {
+      package taskman.backend.Visitor {
         interface Visitor {
             {abstract} + visitProject()
             {abstract} + visitTask()

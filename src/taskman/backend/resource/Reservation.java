@@ -1,7 +1,7 @@
-package taskman.Backend.resource;
+package taskman.backend.resource;
 
-import taskman.Backend.Task.Task;
-import taskman.Backend.Time.TimeSpan;
+import taskman.backend.Task.Task;
+import taskman.backend.Time.TimeSpan;
 
 /**
  * This class represents a reservation.

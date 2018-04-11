@@ -3,8 +3,8 @@
 title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class Cancel {
         }
       }
@@ -13,7 +13,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Clock {
       }
     }
@@ -21,7 +21,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Controller {
       }
     }
@@ -29,7 +29,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class DetailVisitor {
       }
     }
@@ -37,7 +37,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Developer {
       }
     }
@@ -45,7 +45,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       interface Entity {
       }
     }
@@ -53,8 +53,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class FormSection {
         }
       }
@@ -63,7 +63,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ImportExportException {
       }
     }
@@ -71,8 +71,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class InfoSection {
         }
       }
@@ -87,8 +87,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class MenuSection {
         }
       }
@@ -97,8 +97,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         interface MethodCall {
         }
       }
@@ -107,7 +107,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class OperationNotPermittedException {
       }
     }
@@ -115,7 +115,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Project {
       }
     }
@@ -123,7 +123,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ProjectManager {
       }
     }
@@ -131,7 +131,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ProjectOrganizer {
       }
     }
@@ -139,8 +139,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         abstract class Section {
         }
       }
@@ -149,8 +149,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class SelectionSection {
         }
       }
@@ -159,8 +159,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class Task {
         }
       }
@@ -169,8 +169,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         abstract class TaskState {
         }
       }
@@ -179,8 +179,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateExecuting {
         }
       }
@@ -189,8 +189,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFailed {
         }
       }
@@ -199,8 +199,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFinished {
         }
       }
@@ -209,8 +209,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateInactive {
         }
       }
@@ -219,7 +219,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class TimeParser {
       }
     }
@@ -227,7 +227,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class TimeSpan {
       }
     }
@@ -235,8 +235,8 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
-      package taskman.Frontend.Sections {
+    package taskman.frontend {
+      package taskman.frontend.Sections {
         class TitleDecoratorSection {
         }
       }
@@ -245,7 +245,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       abstract class User {
       }
     }
@@ -253,7 +253,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Frontend {
+    package taskman.frontend {
       class UserInterface {
       }
     }
@@ -261,7 +261,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class UserManager {
       }
     }
@@ -269,7 +269,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       interface Visitor {
       }
     }
@@ -277,7 +277,7 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class XmlObject {
       }
     }

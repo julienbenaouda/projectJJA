@@ -5,7 +5,7 @@ import java.util.Stack;
 public class TaskStateInactive extends TaskState{
 
     public TaskStateInactive(){
-        setState("inactive");
+        setStatus("inactive");
     }
 
     @Override

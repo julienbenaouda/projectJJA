@@ -3,8 +3,8 @@
 title __PROJECT's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Project {
+    package taskman.backend {
+      package taskman.backend.Project {
         class Project {
             - name : String
             - description : String
@@ -35,8 +35,8 @@ title __PROJECT's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Project {
+    package taskman.backend {
+      package taskman.backend.Project {
         class ProjectOrganizer {
             - projects : Collection<Project>
             + ProjectOrganizer()

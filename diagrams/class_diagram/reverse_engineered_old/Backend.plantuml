@@ -3,7 +3,7 @@
 title __BACKEND's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Clock {
           - time : LocalDateTime
           + getTime()
@@ -15,7 +15,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Controller {
           + Controller()
           + getSystemTime()
@@ -43,7 +43,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class DetailVisitor {
           - details : HashMap<String, String>
           - currentSystemTime : LocalDateTime
@@ -62,7 +62,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Developer {
           + Developer()
       }
@@ -71,7 +71,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       interface Entity {
           {abstract} + accept()
       }
@@ -80,7 +80,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ImportExportException {
           + ImportExportException()
       }
@@ -119,7 +119,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class OperationNotPermittedException {
           + OperationNotPermittedException()
       }
@@ -158,7 +158,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class Project {
           - name : String
           - description : String
@@ -188,7 +188,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ProjectManager {
           + ProjectManager()
       }
@@ -197,7 +197,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class ProjectOrganizer {
           - projects : Collection<Project>
           + ProjectOrganizer()
@@ -211,7 +211,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class TimeParser {
           {static} - DATE_TIME_FORMATTER : DateTimeFormatter
           {static} + convertLocalDateTimeToString()
@@ -222,7 +222,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class TimeSpan {
           - startTime : LocalDateTime
           - endTime : LocalDateTime
@@ -239,7 +239,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       abstract class User {
           - name : String
           - password : String
@@ -255,7 +255,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class UserManager {
           - users : HashMap<String, User>
           + UserManager()
@@ -275,7 +275,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       interface Visitor {
           {abstract} + visitProject()
           {abstract} + visitTask()
@@ -288,7 +288,7 @@ title __BACKEND's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
+    package taskman.backend {
       class XmlObject {
           - doc : Document
           - element : Element

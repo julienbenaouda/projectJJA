@@ -3,8 +3,8 @@
 title __TASK's Class Diagram__\n
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class Task {
             - description : String
             - estimatedDuration : long
@@ -47,8 +47,8 @@ title __TASK's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         abstract class TaskState {
             + isAvailable()
             + isUnavailable()
@@ -66,8 +66,8 @@ title __TASK's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateExecuting {
             + TaskStateExecuting()
             + isExecuting()
@@ -79,8 +79,8 @@ title __TASK's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFailed {
             + TaskStateFailed()
             + isFailed()
@@ -92,8 +92,8 @@ title __TASK's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateFinished {
             + TaskStateFinished()
             + isFinished()
@@ -105,8 +105,8 @@ title __TASK's Class Diagram__\n
   
 
   package taskman {
-    package taskman.Backend {
-      package taskman.Backend.Task {
+    package taskman.backend {
+      package taskman.backend.Task {
         class TaskStateInactive {
             + TaskStateInactive()
             + isAvailable()
