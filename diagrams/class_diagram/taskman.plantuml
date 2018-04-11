@@ -447,8 +447,6 @@ title TASKMAN\n
   GraphicSection <|-- Menu
   UserInterface o-- Controller
 
-  Task *-- TimeSpan
-
   Controller *-- Clock 
   Controller *-- ProjectOrganizer
   Controller o-- Project
