@@ -1,0 +1,439 @@
+@startuml
+
+  title Taskman Overview\n
+
+  package taskman {
+
+    class Initiator {
+        {static} + main(): void
+    }
+
+    package taskman.Frontend {
+
+      class UserInterface {
+          - controller: Controller
+
+          + UserInterface(Controller)
+          + start(): void
+          - startMenu(): void
+          - login(): void
+          - userCreation(): void
+          - importFromFile(): void
+          - exportToFile(): void
+          - loggedInMenu(): void
+          - showProjects(): void
+          - createProject(): void
+          - createTask(): void
+          - planTask(): void
+          - updateTaskStatus(): void
+          - addAlternativeToTask(): void
+          - addDependencyToTask(): void
+          - showSystemTime(): void
+          - advanceSystemTime(): void
+          - selectProject(boolean, String): String
+          - selectTaskNr(boolean, String, String): Integer
+          - mapToString(Map<String, String>): String
+      }
+
+      package taskman.Frontend.Sections {
+
+        class Cancel {
+        }
+
+        interface MethodCall {
+            {abstract} + call(): void
+        }
+
+        abstract class Section {
+            {abstract} + show(): void
+            ~ print(String): void
+            ~ println(String): void
+            ~ inputString(): String
+            ~ inputAnswer(String): String
+            ~ inputValidAnswer(String, Collection<String>): String
+        }
+
+        class FormSection {
+            - withCancel : Boolean
+            - questions : List<String>
+            - answers : List<String>
+
+            + FormSection(Boolean, String[])
+            + show(): void
+            + hasAnswers(): Boolean
+            + getAnswer(): String
+            - resetAnswers(): void
+        }
+
+        class InfoSection {
+            - text : String
+            - halt : boolean
+
+            + InfoSection(String, boolean)
+            + show(): void
+        }
+
+        class MenuSection {
+            - actions : Map<String, MethodCall>
+            - selectionSection: SelectionSection
+
+            + MenuSection()
+            + addOption(String, MethodCall): void
+            + show(): void
+        }
+
+        class SelectionSection {
+            - withCancel : Boolean
+            - cancelText : String
+            - options : List<String>
+            - answer : Integer
+
+            + SelectionSection(Boolean)
+            + SelectionSection(Boolean, String)
+            + addOption(String): void
+            + addOptions(Collection<String>): void
+            + show(): void
+            + hasAnswer(): Boolean
+            + getAnswer(): String
+            + getAnswerNumber(): Integer
+            - resetAnswer(): void
+        }
+
+        class TitleDecoratorSection {
+            - title : String
+            {static} - decoration : char
+            {static} - length : int
+            - section: Section
+
+            + TitleDecoratorSection(String, Section)
+            + show(): void
+            - repeat(char, int): String
+        }
+      }
+    }
+
+    package taskman.Backend {
+
+      class Controller {
+          - clock: Clock
+          - userManager: UserManager
+          - projectOrganizer: ProjectOrganizer
+
+          + Controller(Clock, UserManager, ProjectOrganizer)
+          + getSystemTime(): String
+          + updateSystemTime(String): void
+          + getCurrentUserName(): String
+          + getUserTypes(): Collection<String>
+          + createUser(String, String, String): void
+          + login(String, String): void
+          + logout(): void
+          + getProjectNames(): List<String>
+          + getProjectStatus(String): String
+          + getProjectDetails(String): Map<String, String>
+          + createProject(String, String, String): void
+          + getNumberOfTasks(String): Integer
+          + getTaskDetails(String, Integer): Map<String, String>
+          + createTask(String, String, String, String): void
+          + addAlternativeToTask(String, Integer, Integer): void
+          + addDependencyToTask(String, Integer, Integer): void
+          + getTaskStatus(String, Integer): String
+          + updateTaskStatus(String, Integer, String, String, String): void
+          + exportSystem(String): void
+          {static} + importSystem(String): void
+      }
+
+      package taskman.Backend.Time {
+
+        class Clock {
+            - time : LocalDateTime
+
+            + getTime(): LocalDateTime
+            + updateSystemTime(LocalDateTime): void
+            + accept(Visitor): void
+        }
+
+        class TimeParser {
+            {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+
+            {static} + convertLocalDateTimeToString(LocalDateTime): String
+            {static} + convertStringToLocalDateTime(String): LocalDateTime
+        }
+
+        class TimeSpan {
+            - startTime : LocalDateTime
+            - endTime : LocalDateTime
+
+            + TimeSpan(LocalDateTime, LocalDateTime)
+            + getStartTime(): LocalDateTime
+            - setStartTime(LocalDateTime): void
+            + getEndTime(): LocalDateTime
+            - setEndTime(LocalDateTime): void
+            + canHaveAsEndTime(LocalDateTime): boolean
+            + accept(Visitor): void
+        }
+      }
+
+      package taskman.Backend.ImportExport {
+        class ImportExportException {
+            + ImportExportException(String)
+        }
+
+        class XmlObject {
+            - doc : Document
+            - element : Element
+
+            + XmlObject()
+            - XmlObject(Document, Element)
+            + exportTo(String): void
+            {static} + importFrom(String): XmlObject
+            + createChild(String): XmlObject
+            + getXmlObject(String): XmlObject
+            + getXmlObjects(String): Collection<XmlObject>
+            + addAttribute(String, String): void
+            + getAttribute(String): String
+            + addText(String, String): void
+            + getText(String): String
+            + getTexts(String): List<String>
+        }
+      }
+
+      package taskman.Backend.Visitor {
+
+        interface Entity {
+            {abstract} + accept(Visitor): void
+        }
+
+        interface Visitor {
+            {abstract} + visitProject(ProjectOrganizer): void
+            {abstract} + visitTask(Task): void
+            {abstract} + visitTimeSpan(TimeSpan): void
+            {abstract} + visitClock(Clock): void
+            {abstract} + visitUser(User): void
+        }
+
+        class DetailVisitor {
+            - time : LocalDateTime
+            - details : HashMap<String, String>
+
+            + DetailVisitor(LocalDateTime)
+            + getDetails(): HashMap<String, String>
+            - createDetailsMap(): void
+            + visitProject(ProjectOrganizer): void
+            + visitTask(Task): void
+            + visitTimeSpan(TimeSpan): void
+            + visitClock(Clock): void
+            + visitUser(User): void
+        }
+
+        class ExportVisitor {
+            - root: XmlObject
+
+            + visitProject(ProjectOrganizer): void
+            + visitTask(Task): void
+            + visitTimeSpan(TimeSpan): void
+            + visitClock(Clock): void
+            + visitUser(User): void
+        }
+      }
+
+      package taskman.Backend.Project {
+
+        class ProjectOrganizer {
+            - projects : Collection<Project>
+
+            + ProjectOrganizer()
+            + getProjectNames(): List<String>
+            + projectExists(String): Boolean
+            + getProject(String): Project
+            + createProject(String, String, LocalDateTime, LocalDateTime, User): void
+        }
+
+        class Project {
+            - name : String
+            - description : String
+            - creationTime : LocalDateTime
+            - dueTime : LocalDateTime
+            - taskList : ArrayList<Task>
+
+            + Project(String, String, LocalDateTime, LocalDateTime, User)
+            + createTask(String, long, double, User): void
+            - addTaskToList(Task): void
+            + getStatus(LocalDateTime): String
+            + removeTask(Task): void
+            + getName(): String
+            - setName(String): void
+            + getDescription(): String
+            - setDescription(String): void
+            + getCreationTime(): LocalDateTime
+            - setCreationTime(LocalDateTime): void
+            + getDueTime(): LocalDateTime
+            - setDueTime(LocalDateTime): void
+            + getTask(int): Task
+            + getTasks(): List<Task>
+            + getNumberOfTasks(): Integer
+            + accept(Visitor): void
+        }
+      }
+
+      package taskman.Backend.Task {
+        class Task {
+            - description : String
+            - estimatedDuration : long
+            - acceptableDeviation : double
+            - timeSpan: TimeSpan
+            - state: TaskState
+            - alternative: Task
+            - dependencies : ArrayList<Task>
+
+            + Task(String, long, double)
+            - Task(String, long, double, TimeSpan, TaskState)
+            + getDescription(): String
+            - setDescription(String): void
+            + getEstimatedDuration(): long
+            - setEstimatedDuration(long): void
+            + getAcceptableDeviation(): double
+            - setAcceptableDeviation(double): void
+            + getTimeSpan(): TimeSpan
+            # setTimeSpan(LocalDateTime, LocalDateTime): void
+            - setTimeSpan(TimeSpan): void
+            + getState(): TaskState
+            # setState(TaskState): void
+            + isAvailable(): boolean
+            + isUnavailable(): boolean
+            + isExecuting(): boolean
+            + isFailed(): boolean
+            + isFinished(): boolean
+            + updateStatus(LocalDateTime, LocalDateTime, String): void
+            + getDelay(): long
+            + getAlternative(): Task
+            # setAlternativeTask(Task): void
+            + setAlternative(Task): void
+            + getDependencies(): List<Task>
+            - setDependencies(List<Task>): void
+            # addDependencyTask(Task): void
+            + addDependency(Task): void
+            + removeDependency(Task): void
+            {static} # containsLoop(Task, Task): void
+            + accept(Visitor): void
+        }
+
+        abstract class TaskState {
+            + isAvailable(Task): boolean
+            + isUnavailable(Task): boolean
+            + isExecuting(): boolean
+            + isFinished(): boolean
+            + isFailed(): boolean
+            + getDelay(Task): long
+            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+            + setAlternative(Task, Task): void
+            + addDependency(Task, Task): void
+        }
+
+        class TaskStateExecuting {
+            + TaskStateExecuting()
+            + isExecuting(): boolean
+            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+        }
+
+        class TaskStateFailed {
+            + TaskStateFailed()
+            + isFailed(): boolean
+            + setAlternative(Task, Task): void
+        }
+
+        class TaskStateFinished {
+            + TaskStateFinished()
+            + isFinished(): boolean
+            + getDelay(Task): void
+        }
+
+        class TaskStateInactive {
+            + TaskStateInactive()
+            + isAvailable(Task): boolean
+            + isUnavailable(Task): boolean
+            + addDependency(Task, Task): void
+        }
+      }
+
+      package taskman.Backend.User {
+
+        class OperationNotPermittedException {
+            + OperationNotPermittedException()
+        }
+
+        class UserManager {
+            - users : HashMap<String, User>
+            - currentUser: User
+
+            + UserManager(String)
+            - getUser(String): User
+            + getCurrentUser(): User
+            + hasCurrentUser(): Boolean
+            - setCurrentUser(User): void
+            + createUser(String, String, String): void
+            + getUserTypes(): Collection<String>
+            - createDeveloper(String, String): void
+            - createProjectManager(String, String): void
+            + login(String, String): void
+            + logout(): void
+        }
+
+        abstract class User {
+            - name : String
+            - password : String
+
+            + User(String, String)
+            + getName(): String
+            - setName(String): void
+            + getPassword(): String
+            - setPassword(String): String
+            + accept(Visitor): void
+        }
+
+        class Developer {
+            + Developer(String, String)
+        }
+
+        class ProjectManager {
+            + ProjectManager(String, String)
+        }
+      }
+    }
+  }
+
+
+  Task o-- Task: dependencies
+  UserManager *-- User: users
+  ProjectManager *-- Project: projects
+  Project *-- Task: taskList
+
+  ExportVisitor -up-|> Visitor
+  Clock -up-|> Entity
+  Controller o-- Clock : clock
+  Controller o-- UserManager : userManager
+  Controller o-- ProjectOrganizer : projectOrganizer
+  DetailVisitor -up-|> Visitor
+  Developer -up-|> User
+  FormSection -up-|> Section
+  InfoSection -up-|> Section
+  MenuSection -up-|> Section
+  MenuSection o-- SelectionSection : selectionSection
+  Project -up-|> Entity
+  ProjectManager -up-|> User
+  SelectionSection -up-|> Section
+  Task -up-|> Entity
+  Task o-- TimeSpan : timeSpan
+  Task o-- TaskState : state
+  Task o-- Task : alternative
+  TaskStateExecuting -up-|> TaskState
+  TaskStateFailed -up-|> TaskState
+  TaskStateFinished -up-|> TaskState
+  TaskStateInactive -up-|> TaskState
+  TimeSpan -up-|> Entity
+  TitleDecoratorSection -up-|> Section
+  TitleDecoratorSection o-- Section : section
+  User -up-|> Entity
+  UserInterface o-- Controller : controller
+  UserManager o-- User : currentUser
+
+@enduml

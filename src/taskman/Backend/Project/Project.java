@@ -1,4 +1,3 @@
-
 package taskman.Backend.Project;
 
 
@@ -14,7 +13,6 @@ import java.util.*;
 
 /**
  * This class represents a project.
- *
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
 public class Project implements Entity {

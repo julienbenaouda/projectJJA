@@ -1,58 +1,62 @@
 package taskman.Backend.Visitor;
 
+import taskman.Backend.ImportExport.ImportExportException;
+import taskman.Backend.ImportExport.XmlObject;
 import taskman.Backend.Project.Project;
+import taskman.Backend.Project.ProjectOrganizer;
 import taskman.Backend.Task.Task;
 import taskman.Backend.Time.Clock;
 import taskman.Backend.Time.TimeSpan;
 import taskman.Backend.User.User;
+import taskman.Backend.User.UserManager;
 
 public class ExportVisitor implements Visitor {
 
 
+	/**
+	 * Represents the root xml object.
+	 */
+	private XmlObject root;
 
 	/**
-	 * visits a project
-	 * @param p the project to visit
+	 * Creates an ExportVisitor for exporting objects.
 	 */
+	public ExportVisitor(String path) throws ImportExportException {
+		this.root = new XmlObject();
+	}
+
+	@Override
+	public void visitProjectOrganizer(ProjectOrganizer p) {
+
+	}
+
 	@Override
 	public void visitProject(Project p) {
 
 	}
 
-	/**
-	 * visits a task
-	 * @param t the task to visit
-	 */
 	@Override
 	public void visitTask(Task t) {
 
 	}
 
-	/**
-	 * visits a timeSpan
-	 * @param t the time span to visit
-	 */
-	@Override
-	public void visitTimeSpan(TimeSpan t) {
-
-	}
-
-	/**
-	 * visits the system clock
-	 * @param c the system clock
-	 */
 	@Override
 	public void visitClock(Clock c) {
 
 	}
 
-	/**
-	 * visits a user
-	 * @param u the user to visit
-	 */
+	@Override
+	public void visitTimeSpan(TimeSpan t) {
+
+	}
+
+	@Override
+	public void visitUserManager(UserManager u) {
+
+	}
+
 	@Override
 	public void visitUser(User u) {
 
 	}
-
 }

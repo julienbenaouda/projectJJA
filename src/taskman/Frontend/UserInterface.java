@@ -225,7 +225,8 @@ public class UserInterface {
 		Integer taskNr = taskNrs.get(selection1.getAnswerNumber());
 
 		SelectionSection selection2 = new SelectionSection(true);
-		selection2.addOptions(controller.getTaskStatuses(project, taskNr));
+		selection2.addOption("failed");
+		selection2.addOption("finished");
 		Section titledSelection2 = new TitleDecoratorSection("select a task status", selection1);
 		titledSelection2.show();
 

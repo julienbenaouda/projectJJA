@@ -1,16 +1,15 @@
-/**
- * 
- */
 package taskman.Backend.Visitor;
 
 /**
- * @author Julien Benaouda
- *
+ * This interface is responsible for accepting visitors.
+ * @author Julien Benaouda, Alexander Braekevelt
  */
 public interface Entity {
+
 	/**
-	 * accepts a visitor
-	 * @param v the visitor to accept
+	 * Accepts a visitor.
+	 * @param v the visitor to accept.
 	 */
-	public void accept(Visitor v);
+	void accept(Visitor v);
+
 }

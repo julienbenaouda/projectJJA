@@ -2,20 +2,6 @@
 
 title TASKMAN\n
 
-
-
-  package Frontend {
-    class Composite {
-
-    }
-  }
-
-  package Frontend {
-    class Form {
-
-    }
-  }
-
   package Frontend {
     abstract class GraphicSection {
         - title : String
@@ -227,8 +213,9 @@ title TASKMAN\n
         - estimatedDuration : long
         - acceptableDeviation : double
         - dependencies : ArrayList<Task>
-        - TimeSpan timesSpan
-        - reservations: List<Reservation>
+        - TimeSpan timeSpan
+        - requirements: Map<ResourceType, Integer>
+        - reservations: Map<Resource, TimeSpan>
 
         + Task(String description, long estimatedDuration, double acceptableDeviation)
         - Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskStatus status)
@@ -259,7 +246,7 @@ title TASKMAN\n
 
 
   package Backend {
-    class TimeSpan {
+    class DateTimeSpan {
         - startTime: LocalDateTime
         - endTime: LocalDateTime
 
@@ -273,25 +260,46 @@ title TASKMAN\n
     }
   }
 
+  package Backend {
+     class WeekTimeSpan {
+         - startTime: WeekTime
+         - endTime: WeekTime
+
+         + WeekTimeSpan(WeekTime startTime, WeekTime endtime)
+         + WeekTime getStartTime()
+         + WeekTime getEndTime()
+         + accept(Visitor v)
+     }
+   }
+
+  package Backend {
+    class WeekTime {
+        - time: LocalTime
+        - day: DayOfWeek
+
+        + WeekTime(LocalTime time, DayOfWeek day)
+        + DayOfWeek getDay()
+        + LocalTime getTime()
+    }
+ }
+
 
   package Backend {
      interface Resource {
-          + getAvailability()
-          - isAvailable(LocalDateTime currentTime)
+        + isAvailable(LocalDateTime time)
+        + ResourceType getType()
+        + isReserved(WeekTimeSpan timeSpan)
      }
   }
 
   package Backend {
      class ResourceItem {
-          - type: String
-          - getAvailability()
-          - boolean isAvailable(LocalDateTime currentTime)
-     }
-  }
+        - unavailableTimes: Collection<WeekTimeSpan>
+        - reservations: Collection<Reservation>
 
-  package Backend {
-     class ResourceItemWorkingDays {
-          - getAvailability()
+        + isAvailable(LocalDateTime currentTime)
+        + ResourceType getType()
+        + isReserved(WeekTimeSpan timeSpan)
      }
   }
 
@@ -402,7 +410,7 @@ title TASKMAN\n
 
 
 
-  GraphicSection <|-- Menu
+  GraphicSection --|> Menu
   UserInterface o-- Controller
 
   Task *-- TimeSpan
@@ -410,9 +418,9 @@ title TASKMAN\n
   ResourceManager *-- Reservation
   ResourceManager *-- Resource
   Resource *-- Reservation
-  ResourceItem <|-- Resource
-  ResourceItemWorkingDays <|-- ResourceItem
-  Developer <|-- Resource
+  ResourceItem --|> Resource
+  ResourceItemWorkingDays --|> ResourceItem
+  Developer --|> Resource
   ResourceManager o-- ResourceInterpreter
 
   Controller *-- Clock
@@ -426,8 +434,8 @@ title TASKMAN\n
   Task *-- TimeSpan: timespans
   Controller *-- UserManager
   UserManager *-- User
-  Developer <|-- User
-  ProjectManager <|-- User
+  Developer --|> User
+  ProjectManager --|> User
   Task o-- User
   Project o-- User
   Controller o-- User

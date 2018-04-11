@@ -260,19 +260,6 @@ public class Controller {
     }
 
     /**
-     * Return the possible statuses of a task.
-     * @param projectName the project fo the task.
-     * @param taskIndex the index of the task.
-     * @return a list of task statuses.
-     * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
-     */
-    public List<String> getTaskStatuses(String projectName, Integer taskIndex) {
-        // TODO: @Jeroen
-        return null;
-    }
-
-    /**
      * Updates the status of the given task.
      * @param projectName the name of the project of the task
      * @param taskIndex the index of the task to update

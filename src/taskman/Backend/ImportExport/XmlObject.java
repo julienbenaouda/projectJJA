@@ -39,7 +39,7 @@ public class XmlObject {
      * Create an empty xml object.
      * @throws ImportExportException if the object can't be created.
      */
-    public XmlObject() throws ImportExportException {
+    public vXmlObject() throws ImportExportException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
