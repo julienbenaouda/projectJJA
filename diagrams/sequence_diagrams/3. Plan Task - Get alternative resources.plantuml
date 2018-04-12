@@ -1,43 +1,50 @@
 @startuml
 
-title "Plan Task - Get available resources"
+title "Plan Task - Get alternative resources"
 
--> ":Controller": getAvailableResources(ResourceWrapper, LocalDateTime)
+-> ":Controller": getAlternativeResources(...)
 activate ":Controller"
 
-":Controller" -> ":ResourceManager": getAvailableResources(Resource, LocalDateTime)
+":Controller" -> ":ResourceManager": getAlternativeResources(Resource, Task, LocalDateTime)
 activate ":ResourceManager"
-
-
-":ResourceManager" -> ":Task": getRequirements()
-activate ":Task"
-":Task" --> ":ResourceManager": Map<ResourceType, Integer>
-deactivate ":Task"
 
 ":ResourceManager" -> ":Task": getDuration()
 activate ":Task"
 ":Task" --> ":ResourceManager": long
 deactivate ":Task"
 
-loop over resource types
 
-    ":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
-    activate ":ResourceType"
+":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
+activate ":ResourceType"
 
-    loop over resources
+loop
+    ":ResourceType" -> ":AvailabilityPeriod": overlaps(TimeSpan)
+    activate ":AvailabilityPeriod"
 
-        ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
-        activate ":Resource"
+    ":AvailabilityPeriod" --> ":ResourceType": boolean
+    deactivate ":AvailabilityPeriod"
+end
 
-        ":Resource" --> ":ResourceType": boolean
-        deactivate ":Resource"
+loop over resources
 
+    ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
+    activate ":Resource"
+
+    loop
+        ":Resource" -> ":TimeSpan": overlaps(TimeSpan)
+        activate ":TimeSpan"
+
+        ":TimeSpan" --> ":Resource": boolean
+        deactivate ":TimeSpan"
     end
 
-    ":ResourceType" --> ":ResourceManager": Iterator<Resource>
-    deactivate ":ResourceType"
+    ":Resource" --> ":ResourceType": boolean
+    deactivate ":Resource"
 
 end
+
+":ResourceType" --> ":ResourceManager": Iterator<Resource>
+deactivate ":ResourceType"
 
 
 ":ResourceManager" --> ":Controller": Iterator<Resource>
