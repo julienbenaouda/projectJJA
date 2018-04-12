@@ -8,3 +8,9 @@
 * isAvailable(), isUnavailable(), isFinished() etc... geprogrammeerd
   maar ik heb ook overal nu als string status bijgehouden,
   biedt dit echt nog meerwaarde?
+
+--------------------------------------------------------------------------------------
+* Visitor via Object Structure?
+* Hoe availablilty van Resources checken?
+* Resources switched between Tasks?
+* Hoe duration berekenen?
