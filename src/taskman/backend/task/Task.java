@@ -31,7 +31,7 @@ public class Task implements Entity {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setState(new TaskStateUnavailable());
+        changeState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
         requirements = new HashMap<ResourceType, Integer>();
     }
@@ -52,7 +52,7 @@ public class Task implements Entity {
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
         setTimeSpan(timeSpan);
-        setState(state);
+        changeState(state);
         dependencies = new ArrayList<>();
     }
 
@@ -200,7 +200,7 @@ public class Task implements Entity {
      * @post the task state of the task is set to the given state
      * @implNote This method is set protected, so that we can apply the State Pattern (a state may need to change the state of the task)
      */
-    protected void setState(TaskState state){
+    protected void changeState(TaskState state){
         this.state = state;
     }
 

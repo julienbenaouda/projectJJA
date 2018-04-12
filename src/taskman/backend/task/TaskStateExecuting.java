@@ -15,9 +15,9 @@ public class TaskStateExecuting extends TaskState{
         }
         task.setTimeSpan(startTime, endTime);
         switch (taskStatus){
-            case "finished" : task.setState(new TaskStateFinished());
+            case "finished" : task.changeState(new TaskStateFinished());
                 break;
-            case "failed" : task.setState(new TaskStateFailed());
+            case "failed" : task.changeState(new TaskStateFailed());
                 break;
         }
     }
