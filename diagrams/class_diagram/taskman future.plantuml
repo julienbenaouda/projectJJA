@@ -32,20 +32,12 @@
           - advanceSystemTime(): void
           - selectProject(boolean, String): String
           - selectTaskNr(boolean, String, String): Integer
-          - mapToString(Map<String, String>): String
       }
 
       package taskman.frontend.sections {
 
-        class Cancel {
-        }
-
-        interface MethodCall {
-            {abstract} + call(): void
-        }
-
         abstract class Section {
-            {abstract} + show(): void
+            {abstract} + show(): boolean
             ~ print(String): void
             ~ println(String): void
             ~ inputString(): String
@@ -54,59 +46,46 @@
         }
 
         class FormSection {
-            - withCancel : Boolean
+            - withCancel : boolean
             - questions : List<String>
             - answers : List<String>
 
-            + FormSection(Boolean, String[])
-            + show(): void
-            + hasAnswers(): Boolean
+            + FormSection(boolean, String[])
+            + show(): boolean
             + getAnswer(): String
             - resetAnswers(): void
         }
 
         class InfoSection {
             - text : String
-            - halt : boolean
 
             + InfoSection(String, boolean)
-            + show(): void
-        }
-
-        class MenuSection {
-            - actions : Map<String, MethodCall>
-            - selectionSection: SelectionSection
-
-            + MenuSection()
-            + addOption(String, MethodCall): void
-            + show(): void
+            + show(): boolean
         }
 
         class SelectionSection {
-            - withCancel : Boolean
+            - withCancel : boolean
             - cancelText : String
             - options : List<String>
             - answer : Integer
 
-            + SelectionSection(Boolean)
-            + SelectionSection(Boolean, String)
+            + SelectionSection(boolean)
+            + SelectionSection(boolean, String)
             + addOption(String): void
             + addOptions(Collection<String>): void
-            + show(): void
-            + hasAnswer(): Boolean
+            + show(): boolean
             + getAnswer(): String
             + getAnswerNumber(): Integer
             - resetAnswer(): void
         }
 
-        class TitleDecoratorSection {
+        class TitleSection {
             - title : String
             {static} - decoration : char
             {static} - length : int
-            - section: Section
 
-            + TitleDecoratorSection(String, Section)
-            + show(): void
+            + TitleSection(String)
+            + show(): boolean
             - repeat(char, int): String
         }
       }
@@ -262,7 +241,7 @@
 
             + ProjectOrganizer()
             + getProjectNames(): List<String>
-            + projectExists(String): Boolean
+            + projectExists(String): boolean
             + getProject(String): Project
             + createProject(String, String, LocalDateTime, LocalDateTime, User): void
         }
@@ -425,7 +404,7 @@
 
         class ResourceType {
            - name: String
-           
+
            + ResourceType(String)
            + getName(): String
            - setName(String): void
@@ -438,7 +417,7 @@
 
         class RequiringConstraint {
             - resourceType: ResourceType
-            - allowed: Boolean
+            - allowed: boolean
             - number: int
 
             + RequiringConstraint(ResourceType, boolean, int)
@@ -447,7 +426,7 @@
 
         class LimitingConstraint {
             - resourceType: ResourceType
-            - allowed: Boolean
+            - allowed: boolean
             - number: int
 
             + LimitingConstraint(ResourceType, boolean, int)
@@ -468,7 +447,7 @@
             + UserManager(String)
             - getUser(String): User
             + getCurrentUser(): User
-            + hasCurrentUser(): Boolean
+            + hasCurrentUser(): boolean
             - setCurrentUser(User): void
             + createUser(String, String, String): void
             + getUserTypes(): Collection<String>
@@ -530,8 +509,8 @@
   TaskStateFinished -up-|> TaskState
   TaskStateInactive -up-|> TaskState
   TimeSpan -up-|> Entity
-  TitleDecoratorSection -up-|> Section
-  TitleDecoratorSection o-- Section : section
+  TitleSection -up-|> Section
+  TitleSection o-- Section : section
   User -up-|> Entity
   UserInterface o-- Controller : controller
   UserManager o-- User : currentUser
