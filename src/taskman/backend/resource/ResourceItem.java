@@ -56,7 +56,7 @@ public class ResourceItem implements Resource {
 			}
 		}
 		return time;
-		// todo returns original start time if there is no available time in a week
+		// TODO returns original start time if there is no available time in a week
 	}
 	
 	private LocalDateTime calculateEndTime(LocalDateTime startTime, long duration) {
@@ -85,7 +85,7 @@ public class ResourceItem implements Resource {
 	
 	/**
 	 * adds a reservation to the list of reservations
-	 * @param reservation the reservation to add
+	 * @param r the reservation to add
 	 */
 	public void addReservation(Reservation r)
 	{
