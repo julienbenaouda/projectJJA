@@ -24,7 +24,7 @@ loop
 
     loop over resource types
 
-        ":ResourceManager" -> ":ResourceType": hasAvailableResource(ResourceType, TimeSpan)
+        ":ResourceManager" -> ":ResourceType": hasAvailableResource(TimeSpan)
         activate ":ResourceType"
 
         loop over resources
@@ -46,10 +46,10 @@ loop
     deactivate ":ResourceManager"
 end
 
-":ResourceManager" --> ":Controller": List<LocalDateTime>
+":ResourceManager" --> ":Controller": Iterator<LocalDateTime>
 deactivate ":ResourceManager"
 
-<-- ":Controller": List<LocalDateTime>
+<-- ":Controller": Iterator<LocalDateTime>
 deactivate ":Controller"
 
 @enduml
