@@ -29,11 +29,30 @@ loop (iterator)
 
         loop over resources
 
-            ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
-            activate ":Resource"
+        ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
+        activate ":Resource"
 
-            ":Resource" --> ":ResourceType": boolean
-            deactivate ":Resource"
+        ":Resource" -> ":Resource": getReservations()
+        ":Resource" --> ":Resource": List<Reservation>
+        
+        
+        loop over reservations
+        
+            ":Resource" -> ":Reservation": overlaps(TimeSpan)
+            activate ":Reservation"
+            
+            ":Reservation" -> ":TimeSpan": overlaps(TimeSpan)
+            activate ":TimeSpan"
+
+            ":TimeSpan" --> ":Reservation": boolean
+            deactivate ":TimeSpan"
+            
+            ":Reservation"--> ":Resource": boolean
+            deactivate ":Reservation"
+        end
+
+        ":Resource" --> ":ResourceType": boolean
+        deactivate ":Resource"
 
         end
 

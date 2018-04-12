@@ -187,7 +187,7 @@ title Taskman Overview\n
             + exportTo(String): void
             {static} + importFrom(String): XmlObject
             + createChild(String): XmlObject
-            + getXmlObject(String): XmlObject
+            + getChild(String): XmlObject
             + getXmlObjects(String): Collection<XmlObject>
             + addAttribute(String, String): void
             + getAttribute(String): String
