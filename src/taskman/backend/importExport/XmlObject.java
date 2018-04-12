@@ -138,7 +138,7 @@ public class XmlObject {
      * @throws ImportExportException if a child with the given name is not an XmlObject.
      * @throws NullPointerException if the name is null.
      */
-    public XmlObject getXmlObject(String name) throws ImportExportException, NullPointerException {
+    public XmlObject getChild(String name) throws ImportExportException, NullPointerException {
         List<XmlObject> objects = getXmlObjects(name);
         if (objects.isEmpty()) {
             throw new ImportExportException("No XmlObject with name '" + name + "' found!");

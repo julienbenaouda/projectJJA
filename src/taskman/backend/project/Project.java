@@ -1,15 +1,15 @@
 package taskman.backend.project;
 
 
-import java.time.LocalDateTime;
-import java.util.*;
-
 import taskman.backend.task.Task;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * This class represents a project.
@@ -77,7 +77,7 @@ public class Project implements Entity {
     		return "active";
 		}
 		for (Task task: taskList) {
-			if (!task.isFinished()) {
+			if (!task.getStatus().equals("finished")) {
 				return "failed";
 			}
 		}
