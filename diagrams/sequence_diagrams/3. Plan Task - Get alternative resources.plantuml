@@ -2,10 +2,10 @@
 
 title "Plan Task - Get available resources"
 
--> ":Controller": getAvailableResources(...)
+-> ":Controller": getAvailableResources(ResourceWrapper, LocalDateTime)
 activate ":Controller"
 
-":Controller" -> ":ResourceManager": getAvailableResources(Task, LocalDateTime)
+":Controller" -> ":ResourceManager": getAvailableResources(Resource, LocalDateTime)
 activate ":ResourceManager"
 
 
@@ -40,10 +40,10 @@ loop over resource types
 end
 
 
-":ResourceManager" --> ":Controller": List<Resource>
+":ResourceManager" --> ":Controller": Iterator<Resource>
 deactivate ":ResourceManager"
 
-<-- ":Controller": Iterator<Resource>
+<-- ":Controller": Iterator<ResourceWrapper>
 deactivate ":Controller"
 
 @enduml

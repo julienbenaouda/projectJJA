@@ -39,7 +39,7 @@ loop
 
             ":Resource" -> ":ResourceType": isAvailable(TimeSpan)
             activate ":ResourceType"
-            ":ResourceType" -->
+            ":ResourceType" --> ":Resource": boolean
             deactivate ":ResourceType"
 
             ":Resource" --> ":ResourceManager": boolean
