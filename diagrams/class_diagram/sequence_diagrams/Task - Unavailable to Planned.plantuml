@@ -1,0 +1,12 @@
+@startuml
+
+title "Task - Unavailable to Planned"
+
+-> ":Task": plan(User, LocalDateTime, List<Resource>)
+":Task" -> ":TaskStateUnavailable": plan(LocalDateTime, List<Resource>)
+loop
+":TaskStateUnavailable" -> ":Task": createReservation(LocalDateTime, Resource)
+":Task" -> ":ResourceManager":
+end
+
+@enduml
