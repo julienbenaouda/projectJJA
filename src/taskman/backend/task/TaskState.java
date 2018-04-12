@@ -16,26 +16,6 @@ public abstract class  TaskState {
         this.status = status;
     }
 
-    public  boolean isAvailable(Task task){
-        return false;
-    }
-
-    public boolean isUnavailable(Task task){
-        return false;
-    }
-
-    public boolean isExecuting(){
-        return false;
-    }
-
-    public boolean isFinished(){
-        return false;
-    }
-
-    public boolean isFailed(){
-        return false;
-    }
-
     public long getDelay(Task t) throws IllegalStateException {
         throw new IllegalStateException("Cannot calculate delay of task if not finished!");
     }
@@ -51,6 +31,10 @@ public abstract class  TaskState {
     public void addDependency(Task task, Task dependency) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The dependency must be added to an inactive task.");
         // TODO: is dit correct? Of moet het enkel een available task zijn
+    }
+
+    public void planTask(Task task) throws IllegalStateException, IllegalArgumentException{
+        throw new IllegalStateException("The task can only be planned in unavailable state.");
     }
 
 }

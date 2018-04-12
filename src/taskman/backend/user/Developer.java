@@ -60,7 +60,7 @@ public class Developer extends User implements Resource {
 	private AvailabilityPeriod breakTime;
 
 	@Override
-	public LocalDateTime firstAvailableTime(LocalDateTime time) {
+	public LocalDateTime firstAvailableTime(LocalDateTime time, long duration) {
 		// TODO add implementation for this method
 		return null;
 	}

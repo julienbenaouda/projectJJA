@@ -25,13 +25,13 @@ public class Task implements Entity {
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
-     * @post a new task is created with the given attributes and inactive status
+     * @post a new task is created with the given attributes and unavailable status
      */
     public Task(String description, long estimatedDuration, double acceptableDeviation) {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        setState(new TaskStateInactive());
+        setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
         requirements = new HashMap<ResourceType, Integer>();
     }
@@ -204,50 +204,14 @@ public class Task implements Entity {
         this.state = state;
     }
 
-
+    
     /**
-     * Returns if the task is available.
+     * Returns the status of the task.
      *
-     * @return true if the task is available, otherwise false
+     * @return the status of the task
      */
-    public boolean isAvailable(){
-        return getState().isAvailable(this);
-    }
-
-    /**
-     * Returns if the task is unavailable.
-     *
-     * @return true if the task is unavailable, otherwise false
-     */
-    public boolean isUnavailable(){
-        return getState().isUnavailable(this);
-    }
-
-    /**
-     * Returns if the task is executing.
-     *
-     * @return true if the task is executing, otherwise false
-     */
-    public boolean isExecuting(){
-        return getState().isExecuting();
-    }
-
-    /**
-     * Returns if the task is failed.
-     *
-     * @return true if the task is failed, otherwise false
-     */
-    public boolean isFailed(){
-        return getState().isFailed();
-    }
-
-    /**
-     * Returns if the task is finished.
-     *
-     * @return true of the task is finished, otherwise false
-     */
-    public boolean isFinished(){
-        return getState().isFinished();
+    public String getStatus(){
+        return state.getStatus();
     }
 
 
