@@ -1,0 +1,55 @@
+@startuml
+
+title "Plan Task - Starting times"
+
+-> ":Controller": getStartingTimes(...)
+activate ":Controller"
+
+":Controller" -> ":ResourceManager": getNextAvailableStartingTime(Task, LocalDateTime)
+activate ":ResourceManager"
+
+loop
+    ":ResourceManager" -> ":ResourceManager": isAvailableStartingTime(Task, LocalDateTime)
+    activate ":ResourceManager"
+
+    ":ResourceManager" -> ":Task": getRequirements()
+    activate ":Task"
+    ":Task" --> ":ResourceManager": Map<ResourceType, Integer>
+    deactivate ":Task"
+
+    ":ResourceManager" -> ":Task": getDuration()
+    activate ":Task"
+    ":Task" --> ":ResourceManager": long
+    deactivate ":Task"
+
+    loop over resource types
+
+        ":ResourceManager" -> ":ResourceType": hasAvailableResource(TimeSpan)
+        activate ":ResourceType"
+
+        loop over resources
+
+            ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
+            activate ":Resource"
+
+            ":Resource" --> ":ResourceType": boolean
+            deactivate ":Resource"
+
+        end
+
+        ":ResourceType" --> ":ResourceManager": boolean
+        deactivate ":ResourceType"
+
+    end
+
+    ":ResourceManager" --> ":ResourceManager": boolean
+    deactivate ":ResourceManager"
+end
+
+":ResourceManager" --> ":Controller": Iterator<LocalDateTime>
+deactivate ":ResourceManager"
+
+<-- ":Controller": Iterator<LocalDateTime>
+deactivate ":Controller"
+
+@enduml

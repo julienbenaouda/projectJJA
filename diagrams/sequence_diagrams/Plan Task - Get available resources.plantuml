@@ -1,0 +1,49 @@
+@startuml
+
+title "Plan Task - Get available resources"
+
+-> ":Controller": getAvailableResources(...)
+activate ":Controller"
+
+":Controller" -> ":ResourceManager": getAvailableResources(Task, LocalDateTime)
+activate ":ResourceManager"
+
+
+":ResourceManager" -> ":Task": getRequirements()
+activate ":Task"
+":Task" --> ":ResourceManager": Map<ResourceType, Integer>
+deactivate ":Task"
+
+":ResourceManager" -> ":Task": getDuration()
+activate ":Task"
+":Task" --> ":ResourceManager": long
+deactivate ":Task"
+
+loop over resource types
+
+    ":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
+    activate ":ResourceType"
+
+    loop over resources
+
+        ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
+        activate ":Resource"
+
+        ":Resource" --> ":ResourceType": boolean
+        deactivate ":Resource"
+
+    end
+
+    ":ResourceType" --> ":ResourceManager": Iterator<Resource>
+    deactivate ":ResourceType"
+
+end
+
+
+":ResourceManager" --> ":Controller": List<Resource>
+deactivate ":ResourceManager"
+
+<-- ":Controller": Iterator<Resource>
+deactivate ":Controller"
+
+@enduml

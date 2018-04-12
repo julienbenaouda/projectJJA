@@ -1,0 +1,13 @@
+
+t1: type
+t2: type
+n1: integer
+n2: integer
+f1: ( < / > / = )
+f2: ( < / > / = )
+f3: (moet / mag niet)
+
+als aantal(a) f1 x
+dan aantal(b) f3 f2 y
+
+Constraint(ResourceType type1, AmountComparator c1, int n1, ResourceType type2, AmountComparator c2, int n2, boolean requires_forbids)

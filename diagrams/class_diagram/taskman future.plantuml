@@ -275,14 +275,11 @@
 
       package taskman.backend.task {
         class Task {
-            - description: String
-            - estimatedDuration: long
-            - acceptableDeviation: double
-            - timeSpan: TimeSpan
-            - state: TaskState
-            - alternative: Task
-            - dependencies: List<Task>
-            - requirements: Map<ResourceType, Integer>
+            - description : String
+            - estimatedDuration : long
+            - acceptableDeviation : double
+            - dependencies : ArrayList<Task>
+            - requirements : HashMap<ResourceType, Integer>
 
             + Task(String, long, double)
             - Task(String, long, double, TimeSpan, TaskState)
@@ -296,12 +293,8 @@
             # setTimeSpan(LocalDateTime, LocalDateTime): void
             - setTimeSpan(TimeSpan): void
             + getState(): TaskState
-            # setState(TaskState): void
-            + isAvailable(): boolean
-            + isUnavailable(): boolean
-            + isExecuting(): boolean
-            + isFailed(): boolean
-            + isFinished(): boolean
+            # changeState(TaskState): void
+            + getStatus(): String
             + updateStatus(LocalDateTime, LocalDateTime, String): void
             + getDelay(): long
             + getAlternative(): Task
@@ -312,51 +305,104 @@
             # addDependencyTask(Task): void
             + addDependency(Task): void
             + removeDependency(Task): void
-            {static} # containsLoop(Task, Task): void
-            + getRequirements(): Map<ResourceType, Integer>
-            + addRequirements(ResourceType, int): void
+            + getRequirements(): Map<ResourceType>
+            + addRequirement(ResourceType, int): void
+            + plan(User, LocalDateTime, List<Resource>): void
+            # createReservation(LocalDateTime, Resource): void
+            {static} # containsLoop(Task, Task): boolean
             + accept(Visitor): void
         }
 
         abstract class TaskState {
-            + isAvailable(Task): boolean
-            + isUnavailable(Task): boolean
-            + isExecuting(): boolean
-            + isFinished(): boolean
-            + isFailed(): boolean
+            - status : String
+            + getStatus(): String
+            # setStatus(String): void
             + getDelay(Task): long
             + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
             + setAlternative(Task, Task): void
             + addDependency(Task, Task): void
+            + planTask(Task, ...): void
+        }
+
+        class TaskStateUnavailable {
+            + TaskStateUnavailable()
+            + addDependency(Task, Task): void
+        }
+
+        class TaskStatePlanned {
+            + TaskStatePlanned()
+        }
+
+        class TaskStateAvailable {
+            + TaskStateAvailable()
         }
 
         class TaskStateExecuting {
             + TaskStateExecuting()
-            + isExecuting(): boolean
             + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
         }
 
         class TaskStateFailed {
             + TaskStateFailed()
-            + isFailed(): boolean
-            + setAlternative(Task, Task): void
+            + setAlternative(Task): void
         }
 
         class TaskStateFinished {
             + TaskStateFinished()
-            + isFinished(): boolean
-            + getDelay(Task): void
+            + getDelay(Task): long
         }
 
-        class TaskStateInactive {
-            + TaskStateInactive()
-            + isAvailable(Task): boolean
-            + isUnavailable(Task): boolean
-            + addDependency(Task, Task): void
-        }
+        Task -up-|> Entity
+        Task o-- TimeSpan : timeSpan
+        Task o-- TaskState : state
+        Task o-- Task : alternative
+        TaskStateAvailable -up-|> TaskState
+        TaskStateExecuting -up-|> TaskState
+        TaskStateFailed -up-|> TaskState
+        TaskStateFinished -up-|> TaskState
+        TaskStatePlanned -up-|> TaskState
+        TaskStateUnavailable -up-|> TaskState
       }
 
       package taskman.backend.resource {
+
+        class ResourceManager {
+           - resources: Map<ResourceType, List<Resource>>
+           - constraints: List<Constraints>
+
+           + ResourceManager()
+           + getNextAvailableTime(Task, LocalDateTime): LocalDateTime
+           - isAvailableTime(Task, LocalDateTime): boolean
+           - hasAvailableResource(ResourceType, TimeSpan): boolean
+           - getResources(ResourceType): List<Resource>
+        }
+
+        class ResourceType {
+           - unavailableTimes: List<AvailabilityPeriod>
+
+           + ResourceType(String)
+           + getName(): String
+           - setName(String): void
+           + isAvailable(TimeSpan)
+           + hashCode(): int
+        }
+
+        interface Resource {
+           + Resource()
+           + isAvailable(TimeSpan): boolean
+        }
+
+        class ResourceItem {
+           - type: ResourceType
+           - reservations: List<Reservation>
+           - availability: Map<Integer, AvailabilityPeriod>
+
+           + ResourceItem(ResourceType)
+           + isAvailable(TimeSpan): LocalDateTime
+           + addReservation(Reservation): void
+           - getReservations(): List<Reservation>
+           - getAvailability(): Map<Integer, AvailabilityPeriod>
+        }
 
         class Reservation {
              - task: Task
@@ -364,73 +410,31 @@
              - timeSpan: TimeSpan
              - isSpecifiedByUser: boolean
 
-             + Reservation(Task, Resource, LocalDateTime, LocalDateTime)
+             + Reservation(Task, Resource, TimeSpan, boolean)
              + getTask(): Task
              - setTask(Task): void
              + getResource(): Resource
              - setResource(Resource): void
              + getTimeSpan(): TimeSpan
-             - setTimeSpan(LocalDateTime, LocalDateTime): void
-        }
-
-        interface Resource {
-           + firstAvailableTime(LocalDateTime, long): LocalDateTime
-           + getType(): ResourceType
-        }
-
-        class ResourceItem {
-           - type: ResourceType
-           - reservations: List<Reservation>
-           - availibility: Map<Integer, AvailibilityPeriod>
-
-           + ResourceItem(ResourceType)
-           + firstAvailableTime(LocalDateTime, long): LocalDateTime
-           - calculateStartTime(LocalDateTime): LocalDateTime
-           - calculateEndTime(LocalDateTime, long): LocalDateTime
-           + getType(): ResourceType
-           - setType(): void
-           + addReservation(Reservation): void
-           - getReservations(): List<Reservation>
-           - getAvailability(): Map<Integer, AvailabilityPeriod>
-        }
-
-        class ResourceManager {
-           - resourceType: Collection<ResourceType>
-
-           + ResourceManager()
-           + getResourceType(String): ResourceType
-           + addResourceType(String): void
-        }
-
-        class ResourceType {
-           - name: String
-
-           + ResourceType(String)
-           + getName(): String
-           - setName(String): void
-           + hashCode(): int
+             - setTimeSpan(TimeSpan): void
+             + isSpecifiedByUser(): boolean
+             - setSpecifiedByUser(boolean): void
         }
 
         interface Constraint {
-            + test(Map<ResourceType, Integer): boolean
+            + Constraint(ResourceType, AmountComparator, int, ResourceType, AmountComparator, int, boolean)
+            + test(Map<ResourceType, Integer>): boolean
         }
 
-        class RequiringConstraint {
-            - resourceType: ResourceType
-            - allowed: boolean
-            - number: int
+        enum AmountComparator {
+            EQUALS
+            NOT_EQUALS
+            GREATER_THAN
+            GREATER_THAN_OR_EQUALS
+            SMALLER_THAN
+            SMALLER_THAN_OR_EQUALS
 
-            + RequiringConstraint(ResourceType, boolean, int)
-            + test(Map<ResourceType, Integer): boolean
-        }
-
-        class LimitingConstraint {
-            - resourceType: ResourceType
-            - allowed: boolean
-            - number: int
-
-            + LimitingConstraint(ResourceType, boolean, int)
-            + test(Map<ResourceType, Integer): boolean
+            + evaluate(int, int): boolean
         }
       }
 
@@ -483,7 +487,7 @@
 
   Task o-- Task: dependencies
   UserManager *-- User: users
-  ProjectManager *-- Project: projects
+  ProjectOrganizer *-- Project: projects
   Project *-- Task: taskList
 
   ExportVisitor -up-|> Visitor

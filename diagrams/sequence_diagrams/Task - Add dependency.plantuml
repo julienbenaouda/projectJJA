@@ -1,0 +1,15 @@
+@startuml
+
+title "Task - Add dependency"
+
+-> ":Task": addDependency(Task)
+activate ":Task"
+":Task" -> ":TaskStateUnvailable": addDependency(this, Task)
+activate ":TaskStateUnvailable"
+":TaskStateUnvailable" -> Task: containsLoop(Task, Task)
+Task --> ":TaskStateUnvailable": boolean
+":TaskStateUnvailable" -> ":Task": addDependencyTask(Task)
+deactivate ":TaskStateUnvailable"
+deactivate ":Task"
+
+@enduml
