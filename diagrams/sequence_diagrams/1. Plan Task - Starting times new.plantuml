@@ -5,10 +5,10 @@ title "Plan Task - Starting times"
 -> ":Controller": getStartingTimes(...)
 activate ":Controller"
 
-":Controller" -> ":ResourceManager": getNextAvailableStartingTime(Task, LocalDateTime)
+":Controller" -> ":ResourceManager": getStartingTimes(Task, LocalDateTime)
 activate ":ResourceManager"
 
-loop
+loop (iterator)
     ":ResourceManager" -> ":ResourceManager": isAvailableStartingTime(Task, LocalDateTime)
     activate ":ResourceManager"
 
