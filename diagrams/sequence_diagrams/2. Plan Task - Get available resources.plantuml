@@ -37,12 +37,23 @@ loop over resource types
         ":ResourceType" -> ":Resource": isAvailable(TimeSpan)
         activate ":Resource"
 
-        loop
-            ":Resource" -> ":TimeSpan": overlaps(TimeSpan)
+        ":Resource" -> ":Resource": getReservations()
+        ":Resource" --> ":Resource": List<Reservation>
+        
+        
+        loop over reservations
+        
+            ":Resource" -> ":Reservation": overlaps(TimeSpan)
+            activate ":Reservation"
+            
+            ":Reservation" -> ":TimeSpan": overlaps(TimeSpan)
             activate ":TimeSpan"
 
-            ":TimeSpan" --> ":Resource": boolean
+            ":TimeSpan" --> ":Reservation": boolean
             deactivate ":TimeSpan"
+            
+            ":Reservation"--> ":Resource": boolean
+            deactivate ":Reservation"
         end
 
         ":Resource" --> ":ResourceType": boolean
