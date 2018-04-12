@@ -148,16 +148,21 @@
             + getEndTime(): LocalDateTime
             - setEndTime(LocalDateTime): void
             + canHaveAsEndTime(LocalDateTime): boolean
+            + overlaps(TimeSpan): boolean
             + accept(Visitor): void
         }
 
-        class WeekTimeSpan {
-            - startTime: WeekTime
-            - endTime: WeekTime
+        class AvailabilityPeriod {
+            - startTime: LocalTime
+            - endTime: LocalTime
 
-            + WeekTimeSpan(WeekTime startTime, WeekTime endtime)
-            + WeekTime getStartTime()
-            + WeekTime getEndTime()
+            + AvailabilityPeriod(LocalTime, LocalTime)
+            + LocalTime getStartTime()
+            - setStartTime(LocalTime): void
+            + LocalTime getEndTime()
+            - setEndTime(LocalTime): void
+            + canHaveAsEndTime(LocalTime): boolean
+            + overlaps(TimeSpan): boolean
             + accept(Visitor v)
         }
 
@@ -305,10 +310,11 @@
             # addDependencyTask(Task): void
             + addDependency(Task): void
             + removeDependency(Task): void
-            + getRequirements(): Map<ResourceType>
+            + getRequirements(): Map<ResourceType, Integer>
             + addRequirement(ResourceType, int): void
             + plan(User, LocalDateTime, List<Resource>): void
             # createReservation(LocalDateTime, Resource): void
+            + plan(List<Resource>, LocalDateTime, ResourceManager, User): void
             {static} # containsLoop(Task, Task): boolean
             + accept(Visitor): void
         }
@@ -321,12 +327,13 @@
             + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
             + setAlternative(Task, Task): void
             + addDependency(Task, Task): void
-            + planTask(Task, ...): void
+            + plan(Task, List<Resource>, LocalDateTime): void
         }
 
         class TaskStateUnavailable {
             + TaskStateUnavailable()
             + addDependency(Task, Task): void
+            + plan(Task, List<Resource>, LocalDateTime): void
         }
 
         class TaskStatePlanned {
@@ -367,29 +374,35 @@
       package taskman.backend.resource {
 
         class ResourceManager {
-           - resources: Map<ResourceType, List<Resource>>
+           - resourceTypes: List<ResourceType>
            - constraints: List<Constraints>
 
            + ResourceManager()
-           + getNextAvailableTime(Task, LocalDateTime): LocalDateTime
-           - isAvailableTime(Task, LocalDateTime): boolean
-           - hasAvailableResource(ResourceType, TimeSpan): boolean
-           - getResources(ResourceType): List<Resource>
+           - getConstraints(): List<Constraint>
+           + Iterator<LocalDateTime> getStartingTimes(Task, LocalDateTime)
+           + getResourceTypes(): List<ResourceType>
+           + getAvailableResources(Task, LocalDateTime): Iterator<Resources>
+           + getAlternativeResources(Task, Resource, LocalDateTime): Iterator<Resource>
+           + checkRequirements(Map<ResourceType, Integer>): boolean
         }
 
         class ResourceType {
            - unavailableTimes: List<AvailabilityPeriod>
+           - resources: List<Resource>
+           - name: String 
 
            + ResourceType(String)
            + getName(): String
            - setName(String): void
-           + isAvailable(TimeSpan)
-           + hashCode(): int
+           + hasAvailableResources(TimeSpan): boolean
+           + getAvailableResources(TimeSpan): Iterator<Resource>
         }
 
         interface Resource {
            + Resource()
            + isAvailable(TimeSpan): boolean
+           + getReservations(): List<Reservation>
+           + createReservation(Task, TimeSpan): void
         }
 
         class ResourceItem {
@@ -398,10 +411,11 @@
            - availability: Map<Integer, AvailabilityPeriod>
 
            + ResourceItem(ResourceType)
-           + isAvailable(TimeSpan): LocalDateTime
-           + addReservation(Reservation): void
-           - getReservations(): List<Reservation>
-           - getAvailability(): Map<Integer, AvailabilityPeriod>
+           - addReservation(Reservation): void
+           + Resource()
+           + isAvailable(TimeSpan): boolean
+           + getReservations(): List<Reservation>
+           + createReservation(Task, TimeSpan): void
         }
 
         class Reservation {
@@ -419,9 +433,10 @@
              - setTimeSpan(TimeSpan): void
              + isSpecifiedByUser(): boolean
              - setSpecifiedByUser(boolean): void
+             + overlaps(TimeSpan): boolean
         }
 
-        interface Constraint {
+        class Constraint {
             + Constraint(ResourceType, AmountComparator, int, ResourceType, AmountComparator, int, boolean)
             + test(Map<ResourceType, Integer>): boolean
         }
@@ -474,7 +489,13 @@
         }
 
         class Developer {
+            - reservations: List<Reservation>
             + Developer(String, String)
+            - addReservation(Reservation)
+            + Resource()
+            + isAvailable(TimeSpan): boolean
+            + getReservations(): List<Reservation>
+            + createReservation(Task, TimeSpan): void
         }
 
         class ProjectManager {
@@ -492,9 +513,9 @@
 
   ExportVisitor -up-|> Visitor
   Clock -up-|> Entity
-  Controller o-- Clock : clock
-  Controller o-- UserManager : userManager
-  Controller o-- ProjectOrganizer : projectOrganizer
+  Controller *-- Clock : clock
+  Controller *-- UserManager : userManager
+  Controller *-- ProjectOrganizer : projectOrganizer
   DetailVisitor -up-|> Visitor
   Developer -up-|> User
   FormSection -up-|> Section
@@ -505,9 +526,9 @@
   ProjectManager -up-|> User
   SelectionSection -up-|> Section
   Task -up-|> Entity
-  Task o-- TimeSpan : timeSpan
-  Task o-- TaskState : state
-  Task o-- Task : alternative
+  Task *-- TimeSpan : timeSpan
+  Task *-- TaskState : state
+  Task *-- Task : alternative
   TaskStateExecuting -up-|> TaskState
   TaskStateFailed -up-|> TaskState
   TaskStateFinished -up-|> TaskState
@@ -516,7 +537,13 @@
   TitleSection -up-|> Section
   TitleSection o-- Section : section
   User -up-|> Entity
-  UserInterface o-- Controller : controller
-  UserManager o-- User : currentUser
+  UserInterface *-- Controller : controller
+  UserManager *-- User : currentUser
+  ResourceManager *-- ResourceType
+  ResourceManager *-- Constraint
+  ResourceType *-- Resource
+  Resource *-- Reservation
+  Reservation *-- Task
+  Reservation *-- TimeSpan
 
 @enduml
