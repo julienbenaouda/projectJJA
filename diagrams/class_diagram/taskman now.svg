@@ -297,7 +297,7 @@ title Taskman Overview\n
             # setTimeSpan(LocalDateTime, LocalDateTime): void
             - setTimeSpan(TimeSpan): void
             + getState(): TaskState
-            # setState(TaskState): void
+            # changeState(TaskState): void
             + isAvailable(): boolean
             + isUnavailable(): boolean
             + isExecuting(): boolean
