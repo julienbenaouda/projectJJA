@@ -7,6 +7,7 @@ import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * This class represents a project.
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
-public class Project implements Entity {
+public class Project implements Entity, ProjectWrapper {
 
 	/**
 	 * creates a new project with the given values
@@ -68,11 +69,11 @@ public class Project implements Entity {
     	taskList.add(task);
     }
     
-    /**
-     * Returns the status of the project (active, finished, failed)
-     * @return a String
-     */
-    public String getStatus(LocalDateTime systemtime) {
+    /* (non-Javadoc)
+	 * @see taskman.backend.project.ProjectWrapper#getStatus(java.time.LocalDateTime)
+	 */
+    @Override
+	public String getStatus(LocalDateTime systemtime) {
     	if (systemtime.isBefore(this.dueTime)) {
     		return "active";
 		}
@@ -96,12 +97,11 @@ public class Project implements Entity {
 
 	// TODO: getTaskDetails() en getAvailableTaskDetails() heb ik verwijderd
 
-    /**
-     * Returns the name of the project.
-     *
-     * @return the name of the project
-     */
-    public String getName() {
+    /* (non-Javadoc)
+	 * @see taskman.backend.project.ProjectWrapper#getName()
+	 */
+    @Override
+	public String getName() {
 		return name;
 	}
 
@@ -125,12 +125,11 @@ public class Project implements Entity {
 	 */
 	private String name;
 
-    /**
-     * Returns the project description.
-     *
-     * @return the project description
-     */
-    public String getDescription() {
+    /* (non-Javadoc)
+	 * @see taskman.backend.project.ProjectWrapper#getDescription()
+	 */
+    @Override
+	public String getDescription() {
 		return description;
 	}
 
@@ -155,12 +154,11 @@ public class Project implements Entity {
 	private String description;
 
 
-    /**
-     * returns the creation time of the project
-     *
-     * @return the creationTime of the project
-     */
-    public LocalDateTime getCreationTime() {
+    /* (non-Javadoc)
+	 * @see taskman.backend.project.ProjectWrapper#getCreationTime()
+	 */
+    @Override
+	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
 
@@ -184,12 +182,11 @@ public class Project implements Entity {
 	 */
 	private LocalDateTime creationTime;
 
-    /**
-     * Returns the due time of the project.
-     *
-     * @return the dueTime of the project
-     */
-    public LocalDateTime getDueTime() {
+    /* (non-Javadoc)
+	 * @see taskman.backend.project.ProjectWrapper#getDueTime()
+	 */
+    @Override
+	public LocalDateTime getDueTime() {
 		return dueTime;
 	}
 
