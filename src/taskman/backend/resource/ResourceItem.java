@@ -3,9 +3,12 @@ package taskman.backend.resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeSpan;
 
 /**
  * Class representing a resource item.
@@ -23,50 +26,11 @@ public class ResourceItem implements Resource {
     public ResourceItem(ResourceType type){
         setType(type);
         reservations = new ArrayList<>();
-        availability = new HashMap<>();
     }
-
-	@Override
-	public LocalDateTime firstAvailableTime(LocalDateTime time, long duration) {
-		LocalDateTime firstAvailableTime = time;
-		LocalDateTime endTime = calculateEndTime(firstAvailableTime, duration);
-		for(Reservation r: getReservations()) {
-			if(r.getTimeSpan().getStartTime().isBefore(endTime) && r.getTimeSpan().getStartTime().isAfter(firstAvailableTime)) {
-				firstAvailableTime = r.getTimeSpan().getEndTime();
-				// TODO dit vereist dat de lijst gesorteerd is op tijd
-				endTime = calculateEndTime(firstAvailableTime, duration);
-			}
-		}
-		return firstAvailableTime;
-	}
-	
-	private LocalDateTime calculateStartTime(LocalDateTime time) {
-		int dayOfWeek = time.getDayOfWeek().getValue();
-		AvailabilityPeriod p = getAvailability().get(dayOfWeek);
-		if(p.getStartTime().atDate(time.toLocalDate()).isAfter(time)) {
-			time = p.getStartTime().atDate(time.toLocalDate());
-		}
-		if(p.getEndTime().atDate(time.toLocalDate()).isBefore(time)) {
-			for(int weekDay = 1; weekDay <= 7; weekDay++) {
-				dayOfWeek = ((time.getDayOfWeek().getValue()+weekDay)%7)+1;
-				p = getAvailability().get(dayOfWeek);
-				if(p != null) {
-					return p.getStartTime().atDate(time.toLocalDate()).plusDays(weekDay);
-				}
-			}
-		}
-		return time;
-		// TODO returns original start time if there is no available time in a week
-	}
-	
-	private LocalDateTime calculateEndTime(LocalDateTime startTime, long duration) {
-		return startTime.plusMinutes(duration);
-	}
-
     /**
      * Represents the resource type of the resource item.
      */
-	private ResourceType type;
+    private ResourceType type;
 	
     @Override
     public ResourceType getType() {
@@ -104,15 +68,31 @@ public class ResourceItem implements Resource {
 	 */
 	private ArrayList<Reservation> reservations;
 	
-	/**
-	 * return the availability of this resource
+
+	/* (non-Javadoc)
+	 * @see taskman.backend.resource.Resource#isAvailable(taskman.backend.time.TimeSpan)
 	 */
-	private Map<Integer, AvailabilityPeriod> getAvailability() {
-		return availability;
+	@Override
+	public boolean isAvailable(TimeSpan timeSpan) {
+		for(Reservation r: Reservations) {
+			if(r.overlaps(timeSpan)) {
+				return false; 
+			}
+		}
+		return true;
 	}
-	
-	/**
-	 * represents the availability for every week day
+
+	/* (non-Javadoc)
+	 * @see taskman.backend.resource.Resource#getReservations()
 	 */
-	private HashMap<Integer, AvailabilityPeriod> availability;
+	@Override
+	public List<Reservation> getReservations() {
+		return reservations.clone();
+	}
+
+	@Override
+	public void createReservation(Task task, TimeSpan timeSpan) {
+		Reservation r = new Reservation(task, this, timeSpan);
+		addReservation(r);
+	}
 }

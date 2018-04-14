@@ -10,6 +10,7 @@ import taskman.backend.time.TimeSpan;
 import taskman.backend.user.User;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.TaskWrapper;
 
 
 /**
@@ -17,7 +18,7 @@ import taskman.backend.visitor.Visitor;
  *
  * @author Jeroen Van Der Donckt
  */
-public class Task implements Entity {
+public class Task implements Entity, TaskWrapper {
 
     /**
      * Creates a new task with the given values.
@@ -63,12 +64,11 @@ public class Task implements Entity {
     private String description;
 
 
-    /**
-     * Returns the task description.
-     *
-     * @return the task description
-     */
-    public String getDescription(){
+    /* (non-Javadoc)
+	 * @see taskman.backend.task.TaskWrapper#getDescription()
+	 */
+    @Override
+	public String getDescription(){
         return description;
     }
 
@@ -90,12 +90,11 @@ public class Task implements Entity {
     private long estimatedDuration;
 
 
-    /**
-     * Returns the estimated duration of the task in minutes.
-     *
-     * @return the estimated duration of the task in minutes
-     */
-    public long getEstimatedDuration(){
+    /* (non-Javadoc)
+	 * @see taskman.backend.task.TaskWrapper#getEstimatedDuration()
+	 */
+    @Override
+	public long getEstimatedDuration(){
         return estimatedDuration;
     }
 
@@ -117,12 +116,11 @@ public class Task implements Entity {
     private double acceptableDeviation;
 
 
-    /**
-     * Returns the acceptable deviation of the task.
-     *
-     * @return the acceptable deviation of the task
-     */
-    public double getAcceptableDeviation(){
+    /* (non-Javadoc)
+	 * @see taskman.backend.task.TaskWrapper#getAcceptableDeviation()
+	 */
+    @Override
+	public double getAcceptableDeviation(){
         return acceptableDeviation;
     }
 
@@ -205,12 +203,11 @@ public class Task implements Entity {
     }
 
     
-    /**
-     * Returns the status of the task.
-     *
-     * @return the status of the task
-     */
-    public String getStatus(){
+    /* (non-Javadoc)
+	 * @see taskman.backend.task.TaskWrapper#getStatus()
+	 */
+    @Override
+	public String getStatus(){
         return state.getStatus();
     }
 

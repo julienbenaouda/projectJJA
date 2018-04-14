@@ -5,6 +5,10 @@ package taskman.backend.resource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+
+import taskman.backend.task.Task;
+import taskman.backend.time.TimeSpan;
 
 /**
  * This interface represents a resource
@@ -14,18 +18,28 @@ import java.util.ArrayList;
 public interface Resource {
 
 	/**
-	 * Returns the first available time to start the task.
-	 *
-	 * @param time the time to start searching from
-	 * @param resources the list of resources to search in
-	 * @return The first available time to plan the task
-	 */
-	LocalDateTime firstAvailableTime(LocalDateTime time, long duration);
-	
-	/**
 	 * Returns the type of the resource.
 	 *
 	 * @return the type of the resource
 	 */
-	public ResourceType getType();
+	ResourceType getType();
+	
+	/**
+	 * checks if the resource is available during the specified timespan
+	 * @param timeSpan the time span to check with
+	 * @return true if the resource is available, else false
+	 */
+	boolean isAvailable(TimeSpan timeSpan);
+	
+	/**
+	 * returns a list of all reservations for the resource
+	 */
+	List<Reservation> getReservations();
+	
+	/**
+	 * creates a new reservation for this resource
+	 * @param task the task to link the reservation to
+	 * @param timeSpan the time span of the reservation
+	 */
+	void createReservation(Task task, TimeSpan timeSpan);
 }

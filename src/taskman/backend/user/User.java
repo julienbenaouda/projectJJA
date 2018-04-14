@@ -2,13 +2,14 @@ package taskman.backend.user;
 
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.UserWrapper;
 
 /**
  * This class represents a user in the system.
  * @author Julien Benaouda
  *
  */
-public abstract class User implements Entity {
+public abstract class User implements Entity, UserWrapper {
 	/**
 	 * creates a new user with the given name and password
 	 * @param name the name of the user
@@ -20,10 +21,10 @@ public abstract class User implements Entity {
 		setPassword(password);
 	}
 
-	/**
-	 * returns the name of the user
-	 * @return the name of the user
+	/* (non-Javadoc)
+	 * @see taskman.backend.user.UserWrapper#getName()
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}

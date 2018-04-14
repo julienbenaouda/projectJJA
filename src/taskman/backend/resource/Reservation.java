@@ -21,7 +21,7 @@ public class Reservation {
      * @param endTime the end time of the reservation
      * @post a new reservation is created with given attributes
      */
-    public Reservation(Task task, Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+    public Reservation(Task task, Resource resource, TimeSpan timeSpan){
         setTask(task);
         setResource(resource);
         setTimeSpan(startTime, endTime);
@@ -100,8 +100,25 @@ public class Reservation {
      * @param endTime the end time of the reservation its time span
      * @post a new time span is created with given attributes and the time span of the reservation is set to this time span
      */
-    private void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
-        TimeSpan timeSpan = new TimeSpan(startTime, endTime); // Reservation creates the time span, because reservation stores time span ==> GRASP: Creator
+    private void setTimeSpan(TimeSpan timeSpan){
         this.timeSpan = timeSpan;
+    }
+    
+    /**
+     * Checks if this reservation overlaps with the given time span
+     * @param timeSpan the timespan to check with
+     * @return true if the start time of the timespan is between the start-and end time of this reservation, if the end time of the time span is between the start and end time of this reservation or if the start-and end time of this reservation are between the start and end time of the given time span
+     */
+    public boolean overlaps(TimeSpan timeSpan) {
+    	if(timeSpan.getStartTime().isAfter(getTimeSpan().getStartTime()) && timeSpan.getStartTime().isBefore(getTimeSpan().getEndTime())) {
+    		return true;
+    	}
+    	if(timeSpan.getEndTime().isAfter(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isBefore(getTimeSpan().getEndTime())) {
+    		return true;
+    	}
+    	if(timeSpan.getStartTime().isBefore(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isAfter(getTimeSpan().getEndTime())) {
+    		return true;
+    	}
+    	return false;
     }
 }

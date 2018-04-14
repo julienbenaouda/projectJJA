@@ -7,13 +7,14 @@ import java.time.LocalTime;
 
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.AvailabilityPeriodWrapper;
 
 /**
  * This class represents a availability period containing an start time and an end time. IN this class, dates are not involved.
  * @author Julien Benaouda
  *
  */
-public class AvailabilityPeriod implements Entity {
+public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
 
 	/**
 	 * Creates a new availability period object with given starttime and endtime
@@ -27,10 +28,10 @@ public class AvailabilityPeriod implements Entity {
 		setEndTime(endTime);
 	}
 	
-	/**
-	 * returns the start time of this time span object
-	 * @return the startTime of the availability period
+	/* (non-Javadoc)
+	 * @see taskman.backend.time.AvailabilityPeriodWrapper#getStartTime()
 	 */
+	@Override
 	public LocalTime getStartTime() {
 		return startTime;
 	}
@@ -53,9 +54,10 @@ public class AvailabilityPeriod implements Entity {
 	 */
 	private LocalTime startTime;
 	
-	/**
-	 * @return the endTime the end time of the availability period
+	/* (non-Javadoc)
+	 * @see taskman.backend.time.AvailabilityPeriodWrapper#getEndTime()
 	 */
+	@Override
 	public LocalTime getEndTime() {
 		return endTime;
 	}

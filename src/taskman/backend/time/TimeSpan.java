@@ -7,13 +7,14 @@ import java.time.LocalDateTime;
 
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.TimeSpanWrapper;
 
 /**
  * This class represents a time span containing a start time, end time and status
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
-public class TimeSpan implements Entity {
+public class TimeSpan implements Entity, TimeSpanWrapper {
 
 	/**
 	 * Creates a new timespan object with given starttime and endtime
@@ -27,10 +28,10 @@ public class TimeSpan implements Entity {
 		setEndTime(endTime);
 	}
 	
-	/**
-	 * returns the start time of this time span object
-	 * @return the startTime of the timespan
+	/* (non-Javadoc)
+	 * @see taskman.backend.time.TimeSpanWrapper#getStartTime()
 	 */
+	@Override
 	public LocalDateTime getStartTime() {
 		return startTime;
 	}
@@ -49,9 +50,10 @@ public class TimeSpan implements Entity {
 	 */
 	private LocalDateTime startTime;
 	
-	/**
-	 * @return the endTime the end time of the timespan
+	/* (non-Javadoc)
+	 * @see taskman.backend.time.TimeSpanWrapper#getEndTime()
 	 */
+	@Override
 	public LocalDateTime getEndTime() {
 		return endTime;
 	}
