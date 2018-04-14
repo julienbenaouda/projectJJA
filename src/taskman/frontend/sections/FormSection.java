@@ -42,7 +42,7 @@ public class FormSection extends Section {
 
     /**
      * Shows the form.
-     * @throws Cancel when the user cancels the section.
+     * @throws Cancel if the user cancels the section.
      */
     @Override
     public void show() throws Cancel {

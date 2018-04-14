@@ -9,7 +9,7 @@ package taskman.backend.resource;
  *
  */
 public enum AmountComparator {
-	EqualS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUALS, SMALLER_THAN, SMALLER_THAN_OR_EQUALS 
+	EqualS, NOT_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUALS, SMALLER_THAN, SMALLER_THAN_OR_EQUALS
 	
 	public boolean evaluate(int amount, int other) {
 		int ordinal = ordinal();
