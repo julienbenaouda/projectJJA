@@ -1,6 +1,9 @@
 package taskman.backend.user;
 
+import java.time.LocalTime;
 import java.util.*;
+
+import taskman.backend.resource.ResourceManager;
 
 /**
  * This class represents the user manager in the taskman system.
@@ -78,7 +81,7 @@ public class UserManager {
 	 * @throws IllegalArgumentException if the type is not valid.
 	 * @post a new user is added to the list of users.
 	 */
-	public void createUser(String name, String password, String type) throws IllegalArgumentException {
+	public void createUser(String name, String password, String type, LocalTime startBreak, ResourceManager resourceManager) throws IllegalArgumentException {
 		switch (type) {
 			case "developer":
 				createDeveloper(name, password);
@@ -89,6 +92,7 @@ public class UserManager {
 			default:
 				throw new IllegalArgumentException("'" + type + "' is not a valid user type!");
 		}
+		resourceManager.createResourceForUser(getUser(name), startBreak);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package taskman.backend;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import taskman.backend.importExport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.time.TimeParser;
@@ -37,6 +39,11 @@ public class Controller {
      * Represents the project management system.
      */
     private ProjectOrganizer projectOrganizer;
+    
+    /**
+     * represents the resource manager
+     */
+    private ResourceManager resourceManager;
 
     /**
      * Create a Controller for the given objects.
@@ -45,13 +52,14 @@ public class Controller {
      * @param projectOrganizer a project management system.
      * @throws NullPointerException if an argument is null.
      */
-    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer) throws NullPointerException{
-        if (clock == null || userManager == null || projectOrganizer == null) {
+    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer, ResourceManager resourceManager) throws NullPointerException{
+        if (clock == null || userManager == null || projectOrganizer == null || resourceManager == null) {
             throw new NullPointerException("Arguments cannot be null!");
         }
         this.clock = clock;
         this.userManager = userManager;
         this.projectOrganizer = projectOrganizer;
+        this.resourceManager = resourceManager;
     }
 
     /**
@@ -98,8 +106,8 @@ public class Controller {
      * @throws IllegalArgumentException if the type is not valid.
      * @post a new user is added to the system.
      */
-    public void createUser(String name, String password, String type) throws IllegalArgumentException {
-        this.userManager.createUser(name, password, type);
+    public void createUser(String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
+        this.userManager.createUser(name, password, type, startBreak, resourceManager);
     }
 
     /**

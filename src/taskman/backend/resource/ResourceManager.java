@@ -1,8 +1,11 @@
 package taskman.backend.resource;
 
 import taskman.backend.task.Task;
+import taskman.backend.user.Developer;
+import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -17,6 +20,7 @@ public class ResourceManager {
      */
     public ResourceManager() {
         this.resourceTypes = new HashSet<>();
+        addResourceType("developer");
     }
 
     /**
@@ -48,7 +52,7 @@ public class ResourceManager {
      * @param name the name of the resource type
      * @post a resource type with given name is created and added to the resource types
      */
-    public void addResourceTye(String name){
+    public void addResourceType(String name){
         ResourceType resourceType = new ResourceType(name);
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
     }
@@ -66,5 +70,22 @@ public class ResourceManager {
 
         }
         // TODO
+    }
+    
+    /**
+     * creates a new resource from the given user
+     * @param user the user to use for the resource creation
+     * @throws IllegalArgumentException the break is null
+     */
+    public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
+    	if(user.isProjectManager()) {
+    			if(startBreak == null)
+    			{
+    				throw new IllegalArgumentException("A user must take a break");
+    			}
+    			DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
+    			Developer d = (Developer)user;
+    			d.changeResource(r);
+    	}
     }
 }

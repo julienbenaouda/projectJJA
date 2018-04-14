@@ -24,7 +24,7 @@ public class Reservation {
     public Reservation(Task task, Resource resource, TimeSpan timeSpan){
         setTask(task);
         setResource(resource);
-        setTimeSpan(startTime, endTime);
+        setTimeSpan(timeSpan);
     }
 
 

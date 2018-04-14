@@ -37,7 +37,7 @@ public class UserInterface {
 	public void start() {
 
 		// Create default user
-		controller.createUser("admin", "admin", "project manager");
+		controller.createUser("admin", "admin", "project manager", null);
 
 		// Show start menu
 		try {

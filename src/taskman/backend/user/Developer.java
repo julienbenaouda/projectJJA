@@ -4,17 +4,20 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import taskman.backend.resource.DeveloperResource;
 import taskman.backend.resource.Reservation;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceType;
+import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeSpan;
 
 /**
  * This class represents a developer in the taskman system.
  * @author Julien Benaouda
  *
  */
-public class Developer extends User implements Resource {
+public class Developer extends User {
 
 	/**
 	 * creates a new developer with given name and password
@@ -27,72 +30,34 @@ public class Developer extends User implements Resource {
 	}
 	
 	/**
-	 * @return the breakTime
+	 * @return the Resource of the developer
 	 */
-	public AvailabilityPeriod getBreakTime() {
-		return breakTime;
-	}
-
-	/**
-	 * @param breakTime the breakTime of the developer
-	 */
-	private void setBreakTime(AvailabilityPeriod breakTime) {
-		this.breakTime = breakTime;
-	}
-	
-	/**
-	 * adds a new break time for this developer
-	 * @param startTime the start time of his break
-	 */
-	public void addBreakTime(LocalTime startTime) {
-		LocalTime startBreak = LocalTime.of(11, 0);
-		LocalTime endBreak = LocalTime.of(13, 0);
-		LocalTime endTime = startTime.plusHours(1);
-		if(startTime.isBefore(startBreak) || endTime.isAfter(endBreak)) {
-			throw new IllegalArgumentException("The break time must be tetween 11:00 end 13:00");
-		}
-		setBreakTime(new AvailabilityPeriod(startTime, endTime));
-	}
-
-	/**
-	 * represents the break of the developer
-	 */
-	private AvailabilityPeriod breakTime;
-
-	@Override
-	public LocalDateTime firstAvailableTime(LocalDateTime time, long duration) {
-		// TODO add implementation for this method
-		return null;
-	}
-
-	@Override
-	public ResourceType getType() {
-		return type;
-	}
-	
-	/**
-	 * represents the resource type
-	 */
-	private ResourceType type;
-
-	/**
-	 * adds a reservation to the list of reservations
-	 * @param reservation the reservation to add
-	 */
-	public void addReservation(Reservation r)
+	public DeveloperResource getResource()
 	{
-		reservations.add(r);
+		return resource;
 	}
 	
 	/**
-	 * returns all reservations for this resource
+	 * changes the Resource of the developer to thee given Resource
+	 * @param Resource the Resource to change the developer to
+	 * @throws IllegalArgumentException when the Resource is not "developer"
 	 */
-	private ArrayList<Reservation> getReservations() {
-		return reservations;
+	public void changeResource(DeveloperResource resource) {
+		setResource(resource);
 	}
 	
 	/**
-	 * represents the list of reservations
+	 * sets the Resource of the developer to the given Resource
+	 * @param Resource the Resource to set the developer to
 	 */
-	private ArrayList<Reservation> reservations;
+	private void setResource(DeveloperResource resource)
+	{
+		this.resource = resource;
+	}
+	
+	/**
+	 * represents the Resource of the developer
+	 */
+	private DeveloperResource resource;
+	
 }

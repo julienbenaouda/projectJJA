@@ -1,7 +1,9 @@
 package taskman.backend.resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ public class ResourceType {
     public  ResourceType(String name){
         setName(name);
         availability = new HashMap<>();
+        resources = new ArrayList<>();
     }
 
     /**
@@ -68,4 +71,24 @@ public class ResourceType {
 	 * represents the availability for every week day
 	 */
 	private HashMap<Integer, AvailabilityPeriod> availability;
+	
+	/**
+	 * @return the list of resources
+	 */
+	private List<Resource> getResources() {
+		return resources;
+	}
+	
+	/**
+	 * adds a resource to the list of resources
+	 * @param resource the resource to add
+	 */
+	public void addResource(Resource resource) {
+		resources.add(resource);
+	}
+	
+	/**
+	 * represents the list of resources
+	 */
+	private ArrayList<Resource> resources;
 }
