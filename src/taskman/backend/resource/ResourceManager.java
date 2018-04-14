@@ -1,5 +1,8 @@
 package taskman.backend.resource;
 
+import taskman.backend.task.Task;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -48,5 +51,10 @@ public class ResourceManager {
     public void addResourceTye(String name){
         ResourceType resourceType = new ResourceType(name);
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
+    }
+
+    public void plan(Task task, List<Resource> resources, LocalDateTime startTime){
+        // TODO
+        checkRe
     }
 }

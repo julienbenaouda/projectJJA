@@ -2,7 +2,7 @@ package taskman.backend.user;
 
 /**
  * This class represents a project manager in the taskman system.
- * @author Julien Benaouda
+ * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
 public class ProjectManager extends User {
@@ -17,4 +17,13 @@ public class ProjectManager extends User {
 		super(name, password);
 	}
 
+	/**
+	 * Returns that the user is a project manager
+	 *
+	 * @return true
+	 */
+	@Override
+	public boolean isProjectManager(){
+		return true;
+	}
 }

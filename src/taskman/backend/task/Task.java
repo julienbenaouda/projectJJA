@@ -1,13 +1,13 @@
 package taskman.backend.task;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
+import taskman.backend.resource.Resource;
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.User;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
 
@@ -328,7 +328,6 @@ public class Task implements Entity {
         getState().addDependency(this, dependency);
     }
 
-
     /**
      * Removes dependency of the given task.
      *
@@ -361,6 +360,22 @@ public class Task implements Entity {
      */
     public void addRequirement(ResourceType type, int amount) {
     	requirements.put(type, amount);
+    }
+
+    /**
+     * Plans the task with the given list of resources at the given start time
+     *
+     * @param resources the list of resources necessary to plan the task
+     * @param startTime the start time of the planning
+     * @param resourceManager the resource manager of the system
+     * @param user the user that wants to plan the task
+     * @throws IllegalArgumentException the user must be allowed to plan the task
+     */
+    public void plan(List<Resource> resources, LocalDateTime startTime, ResourceManager resourceManager, User user) throws IllegalStateException, IllegalArgumentException {
+        if (!user.isProjectManager()){
+            throw new IllegalArgumentException("The user must be a project manager in order to plan tasks.");
+        }
+        getState().plan(this, resources, startTime, resourceManager);
     }
 
 

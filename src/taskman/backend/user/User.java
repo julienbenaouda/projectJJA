@@ -71,7 +71,17 @@ public abstract class User implements Entity {
 	 * represents the password of the user
 	 */
 	private String password;
-	
+
+
+	/**
+	 * Returns if the user is a project manager.
+	 *
+	 * @return true if the user is a project manager, otherwise false
+	 */
+	public boolean isProjectManager(){
+		return false;
+	}
+
 	/**
 	 * accepts a visitor
 	 * @para v the visitor to accept
