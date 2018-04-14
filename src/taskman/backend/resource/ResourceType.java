@@ -1,7 +1,11 @@
 package taskman.backend.resource;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import taskman.backend.time.AvailabilityPeriod;
 
 /**
  * This class is responsible for storing and retrieving resource types of the system.
@@ -17,6 +21,7 @@ public class ResourceType {
      */
     public  ResourceType(String name){
         setName(name);
+        availability = new HashMap<>();
     }
 
     /**
@@ -52,4 +57,15 @@ public class ResourceType {
     public int hashCode() {
         return getName().hashCode();
     }
+	/**
+	 * return the availability of this resource
+	 */
+	private Map<Integer, AvailabilityPeriod> getAvailability() {
+		return availability;
+	}
+	
+	/**
+	 * represents the availability for every week day
+	 */
+	private HashMap<Integer, AvailabilityPeriod> availability;
 }
