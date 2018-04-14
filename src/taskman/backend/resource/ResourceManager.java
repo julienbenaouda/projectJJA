@@ -53,8 +53,18 @@ public class ResourceManager {
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
     }
 
+    private boolean checkRequirements(Map<ResourceType, Integer> requirements) {
+        // TODO
+        return true;
+    }
+
     public void plan(Task task, List<Resource> resources, LocalDateTime startTime){
         // TODO
-        checkRe
+        Map<ResourceType, Integer> requirements = task.getRequirements();
+        long duration = task.getEstimatedDuration();
+        if (checkRequirements(requirements)){
+
+        }
+        // TODO
     }
 }
