@@ -17,8 +17,7 @@ public class Reservation {
      *
      * @param task the task of the reservation
      * @param resource the resource of the reservation
-     * @param startTime the start time of the reservation
-     * @param endTime the end time of the reservation
+     * @param timeSpan the time span of the reservation
      * @post a new reservation is created with given attributes
      */
     public Reservation(Task task, Resource resource, TimeSpan timeSpan){
