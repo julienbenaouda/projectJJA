@@ -12,7 +12,7 @@ import taskman.backend.time.AvailabilityPeriod;
 /**
  * This class is responsible for storing and retrieving resource types of the system.
  *
- * @author Jeroen Van Der Donckt
+ * @author Jeroen Van Der Donckt, Julien Benaouda
  */
 public class ResourceType {
 
