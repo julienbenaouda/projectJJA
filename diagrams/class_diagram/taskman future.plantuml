@@ -128,6 +128,7 @@
 
             + getTime(): LocalDateTime
             + updateSystemTime(LocalDateTime): void
+            + accept(Visitor): void
         }
 
         class TimeParser {
@@ -148,6 +149,7 @@
             - setEndTime(LocalDateTime): void
             + canHaveAsEndTime(LocalDateTime): boolean
             + overlaps(TimeSpan): boolean
+            + accept(Visitor): void
         }
 
         class AvailabilityPeriod {
@@ -161,6 +163,7 @@
             - setEndTime(LocalTime): void
             + canHaveAsEndTime(LocalTime): boolean
             + overlaps(TimeSpan): boolean
+            + accept(Visitor v)
         }
 
         class WeekTime {
@@ -170,6 +173,69 @@
             + WeekTime(LocalTime time, DayOfWeek day)
             + DayOfWeek getDay()
             + LocalTime getTime()
+        }
+      }
+
+      package taskman.backend.importExport {
+        class ImportExportException {
+            + ImportExportException(String)
+        }
+
+        class XmlObject {
+            - doc : Document
+            - element : Element
+
+            + XmlObject()
+            - XmlObject(Document, Element)
+            + exportTo(String): void
+            {static} + importFrom(String): XmlObject
+            + createChild(String): XmlObject
+            + getXmlObject(String): XmlObject
+            + getXmlObjects(String): Collection<XmlObject>
+            + addAttribute(String, String): void
+            + getAttribute(String): String
+            + addText(String, String): void
+            + getText(String): String
+            + getTexts(String): List<String>
+        }
+      }
+
+      package taskman.backend.visitor {
+
+        interface Entity {
+            {abstract} + accept(Visitor): void
+        }
+
+        interface Visitor {
+            {abstract} + visitProject(ProjectOrganizer): void
+            {abstract} + visitTask(Task): void
+            {abstract} + visitTimeSpan(TimeSpan): void
+            {abstract} + visitClock(Clock): void
+            {abstract} + visitUser(User): void
+        }
+
+        class DetailVisitor {
+            - time : LocalDateTime
+            - details : HashMap<String, String>
+
+            + DetailVisitor(LocalDateTime)
+            + getDetails(): HashMap<String, String>
+            - createDetailsMap(): void
+            + visitProject(ProjectOrganizer): void
+            + visitTask(Task): void
+            + visitTimeSpan(TimeSpan): void
+            + visitClock(Clock): void
+            + visitUser(User): void
+        }
+
+        class ExportVisitor {
+            - root: XmlObject
+
+            + visitProject(ProjectOrganizer): void
+            + visitTask(Task): void
+            + visitTimeSpan(TimeSpan): void
+            + visitClock(Clock): void
+            + visitUser(User): void
         }
       }
 
@@ -208,6 +274,7 @@
             + getTask(int): Task
             + getTasks(): List<Task>
             + getNumberOfTasks(): Integer
+            + accept(Visitor): void
         }
       }
 
@@ -249,6 +316,7 @@
             # createReservation(LocalDateTime, Resource): void
             + plan(List<Resource>, LocalDateTime, ResourceManager, User): void
             {static} # containsLoop(Task, Task): boolean
+            + accept(Visitor): void
         }
 
         abstract class TaskState {
@@ -344,7 +412,6 @@
 
            + ResourceItem(ResourceType)
            - addReservation(Reservation): void
-           + Resource()
            + isAvailable(TimeSpan): boolean
            + getReservations(): List<Reservation>
            + createReservation(Task, TimeSpan): void
@@ -417,6 +484,7 @@
             - setName(String): void
             + getPassword(): String
             - setPassword(String): String
+            + accept(Visitor): void
         }
 
         class Developer {
@@ -442,13 +510,17 @@
   ProjectOrganizer *-- Project: projects
   Project *-- Task: taskList
 
+  ExportVisitor -up-|> Visitor
   Clock -up-|> Entity
   Controller *-- Clock : clock
   Controller *-- UserManager : userManager
   Controller *-- ProjectOrganizer : projectOrganizer
+  DetailVisitor -up-|> Visitor
   Developer -up-|> User
   FormSection -up-|> Section
   InfoSection -up-|> Section
+  MenuSection -up-|> Section
+  MenuSection o-- SelectionSection : selectionSection
   Project -up-|> Entity
   ProjectManager -up-|> User
   SelectionSection -up-|> Section
@@ -459,12 +531,12 @@
   TaskStateExecuting -up-|> TaskState
   TaskStateFailed -up-|> TaskState
   TaskStateFinished -up-|> TaskState
+  TaskStateInactive -up-|> TaskState
   TimeSpan -up-|> Entity
   TitleSection -up-|> Section
   TitleSection o-- Section : section
   User -up-|> Entity
   UserInterface *-- Controller : controller
-  UserInterface o-- Section
   UserManager *-- User : currentUser
   ResourceManager *-- ResourceType
   ResourceManager *-- Constraint
@@ -472,11 +544,5 @@
   Resource *-- Reservation
   Reservation *-- Task
   Reservation *-- TimeSpan
-  AmountComparator --* Constraint
-  ResourceItem -up-|> Resource
-  Developer -up-|> Resource
-  Initiator *-- Controller
-  Initiator *-- UserInterface
-  
 
 @enduml

@@ -34,8 +34,8 @@ public class UserInterface {
 	 */
 	public void start() {
 
-		// Create default user for testing purposes
-		controller.createUser("admin", "admin", "project manager");
+		// Create default user
+		controller.createUser("admin", "admin", "project manager", null);
 
 		// Show start menu
 		try {
@@ -94,7 +94,7 @@ public class UserInterface {
 		SelectionSection<String> selection = new SelectionSection<>(true);
 		for (String userType: this.controller.getUserTypes()) selection.addOption(userType);
 		selection.show();
-		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer());
+		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), null);
 		Section success = new TextSection("user created successfully!", false);
 		success.show();
 	}

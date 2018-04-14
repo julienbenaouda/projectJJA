@@ -2,6 +2,7 @@ package taskman;
 
 import taskman.backend.Controller;
 import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
 import taskman.frontend.UserInterface;
@@ -17,7 +18,7 @@ public class Initiator {
 	 * @param args ignored arguments.
 	 */
 	public static void main(String[] args) {
-		Controller controller = new Controller(new Clock(), new UserManager(), new ProjectOrganizer());
+		Controller controller = new Controller(new Clock(), new UserManager(), new ProjectOrganizer(), new ResourceManager());
 		UserInterface ui = new UserInterface(controller);
 		ui.start();
 	}

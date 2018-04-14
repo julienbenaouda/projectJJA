@@ -7,12 +7,15 @@ import org.junit.Test;
 import taskman.backend.*;
 import taskman.backend.importExport.ImportExportException;
 import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.time.TimeParser;
 import taskman.backend.user.UserManager;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
+import java.time.LocalTime;
+
 import static org.junit.Assert.*;
 
 public class ControllerTest {
@@ -24,15 +27,19 @@ public class ControllerTest {
     private Clock clock;
     private ProjectOrganizer projectOrganizer;
     private UserManager userManager;
+    private ResourceManager resourceManager;
+    private LocalTime startBreak;
 
     @Before
     public void runBeforeMethod() {
         userManager = new UserManager();
-        userManager.createUser("test", "test", "projectmanager");
+        userManager.createUser("test", "test", "projectmanager", startBreak, resourceManager);
         userManager.login("test", "test");
         projectOrganizer = new ProjectOrganizer();
         clock = new Clock();
-        controller = new Controller(clock, userManager, projectOrganizer);
+        resourceManager = new ResourceManager();
+        controller = new Controller(clock, userManager, projectOrganizer, resourceManager);
+        startBreak = LocalTime.of(12, 0);
     }
 
     @After
@@ -42,7 +49,7 @@ public class ControllerTest {
 
     @Test
     public void constructor() {
-    	userManager.createUser("test", "myPassword", "developer");
+    	userManager.createUser("test", "myPassword", "developer", startBreak, resourceManager);
     	userManager.login("test", "myPassword");
         assertEquals("Constructor does not initialize system time!", TimeParser.convertLocalDateTimeToString(clock.getTime()), controller.getSystemTime());
         assertEquals("Constructor does not initialize user type!", "test", controller.getCurrentUserName());
@@ -52,8 +59,8 @@ public class ControllerTest {
     public void project_and_task() {
         // project and task are only tested to make sure that the controller works correctly.
         // More extended tests are located in separate test classes.
-        userManager.createUser("pm", "test", "projectmanager");
-        userManager.createUser("d", "test", "developer");
+        userManager.createUser("pm", "test", "projectmanager", null, resourceManager);
+        userManager.createUser("d", "test", "developer", startBreak, resourceManager);
         userManager.login("pm", "test");
 
         String projectName = "test name";
@@ -104,7 +111,7 @@ public class ControllerTest {
     public void user() {
         assertNotNull("user cannot be null!", controller.getCurrentUserName());
         assertNotEquals("user cannot be ''!", "", controller.getCurrentUserName());
-        controller.createUser("testUser", "testPassword", "developer");
+        controller.createUser("testUser", "testPassword", "developer", startBreak);
         controller.login("testUser", "testPassword");
         assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUserName());
     }
