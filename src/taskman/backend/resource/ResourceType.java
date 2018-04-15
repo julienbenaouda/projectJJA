@@ -23,13 +23,14 @@ public class ResourceType {
         resources = new ArrayList<>();
     }
 
+
     /**
      * Represents the name of a resource type.
      */
     private String name;
 
     /**
-     * Returns the name of the resource type
+     * Returns the name of the resource type.
      *
      * @return the name of the resource type
      */
@@ -47,8 +48,14 @@ public class ResourceType {
         this.name = name;
     }
 
+
+	/**
+	 * Represents the availability for every week day.
+	 */
+	private HashMap<Integer, AvailabilityPeriod> availability;
+
     /**
-     * Returns the hashcode of the name of the resource type
+     * Returns the hashcode of the name of the resource type.
      *
      * @return the hashcode of the name of the resource type
      */
@@ -73,13 +80,16 @@ public class ResourceType {
 	public AvailabilityPeriod getAvailabilityPeriod(int day){
 	    return availability.get(day);
     }
-	
+
+
 	/**
-	 * Represents the availability for every week day.
+	 * Represents the list of resources.
 	 */
-	private HashMap<Integer, AvailabilityPeriod> availability;
-	
+	private ArrayList<Resource> resources;
+
 	/**
+	 * Returns the resources of the resource type.
+	 *
 	 * @return the list of resources
 	 */
 	private List<Resource> getResources() {
@@ -99,27 +109,26 @@ public class ResourceType {
 	 * Adds a resource to the list of resources.
      *
 	 * @param resource the resource to add
+	 * @post the given resource is added to the list of resources
 	 */
 	public void addResource(Resource resource) {
 		resources.add(resource);
 	}
 
-
 	/**
-	 * Represents the list of resources.
+	 * Returns if there are enough resources  of the resource type available in the given time span.
+	 *
+	 * @param timeSpan the time span to check the number of resources for
+	 * @param amount the amount of resources that needs to be available
+	 * @return true if there are enough resources of the resource type available in the given time span, otherwise false
 	 */
-	private ArrayList<Resource> resources;
-
-
 	public boolean hasAvailableResources(TimeSpan timeSpan, int amount){
 		int numberAvailable = 0;
-
 		for (Resource resource : getResources()){
 			if (resource.isAvailable(timeSpan)){
 				numberAvailable += 1;
 			}
 		}
-
 		if (numberAvailable >= amount){
 			return true;
 		}
@@ -128,7 +137,12 @@ public class ResourceType {
 		}
 	}
 
-
+	/**
+	 * Returns the available resources of the resource type in the given time span.
+	 *
+	 * @param timeSpan the time span to get the available resources from
+	 * @return the available resources of the resource type in the given time span
+	 */
 	public List<Resource> getAvailableResources(TimeSpan timeSpan){
 		boolean validTimeSpan = false;
 		for(Integer key : getAvailability().keySet()){

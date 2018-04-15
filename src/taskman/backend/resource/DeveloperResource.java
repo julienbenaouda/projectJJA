@@ -24,14 +24,24 @@ public class DeveloperResource extends Resource {
 		addBreakTime(startBreak);
 	}
 
+
 	/**
-	 * @return the breakTime
+	 * Represents the break of the developer.
+	 */
+	private AvailabilityPeriod breakTime;
+
+	/**
+	 * Returns the break time of the developer.
+	 *
+	 * @return the break time of the developer
 	 */
 	public AvailabilityPeriod getBreakTime() {
 		return breakTime;
 	}
 
 	/**
+	 * Sets the break time of the developer to the given break time
+	 *
 	 * @param breakTime the breakTime of the developer
 	 * @throws IllegalArgumentException when the break time is null
 	 */
@@ -43,7 +53,8 @@ public class DeveloperResource extends Resource {
 	}
 	
 	/**
-	 * adds a new break time for this developer
+	 * aAds a new break time for this developer.
+	 *
 	 * @param startTime the start time of his break
 	 * @throws IllegalArgumentException when the start time is null
 	 */
@@ -61,11 +72,11 @@ public class DeveloperResource extends Resource {
 	}
 
 	/**
-	 * represents the break of the developer
+	 * Returns if the developer is available at the given time span.
+	 *
+	 * @param timeSpan the time span to check with
+	 * @return true if the developer is available at the given time span
 	 */
-	private AvailabilityPeriod breakTime;
-
-
 	@Override
 	public boolean isAvailable(TimeSpan timeSpan) {
 		if(overlapsWithBreak(timeSpan)) {
@@ -75,7 +86,8 @@ public class DeveloperResource extends Resource {
 	}
 	
 	/**
-	 * checks if the given time span overlaps with the break time of the developer
+	 * Checks if the given time span overlaps with the break time of the developer.
+	 *
 	 * @param timeSpan the timespan to check with
 	 * @return true if the time span overlaps, else false
 	 */
