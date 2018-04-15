@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author Jeroen Van Der Donckt
  */
-public class Constaint implements ConstraintComponent {
+public class Constraint implements ConstraintComponent {
 
     /**
      * Create a constraint with given attributes.
@@ -18,7 +18,7 @@ public class Constaint implements ConstraintComponent {
      * @param amount the amount of the constraint
      * @post a new constraint is created with given parameters
      */
-    public Constaint(ResourceType resourceType, AmountComparator operator, Integer amount){
+    public Constraint(ResourceType resourceType, AmountComparator operator, Integer amount){
         setResourceType(resourceType);
         setAmountComparator(operator);
         setAmount(amount);

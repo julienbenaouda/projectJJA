@@ -19,8 +19,12 @@ public class Reservation {
      * @param resource the resource of the reservation
      * @param timeSpan the time span of the reservation
      * @post a new reservation is created with given attributes
+     * @throws IllegalArgumentException when the task, resource or timespan is null
      */
     public Reservation(Task task, Resource resource, TimeSpan timeSpan){
+    	if(task == null || resource == null || timeSpan == null) {
+    		throw new IllegalArgumentException("A reservation must have a task, resource and time span!");
+    	}
         setTask(task);
         setResource(resource);
         setTimeSpan(timeSpan);

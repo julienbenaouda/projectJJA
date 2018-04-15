@@ -101,7 +101,7 @@ public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
 		if(timeSpan.getEndTime().toLocalTime().isAfter(getStartTime()) && timeSpan.getEndTime().toLocalTime().isBefore(getEndTime())) {
 			return true;
 		}
-		if(timeSpan.getStartTime().toLocalTime().isBefore(getStartTime()) && timeSpan.getEndTime().toLocalTime().isAfter(getEndTime())) {
+		if(!(timeSpan.getStartTime().toLocalTime().isAfter(getStartTime())) && !(timeSpan.getEndTime().toLocalTime().isBefore(getEndTime()))) {
 			return true;
 		}
 		return false;
