@@ -42,8 +42,8 @@ public class TaskTest {
 						break;
 					case "failed" : state = new TaskStateFailed();
 						break;
-					/*case "inactive" : state = new TaskStateInactive();
-						break; TODO*/
+					case "unavailable" : state = new TaskStateUnavailable();
+						break;
 				}
 			}
 
@@ -52,7 +52,7 @@ public class TaskTest {
 				return state;
 			}
 		};
-
+		root.updateStatus(null, null,"unavailable");
 
 		Task dependency1_1 = new Task ("dependency 1_1 description", estimatedDuration, acceptableDeviation){
 			private Task alternative;
@@ -229,13 +229,13 @@ public class TaskTest {
 		Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
 		Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
 		Assert.assertEquals("There is no time span added", null, task.getTimeSpan());
-		Assert.assertEquals("The status is not available", true, task.getState().equals("available"));
+		Assert.assertEquals("The status is not available", true, task.getStatus().equals("unavailable"));
 	}
 
 	@Test
 	public void testIsFinished(){
 		Task taskNotFinished = new Task("blabla", 13, 0.23);
-		Assert.assertEquals("The status is finished", false, taskNotFinished.getState().equals("finished"));
+		Assert.assertEquals("The status is finished", false, taskNotFinished.getStatus().equals("finished"));
 
 		Task taskFinished = new Task("blablabla", 33, 0.08){
 			private TaskState state;
@@ -256,13 +256,13 @@ public class TaskTest {
 			}
 		};
 		taskFinished.updateStatus(null, null, "finished");
-		Assert.assertEquals("The status is no finished", true, taskFinished.getState().equals("finished"));
+		Assert.assertEquals("The status is no finished", true, taskFinished.getStatus().equals("finished"));
 	}
 
 	@Test
 	public void testIsAvailable(){
 		Task availableTask = new Task("available task", 23, 2);
-		Assert.assertEquals("The task is not available", true, availableTask.getState().equals("available"));
+		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
 		Task dependencyFinished = new Task("dependency finished", 23, 1.45){
 			private TaskState state;
 
@@ -284,7 +284,7 @@ public class TaskTest {
 		availableTask.addDependency(dependencyFinished);
 
 		dependencyFinished.updateStatus(null, null, "finished");
-		Assert.assertEquals("The task is not available", true, availableTask.getState().equals("available"));
+		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
 		Task dependencyFailed =  new Task("dependency failed", 23, 1.45){
 			private TaskState state;
 
@@ -327,12 +327,12 @@ public class TaskTest {
 		dependencyFailed.updateStatus(null, null, "failed");
 		dependencyFailed.setAlternative(alternativeFinished);
 		alternativeFinished.updateStatus(null, null, "finished");
-		Assert.assertEquals("The task is not available", true, availableTask.getState().equals("available"));
+		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
 
 		Task unavailableTask = new Task("unavailable task", 789, 1.25);
 		Task unavialableTask2 = new Task("unavailable task 2", 4, 0.003);
 		unavailableTask.addDependency(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.getState().equals("available"));
+		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
 		unavailableTask.removeDependency(unavialableTask2);
 		dependencyFinished.updateStatus(null, null, "inactive");
 		unavailableTask.addDependency(dependencyFinished);
@@ -341,12 +341,12 @@ public class TaskTest {
 		dependencyFailed.addDependency(unavialableTask2);
 		dependencyFinished.updateStatus(null, null, "finished");
 		dependencyFailed.updateStatus(null, null, "failed");
-		Assert.assertEquals("The task is available", false, unavailableTask.getState().equals("available"));
+		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
 		dependencyFailed.updateStatus(null, null, "inactive");
 		dependencyFailed.removeDependency(unavialableTask2);
 		dependencyFailed.updateStatus(null, null, "failed");
 		dependencyFailed.setAlternative(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.getState().equals("available"));
+		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
 
 	}
 
@@ -371,7 +371,7 @@ public class TaskTest {
 			}
 		};
 		failedTask.updateStatus(null, null, "failed");
-		failedTask.getState().equals("available");
+		failedTask.getStatus().equals("available");
 	}
 
 	@Test
@@ -395,7 +395,7 @@ public class TaskTest {
 		LocalDateTime starTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
-		Assert.assertEquals("The status is not available", true, updateStatusTask.getState().equals("available"));
+		Assert.assertEquals("The status is not available", true, updateStatusTask.getStatus().equals("available"));
 		Assert.assertEquals("The time span is not null", null, updateStatusTask.getTimeSpan());
 		updateStatusTask.updateStatus(starTime, endTime, "finished");
 		Assert.assertEquals("The status is not finished", TaskStateFinished.class, updateStatusTask.getState().getClass());

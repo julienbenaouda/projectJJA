@@ -1,6 +1,7 @@
 package taskman.backend.resource;
 
 import taskman.backend.task.Task;
+import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
@@ -56,6 +57,45 @@ public class ResourceManager {
         ResourceType resourceType = new ResourceType(name);
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
     }
+
+
+    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime){
+        // TODO: zorgen dat dit een iterator returnt
+        LocalDateTime startingTime = startTime;
+        if(isAvailableStartingTime(task, startingTime)){
+
+        }
+    }
+
+    public Iterator<Resource> getAvailableResources(Task task, LocalDateTime startTime){
+        // TODO zorgen dat dit een iterator returnt
+        Map<ResourceType, Integer> requirements = task.getRequirements();
+        long duration = task.getEstimatedDuration();
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        for (ResourceType resourceType : requirements.keySet()){
+            resourceType.getAvailableResources(timeSpan);
+        }
+    }
+
+    public Iterator<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
+        long duration = task.getEstimatedDuration();
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        // TODO zorgen dat resource er wel niet bij zit
+        return resource.getType().getAvailableResources(timeSpan);
+    }
+
+    private boolean isAvailableStartingTime(Task task, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
+        Map<ResourceType, Integer> requirements = task.getRequirements();
+        long duration = task.getEstimatedDuration();
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        for (ResourceType resourceType : requirements.keySet()){
+            if (!resourceType.hasAvailableResources(timeSpan, requirements.get(resourceType))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private boolean checkRequirements(Map<ResourceType, Integer> requirements) {
         // TODO

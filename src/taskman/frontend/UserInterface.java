@@ -90,7 +90,7 @@ public class UserInterface {
 		SelectionSection selection = new SelectionSection(true);
 		selection.addOptions(this.controller.getUserTypes());
 		selection.show();
-		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer());
+		//controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer());
 		Section success = new InfoSection("user created successfully!", false);
 		success.show();
 	}

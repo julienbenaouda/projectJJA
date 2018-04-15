@@ -1,13 +1,9 @@
 package taskman.backend.resource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeSpan;
 
 /**
  * This class is responsible for storing and retrieving resource types of the system.
@@ -91,4 +87,42 @@ public class ResourceType {
 	 * represents the list of resources
 	 */
 	private ArrayList<Resource> resources;
+
+
+	public boolean hasAvailableResources(TimeSpan timeSpan, int amount){
+		int numberAvailable = 0;
+
+		for (Resource resource : getResources()){
+			if (resource.isAvailable(timeSpan)){
+				numberAvailable += 1;
+			}
+		}
+
+		if (numberAvailable >= amount){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+
+	public Iterator<ResourceType> getAvailableResources(TimeSpan timeSpan){
+		// TODO: zorgen dat dit iterator returnt
+		boolean validTimeSpan = false;
+		for(Integer key : getAvailability().keySet()){
+			if (getAvailability().get(key).overlaps(timeSpan)){
+				validTimeSpan = true;
+			}
+		}
+
+		if (validTimeSpan) {
+			List<Resource> resources = new ArrayList<>();
+			for (Resource resource : getResources()) {
+				if (resource.isAvailable(timeSpan)) {
+					resources.add(resource);
+				}
+			}
+		}
+	}
 }

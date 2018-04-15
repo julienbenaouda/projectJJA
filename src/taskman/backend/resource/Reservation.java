@@ -93,11 +93,10 @@ public class Reservation {
     }
 
     /**
-     * Creates a time span and sets the time span of the reservation to the new created time span.
+     * Sets the time span of the reservation to the given time span.
      *
-     * @param startTime the start time of the reservation its time span
-     * @param endTime the end time of the reservation its time span
-     * @post a new time span is created with given attributes and the time span of the reservation is set to this time span
+     * @param timeSpan the time span of the reservation
+     * @post the time span of the reservation is set to the given time span
      */
     private void setTimeSpan(TimeSpan timeSpan){
         this.timeSpan = timeSpan;

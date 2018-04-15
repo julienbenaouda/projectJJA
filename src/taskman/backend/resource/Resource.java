@@ -72,8 +72,8 @@ public class Resource {
 	 * @return true if there is no overlapping reservation for the time span
 	 */
 	public boolean isAvailable(TimeSpan timeSpan) {
-		for(Reservation r: reservations) {
-			if(r.overlaps(timeSpan)) {
+		for (Reservation r: getReservations()) {
+			if (r.overlaps(timeSpan)) {
 				return false; 
 			}
 		}

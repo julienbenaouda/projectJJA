@@ -32,7 +32,7 @@ public class Task implements Entity, TaskWrapper {
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
-        changeState(new TaskStateUnavailable());
+        setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
         requirements = new HashMap<ResourceType, Integer>();
     }
@@ -53,7 +53,7 @@ public class Task implements Entity, TaskWrapper {
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
         setTimeSpan(timeSpan);
-        changeState(state);
+        setState(state);
         dependencies = new ArrayList<>();
     }
 
@@ -198,7 +198,7 @@ public class Task implements Entity, TaskWrapper {
      * @post the task state of the task is set to the given state
      * @implNote This method is set protected, so that we can apply the State Pattern (a state may need to change the state of the task)
      */
-    protected void changeState(TaskState state){
+    protected void setState(TaskState state){
         this.state = state;
     }
 
