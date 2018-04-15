@@ -77,7 +77,7 @@ public class ResourceManager {
         }
     }
 
-    public Iterator<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
+    public List<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         // TODO zorgen dat resource er wel niet bij zit

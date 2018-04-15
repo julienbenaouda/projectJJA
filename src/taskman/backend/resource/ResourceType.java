@@ -107,8 +107,7 @@ public class ResourceType {
 	}
 
 
-	public Iterator<ResourceType> getAvailableResources(TimeSpan timeSpan){
-		// TODO: zorgen dat dit iterator returnt
+	public List<Resource> getAvailableResources(TimeSpan timeSpan){
 		boolean validTimeSpan = false;
 		for(Integer key : getAvailability().keySet()){
 			if (getAvailability().get(key).overlaps(timeSpan)){
@@ -116,13 +115,14 @@ public class ResourceType {
 			}
 		}
 
+        List<Resource> resources = new ArrayList<>();
 		if (validTimeSpan) {
-			List<Resource> resources = new ArrayList<>();
 			for (Resource resource : getResources()) {
 				if (resource.isAvailable(timeSpan)) {
 					resources.add(resource);
 				}
 			}
 		}
+		return resources;
 	}
 }
