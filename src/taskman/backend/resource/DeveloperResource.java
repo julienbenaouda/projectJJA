@@ -33,16 +33,24 @@ public class DeveloperResource extends Resource {
 
 	/**
 	 * @param breakTime the breakTime of the developer
+	 * @throws IllegalArgumentException when the break time is null
 	 */
 	private void setBreakTime(AvailabilityPeriod breakTime) {
+		if(breakTime == null) {
+			throw new IllegalArgumentException("A developer must have a break time!");
+		}
 		this.breakTime = breakTime;
 	}
 	
 	/**
 	 * adds a new break time for this developer
 	 * @param startTime the start time of his break
+	 * @throws IllegalArgumentException when the start time is null
 	 */
 	public void addBreakTime(LocalTime startTime) {
+		if(startTime == null) {
+			throw new IllegalArgumentException("the start time can't be null!");
+		}
 		LocalTime startBreak = LocalTime.of(11, 0);
 		LocalTime endBreak = LocalTime.of(13, 0);
 		LocalTime endTime = startTime.plusHours(1);
