@@ -1,12 +1,14 @@
 package taskman.backend.resource;
 
 import taskman.backend.task.Task;
+import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -59,25 +61,77 @@ public class ResourceManager {
     }
 
 
-    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime){
+    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime) throws NoSuchElementException {
         // TODO: zorgen dat dit een iterator returnt
-        LocalDateTime startingTime = startTime;
-        if(isAvailableStartingTime(task, startingTime)){
+        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
 
-        }
+            LocalDateTime startingTime = startTime.truncatedTo(ChronoUnit.HOURS);
+
+            @Override
+            public boolean hasNext() {
+                Map<ResourceType, Integer> requirements = task.getRequirements();
+                boolean enoughResources = true;
+                for (ResourceType resourceType : requirements.keySet()){
+                    if (resourceType.getNbOfResources() < requirements.get(resourceType)){
+                        enoughResources = false;
+                    }
+                }
+
+                long duration = task.getEstimatedDuration();
+                boolean hasAvailablePeriod = false;
+                for (int day = 1; day <= 7; day++){
+                    AvailabilityPeriod availabilityPeriod = new AvailabilityPeriod(LocalTime.MIN, LocalTime.MAX);
+                    for (ResourceType resourceType : requirements.keySet()){
+                        LocalTime startTime;
+                        LocalTime endTime;
+                        if (availabilityPeriod.getStartTime().isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
+                            startTime = resourceType.getAvailabilityPeriod(day).getStartTime();
+                        }
+                        else{
+                            startTime = availabilityPeriod.getStartTime();
+                        }
+                        if (availabilityPeriod.getEndTime().isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
+                            endTime = resourceType.getAvailabilityPeriod(day).getEndTime();
+                        }
+                        else{
+                            endTime = availabilityPeriod.getEndTime();
+                        }
+                        availabilityPeriod = new AvailabilityPeriod(startTime, endTime);
+                    }
+                    if (availabilityPeriod.getStartTime().truncatedTo(ChronoUnit.HOURS).plus(duration, ChronoUnit.MINUTES).isBefore(availabilityPeriod.getEndTime())){
+                        hasAvailablePeriod = true;
+                    }
+                }
+
+                return enoughResources && hasAvailablePeriod;
+            }
+
+            @Override
+            public LocalDateTime next() {
+                if (hasNext()) {
+                    while (!isAvailableStartingTime(task, startingTime)) {
+                        startingTime = startingTime.plusHours(1);
+                    }
+                    return startingTime;
+                }
+                throw new NoSuchElementException("There is no starting time available.");
+            }
+        };
+        return startingTimes;
     }
 
-    public Iterator<Resource> getAvailableResources(Task task, LocalDateTime startTime){
-        // TODO zorgen dat dit een iterator returnt
+    public List<Resource> getAvailableResources(Task task, LocalDateTime startTime){
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        ArrayList<Resource> resources = new ArrayList<>();
         for (ResourceType resourceType : requirements.keySet()){
-            resourceType.getAvailableResources(timeSpan);
+            resources.addAll(resourceType.getAvailableResources(timeSpan));
         }
+        return resources;
     }
 
-    public Iterator<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
+    public List<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         // TODO zorgen dat resource er wel niet bij zit
@@ -99,7 +153,7 @@ public class ResourceManager {
 
     private boolean checkRequirements(Map<ResourceType, Integer> requirements) {
         // TODO
-        return true;
+        return false;
     }
 
     public void plan(Task task, List<Resource> resources, LocalDateTime startTime){
@@ -119,13 +173,13 @@ public class ResourceManager {
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
     	if(user.isProjectManager()) {
-    			if(startBreak == null)
-    			{
-    				throw new IllegalArgumentException("A user must take a break");
-    			}
-    			DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
-    			Developer d = (Developer)user;
-    			d.changeResource(r);
+            if(startBreak == null)
+            {
+                throw new IllegalArgumentException("A user must take a break");
+            }
+            DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
+            Developer d = (Developer)user;
+            d.changeResource(r);
     	}
     }
 }
