@@ -81,7 +81,12 @@ public class ResourceManager {
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         // TODO zorgen dat resource er wel niet bij zit
-        return resource.getType().getAvailableResources(timeSpan);
+        Iterator<ResourceType> r = resource.getType().getAvailableResources(timeSpan);
+        while(r.hasNext()) {
+        	if(r.next() == resource) {
+        		r.remove();
+        	}
+        }
     }
 
     private boolean isAvailableStartingTime(Task task, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
