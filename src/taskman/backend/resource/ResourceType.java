@@ -56,15 +56,26 @@ public class ResourceType {
     public int hashCode() {
         return getName().hashCode();
     }
+
 	/**
 	 * return the availability of this resource
 	 */
 	private Map<Integer, AvailabilityPeriod> getAvailability() {
 		return availability;
 	}
+
+    /**
+     * Returns the availability period of the given day.
+     *
+     * @param day the day to get the availability period from
+     * @return the availability period of the given day
+     */
+	public AvailabilityPeriod getAvailabilityPeriod(int day){
+	    return availability.get(day);
+    }
 	
 	/**
-	 * represents the availability for every week day
+	 * Represents the availability for every week day.
 	 */
 	private HashMap<Integer, AvailabilityPeriod> availability;
 	
@@ -74,17 +85,28 @@ public class ResourceType {
 	private List<Resource> getResources() {
 		return resources;
 	}
+
+    /**
+     * Returns the number of resources of the resource type.
+     *
+     * @return the number of resources of the resource type
+     */
+	public int getNbOfResources(){
+	    return resources.size();
+    }
 	
 	/**
-	 * adds a resource to the list of resources
+	 * Adds a resource to the list of resources.
+     *
 	 * @param resource the resource to add
 	 */
 	public void addResource(Resource resource) {
 		resources.add(resource);
 	}
-	
+
+
 	/**
-	 * represents the list of resources
+	 * Represents the list of resources.
 	 */
 	private ArrayList<Resource> resources;
 
