@@ -114,7 +114,7 @@ public class Reservation {
     	if(timeSpan.getEndTime().isAfter(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isBefore(getTimeSpan().getEndTime())) {
     		return true;
     	}
-    	if(timeSpan.getStartTime().isBefore(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isAfter(getTimeSpan().getEndTime())) {
+    	if(!(timeSpan.getStartTime().isAfter(getTimeSpan().getStartTime())) && !(timeSpan.getEndTime().isBefore(getTimeSpan().getEndTime()))) {
     		return true;
     	}
     	return false;

@@ -44,8 +44,12 @@ public class Resource {
      *
      * @param type the resource type of the resource type
      * @post the resource type of the resource item is set to the given type
+     * @throws IllegalArgumentException when the type is null
      */
 	private void setType(ResourceType type) {
+		if(type == null) {
+			throw new IllegalArgumentException("A resource must have a type!");
+		}
 	    this.type = type;
 	    type.addResource(this);
     }
