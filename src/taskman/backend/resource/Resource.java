@@ -1,21 +1,18 @@
 package taskman.backend.resource;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import taskman.backend.task.Task;
-import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.wrappers.ResourceWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing a resource item.
  *
  * @author Jeroen Van Der Donckt, Julien Benaouda
  */
-public class Resource {
+public class Resource implements ResourceWrapper {
 
     /**
      * Creates a new resource item with the given resource type.
@@ -109,5 +106,13 @@ public class Resource {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Returns if the resource can be safely removed.
+	 * @return if the resource can be safely removed.
+	 */
+	public boolean canRemove() {
+		return this.reservations.isEmpty();
 	}
 }

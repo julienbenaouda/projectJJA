@@ -65,7 +65,7 @@ title __SECTIONS's Class Diagram__\n
       package taskman.frontend.sections {
         class InfoSection {
             - text : String
-            - halt : boolean
+            - isBlocking : boolean
             + InfoSection()
             + show()
         }

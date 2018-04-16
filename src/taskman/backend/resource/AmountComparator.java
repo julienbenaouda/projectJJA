@@ -1,6 +1,3 @@
-/**
- * 
- */
 package taskman.backend.resource;
 
 /**
@@ -21,9 +18,7 @@ public enum AmountComparator {
 	 * @throws IllegalStateException the amount operator is not mapped to an existing ordinal
 	 */
 	public boolean evaluate(int amount, int other) throws IllegalStateException {
-		int ordinal = ordinal();
-		String name = this.name();
-		switch(name) {
+		switch(this.name()) {
 			case "EQUALS": return amount == other;
 			case "NOT_EQUALS": return amount != other;
 			case "GREATER_THAN": return amount > other;
@@ -31,7 +26,6 @@ public enum AmountComparator {
 			case "SMALLER_THAN": return amount < other;
 			case "SMALLER_THAN_OR_EQUALS": return amount <= other;
 			default: throw new IllegalStateException("There is no matching operation found with this operator.");
-		   // TODO: klopt deze volgorde?
 		}
 	}
 }

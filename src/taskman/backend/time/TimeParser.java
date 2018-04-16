@@ -1,6 +1,7 @@
 package taskman.backend.time;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
@@ -19,7 +20,6 @@ public final class TimeParser {
 
     /**
      * Convert a LocalDateTime to a String.
-     *
      * @param time a LocalDateTime.
      * @return a String.
      */
@@ -29,13 +29,31 @@ public final class TimeParser {
 
     /**
      * Convert a String to a LocalDateTime.
-     *
      * @param time a String.
      * @return a LocalDateTime.
      * @throws DateTimeParseException if the text cannot be parsed.
      */
     public static LocalDateTime convertStringToLocalDateTime(String time) throws DateTimeParseException {
         return LocalDateTime.parse(time, DATE_TIME_FORMATTER);
+    }
+
+    /**
+     * Convert a LocalTime to a String.
+     * @param time a LocalTime.
+     * @return a String.
+     */
+    public static String convertLocalTimeToString(LocalTime time) {
+        return time.format(DATE_TIME_FORMATTER);
+    }
+
+    /**
+     * Convert a String to a LocalTime.
+     * @param time a String.
+     * @return a LocalTime.
+     * @throws DateTimeParseException if the text cannot be parsed.
+     */
+    public static LocalTime convertStringToLocalTime(String time) throws DateTimeParseException {
+        return LocalTime.parse(time, DATE_TIME_FORMATTER);
     }
 
 }

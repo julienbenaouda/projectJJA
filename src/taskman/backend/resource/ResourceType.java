@@ -1,23 +1,27 @@
 package taskman.backend.resource;
 
-import java.util.*;
-
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.wrappers.ResourceTypeWrapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for storing and retrieving resource types of the system.
  *
  * @author Jeroen Van Der Donckt, Julien Benaouda
  */
-public class ResourceType {
+public class ResourceType implements ResourceTypeWrapper {
 
     /**
      * Creates a new resource type with given name.
      *
      * @param name the name of the resource type
      */
-    public  ResourceType(String name){
+    public ResourceType(String name){
         setName(name);
         availability = new HashMap<>();
         resources = new ArrayList<>();
@@ -113,6 +117,21 @@ public class ResourceType {
 	 */
 	public void addResource(Resource resource) {
 		resources.add(resource);
+	}
+
+	/**
+	 * Removes a resource from the list of resources.
+	 *
+	 * @param resource the resource to remove
+	 * @post the given resource is removes from the list of resources
+	 * @throws IllegalStateException if the resource cannot be removed.
+	 */
+	public void removeResource(Resource resource) throws IllegalStateException {
+		if (resource.canRemove()) {
+			resources.remove(resource);
+		} else {
+			throw new IllegalStateException("The resource cannot be removed!");
+		}
 	}
 
 	/**

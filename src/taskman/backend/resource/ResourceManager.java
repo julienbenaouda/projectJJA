@@ -91,19 +91,19 @@ public class ResourceManager {
 
 
     /**
-     * Returns a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task.
+     * Returns a list of available resources for the given resource type at the given startTime for the given task.
      *
-     * @param task the task to get the available resources from
-     * @param startTime the start time on which the resources needs to be planned
-     * @return a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task
+     * @param task the task to get the available resources for.
+     * @param startTime the start time on which the resources needs to be planned.
+     * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
-    public Map<ResourceType, List<Resource>> getAvailableResources(Task task, LocalDateTime startTime){
+    public List<Resource> getAvailableResources(Task task, LocalDateTime startTime){
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        Map<ResourceType ,List<Resource>> availableResources = new HashMap<>();
+        List<Resource> availableResources = new ArrayList<>();
         for (ResourceType resourceType : requirements.keySet()){
-            availableResources.put(resourceType, resourceType.getAvailableResources(timeSpan));
+            availableResources.addAll(resourceType.getAvailableResources(timeSpan));
         }
         return availableResources;
     }
@@ -221,7 +221,7 @@ public class ResourceManager {
      * @param requirements the requirements to test
      * @throws IllegalArgumentException when the requirements are not valid
      */
-    public void testREquirements(HashMap<ResourceType, Integer> requirements) {
+    public void testRequirements(Map<ResourceType, Integer> requirements) {
     	if(!checkRequirements(requirements)) {
     		throw new IllegalArgumentException("The list of requirements doesn't match the constraints.");
     	}
@@ -273,17 +273,31 @@ public class ResourceManager {
      * Creates a new resource from the given user.
      *
      * @param user the user to use for the resource creation
-     * @throws IllegalArgumentException the break is null or the user is not a project
-     * @post a new developer resource is created, the user is casted to the Developer subclass and the developer resource is added to the user
+     * @throws IllegalArgumentException the break is null.
+     * @post a new user resource is created and the resource is added to the user
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
-    	if (!user.isProjectManager()) {
-            if (startBreak == null) {
+    	if(user.getUserType().equals("developer")) {
+            if(startBreak == null) {
                 throw new IllegalArgumentException("A user must take a break");
             }
             DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
-            Developer d = (Developer)user;
+            Developer d = (Developer) user;
             d.changeResource(r);
     	}
+    }
+
+    /**
+     * Removes the resource of the given user.
+     *
+     * @param user the user to use for the resource removal
+     * @post the user resource is removed
+     * @throws IllegalStateException if the resource cannot be removed.
+     */
+    public void removeResourceForUser(User user) {
+        if (user.getUserType().equals("developer")) {
+            Developer d = (Developer) user;
+            getResourceType("developer").removeResource(d.getResource());
+        }
     }
 }

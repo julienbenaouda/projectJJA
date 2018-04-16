@@ -1,7 +1,6 @@
 package taskman.frontend.sections;
 
-import java.util.HashMap;
-import java.util.Map;
+import taskman.frontend.MethodCall;
 
 /**
  * This class is responsible for showing a menu to the user and activating the appropriate method.
@@ -9,51 +8,56 @@ import java.util.Map;
  */
 public class MenuSection extends Section {
 
-    /**
-     * Represents the options of the menu.
-     */
-    private Map<String, MethodCall> actions;
+	/**
+	 * Represents the selection section of the menu.
+	 */
+	private SelectionSection<MethodCall> selectionSection;
 
-    /**
-     * Represents the selection section of the menu.
-     */
-    private SelectionSection selectionSection;
+	/**
+	 * Constructs a menu.
+	 */
+	public MenuSection() {
+		this("exit");
+	}
 
-    /**
-     * Constructs a menu.
-     */
-    public MenuSection() {
-        this.actions = new HashMap<>();
-        this.selectionSection = new SelectionSection(true, "exit");
-    }
+	/**
+	 * Constructs a menu.
+	 * @param cancelText the name of the exit option.
+	 */
+	public MenuSection(String cancelText) {
+		this.selectionSection = new SelectionSection<>(true, cancelText);
+	}
 
-    /**
-     * Adds an option to the menu.
-     * @param name the name of the option.
-     * @param action the action of the option.
-     * @throws NullPointerException if an argument is null.
-     */
-    public void addOption(String name, MethodCall action) throws NullPointerException {
-        if (name == null || action == null) {
-            throw new NullPointerException("Arguments of option cannot be null!");
-        }
-        this.selectionSection.addOption(name);
-        this.actions.put(name, action);
-    }
+	/**
+	 * Adds an option to the menu.
+	 * @param name the name of the option.
+	 * @param action the action of the option.
+	 * @throws NullPointerException if an argument is null.
+	 */
+	public void addOption(String name, MethodCall action) throws NullPointerException {
+		this.selectionSection.addOption(name, action);
+	}
 
-    /**
-     * Shows the menu.
-     * @throws Cancel when the user cancels the section.
-     */
-    @Override
-    public void show() throws Cancel {
-        this.selectionSection.show();
-        try {
-            this.actions.get(this.selectionSection.getAnswer()).call();
-        } catch (Cancel e) {
-            println("Cancelled!");
-        } catch (Exception e) {
-            println("An error occurred: " + e.getMessage());
-        }
-    }
+	/**
+	 * Shows the menu.
+	 * @throws Cancel when the user cancels the section.
+	 */
+	@Override
+	public void show() throws Cancel {
+		this.selectionSection.resetAnswer();
+		this.selectionSection.show();
+	}
+
+	/**
+	 * Executes the action chosen by the user.
+	 * @throws IllegalStateException if the menu was not shown yet.
+	 */
+	public void executeChoice() throws IllegalArgumentException {
+		try {
+			this.selectionSection.getAnswerObject().call();
+		} catch (Cancel ignored) {
+		} catch (Exception e) {
+			println("An error occurred: " + e.getMessage());
+		}
+	}
 }

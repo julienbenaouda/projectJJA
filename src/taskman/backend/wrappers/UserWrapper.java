@@ -3,9 +3,15 @@ package taskman.backend.wrappers;
 public interface UserWrapper {
 
 	/**
-	 * returns the name of the user
-	 * @return the name of the user
+	 * Returns the name of the user.
+	 * @return a String.
 	 */
 	String getName();
+
+	/**
+	 * Returns the type of the user.
+	 * @return a String.
+	 */
+	String getUserType();
 
 }
