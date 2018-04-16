@@ -29,35 +29,4 @@ public class Developer extends User {
 		super(name, password);
 	}
 	
-	/**
-	 * @return the Resource of the developer
-	 */
-	public DeveloperResource getResource()
-	{
-		return resource;
-	}
-	
-	/**
-	 * changes the Resource of the developer to thee given Resource
-	 * @param Resource the Resource to change the developer to
-	 * @throws IllegalArgumentException when the Resource is not "developer"
-	 */
-	public void changeResource(DeveloperResource resource) {
-		setResource(resource);
-	}
-	
-	/**
-	 * sets the Resource of the developer to the given Resource
-	 * @param Resource the Resource to set the developer to
-	 */
-	private void setResource(DeveloperResource resource)
-	{
-		this.resource = resource;
-	}
-	
-	/**
-	 * represents the Resource of the developer
-	 */
-	private DeveloperResource resource;
-	
 }

@@ -7,6 +7,7 @@ import java.time.LocalTime;
 
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
 
 /**
  * @author Julien Benaouda
@@ -19,9 +20,10 @@ public class DeveloperResource extends Resource {
 	 * @param type the type of the userResource
 	 * @param startBreak the time when the break of the developer starts
 	 */
-	public DeveloperResource(ResourceType type, LocalTime startBreak) {
+	public DeveloperResource(ResourceType type, LocalTime startBreak, Developer d) {
 		super(type);
 		addBreakTime(startBreak);
+		setDeveloper(d);
 	}
 
 
@@ -103,6 +105,30 @@ public class DeveloperResource extends Resource {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * represents the developer linked to this resource
+	 */
+	private Developer developer;
+	
+	/**
+	 * sets the developer to the given developer
+	 * @param developer the developer of the resource
+	 * @throws IllegalArgumentException when the developer is null
+	 */
+	private void setDeveloper(Developer d) {
+		if(d == null) {
+			throw new IllegalArgumentException("The developer can't be null!");
+		}
+		this.developer = d;
+	}
+	
+	/**
+	 * @return the developer of the resource
+	 */
+	public Developer getDeveloper() {
+		return developer;
 	}
 
 }
