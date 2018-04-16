@@ -1,8 +1,6 @@
 package taskman.backend.project;
 
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * This class is responsible for creating, storing and retrieving projects of the system.
  */
-public class ProjectOrganizer implements Entity {
+public class ProjectOrganizer {
 
     /**
      * Represents the projects in the system.

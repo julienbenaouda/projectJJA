@@ -70,12 +70,12 @@ public class ControllerTest {
         String due = "06/07/2008 09:10";
         controller.createProject(projectName, "test description", due);
         assertEquals("project list should contain one project!", 1, projectOrganizer.getProjects().size());
-        assertTrue("The project name is incorrect!", controller.getProjectNames().contains(projectName));
-        assertNotNull("project details cannot be null!", controller.getProjectDetails(projectName));
+        assertEquals("The project name is incorrect!", projectName, controller.getProjects().get(0).getName());
 
-        assertEquals("project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
-        controller.createTask(projectName, "test task description", Long.toString(709l), Double.toString(1.345));
-        assertEquals("The task is not added!", (Integer) 1, controller.getNumberOfTasks(projectName));
+        assertEquals("project already has tasks!", 0, controller.getProjects().get(0).getTasks().size());
+        String taskName = "task name";
+        controller.createTask(projectName, taskName, "test task description", 709l, 1.345);
+        assertEquals("The task is not added!", taskName, controller.getProjects().get(0).getTasks().get(0).getName());
         int taskId = 0;
         assertNotNull("task details cannot be null!", controller.getTaskDetails(projectName, taskId));
 
