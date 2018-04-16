@@ -1,5 +1,6 @@
 package taskman.backend;
 
+import taskman.Pair;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
@@ -252,8 +253,8 @@ public class Controller {
      * @param startTime
      * @throws IllegalArgumentException
      */
-    public void plan(String projectName, String taskName, List<ResourceWrapper> resources, LocalDateTime startTime) throws IllegalArgumentException {
-
+    public void plan(String projectName, String taskName, List<Pair<String, String>> resources, LocalDateTime startTime) throws IllegalArgumentException {
+        
     }
 
     /**
