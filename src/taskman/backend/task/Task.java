@@ -34,27 +34,7 @@ public class Task implements Entity, TaskWrapper {
         setAcceptableDeviation(acceptableDeviation);
         setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
-        requirements = new HashMap<ResourceType, Integer>();
-    }
-
-    /**
-     * Creates a new task with thte given values.
-     * @param name the name of the task.
-     * @param description the task description
-     * @param estimatedDuration the estimated duration of the task in minutes
-     * @param acceptableDeviation the acceptable deviation of the task
-     * @param timeSpan the time span of the task
-     * @param state the task state of the task
-     * @post a new task is created with the given attributes
-     */
-    private Task(String name, String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskState state) {
-        setName(name);
-        setDescription(description);
-        setEstimatedDuration(estimatedDuration);
-        setAcceptableDeviation(acceptableDeviation);
-        setTimeSpan(timeSpan);
-        setState(state);
-        dependencies = new ArrayList<>();
+        requirements = new HashMap<>();
     }
 
     /**

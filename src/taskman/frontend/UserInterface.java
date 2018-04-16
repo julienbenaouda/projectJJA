@@ -3,11 +3,14 @@ package taskman.frontend;
 import taskman.backend.Controller;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.time.TimeParser;
-import taskman.backend.wrappers.ProjectWrapper;
-import taskman.backend.wrappers.TaskWrapper;
+import taskman.backend.wrappers.*;
 import taskman.frontend.sections.*;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for the user interface of the taskman application.
@@ -54,7 +57,9 @@ public class UserInterface {
 		TitleSection title = new TitleSection("start menu");
 		MenuSection menu = new MenuSection("quit");
 		menu.addOption("login", this::login);
-		menu.addOption("create user", this::userCreation);
+		menu.addOption("show users", this::showUsers);
+		menu.addOption("create user", this::createUser);
+		menu.addOption("remove user", this::removeUser);
 		menu.addOption("import from file", this::importFromFile);
 		menu.addOption("export to file", this::exportToFile);
 		while (true) {
@@ -84,10 +89,21 @@ public class UserInterface {
 	}
 
 	/**
+	 * Shows the users in the system.
+	 */
+	private void showUsers() {
+		TitleSection title = new TitleSection("overview of users");
+		title.show();
+		TextSection info = new TextSection("", true);
+		for (UserWrapper user: controller.getUsers()) info.addLine(user.getName() + " (" + user.getUserType() + ")");
+		info.show();
+	}
+
+	/**
 	 * Shows user creation form.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void userCreation() throws Cancel {
+	private void createUser() throws Cancel {
 		TitleSection title = new TitleSection("create user");
 		title.show();
 		FormSection form = new FormSection(false, "Username:", "Password:");
@@ -103,6 +119,25 @@ public class UserInterface {
 		}
 		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), startBreak);
 		Section success = new TextSection("user created successfully!", false);
+		success.show();
+	}
+
+	/**
+	 * Shows the option to remove the user.
+	 * @throws Cancel when the user cancels the section.
+	 * @throws IllegalArgumentException if the removal fails.
+	 * @throws IllegalStateException if the removal fails.
+	 */
+	private void removeUser() throws Cancel {
+		TitleSection title = new TitleSection("remove user");
+		title.show();
+		SelectionSection<UserWrapper> selection = new SelectionSection<>(false);
+		for (UserWrapper user: controller.getUsers()) selection.addOption(user.getName(), user);
+		selection.show();
+		FormSection form = new FormSection(false, "Password:");
+		form.show();
+		controller.removeUser(selection.getAnswerObject().getName(), form.getAnswer(0));
+		TextSection success = new TextSection("User removed successfully!", false);
 		success.show();
 	}
 
@@ -143,7 +178,7 @@ public class UserInterface {
 	private void loggedInMenu() throws Cancel {
 		TitleSection title = new TitleSection("main menu");
 		MenuSection menu = new MenuSection("logout");
-		menu.addOption("show projects", this::showProjects);
+		menu.addOption("show projects and tasks", this::showProjectsAndTasks);
 		menu.addOption("create project", this::createProject);
 		menu.addOption("create task", this::createTask);
 		menu.addOption("plan task", this::planTask);
@@ -163,7 +198,7 @@ public class UserInterface {
 	 * Shows the list of projects.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void showProjects() throws Cancel {
+	private void showProjectsAndTasks() throws Cancel {
 		ProjectWrapper project = selectProject(true, "overview of projects");
 
 		TitleSection titleProjectInfo = new TitleSection("details of " + project.getName());
@@ -233,7 +268,43 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void planTask() throws Cancel {
-		// TODO
+		TitleSection taskTitle = new TitleSection("select unplanned task to plan");
+		taskTitle.show();
+		SelectionSection<Pair<ProjectWrapper, TaskWrapper>> selection1 = new SelectionSection<>(true);
+		for (ProjectWrapper project: controller.getProjects()) {
+			for (TaskWrapper task: project.getTasks()) {
+				if (task.getStatus().equals("unavailable")) {
+					selection1.addOption(project.getName() + " - " + task.getName(), new Pair<>(project, task));
+				}
+			}
+		}
+		selection1.show();
+		Pair<ProjectWrapper, TaskWrapper> pair = selection1.getAnswerObject();
+		ProjectWrapper project = pair.getFirst();
+		TaskWrapper task = pair.getSecond();
+
+		TitleSection timeTitle = new TitleSection("select start time");
+		timeTitle.show();
+		SelectionSection<LocalDateTime> timeSelection = new SelectionSection<>(true);
+		Iterator<LocalDateTime> times = controller.getStartingsTimes(project.getName(), task.getName());
+		for (int i = 1; i <= 3 && times.hasNext(); i++) {
+			LocalDateTime nextTime = times.next();
+			timeSelection.addOption(TimeParser.convertLocalDateTimeToString(nextTime), nextTime);
+		}
+		timeSelection.show();
+		LocalDateTime startTime = timeSelection.getAnswerObject();
+
+		Map<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> available =
+				controller.getAvailableResources(project.getName(), task.getName(), startTime);
+		TitleSection resourceTitle = new TitleSection("suggested resources");
+		resourceTitle.show();
+		TextSection suggestion = new TextSection("", true);
+		for (Map.Entry<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> e: available.entrySet()) {
+			for (ResourceWrapper w: e.getKey()) {
+				// TODO
+			}
+		}
+
 	}
 
 	/**
@@ -363,4 +434,5 @@ public class UserInterface {
 		taskSelection.show();
 		return taskSelection.getAnswerObject();
 	}
+
 }

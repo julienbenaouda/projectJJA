@@ -91,7 +91,7 @@ public class ResourceManager {
 
 
     /**
-     * Returns a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task.
+     * Returns a map ofresource  types and as values a list of available resources for that resource type at the given startTime for the given task.
      *
      * @param task the task to get the available resources from
      * @param startTime the start time on which the resources needs to be planned
@@ -255,17 +255,31 @@ public class ResourceManager {
      * Creates a new resource from the given user.
      *
      * @param user the user to use for the resource creation
-     * @throws IllegalArgumentException the break is null or the user is not a project
-     * @post a new developer resource is created, the user is casted to the Developer subclass and the developer resource is added to the user
+     * @throws IllegalArgumentException the break is null.
+     * @post a new user resource is created and the resource is added to the user
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
     	if(user.getUserType().equals("developer")) {
-    			if(startBreak == null) {
-    				throw new IllegalArgumentException("A user must take a break");
-    			}
-    			DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
-    			Developer d = (Developer) user;
-    			d.changeResource(r);
+            if(startBreak == null) {
+                throw new IllegalArgumentException("A user must take a break");
+            }
+            DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
+            Developer d = (Developer) user;
+            d.changeResource(r);
     	}
+    }
+
+    /**
+     * Removes the resource of the given user.
+     *
+     * @param user the user to use for the resource removal
+     * @post the user resource is removed
+     * @throws IllegalStateException if the resource cannot be removed.
+     */
+    public void removeResourceForUser(User user) {
+        if (user.getUserType().equals("developer")) {
+            Developer d = (Developer) user;
+            getResourceType("developer").removeResource(d.getResource());
+        }
     }
 }

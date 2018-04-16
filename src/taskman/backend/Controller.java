@@ -11,13 +11,17 @@ import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.ProjectWrapper;
+import taskman.backend.wrappers.ResourceTypeWrapper;
+import taskman.backend.wrappers.ResourceWrapper;
 import taskman.backend.wrappers.UserWrapper;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -119,6 +123,19 @@ public class Controller {
     }
 
     /**
+     * Adds a new user to the system.
+     * @param name the name of the user.
+     * @param password the password of the user.
+     * @post a new user is added to the system.
+     * @throws IllegalArgumentException when an user with the given name can't be found.
+     * @throws IllegalArgumentException if the password is incorrect.
+     * @throws IllegalStateException if the resource for the user cannot be removed.
+     */
+    public void removeUser(String name, String password) throws IllegalArgumentException, IllegalStateException {
+        this.userManager.removeUser(name, password, resourceManager);
+    }
+
+    /**
      * Logs in with the given username and password.
      * @param name the name of the user to log in.
      * @param password the password of the user to log in with.
@@ -172,7 +189,7 @@ public class Controller {
     }
 
     /**
-     * Adds a project with the properties from a given form.
+     * Adds a task with the given properties.
      * @param projectName the project name.
      * @param taskName the name of the task.
      * @param description the description of the task.
@@ -188,6 +205,29 @@ public class Controller {
         Project project = this.projectOrganizer.getProject(projectName);
         User user = this.userManager.getCurrentUser();
         project.createTask(taskName,description, estimatedDuration,acceptableDeviation, user);
+    }
+
+    /**
+     * Returns an iterator of the starting times for the given task.
+     * @param projectName the project of the task.
+     * @param taskName the name of the task.
+     * @throws IllegalArgumentException if no project is found with the given name.
+     * @throws IllegalArgumentException if no task exists with the given name.
+     */
+    public Iterator<LocalDateTime> getStartingsTimes(String projectName, String taskName) {
+        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
+        return this.resourceManager.getStartingTimes(task, this.clock.getTime());
+    }
+
+    /**
+     * Returns a map of resource types and lists of available resources.
+     * @param taskName the name of the task to get the available resources from.
+     * @param startTime the start time on which the resources needs to be planned.
+     * @return a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task.
+     */
+    public Map<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> getAvailableResources(String projectName, String taskName, LocalDateTime startTime) {
+        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
+        return resourceManager.getAvailableResources(task, startTime);
     }
 
     /**

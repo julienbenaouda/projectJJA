@@ -49,7 +49,7 @@ public class Developer extends User {
 	/**
 	 * changes the Resource of the developer to thee given Resource
 	 * @param Resource the Resource to change the developer to
-	 * @throws IllegalArgumentException when the Resource is not "developer"
+	 * @throws IllegalArgumentException when the Resource is not "developer" // TODO: gebeurt nooit? + check null?
 	 */
 	public void changeResource(DeveloperResource resource) {
 		setResource(resource);

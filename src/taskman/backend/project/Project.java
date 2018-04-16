@@ -101,7 +101,7 @@ public class Project implements Entity, ProjectWrapper {
      * @param task the task to remove from the project.
 	 * @post the task is removed from the project.
      */
-    public void removeTask(Task task) {
+    private void removeTask(Task task) {
 		taskList.remove(task);
 	}
 
