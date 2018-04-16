@@ -339,6 +339,7 @@ public class Task implements TaskWrapper {
 
     /**
      * Checks if the searched task is equal to the root or one of its dependencies or alternatives (recursively).
+     *
      * @param root the root task whose dependencies and alternatives will be further searched
      * @param searchedTask the task we want to search for
      * @return true if the task is found, false otherwise
