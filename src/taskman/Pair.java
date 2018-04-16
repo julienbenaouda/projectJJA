@@ -1,4 +1,4 @@
-package taskman.frontend;
+package taskman;
 
 /**
  * This class represents a pair o objects.
