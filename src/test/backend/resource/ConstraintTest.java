@@ -10,8 +10,8 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.backend.resource.AmountComparator;
-import taskman.backend.resource.Constraint;
+import taskman.backend.constraint.AmountComparator;
+import taskman.backend.constraint.Constraint;
 import taskman.backend.resource.ResourceType;
 
 /**

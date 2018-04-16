@@ -1,7 +1,9 @@
 package taskman.backend.resource;
 
+import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeParser;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
@@ -78,17 +80,26 @@ public class ResourceManager {
         return constraints;
     }
 
-    // TODO: moet onderstaande methode er wel bij? Kan mss via constructor geïnitaliseerd worden
     /**
      * Adds the given constraint to the list of constraints.
      *
      * @param constraint the constraint to add to the list
      * @post the given constraint is added to the list of constraints
      */
-    public void addConstraint(ConstraintComponent constraint){
+    private void addConstraint(ConstraintComponent constraint){
         constraints.add(constraint);
     }
 
+    /**
+     * Creates a constraint from a given string.
+     * @param string a string which represents a constraint.
+     * @post adds a constraint to the resource manager.
+     * @throws IllegalArgumentException if the string does not represent a valid constraint.
+     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
+     */
+    public void createConstraint(String string) {
+        addConstraint(ConstraintComponent.parseConstraint(string, this));
+    }
 
     /**
      * Returns a list of available resources for the given resource type at the given startTime for the given task.
@@ -142,7 +153,7 @@ public class ResourceManager {
         // TODO: zorgen dat dit een iterator returnt
         Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
 
-            LocalDateTime startingTime = startTime.truncatedTo(ChronoUnit.HOURS);
+            LocalDateTime startingTime = TimeParser.roundUpLocalDateTime(startTime);
 
             @Override
             public boolean hasNext() {

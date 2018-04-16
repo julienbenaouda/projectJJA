@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.time.temporal.ChronoUnit;
 
 /**
  * This class is responsible for converting from and to time objects.
@@ -54,6 +55,19 @@ public final class TimeParser {
      */
     public static LocalTime convertStringToLocalTime(String time) throws DateTimeParseException {
         return LocalTime.parse(time, DATE_TIME_FORMATTER);
+    }
+
+    /**
+     * Return the given LocalDateTime rounded up.
+     * @param time the LocalDateTime to round up.
+     * @return the given LocalDateTime rounded up.
+     */
+    public static LocalDateTime roundUpLocalDateTime(LocalDateTime time) {
+        if (time.getMinute() == 0 && time.getSecond() == 0) {
+            return time;
+        } else {
+            return time.truncatedTo(ChronoUnit.HOURS).plusHours(1);
+        }
     }
 
 }

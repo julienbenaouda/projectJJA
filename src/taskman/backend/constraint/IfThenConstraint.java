@@ -1,4 +1,6 @@
-package taskman.backend.resource;
+package taskman.backend.constraint;
+
+import taskman.backend.resource.ResourceType;
 
 import java.util.Map;
 

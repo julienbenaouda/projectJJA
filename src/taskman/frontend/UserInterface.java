@@ -189,6 +189,9 @@ public class UserInterface {
 		menu.addOption("update task status", this::updateTaskStatus);
 		menu.addOption("add alternative to task", this::addAlternativeToTask);
 		menu.addOption("add dependency to task", this::addDependencyToTask);
+		menu.addOption("add resource type", this::addResourceType);
+		menu.addOption("add resource type constraint", this::addConstraint);
+		menu.addOption("add resource", this::addResource);
 		menu.addOption("show system time", this::showTime);
 		menu.addOption("advance system time", this::advanceTime);
 		while (true) {
@@ -405,6 +408,37 @@ public class UserInterface {
 		controller.addDependencyToTask(project.getName(), task.getName(), dependency.getName());
 		Section success = new TextSection("Dependency added successfully!", false);
 		success.show();
+	}
+
+	/**
+	 * Shows the resource type creation form.
+	 */
+	private void addResourceType() {
+		TitleSection title = new TitleSection("create resource type");
+		title.show();
+		FormSection form = new FormSection(false, "");
+		// TODO
+	}
+
+	/**
+	 * Shows the constraint creation form.
+	 * @throws Cancel when the user cancels the section.
+	 */
+	private void addConstraint() throws Cancel {
+		TitleSection title = new TitleSection("create constraint");
+		title.show();
+		FormSection form = new FormSection(false, "Constraint:");
+		form.show();
+		controller.addConstraint(form.getAnswer(0));
+		Section success = new TextSection("Constraint added successfully!", false);
+		success.show();
+	}
+
+	/**
+	 * Shows the resource creation form.
+	 */
+	private void addResource() {
+		// TODO
 	}
 
 	/**

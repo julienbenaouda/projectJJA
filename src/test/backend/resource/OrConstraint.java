@@ -2,6 +2,10 @@ package test.backend.resource;
 
 import org.junit.Before;
 import org.junit.Test;
+import taskman.backend.constraint.AmountComparator;
+import taskman.backend.constraint.AndConstraint;
+import taskman.backend.constraint.Constraint;
+import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.resource.*;
 
 import java.util.HashMap;
