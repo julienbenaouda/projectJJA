@@ -27,12 +27,16 @@ public class Resource {
         setType(type);
         reservations = new ArrayList<>();
     }
+
+
     /**
      * Represents the resource type of the resource item.
      */
     private ResourceType type;
-	
+
     /**
+	 * Returns the type of the resource.
+	 *
      * @return the type of the resource
      */
     public ResourceType getType() {
@@ -53,51 +57,57 @@ public class Resource {
 	    this.type = type;
 	    type.addResource(this);
     }
-	
+
+
 	/**
-	 * adds a reservation to the list of reservations
+	 * represents the list of reservations
+	 */
+	private ArrayList<Reservation> reservations;
+
+	/**
+	 * Returns the list of reservations for this resource
+	 *
+	 * @return the list of reservations for this resource
+	 */
+	public List<Reservation> getReservations() {
+		return (List<Reservation>) reservations.clone();
+	}
+
+	/**
+	 * Adds a reservation to the list of reservations
+	 *
 	 * @param r the reservation to add
+	 * @post the given reservation is added to this resource
 	 */
 	public void addReservation(Reservation r)
 	{
 		reservations.add(r);
 	}
 	
-	
 	/**
-	 * represents the list of reservations
+	 * Creates a new reservation for this resource.
+	 *
+	 * @param task the task to create a reservation for
+	 * @param timeSpan the time span of the reservation
+	 * @post a new reservation is created and added to this resource
 	 */
-	private ArrayList<Reservation> reservations;
-	
+	public void createReservation(Task task, TimeSpan timeSpan) {
+		Reservation r = new Reservation(task, this, timeSpan);
+		addReservation(r);
+	}
 
 	/**
-	 * checks if a resource is available at the given timespan
+	 * Checks if a resource is available at the given time span.
+	 *
 	 * @param timeSpan the time span to check with
 	 * @return true if there is no overlapping reservation for the time span
 	 */
 	public boolean isAvailable(TimeSpan timeSpan) {
 		for (Reservation r: getReservations()) {
 			if (r.overlaps(timeSpan)) {
-				return false; 
+				return false;
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * @return the list of reservations for this resource
-	 */
-	public List<Reservation> getReservations() {
-		return (List<Reservation>) reservations.clone();
-	}
-	
-	/**
-	 * creates a new reservation for this resource
-	 * @param task the task to create a reservation for
-	 * @param timeSpan the time span of the reservation
-	 */
-	public void createReservation(Task task, TimeSpan timeSpan) {
-		Reservation r = new Reservation(task, this, timeSpan);
-		addReservation(r);
 	}
 }

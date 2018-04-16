@@ -1,12 +1,14 @@
 package taskman.backend.resource;
 
 import taskman.backend.task.Task;
+import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -18,9 +20,12 @@ public class ResourceManager {
 
     /**
      * Construct an empty resource manager.
+     *
+     * @post the set of resource types is set to a new HashsSt and the list of constraints is set to a new Arraylist
      */
     public ResourceManager() {
         this.resourceTypes = new HashSet<>();
+        this.constraints = new ArrayList<>();
         addResourceType("developer");
     }
 
@@ -59,25 +64,59 @@ public class ResourceManager {
     }
 
 
-    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime){
-        // TODO: zorgen dat dit een iterator returnt
-        LocalDateTime startingTime = startTime;
-        if(isAvailableStartingTime(task, startingTime)){
+    /**
+     * Represents the list of constraints for the resource types in the system.
+     */
+    private List<ConstraintComponent> constraints;
 
-        }
+    /**
+     * Returns the constraints for the resource types.
+     *
+     * @return the list of constraints for the resource types.
+     */
+    private List<ConstraintComponent> getConstraint(){
+        return constraints;
     }
 
-    public Iterator<Resource> getAvailableResources(Task task, LocalDateTime startTime){
-        // TODO zorgen dat dit een iterator returnt
+    // TODO: moet onderstaande methode er wel bij? Kan mss via constructor geïnitaliseerd worden
+    /**
+     * Adds the given constraint to the list of constraints.
+     *
+     * @param constraint the constraint to add to the list
+     * @post the given constraint is added to the list of constraints
+     */
+    public void addConstraint(ConstraintComponent constraint){
+        constraints.add(constraint);
+    }
+
+
+    /**
+     * Returns a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task.
+     *
+     * @param task the task to get the available resources from
+     * @param startTime the start time on which the resources needs to be planned
+     * @return a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task
+     */
+    public Map<ResourceType, List<Resource>> getAvailableResources(Task task, LocalDateTime startTime){
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        Map<ResourceType ,List<Resource>> availableResources = new HashMap<>();
         for (ResourceType resourceType : requirements.keySet()){
-            resourceType.getAvailableResources(timeSpan);
+            availableResources.put(resourceType, resourceType.getAvailableResources(timeSpan));
         }
+        return availableResources;
     }
 
-    public Iterator<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
+    /**
+     * Returns a list of resources as alternatives for the given resource and the given task at the given time.
+     *
+     * @param resource the resource to get a list of alternatives for
+     * @param task the task to get a list of alternatives for
+     * @param startTime the start time on which the alternative resources will be planned
+     * @return a list of resources as alternatives for the given resource and the given task at the given time.
+     */
+    public List<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         // TODO zorgen dat resource er wel niet bij zit
@@ -89,6 +128,81 @@ public class ResourceManager {
         }
     }
 
+
+    /**
+     * Returns an iterator of the starting times (on or after the given time) for the given task.
+     *
+     * @param task the task to get the starting times for
+     * @param startTime the time on or before the starting times
+     * @return an iterator of starting times (on or after the given time) for the given task
+     * @throws NoSuchElementException if there is no next element in the iterator
+     */
+    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime) throws NoSuchElementException {
+        // TODO: zorgen dat dit een iterator returnt
+        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
+
+            LocalDateTime startingTime = startTime.truncatedTo(ChronoUnit.HOURS);
+
+            @Override
+            public boolean hasNext() {
+                Map<ResourceType, Integer> requirements = task.getRequirements();
+                boolean enoughResources = true;
+                for (ResourceType resourceType : requirements.keySet()){
+                    if (resourceType.getNbOfResources() < requirements.get(resourceType)){
+                        enoughResources = false;
+                    }
+                }
+
+                long duration = task.getEstimatedDuration();
+                boolean hasAvailablePeriod = false;
+                for (int day = 1; day <= 7; day++){
+                    AvailabilityPeriod availabilityPeriod = new AvailabilityPeriod(LocalTime.MIN, LocalTime.MAX);
+                    for (ResourceType resourceType : requirements.keySet()){
+                        LocalTime startTime;
+                        LocalTime endTime;
+                        if (availabilityPeriod.getStartTime().isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
+                            startTime = resourceType.getAvailabilityPeriod(day).getStartTime();
+                        }
+                        else{
+                            startTime = availabilityPeriod.getStartTime();
+                        }
+                        if (availabilityPeriod.getEndTime().isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
+                            endTime = resourceType.getAvailabilityPeriod(day).getEndTime();
+                        }
+                        else{
+                            endTime = availabilityPeriod.getEndTime();
+                        }
+                        availabilityPeriod = new AvailabilityPeriod(startTime, endTime);
+                    }
+                    if (availabilityPeriod.getStartTime().truncatedTo(ChronoUnit.HOURS).plus(duration, ChronoUnit.MINUTES).isBefore(availabilityPeriod.getEndTime())){
+                        hasAvailablePeriod = true;
+                    }
+                }
+
+                return enoughResources && hasAvailablePeriod;
+            }
+
+            @Override
+            public LocalDateTime next() {
+                if (hasNext()) {
+                    while (!isAvailableStartingTime(task, startingTime)) {
+                        startingTime = startingTime.plusHours(1);
+                    }
+                    return startingTime;
+                }
+                throw new NoSuchElementException("There is no starting time available.");
+            }
+        };
+        return startingTimes;
+    }
+
+    /**
+     * Returns if the given time is an available starting time for the given task.
+     *
+     * @param task the task to check the starting time for
+     * @param startTime the starting time to check
+     * @return true if the given time is available for the given task, otherwise false
+     */
     private boolean isAvailableStartingTime(Task task, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
@@ -102,35 +216,61 @@ public class ResourceManager {
     }
 
 
+    /**
+     * Checks the given requirements with the constraints of the system.
+     *
+     * @param requirements the requirements to check the systems constraints with
+     * @return true if there is no conflict between the system its constraints and the requirements, otherwise false
+     */
     private boolean checkRequirements(Map<ResourceType, Integer> requirements) {
-        // TODO
+        for (ConstraintComponent constraint : getConstraint()){
+            if (!constraint.solution(requirements)){
+                return false;
+            }
+        }
         return true;
     }
 
-    public void plan(Task task, List<Resource> resources, LocalDateTime startTime){
+
+    /**
+     * Plans the given resources for the given task at the given start time.
+     *
+     * @param task the task to plan the resources for
+     * @param resources the resource to plan
+     * @param startTime the starting time to plan the resources at
+     * @throws IllegalArgumentException the requirements of the task violate the system its constraints
+     * @post the resources are planned for the given task at a newly created time span (based on the start time)
+     */
+    public void plan(Task task, List<Resource> resources, LocalDateTime startTime) throws IllegalArgumentException {
         // TODO
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         if (checkRequirements(requirements)){
-
+            for (Resource resource : resources){
+                resource.createReservation(task, timeSpan);
+            }
         }
-        // TODO
+        throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
+        // TODO is het niet beter om deze requirements vroeger te checken
     }
-    
+
+
     /**
-     * creates a new resource from the given user
+     * Creates a new resource from the given user.
+     *
      * @param user the user to use for the resource creation
-     * @throws IllegalArgumentException the break is null
+     * @throws IllegalArgumentException the break is null or the user is not a project
+     * @post a new developer resource is created, the user is casted to the Developer subclass and the developer resource is added to the user
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
-    	if(user.isProjectManager()) {
-    			if(startBreak == null)
-    			{
-    				throw new IllegalArgumentException("A user must take a break");
-    			}
-    			DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
-    			Developer d = (Developer)user;
-    			d.changeResource(r);
+    	if (user.isProjectManager()) {
+            if (startBreak == null) {
+                throw new IllegalArgumentException("A user must take a break");
+            }
+            DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
+            Developer d = (Developer)user;
+            d.changeResource(r);
     	}
     }
 }
