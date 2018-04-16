@@ -281,8 +281,8 @@ public class ResourceManager {
             if(startBreak == null) {
                 throw new IllegalArgumentException("A user must take a break");
             }
-            DeveloperResource r = new DeveloperResource(getResourceType("developer"), startBreak);
             Developer d = (Developer) user;
+            DeveloperResource r = new DeveloperResource(d.getName(), getResourceType("developer"), startBreak, d);
             d.changeResource(r);
     	}
     }

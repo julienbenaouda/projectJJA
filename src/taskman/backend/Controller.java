@@ -245,6 +245,18 @@ public class Controller {
     }
 
     /**
+     *
+     * @param projectName
+     * @param taskName
+     * @param resources
+     * @param startTime
+     * @throws IllegalArgumentException
+     */
+    public void plan(String projectName, String taskName, List<ResourceWrapper> resources, LocalDateTime startTime) throws IllegalArgumentException {
+
+    }
+
+    /**
      * Sets the alternative of the given task to the given alternative task
      * @param projectName the name of the project which holds both tasks
      * @param taskName the name of the task
