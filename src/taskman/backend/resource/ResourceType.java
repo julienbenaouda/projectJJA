@@ -129,10 +129,9 @@ public class ResourceType {
 				numberAvailable += 1;
 			}
 		}
-		if (numberAvailable >= amount){
+		if (numberAvailable >= amount) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
@@ -163,7 +162,8 @@ public class ResourceType {
 	}
 
 	/**
-	 * Adds the availability for the given day 
+	 * Adds the availability for the given day .
+	 *
 	 * @param weekDay the day for which to add the availability
 	 * @param availabilityPeriod the availability
 	 * @post the given availability is added to the list
