@@ -144,8 +144,21 @@ public class ResourceType implements ResourceTypeWrapper {
 	 * @param resource the resource to add
 	 * @post the given resource is added to the list of resources
 	 */
-	public void addResource(Resource resource) {
+	private void addResource(Resource resource) {
 		resources.add(resource);
+	}
+	
+	/**
+	 * creates a new resource with given name
+	 * @param name the name of the resource
+	 * @throws IllegalArgumentException when the name is null or already exists
+	 */
+	public void createResource(String name) {
+		if(name == null || hasResource(name)) {
+			throw new IllegalArgumentException("This resource already exists. Please try another name.");
+		}
+		Resource r = new Resource(name, this);
+		addResource(r);
 	}
 
 	/**
