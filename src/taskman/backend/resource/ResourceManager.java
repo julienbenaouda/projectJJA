@@ -251,8 +251,9 @@ public class ResourceManager {
             for (Resource resource : resources){
                 resource.createReservation(task, timeSpan);
             }
+        } else {
+        	throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
         }
-        throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
         // TODO is het niet beter om deze requirements vroeger te checken
     }
 
@@ -265,7 +266,7 @@ public class ResourceManager {
      * @post a new developer resource is created, the user is casted to the Developer subclass and the developer resource is added to the user
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
-    	if (user.isProjectManager()) {
+    	if (!user.isProjectManager()) {
             if (startBreak == null) {
                 throw new IllegalArgumentException("A user must take a break");
             }
