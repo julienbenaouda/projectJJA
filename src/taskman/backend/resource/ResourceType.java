@@ -108,6 +108,35 @@ public class ResourceType implements ResourceTypeWrapper {
 	public int getNbOfResources(){
 	    return resources.size();
     }
+
+	/**
+	 * Returns if a resource with the given name exists.
+	 * @param name the name of the resource.
+	 * @return if a resource with the given name exists.
+	 */
+	public boolean hasResource(String name) throws IllegalArgumentException {
+		for (Resource resource: this.resources) {
+			if (resource.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the resource for a given name.
+	 * @param name the name of the resource.
+	 * @return the resource with the given name.
+	 * @throws IllegalArgumentException if no resource with the given name is found.
+	 */
+	public Resource getResource(String name) throws IllegalArgumentException {
+		for (Resource resource: this.resources) {
+			if (resource.getName().equals(name)) {
+				return resource;
+			}
+		}
+		throw new IllegalArgumentException("No resource with name " + name + " found!");
+    }
 	
 	/**
 	 * Adds a resource to the list of resources.
@@ -115,8 +144,21 @@ public class ResourceType implements ResourceTypeWrapper {
 	 * @param resource the resource to add
 	 * @post the given resource is added to the list of resources
 	 */
-	public void addResource(Resource resource) {
+	private void addResource(Resource resource) {
 		resources.add(resource);
+	}
+	
+	/**
+	 * creates a new resource with given name
+	 * @param name the name of the resource
+	 * @throws IllegalArgumentException when the name is null or already exists
+	 */
+	public void createResource(String name) {
+		if(name == null || hasResource(name)) {
+			throw new IllegalArgumentException("This resource already exists. Please try another name.");
+		}
+		Resource r = new Resource(name, this);
+		addResource(r);
 	}
 
 	/**

@@ -3,8 +3,6 @@
  */
 package taskman.backend.time;
 
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.AvailabilityPeriodWrapper;
 
 import java.time.LocalTime;
@@ -14,7 +12,7 @@ import java.time.LocalTime;
  * @author Julien Benaouda
  *
  */
-public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
+public class AvailabilityPeriod implements AvailabilityPeriodWrapper {
 
 	/**
 	 * Creates a new availability period object with given starttime and endtime
@@ -112,9 +110,4 @@ public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
 	 * accepts a visitor
 	 * @param v the visitor to accept
 	 */
-	@Override
-	public void accept(Visitor v)
-	{
-		v.visitAvailabilityPeriod(this);
-	}
 }

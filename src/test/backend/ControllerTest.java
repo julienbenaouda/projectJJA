@@ -16,6 +16,7 @@ import java.io.File;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 
 import static org.junit.Assert.*;
 
@@ -70,26 +71,24 @@ public class ControllerTest {
         String due = "06/07/2008 09:10";
         controller.createProject(projectName, "test description", due);
         assertEquals("project list should contain one project!", 1, projectOrganizer.getProjects().size());
-        assertTrue("The project name is incorrect!", controller.getProjectNames().contains(projectName));
-        assertNotNull("project details cannot be null!", controller.getProjectDetails(projectName));
+        assertEquals("The project name is incorrect!", projectName, controller.getProjects().get(0).getName());
 
-        assertEquals("project already has tasks!", (Integer) 0, controller.getNumberOfTasks(projectName));
-        controller.createTask(projectName, "test task description", Long.toString(709l), Double.toString(1.345));
-        assertEquals("The task is not added!", (Integer) 1, controller.getNumberOfTasks(projectName));
-        int taskId = 0;
-        assertNotNull("task details cannot be null!", controller.getTaskDetails(projectName, taskId));
-
-        controller.createTask(projectName, "test task description", Long.toString(888l), Double.toString(1.45));
-        int dependencyTaskId = 1;
-        controller.addDependencyToTask(projectName, taskId, dependencyTaskId);
+        assertEquals("project already has tasks!", 0, controller.getProjects().get(0).getTasks().size());
+        String taskName = "task name";
+        controller.createTask(projectName, taskName, "test task description", 709l, 1.345);
+        assertEquals("The task is not added!", taskName, controller.getProjects().get(0).getTasks().get(0).getName());
+String dependencyName = "task dependency";
+        controller.createTask(projectName, dependencyName, "test task description", 888l, 1.45);
+        controller.addDependencyToTask(projectName, taskName, dependencyName);
 
         userManager.login("d", "test");
-        String startTime = "01/01/2003 05:05";
-        String endTime = "01/01/2100 00:00";
-        controller.updateTaskStatus(projectName, taskId, startTime, endTime, "FAILED");
-        controller.createTask(projectName, "test", Long.toString(200L), Double.toString(1.1));
-        Integer alternativeTaskId = 2;
-        controller.addAlternativeToTask(projectName, taskId, alternativeTaskId);
+        LocalDateTime startTime = LocalDateTime.of(2003, Month.JANUARY, 1, 05, 05);
+        LocalDateTime endTime = LocalDateTime.of(2100, Month.JANUARY, 1, 0, 0);
+        // TOTO moet nog getest worden
+        // controller.updateTaskStatus(projectName, taskId, startTime, endTime, "FAILED");
+        String alternativeName = "task alternative";
+        controller.createTask(projectName, alternativeName, "test", 200L, 1.1);
+        controller.addAlternativeToTask(projectName, taskName, alternativeName);
     }
 
     @Test
@@ -110,11 +109,11 @@ public class ControllerTest {
 
     @Test
     public void user() {
-        assertNotNull("user cannot be null!", controller.getCurrentUserName());
-        assertNotEquals("user cannot be ''!", "", controller.getCurrentUserName());
+        assertNotNull("user cannot be null!", controller.getCurrentUser().getName());
+        assertNotEquals("user cannot be ''!", "", controller.getCurrentUser().getName());
         controller.createUser("testUser", "testPassword", "developer", startBreak);
         controller.login("testUser", "testPassword");
-        assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUserName());
+        assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUser().getName());
     }
 
     private void deleteFile(String path) throws AccessDeniedException {

@@ -1,5 +1,6 @@
 package taskman.frontend;
 
+import taskman.Pair;
 import taskman.backend.Controller;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.time.TimeParser;
@@ -11,6 +12,7 @@ import taskman.frontend.sections.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -304,7 +306,7 @@ public class UserInterface {
 			SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
 			resourceSelection.addOption("continue", null);
 			for (ResourceWrapper resourceWrapper: suggestion) {
-				resourceSelection.addOption(resourceWrapper.getType().getName(), resourceWrapper);
+				resourceSelection.addOption(resourceWrapper.getName() + " ("+ resourceWrapper.getType().getName() + ")", resourceWrapper);
 			}
 			resourceSelection.show();
 			resourceToChange = resourceSelection.getAnswerObject();
@@ -316,7 +318,7 @@ public class UserInterface {
 				alternativeResourceTitle.show();
 				SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
 				for (ResourceWrapper alternative: controller.getAlternativeResources(project.getName(), task.getName(), resourceToChange, startTime)) {
-					alternativeSelection.addOption(alternative.getType().getName(), alternative);
+					alternativeSelection.addOption(alternative.getName() + " ("+ alternative.getType().getName() + ")", alternative);
 				}
 				alternativeSelection.show();
 				ResourceWrapper alternative = alternativeSelection.getAnswerObject();
@@ -325,9 +327,14 @@ public class UserInterface {
 			}
 		}
 
+		List<Pair<String, String>> resourceInfo = new ArrayList<>();
+		for (ResourceWrapper resource: suggestion) {
+			resourceInfo.add(new Pair<>(resource.getType().getName(), resource.getName()));
+		}
+		controller.plan(project.getName(), task.getName(), resourceInfo, startTime);
 
-
-
+		TextSection success = new TextSection("Task planned successfully!", false);
+		success.show();
 	}
 
 	/**

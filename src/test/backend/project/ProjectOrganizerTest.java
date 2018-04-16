@@ -22,22 +22,18 @@ public class ProjectOrganizerTest {
 	
 	@Test
 	public void testProjectOrganizer() {
-		assertEquals(0, organizer.getProjectNames().size());
+		assertEquals(0, organizer.getProjects().size());
 	}
 
-	@Test
-	public void testProjectExists_true() {
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreateProject_alreadyExists() {
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 19, 0);
 		ProjectManager user = new ProjectManager("test", "test");
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
-		assertTrue(organizer.projectExists("test"));
+		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 	}
 	
-	@Test
-	public void testProjectExists_false() {
-		assertFalse(organizer.projectExists("test"));
-	}
 
 
 	@Test

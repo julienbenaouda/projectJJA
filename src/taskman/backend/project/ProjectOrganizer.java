@@ -1,8 +1,6 @@
 package taskman.backend.project;
 
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * This class is responsible for creating, storing and retrieving projects of the system.
  */
-public class ProjectOrganizer implements Entity {
+public class ProjectOrganizer {
 
     /**
      * Represents the projects in the system.
@@ -57,19 +55,32 @@ public class ProjectOrganizer implements Entity {
      * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
      * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
      * @param user the current user.
-     * @throws IllegalArgumentException when one of the given parameters is not of a valid format. TODO: is dit nodig?
+     * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
     public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) throws IllegalArgumentException {
+    	if(projectExists(name)) {
+    		throw new IllegalArgumentException("A project with the given name already exists");
+    	}
         this.projects.add(new Project(name, description, creationTime, dueTime, user));
+    }
+    
+    /**
+     * checks if a project with the given name exists
+     * @param name the project to check for
+     * @return true if a project with the given name exists, else false
+     */
+    private boolean projectExists(String name) {
+    	for(Project p: projects) {
+    		if(p.getName().equals(name)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 
     /**
      * Accepts a visitor.
      * @param v the visitor to accept.
      */
-    @Override
-    public void accept(Visitor v) {
-        v.visitProjectOrganizer(this);
-    }
 }

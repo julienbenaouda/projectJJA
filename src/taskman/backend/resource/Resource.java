@@ -20,11 +20,22 @@ public class Resource implements ResourceWrapper {
      * @param type the resource type of the resource item
      * @post a new resource item is created with given resource type
      */
-    public Resource(ResourceType type){
+    public Resource(String name, ResourceType type){
+    	this.name = name;
         setType(type);
         reservations = new ArrayList<>();
     }
 
+    private final String name;
+
+	/**
+	 * Returns the name of the resource.
+	 * @return the name of the resource.
+	 */
+	@Override
+	public String getName() {
+    	return this.name;
+    }
 
     /**
      * Represents the resource type of the resource item.
@@ -47,12 +58,11 @@ public class Resource implements ResourceWrapper {
      * @post the resource type of the resource item is set to the given type
      * @throws IllegalArgumentException when the type is null
      */
-	private void setType(ResourceType type) {
+	public void setType(ResourceType type) {
 		if(type == null) {
 			throw new IllegalArgumentException("A resource must have a type!");
 		}
 	    this.type = type;
-	    type.addResource(this);
     }
 
 

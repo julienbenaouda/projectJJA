@@ -1,14 +1,11 @@
 package taskman.backend.time;
 
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
-
 import java.time.LocalDateTime;
 
 /**
  * This class is responsible for storing a consistent time for the system.
  */
-public class Clock implements Entity {
+public class Clock {
 
     /**
      * Represents the time of the clock.

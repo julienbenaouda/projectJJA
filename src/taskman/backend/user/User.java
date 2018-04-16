@@ -6,7 +6,7 @@ import taskman.backend.wrappers.UserWrapper;
  * This class represents a user in the system.
  * @author Julien Benaouda
  */
-public abstract class User implements Entity, UserWrapper {
+public abstract class User implements UserWrapper {
 
 	/**
 	 * Creates a new user with the given name and password.
