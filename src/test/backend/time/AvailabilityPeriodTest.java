@@ -1,16 +1,15 @@
-package test;
+package test.backend.time;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeSpan;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.backend.time.AvailabilityPeriod;
-import taskman.backend.time.TimeSpan;
+import static org.junit.Assert.*;
 
 public class AvailabilityPeriodTest {
 	private AvailabilityPeriod availabilityPeriod;

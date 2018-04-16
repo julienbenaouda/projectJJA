@@ -1,19 +1,15 @@
-package test;
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
+package test.backend.resource;
 
 import org.junit.Before;
 import org.junit.Test;
+import taskman.backend.resource.*;
 
-import taskman.backend.resource.AmountComparator;
-import taskman.backend.resource.AndConstraint;
-import taskman.backend.resource.Constraint;
-import taskman.backend.resource.ConstraintComponent;
-import taskman.backend.resource.ResourceType;
+import java.util.HashMap;
 
-public class IfThenConstraintTest {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class OrConstraint {
 	private Constraint constraint1;
 	private Constraint constraint2;
 	private ConstraintComponent constraint;
@@ -21,7 +17,7 @@ public class IfThenConstraintTest {
 	private ResourceType type2;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setup() {
 		type1 = new ResourceType("type1");
 		type2 = new ResourceType("type2");
 		constraint1 = new Constraint(type1, AmountComparator.EQUALS, 1);
@@ -40,9 +36,6 @@ public class IfThenConstraintTest {
 	@Test
 	public void testSolution_false() {
 			HashMap<ResourceType, Integer> requirements = new HashMap<>();
-			requirements.put(type1, 1);
-			requirements.put(type2, 5);
 			assertFalse(constraint.solution(requirements));
 	}
-
 }

@@ -1,4 +1,4 @@
-package test;
+package test.backend.resource;
 
 import static org.junit.Assert.*;
 
@@ -13,7 +13,7 @@ import taskman.backend.resource.Constraint;
 import taskman.backend.resource.ConstraintComponent;
 import taskman.backend.resource.ResourceType;
 
-public class OrConstraint {
+public class IfThenConstraintTest {
 	private Constraint constraint1;
 	private Constraint constraint2;
 	private ConstraintComponent constraint;
@@ -21,7 +21,7 @@ public class OrConstraint {
 	private ResourceType type2;
 
 	@Before
-	public void setup() {
+	public void setUp() throws Exception {
 		type1 = new ResourceType("type1");
 		type2 = new ResourceType("type2");
 		constraint1 = new Constraint(type1, AmountComparator.EQUALS, 1);
@@ -40,6 +40,9 @@ public class OrConstraint {
 	@Test
 	public void testSolution_false() {
 			HashMap<ResourceType, Integer> requirements = new HashMap<>();
+			requirements.put(type1, 1);
+			requirements.put(type2, 5);
 			assertFalse(constraint.solution(requirements));
 	}
+
 }
