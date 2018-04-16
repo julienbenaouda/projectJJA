@@ -40,14 +40,14 @@ public class TaskStateUnavailable extends TaskState {
     /**
      * Plan the task with given arguments.
      *
+     * @param resourceManager the resource manager of the system
      * @param task the task to plan
      * @param resources the resources that are used in the plan
      * @param startTime the start time of the plan
-     * @param resourceManager the resource manager of the system
      * @post the new task will be planned and the task state will be set to planned
      */
     @Override
-    public void plan(Task task, List<Resource> resources, LocalDateTime startTime, ResourceManager resourceManager) {
+    public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) {
         resourceManager.plan(task, resources, startTime);
         task.setState(new TaskStatePlanned());
     }
