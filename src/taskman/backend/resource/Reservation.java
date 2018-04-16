@@ -17,11 +17,14 @@ public class Reservation {
      *
      * @param task the task of the reservation
      * @param resource the resource of the reservation
-     * @param startTime the start time of the reservation
-     * @param endTime the end time of the reservation
+     * @param timeSpan the time span of the reservation
      * @post a new reservation is created with given attributes
+     * @throws IllegalArgumentException when the task, resource or timespan is null
      */
     public Reservation(Task task, Resource resource, TimeSpan timeSpan){
+    	if(task == null || resource == null || timeSpan == null) {
+    		throw new IllegalArgumentException("A reservation must have a task, resource and time span!");
+    	}
         setTask(task);
         setResource(resource);
         setTimeSpan(timeSpan);
@@ -94,11 +97,10 @@ public class Reservation {
     }
 
     /**
-     * Creates a time span and sets the time span of the reservation to the new created time span.
+     * Sets the time span of the reservation to the given time span.
      *
-     * @param startTime the start time of the reservation its time span
-     * @param endTime the end time of the reservation its time span
-     * @post a new time span is created with given attributes and the time span of the reservation is set to this time span
+     * @param timeSpan the time span of the reservation
+     * @post the time span of the reservation is set to the given time span
      */
     private void setTimeSpan(TimeSpan timeSpan){
         this.timeSpan = timeSpan;
@@ -116,7 +118,7 @@ public class Reservation {
     	if(timeSpan.getEndTime().isAfter(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isBefore(getTimeSpan().getEndTime())) {
     		return true;
     	}
-    	if(timeSpan.getStartTime().isBefore(getTimeSpan().getStartTime()) && timeSpan.getEndTime().isAfter(getTimeSpan().getEndTime())) {
+    	if(!(timeSpan.getStartTime().isAfter(getTimeSpan().getStartTime())) && !(timeSpan.getEndTime().isBefore(getTimeSpan().getEndTime()))) {
     		return true;
     	}
     	return false;

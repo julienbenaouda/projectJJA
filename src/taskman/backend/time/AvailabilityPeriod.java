@@ -93,6 +93,20 @@ public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
 	 * represents the end time of the availability period
 	 */
 	private LocalTime endTime;
+
+
+	public boolean overlaps(TimeSpan timeSpan){
+		if(timeSpan.getStartTime().toLocalTime().isAfter(getStartTime()) && timeSpan.getStartTime().toLocalTime().isBefore(getEndTime())) {
+			return true;
+		}
+		if(timeSpan.getEndTime().toLocalTime().isAfter(getStartTime()) && timeSpan.getEndTime().toLocalTime().isBefore(getEndTime())) {
+			return true;
+		}
+		if(!(timeSpan.getStartTime().toLocalTime().isAfter(getStartTime())) && !(timeSpan.getEndTime().toLocalTime().isBefore(getEndTime()))) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * accepts a visitor
