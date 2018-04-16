@@ -88,15 +88,5 @@ public class TimeSpan implements Entity, TimeSpanWrapper {
 	 * represents the end time of the timespan
 	 */
 	private LocalDateTime endTime;
-	
-	/**
-	 * accepts a visitor
-	 * @param v the visitor to accept
-	 */
-	@Override
-	public void accept(Visitor v)
-	{
-		v.visitTimeSpan(this);
-	}
 
 }

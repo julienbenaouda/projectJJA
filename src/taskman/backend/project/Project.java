@@ -247,17 +247,5 @@ public class Project implements Entity, ProjectWrapper {
 	 * The list of tasks for the project.
 	 */
 	private ArrayList<Task> taskList;
-	
-	/**
-	 * accepts a visitor 
-	 * @param v the visitor to be accepted
-	 */
-	@Override
-	public void accept(Visitor v) {
-		v.visitProject(this);
-		for(Task t: this.getTasks()) {
-			t.accept(v);
-		}
-	}
 
 }

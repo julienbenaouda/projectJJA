@@ -38,13 +38,4 @@ public class Clock implements Entity, ClockWrapper {
             throw new IllegalArgumentException("New system time must be after the current system time!");
         }
     }
-    
-    /**
-     * accepts a visitor
-     * @param v the visitor to accept
-     */
-    @Override
-    public void accept(Visitor v) {
-    	v.visitClock(this);
-    }
 }

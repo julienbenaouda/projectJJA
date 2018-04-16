@@ -82,14 +82,4 @@ public abstract class User implements Entity, UserWrapper {
 	public boolean isProjectManager(){
 		return false;
 	}
-
-	/**
-	 * accepts a visitor
-	 * @para v the visitor to accept
-	 */
-	@Override
-	public void accept(Visitor v)
-	{
-		v.visitUser(this);
-	}
 }
