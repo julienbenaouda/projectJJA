@@ -1,7 +1,5 @@
 package taskman.backend.user;
 
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.UserWrapper;
 
 /**
@@ -82,12 +80,4 @@ public abstract class User implements Entity, UserWrapper {
 	@Override
 	public abstract String getUserType();
 
-	/**
-	 * Accepts a visitor.
-	 * @param v the visitor to accept.
-	 */
-	@Override
-	public void accept(Visitor v) {
-		v.visitUser(this);
-	}
 }

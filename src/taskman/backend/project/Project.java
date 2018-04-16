@@ -5,8 +5,6 @@ import taskman.backend.task.Task;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
@@ -17,7 +15,7 @@ import java.util.List;
  * This class represents a project.
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
-public class Project implements Entity, ProjectWrapper {
+public class Project implements ProjectWrapper {
 
 	/**
 	 * Creates a new project with the given values.
@@ -236,18 +234,6 @@ public class Project implements Entity, ProjectWrapper {
 			}
 		}
 		return "finished";
-	}
-	
-	/**
-	 * Accepts a visitor.
-	 * @param v the visitor to be accepted.
-	 */
-	@Override
-	public void accept(Visitor v) {
-		v.visitProject(this);
-		for(Task t: this.getTasks()) {
-			t.accept(v);
-		}
 	}
 
 }

@@ -5,8 +5,6 @@ import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.TaskWrapper;
 
 import java.time.LocalDateTime;
@@ -17,7 +15,7 @@ import java.util.*;
  * This class represents a task.
  * @author Jeroen Van Der Donckt
  */
-public class Task implements Entity, TaskWrapper {
+public class Task implements TaskWrapper {
 
     /**
      * Creates a new task with the given values.
@@ -369,18 +367,6 @@ public class Task implements Entity, TaskWrapper {
             }
         }
         return false;
-    }
-
-
-    // VISITOR PATTERN
-
-    /**
-     * Accepts a visitor
-     * @param v the visitor to be accepted
-     */
-    @Override
-    public void accept(Visitor v) {
-        v.visitTask(this);
     }
 
 }
