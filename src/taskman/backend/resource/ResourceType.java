@@ -129,10 +129,9 @@ public class ResourceType {
 				numberAvailable += 1;
 			}
 		}
-		if (numberAvailable >= amount){
+		if (numberAvailable >= amount) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
@@ -173,6 +172,6 @@ public class ResourceType {
 		if(weekDay < 0 || weekDay > 6) {
 			throw new IllegalArgumentException("the number of the week day must be between 0 and 6");
 		}
-		availability.put(weekDay, availabilityPeriod)
+		availability.put(weekDay, availabilityPeriod);
 	}
 }
