@@ -1,13 +1,6 @@
 package taskman.backend;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
@@ -17,7 +10,14 @@ import taskman.backend.time.TimeParser;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
-import taskman.backend.visitor.DetailVisitor;
+import taskman.backend.wrappers.ProjectWrapper;
+import taskman.backend.wrappers.UserWrapper;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -63,39 +63,39 @@ public class Controller {
     }
 
     /**
-     * Return the time of the system.
-     * @return the time of the system.
+     * Return the time.
+     * @return the time.
      */
-    public String getSystemTime() {
-        return TimeParser.convertLocalDateTimeToString(clock.getTime());
+    public LocalDateTime getTime() {
+        return this.clock.getTime();
     }
 
     /**
-     * Updates the time of the system.
-     * @param newTime the new time of the system.
+     * Updates the time.
+     * @param newTime the new time.
      * @throws DateTimeParseException if the text cannot be parsed.
      * @throws IllegalArgumentException if the new time if before the old time.
-     * @post the time of the system will be set to the given time
+     * @post the time of the system will be set to the given time.
      */
-    public void updateSystemTime(String newTime) throws DateTimeParseException, IllegalArgumentException {
-        clock.updateSystemTime(TimeParser.convertStringToLocalDateTime(newTime));
+    public void updateTime(LocalDateTime newTime) throws DateTimeParseException, IllegalArgumentException {
+        this.clock.updateTime(newTime);
     }
 
     /**
-     * Returns the name of the active user.
-     * @return a string.
+     * Returns the active user.
+     * @return a UserWrapper.
      * @throws OperationNotPermittedException if no user is logged in.
      */
-    public String getCurrentUserName() throws OperationNotPermittedException {
-        return this.userManager.getCurrentUser().getName();
+    public UserWrapper getCurrentUser() throws OperationNotPermittedException {
+        return this.userManager.getCurrentUser();
     }
 
     /**
-     * Return the possible user types.
-     * @return a collection of user types.
+     * Returns a list of all users.
+     * @return a list of UserWrappers.
      */
-    public Collection<String> getUserTypes() {
-        return this.userManager.getUserTypes();
+    public List<? extends UserWrapper> getUsers() {
+        return this.userManager.getUsers();
     }
 
     /**
@@ -108,6 +108,14 @@ public class Controller {
      */
     public void createUser(String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
         this.userManager.createUser(name, password, type, startBreak, resourceManager);
+    }
+
+    /**
+     * Return the possible user types.
+     * @return a collection of user types.
+     */
+    public Collection<String> getUserTypes() {
+        return this.userManager.getUserTypes();
     }
 
     /**
@@ -130,11 +138,11 @@ public class Controller {
     }
 
     /**
-     * Returns all project names.
-     * @return a List of Strings.
+     * Returns all projects.
+     * @return a List of ProjectWrappers.
      */
-    public List<String> getProjectNames() {
-        return this.projectOrganizer.getProjectNames();
+    public List<ProjectWrapper> getProjects() {
+        return this.projectOrganizer.getProjects();
     }
 
     /**
@@ -145,18 +153,6 @@ public class Controller {
      */
     public String getProjectStatus(String projectname) throws IllegalArgumentException {
         return this.projectOrganizer.getProject(projectname).getStatus(this.clock.getTime());
-    }
-
-    /**
-     * Returns the details of the project with the given name.
-     * @param name a String with the name of the project.
-     * @return a Map with the details of the project with the given name.
-     * @throws IllegalArgumentException if no project is found with the given name.
-     */
-    public Map<String, String> getProjectDetails(String name) throws IllegalArgumentException {
-    	DetailVisitor v = new DetailVisitor(this.clock.getTime());
-    	projectOrganizer.getProject(name).accept(v);
-    	return v.getDetails();
     }
 
     /**
@@ -176,32 +172,9 @@ public class Controller {
     }
 
     /**
-     * Return the number of tasks of a project.
-     * @param projectName the name of the project.
-     * @return an Integer.
-     * @throws IllegalArgumentException if no project is found with the given name.
-     */
-    public Integer getNumberOfTasks(String projectName) {
-        return this.projectOrganizer.getProject(projectName).getNumberOfTasks();
-    }
-
-    /**
-     * Returns the details of the given task
-     * @param projectName the name of the project of the task
-     * @param taskIndex the index of the task of which the details should be returned.
-     * @return the details of the given task
-     * @throws IllegalArgumentException if the project does not exist.
-     */
-    public Map<String, String> getTaskDetails(String projectName, Integer taskIndex) throws IllegalArgumentException {
-    	DetailVisitor v = new DetailVisitor(this.clock.getTime());
-    	Task t = projectOrganizer.getProject(projectName).getTask(taskIndex);
-    	t.accept(v);
-    	return v.getDetails();
-    }
-
-    /**
      * Adds a project with the properties from a given form.
      * @param projectName the project name.
+     * @param taskName the name of the task.
      * @param description the description of the task.
      * @param estimatedDuration the estimated duration of the task as Long.
      * @param acceptableDeviation the acceptable deviation of the task as Double.
@@ -211,20 +184,17 @@ public class Controller {
      * @throws NumberFormatException if estimatedDuration is not a Long or acceptableDeviation is not a Double.
      * @post a new task is created and added to the project in the system.
      */
-    public void createTask(String projectName, String description, String estimatedDuration, String acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
-        this.projectOrganizer.getProject(projectName).createTask(
-                description,
-                Long.parseLong(estimatedDuration),
-                Double.parseDouble(acceptableDeviation),
-                this.userManager.getCurrentUser()
-        );
+    public void createTask(String projectName, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
+        Project project = this.projectOrganizer.getProject(projectName);
+        User user = this.userManager.getCurrentUser();
+        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, user);
     }
 
     /**
      * Sets the alternative of the given task to the given alternative task
      * @param projectName the name of the project which holds both tasks
-     * @param taskIndex the index of the task
-     * @param alternativeTaskIndex the index of the alternative task
+     * @param taskName the name of the task
+     * @param alternativeTaskName the name of the alternative task
      * @throws IllegalArgumentException if the project does not exist.
      * @throws IndexOutOfBoundsException if the project does not contain the task or its alternative.
      * @throws IllegalStateException the task must be failed to set the alternative task.
@@ -232,16 +202,16 @@ public class Controller {
      *                                  one of its dependencies or one of these alternatives recursively.
      * @post the alternative task of the task is set to the given task.
      */
-    public void addAlternativeToTask(String projectName, Integer taskIndex, Integer alternativeTaskIndex) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
+    public void addAlternativeToTask(String projectName, String taskName, String alternativeTaskName) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
         Project project = this.projectOrganizer.getProject(projectName);
-        project.getTask(taskIndex).setAlternative(project.getTask(alternativeTaskIndex));
+        project.getTask(taskName).setAlternative(project.getTask(alternativeTaskName));
     }
 
     /**
      * Adds the given dependency to the given task
      * @param projectName the name of the project which holds both tasks.
-     * @param taskIndex the index of the task.
-     * @param dependencyTaskIndex the index of the dependency.
+     * @param taskName the index of the task.
+     * @param dependencyTaskName the index of the dependency.
      * @throws IllegalArgumentException if the project does not exist.
      * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
      * @throws IllegalArgumentException when the dependency is the task or its alternative or
@@ -249,46 +219,29 @@ public class Controller {
      * @throws IllegalStateException if the task is already finished or failed.
      * @post the dependency is added to the task.
      */
-    public void addDependencyToTask(String projectName, Integer taskIndex, Integer dependencyTaskIndex) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
+    public void addDependencyToTask(String projectName, String taskName, String dependencyTaskName) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
         Project project = this.projectOrganizer.getProject(projectName);
-        project.getTask(taskIndex).addDependency(project.getTask(dependencyTaskIndex));
-    }
-
-    /**
-     * Return the status of the task.
-     * @param projectName the project fo the task.
-     * @param taskIndex the index of the task.
-     * @return the status of the task.
-     * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
-     */
-    public String getTaskStatus(String projectName, Integer taskIndex) {
-        // TODO: @Jeroen
-        Project project = this.projectOrganizer.getProject(projectName);
-        Task task = project.getTask(taskIndex);
-        return task.getState().getStatus();
+        project.getTask(taskName).addDependency(project.getTask(dependencyTaskName));
     }
 
     /**
      * Updates the status of the given task.
-     * @param projectName the name of the project of the task
-     * @param taskIndex the index of the task to update
-     * @param startTime the start time of the task
-     * @param endTime the end time of the task
-     * @param status the new status of the task
+     * @param projectName the name of the project of the task.
+     * @param taskName the name of the task to update.
+     * @param startTime the start time of the task.
+     * @param endTime the end time of the task.
+     * @param status the new status of the task?
      * @throws DateTimeParseException if the start or end time cannot be parsed.
      * @throws IllegalArgumentException if the status does not exist.
      * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task index.
-     * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid
+     * @throws IndexOutOfBoundsException if the project does not contain the task.
+     * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid.
      * @post the start time, end time and status of the task will be updated
      */
-    public void updateTaskStatus(String projectName, Integer taskIndex, String startTime, String endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
+    public void updateTaskStatus(String projectName, String taskName, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
         // TODO: check if developer is member of task team!
-        LocalDateTime startTimeObject = TimeParser.convertStringToLocalDateTime(startTime);
-        LocalDateTime endTimeObject = TimeParser.convertStringToLocalDateTime(endTime);
-        Task task = this.projectOrganizer.getProject(projectName).getTask(taskIndex);
-        task.updateStatus(startTimeObject, endTimeObject, status);
+        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
+        task.updateStatus(startTime, endTime, status);
     }
 
     /**

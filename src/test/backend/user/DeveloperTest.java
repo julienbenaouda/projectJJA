@@ -1,14 +1,13 @@
 /**
  * 
  */
-package test;
-
-import static org.junit.Assert.*;
+package test.backend.user;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.user.Developer;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Julien Benaouda

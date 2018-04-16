@@ -1,14 +1,13 @@
-package test;
+package test.backend.time;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.time.TimeSpan;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.backend.time.TimeSpan;
+import static org.junit.Assert.*;
 
 /**
  * This is a test class for the TimeSpan class.

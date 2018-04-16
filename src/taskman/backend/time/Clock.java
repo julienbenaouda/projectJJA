@@ -1,25 +1,24 @@
 package taskman.backend.time;
 
-import java.time.LocalDateTime;
-
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
-import taskman.backend.wrappers.ClockWrapper;
+
+import java.time.LocalDateTime;
 
 /**
  * This class is responsible for storing a consistent time for the system.
  */
-public class Clock implements Entity, ClockWrapper {
+public class Clock implements Entity {
 
     /**
      * Represents the time of the clock.
      */
     private LocalDateTime time = LocalDateTime.MIN;
 
-    /* (non-Javadoc)
-	 * @see taskman.backend.time.ClockWrapper#getTime()
-	 */
-    @Override
+    /**
+     * Returns the time of the clock.
+     * @return a LocalDateTime.
+     */
 	public LocalDateTime getTime() {
         return time; // LocalDateTime is immutable!
     }
@@ -30,7 +29,7 @@ public class Clock implements Entity, ClockWrapper {
      * @throws IllegalArgumentException if the new time if before the old time.
      * @post the time of the clock will be set to the given time.
      */
-    public void updateSystemTime(LocalDateTime newTime) throws IllegalArgumentException {
+    public void updateTime(LocalDateTime newTime) throws IllegalArgumentException {
         if (newTime.isAfter(time)) {
             this.time = newTime;
         }

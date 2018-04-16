@@ -9,7 +9,7 @@ public class TextSection extends Section {
     /**
      * Represents the text to show.
      */
-    private final String text;
+    private String text;
 
     /**
      * Represents if the section should block after showing the text.
@@ -28,6 +28,14 @@ public class TextSection extends Section {
         }
         this.text = text;
         this.isBlocking = isBlocking;
+    }
+
+    /**
+     * Adds a line of text.
+     * @param line the text.
+     */
+    public void addLine(String line) {
+        this.text += line + "\n";
     }
 
     /**

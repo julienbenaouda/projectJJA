@@ -173,7 +173,7 @@
         }
       }
 
-      package taskman.backend.importExport {
+      package taskman.backend.importexport {
         class ImportExportException {
             + ImportExportException(String)
         }

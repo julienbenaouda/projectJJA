@@ -46,10 +46,16 @@ public class MenuSection extends Section {
 	public void show() throws Cancel {
 		this.selectionSection.resetAnswer();
 		this.selectionSection.show();
+	}
+
+	/**
+	 * Executes the action chosen by the user.
+	 * @throws IllegalStateException if the menu was not shown yet.
+	 */
+	public void executeChoice() throws IllegalArgumentException {
 		try {
 			this.selectionSection.getAnswerObject().call();
-		} catch (Cancel e) {
-			println("Cancelled!");
+		} catch (Cancel ignored) {
 		} catch (Exception e) {
 			println("An error occurred: " + e.getMessage());
 		}

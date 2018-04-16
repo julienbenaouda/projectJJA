@@ -78,7 +78,7 @@ public class ResourceManager {
      * @throws IllegalArgumentException the break is null
      */
     public void createResourceForUser(User user, LocalTime startBreak) throws IllegalArgumentException {
-    	if(user.isProjectManager()) {
+    	if(user.getUserType().equals("developer")) {
     			if(startBreak == null)
     			{
     				throw new IllegalArgumentException("A user must take a break");

@@ -1,9 +1,12 @@
 package taskman.backend.user;
 
-import java.time.LocalTime;
-import java.util.*;
-
 import taskman.backend.resource.ResourceManager;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This class represents the user manager in the taskman system.
@@ -26,11 +29,19 @@ public class UserManager {
 	private List<User> users;
 
 	/**
+	 * Return all users.
+	 * @return a list of users.
+	 */
+	public List<User> getUsers() {
+		return new ArrayList<>(this.users);
+	}
+
+	/**
 	 * Returns a user.
 	 * @return a user.
 	 * @throws IllegalArgumentException when an user with the given name can't be found.
 	 */
-	private User getUser(String name) {
+	public User getUser(String name) {
 		for (User u: this.users) {
 			if (u.getName().equals(name)) {
 				return u;
@@ -38,40 +49,6 @@ public class UserManager {
 		}
 		throw new IllegalArgumentException("There exists no user with name '" + name + "'.");
 	}
-
-	/**
-	 * Returns the current user.
-	 * @return the current user.
-	 * @throws OperationNotPermittedException if no user is logged in.
-	 */
-	public User getCurrentUser() throws OperationNotPermittedException {
-		if (this.currentUser == null) {
-			throw new OperationNotPermittedException("No user is logged in!");
-		} else {
-			return currentUser;
-		}
-	}
-	/**
-	 * If a user is logged in.
-	 * @return a Boolean.
-	 */
-	public Boolean hasCurrentUser() {
-		return this.currentUser != null;
-	}
-
-	/**
-	 * Sets the current user to the given user.
-	 * @param currentUser the new user to set as the current user.
-	 * @post the current user is set to the new user.
-	 */
-	private void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
-	}
-
-	/**
-	 * Represents the current user logged in.
-	 */
-	private User currentUser;
 
 	/**
 	 * Adds a new user to the list of users.
@@ -96,6 +73,26 @@ public class UserManager {
 	}
 
 	/**
+	 * Adds a new developer to the list of users.
+	 * @param name the name of the developer.
+	 * @param password the password of the user.
+	 * @post a new developer is added to the list of users.
+	 */
+	private void createDeveloper(String name, String password) {
+		users.add(new Developer(name, password));
+	}
+
+	/**
+	 * Adds a new project manager to the list of users.
+	 * @param name the name of the project manager.
+	 * @param password the password of the project manager.
+	 * @post a project manager with the given name and password is added to the list of users.
+	 */
+	private void createProjectManager(String name, String password) {
+		users.add(new ProjectManager(name, password));
+	}
+
+	/**
 	 * Return the possible user types.
 	 * @return a collection of user types.
 	 */
@@ -104,25 +101,38 @@ public class UserManager {
 	}
 
 	/**
-	 * Adds a new developer to the list of users.
-	 * @param name the name of the developer.
-	 * @param password the password of the user.
-	 * @post a new developer is added to the list of users.
+	 * Represents the current user logged in.
 	 */
-	private void createDeveloper(String name, String password)
-	{
-		users.add(new Developer(name, password));
-	}
-	
+	private User currentUser;
+
 	/**
-	 * Adds a new project manager to the list of users.
-	 * @param name the name of the project manager.
-	 * @param password the password of the project manager.
-	 * @post a project manager with the given name and password is added to the list of users.
+	 * Returns the current user.
+	 * @return the current user.
+	 * @throws OperationNotPermittedException if no user is logged in.
 	 */
-	private void createProjectManager(String name, String password)
-	{
-		users.add(new ProjectManager(name, password));
+	public User getCurrentUser() throws OperationNotPermittedException {
+		if (this.currentUser == null) {
+			throw new OperationNotPermittedException("No user is logged in!");
+		} else {
+			return currentUser;
+		}
+	}
+
+	/**
+	 * Sets the current user to the given user.
+	 * @param currentUser the new user to set as the current user.
+	 * @post the current user is set to the new user.
+	 */
+	private void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	/**
+	 * If a user is logged in.
+	 * @return a Boolean.
+	 */
+	public Boolean hasCurrentUser() {
+		return this.currentUser != null;
 	}
 	
 	/**

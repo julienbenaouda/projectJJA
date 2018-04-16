@@ -28,7 +28,16 @@ public class Developer extends User {
 	public Developer(String name, String password) {
 		super(name, password);
 	}
-	
+
+	/**
+	 * Returns the type of the user.
+	 * @return a String.
+	 */
+	@Override
+	public String getUserType() {
+		return "developer";
+	}
+
 	/**
 	 * @return the Resource of the developer
 	 */

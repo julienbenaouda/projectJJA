@@ -18,12 +18,12 @@ public class ProjectManager extends User {
 	}
 
 	/**
-	 * Returns that the user is a project manager
-	 *
-	 * @return true
+	 * Returns the type of the user.
+	 * @return a String.
 	 */
 	@Override
-	public boolean isProjectManager(){
-		return true;
+	public String getUserType() {
+		return "project manager";
 	}
+
 }

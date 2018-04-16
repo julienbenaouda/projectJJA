@@ -1,10 +1,13 @@
 package taskman.frontend;
 
 import taskman.backend.Controller;
-import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importexport.ImportExportException;
+import taskman.backend.time.TimeParser;
+import taskman.backend.wrappers.ProjectWrapper;
+import taskman.backend.wrappers.TaskWrapper;
 import taskman.frontend.sections.*;
 
-import java.util.Map;
+import java.time.LocalTime;
 
 /**
  * This class is responsible for the user interface of the taskman application.
@@ -23,9 +26,7 @@ public class UserInterface {
 	 * @throws NullPointerException if the controller is null.
 	 */
 	public UserInterface(Controller controller) throws NullPointerException {
-		if (controller == null) {
-			throw new NullPointerException("Controller cannot be null!");
-		}
+		if (controller == null) throw new NullPointerException("Controller cannot be null!");
 		this.controller = controller;
 	}
 
@@ -41,6 +42,8 @@ public class UserInterface {
 		try {
 			startMenu();
 		} catch (Cancel ignored) {}
+		TitleSection exit = new TitleSection("Bye!");
+		exit.show();
 	}
 
 	/**
@@ -48,7 +51,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void startMenu() throws Cancel {
-		Section title = new TitleSection("start menu");
+		TitleSection title = new TitleSection("start menu");
 		MenuSection menu = new MenuSection("quit");
 		menu.addOption("login", this::login);
 		menu.addOption("create user", this::userCreation);
@@ -57,6 +60,7 @@ public class UserInterface {
 		while (true) {
 			title.show();
 			menu.show();
+			menu.executeChoice();
 		}
 	}
 
@@ -65,16 +69,13 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void login() throws Cancel {
-		Section title = new TitleSection("login");
+		TitleSection title = new TitleSection("login");
 		title.show();
 		FormSection form = new FormSection(false, "Username:", "Password:");
 		form.show();
 		controller.login(form.getAnswer(0), form.getAnswer(1));
 		try {
 			loggedInMenu();
-		} catch (Exception e) {
-			Section error = new TextSection("Action aborted: " + e.getMessage(), false);
-			error.show();
 		} finally {
 			Section info = new TextSection("Logging out...", false);
 			info.show();
@@ -87,14 +88,20 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void userCreation() throws Cancel {
-		Section title = new TitleSection("create user");
+		TitleSection title = new TitleSection("create user");
 		title.show();
 		FormSection form = new FormSection(false, "Username:", "Password:");
 		form.show();
 		SelectionSection<String> selection = new SelectionSection<>(true);
-		for (String userType: this.controller.getUserTypes()) selection.addOption(userType);
+		selection.addOptions(this.controller.getUserTypes());
 		selection.show();
-		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), null);
+		LocalTime startBreak = null;
+		if (selection.getAnswer().equals("developer")) {
+			FormSection breakForm = new FormSection(false, "Start of break time (hh:mm):");
+			breakForm.show();
+			startBreak = TimeParser.convertStringToLocalTime(breakForm.getAnswer(0));
+		}
+		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), startBreak);
 		Section success = new TextSection("user created successfully!", false);
 		success.show();
 	}
@@ -105,7 +112,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void importFromFile() throws ImportExportException, Cancel {
-		Section title = new TitleSection("import from file");
+		TitleSection title = new TitleSection("import from file");
 		title.show();
 		FormSection form = new FormSection(false, "Path to file:");
 		form.show();
@@ -120,7 +127,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void exportToFile() throws ImportExportException, Cancel {
-		Section title = new TitleSection("export to file");
+		TitleSection title = new TitleSection("export to file");
 		title.show();
 		FormSection form = new FormSection(false, "Path to file:");
 		form.show();
@@ -134,7 +141,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void loggedInMenu() throws Cancel {
-		Section title = new TitleSection("main menu");
+		TitleSection title = new TitleSection("main menu");
 		MenuSection menu = new MenuSection("logout");
 		menu.addOption("show projects", this::showProjects);
 		menu.addOption("create project", this::createProject);
@@ -143,11 +150,12 @@ public class UserInterface {
 		menu.addOption("update task status", this::updateTaskStatus);
 		menu.addOption("add alternative to task", this::addAlternativeToTask);
 		menu.addOption("add dependency to task", this::addDependencyToTask);
-		menu.addOption("show system time", this::showSystemTime);
-		menu.addOption("advance system time", this::advanceSystemTime);
+		menu.addOption("show system time", this::showTime);
+		menu.addOption("advance system time", this::advanceTime);
 		while (true) {
 			title.show();
 			menu.show();
+			menu.executeChoice();
 		}
 	}
 
@@ -156,18 +164,27 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void showProjects() throws Cancel {
-		String project = selectProject(true, "overview of projects");
+		ProjectWrapper project = selectProject(true, "overview of projects");
 
-		Section titleProjectInfo = new TitleSection("details of " + project);
+		TitleSection titleProjectInfo = new TitleSection("details of " + project.getName());
 		titleProjectInfo.show();
-		Section projectInfo = new TextSection(mapToString(controller.getProjectDetails(project)), true);
+		TextSection projectInfo = new TextSection("", true);
+		projectInfo.addLine("Name: " + project.getName());
+		projectInfo.addLine("Description: " + project.getDescription());
+		projectInfo.addLine("Creation time: " + project.getCreationTime());
+		projectInfo.addLine("Due time: " + project.getDueTime());
 		projectInfo.show();
 
-		Integer taskNr = selectTaskNr(true, "overview of tasks in " + project, project);
+		TaskWrapper task = selectTask(true, "overview of tasks in " + project.getName(), project);
 
-		Section titleTaskInfo = new TitleSection("details of task " + taskNr);
+		TitleSection titleTaskInfo = new TitleSection("details of " + task.getName());
 		titleTaskInfo.show();
-		Section taskInfo = new TextSection(mapToString(controller.getTaskDetails(project, taskNr)), true);
+		TextSection taskInfo = new TextSection("", true);
+		taskInfo.addLine("Name: " + task.getName());
+		taskInfo.addLine("Description: " + task.getDescription());
+		taskInfo.addLine("Status: " + task.getStatus());
+		taskInfo.addLine("Acceptable deviation: " + task.getAcceptableDeviation());
+		taskInfo.addLine("Estimated duration: " + task.getEstimatedDuration());
 		taskInfo.show();
 	}
 
@@ -176,7 +193,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void createProject() throws Cancel {
-		Section title = new TitleSection("create project");
+		TitleSection title = new TitleSection("create project");
 		title.show();
 		FormSection form = new FormSection(true, "Name:", "Description:", "Due time (dd/mm/yyyy hh:mm):");
 		form.show();
@@ -190,16 +207,23 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void createTask() throws Cancel {
-		String project = selectProject(true, "select project for task");
-		Section title = new TitleSection("create task");
+		ProjectWrapper project = selectProject(true, "select project for task");
+		TitleSection title = new TitleSection("create task");
 		FormSection form = new FormSection(true,
+				"Name:",
 				"Description:",
 				"Estimated duration (in minutes):",
 				"Acceptable deviation (as floating point number):"
 		);
 		title.show();
 		form.show();
-		controller.createTask(project, form.getAnswer(0), form.getAnswer(1), form.getAnswer(2));
+		controller.createTask(
+				project.getName(),
+				form.getAnswer(0),
+				form.getAnswer(1),
+				Long.parseLong(form.getAnswer(2)),
+				Double.parseDouble(form.getAnswer(3))
+		);
 		Section success = new TextSection("task created successfully!", false);
 		success.show();
 	}
@@ -217,30 +241,29 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void updateTaskStatus() throws Cancel {
-		Section titleSelection1 = new TitleSection("select an available task");
+		TitleSection titleSelection1 = new TitleSection("select an available task");
 		titleSelection1.show();
-		SelectionSection<Pair<String, Integer>> selection1 = new SelectionSection<>(true);
-		for (String project: controller.getProjectNames()) {
-			Integer nr = controller.getNumberOfTasks(project);
-			for (int taskNr = 0; taskNr < nr; taskNr++) {
-				if (controller.getTaskStatus(project, taskNr).equals("available")) {
-					selection1.addOption(project + " - task " + taskNr, new Pair<>(project, taskNr));
+		SelectionSection<Pair<ProjectWrapper, TaskWrapper>> selection1 = new SelectionSection<>(true);
+		for (ProjectWrapper project: controller.getProjects()) {
+			for (TaskWrapper task: project.getTasks()) {
+				if (task.getStatus().equals("available")) {
+					selection1.addOption(project.getName() + " - " + task.getName(), new Pair<>(project, task));
 				}
 			}
 		}
 		selection1.show();
-		Pair<String, Integer> pair = selection1.getAnswerObject();
-		String project = pair.getFirst();
-		Integer taskNr = pair.getSecond();
+		Pair<ProjectWrapper, TaskWrapper> pair = selection1.getAnswerObject();
+		ProjectWrapper project = pair.getFirst();
+		TaskWrapper task = pair.getSecond();
 
-		Section titleSelection2 = new TitleSection("select a task status");
+		TitleSection titleSelection2 = new TitleSection("select a task status");
 		titleSelection2.show();
 		SelectionSection selection2 = new SelectionSection(true);
 		selection2.addOption("failed");
 		selection2.addOption("finished");
 		selection2.show();
 
-		Section titleForm = new TitleSection("status details");
+		TitleSection titleForm = new TitleSection("status details");
 		titleForm.show();
 		FormSection form = new FormSection(true,
 				"Start time (dd/mm/yyyy hh:mm):",
@@ -248,7 +271,13 @@ public class UserInterface {
 		);
 		form.show();
 
-		controller.updateTaskStatus(project, taskNr, form.getAnswer(0), form.getAnswer(1), selection2.getAnswer());
+		controller.updateTaskStatus(
+				project.getName(),
+				task.getName(),
+				TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),
+				TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),
+				selection2.getAnswer()
+		);
 	}
 
 	/**
@@ -256,10 +285,10 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void addAlternativeToTask() throws Cancel {
-		String project = selectProject(true, "select project of task");
-		Integer taskNr = selectTaskNr(true, "select task", project);
-		Integer alternativeNr = selectTaskNr(true, "select alternative task", project);
-		controller.addAlternativeToTask(project, taskNr, alternativeNr);
+		ProjectWrapper project = selectProject(true, "select project of task");
+		TaskWrapper task = selectTask(true, "select task", project);
+		TaskWrapper alternative = selectTask(true, "select alternative task", project);
+		controller.addAlternativeToTask(project.getName(), task.getName(), alternative.getName());
 		Section success = new TextSection("Alternative added successfully!", false);
 		success.show();
 	}
@@ -269,51 +298,52 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void addDependencyToTask() throws Cancel {
-		String project = selectProject(true, "select project of task");
-		Integer taskNr = selectTaskNr(true, "select task", project);
-		Integer alternativeNr = selectTaskNr(true, "select dependent task", project);
-		controller.addDependencyToTask(project, taskNr, alternativeNr);
+		ProjectWrapper project = selectProject(true, "select project of task");
+		TaskWrapper task = selectTask(true, "select task", project);
+		TaskWrapper dependency = selectTask(true, "select dependent task", project);
+		controller.addDependencyToTask(project.getName(), task.getName(), dependency.getName());
 		Section success = new TextSection("Dependency added successfully!", false);
 		success.show();
 	}
 
 	/**
-	 * Shows system time.
+	 * Shows time.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void showSystemTime() throws Cancel {
-		Section titleInfo = new TitleSection("system time");
+	private void showTime() throws Cancel {
+		TitleSection titleInfo = new TitleSection("system time");
 		titleInfo.show();
-		Section info = new TextSection("The system time is: " + controller.getSystemTime(), true);
+		Section info = new TextSection("The system time is: " + controller.getTime(), true);
 		info.show();
 	}
 
 	/**
-	 * Shows advance the system time form.
+	 * Shows advance the time form.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void advanceSystemTime() throws Cancel {
-		Section titleForm = new TitleSection("advance system time");
+	private void advanceTime() throws Cancel {
+		TitleSection titleForm = new TitleSection("advance system time");
 		titleForm.show();
 		FormSection form = new FormSection(true, "New system time:");
 		form.show();
 		if (!form.hasAnswers()) return; // Cancelled
-		controller.updateSystemTime(form.getAnswer(0));
+		controller.updateTime(TimeParser.convertStringToLocalDateTime(form.getAnswer(0)));
 		Section success = new TextSection("System time updated successfully!", false);
 		success.show();
 	}
 
 	/**
 	 * Shows project selection form.
-	 * @return project or null.
+	 * @return a projectWrapper.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private String selectProject(boolean withCancel, String title) throws Cancel {
-		Section titleProjectSelection = new TitleSection(title);
+	private ProjectWrapper selectProject(boolean withCancel, String title) throws Cancel {
+		TitleSection titleProjectSelection = new TitleSection(title);
 		titleProjectSelection.show();
-		SelectionSection<String> projectSelection = new SelectionSection<>(withCancel);
-		for (String project : controller.getProjectNames()) {
-			projectSelection.addOption(project + " (status: " + controller.getProjectStatus(project) + ")", project);
+		SelectionSection<ProjectWrapper> projectSelection = new SelectionSection<>(withCancel);
+		for (ProjectWrapper project : controller.getProjects()) {
+			String status = controller.getProjectStatus(project.getName());
+			projectSelection.addOption(project.getName() + " (status: " + status + ")", project);
 		}
 		projectSelection.show();
 		return projectSelection.getAnswerObject();
@@ -321,32 +351,16 @@ public class UserInterface {
 
 	/**
 	 * Shows task selection form for a given project.
-	 * @param project the project.
-	 * @return the number of the task or null.
+	 * @param project a ProjectWrapper.
+	 * @return a TaskWrapper.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private Integer selectTaskNr(boolean withCancel, String title, String project) throws Cancel {
-		Section titleTaskSelection = new TitleSection(title);
+	private TaskWrapper selectTask(boolean withCancel, String title, ProjectWrapper project) throws Cancel {
+		TitleSection titleTaskSelection = new TitleSection(title);
 		titleTaskSelection.show();
-		SelectionSection<Integer> taskSelection = new SelectionSection<>(withCancel);
-		int nrs = controller.getNumberOfTasks(project);
-		for (int i = 0; i < nrs; i++) {
-			taskSelection.addOption("task " + i, i);
-		}
+		SelectionSection<TaskWrapper> taskSelection = new SelectionSection<>(withCancel);
+		for (TaskWrapper task: project.getTasks()) taskSelection.addOption(task.getName(), task);
 		taskSelection.show();
 		return taskSelection.getAnswerObject();
-	}
-
-	/**
-	 * Converts a map with strings to a string.
-	 * @param map the map with strings.
-	 * @return the resulting string.
-	 */
-	private String mapToString(Map<String, String> map) {
-		StringBuilder str = new StringBuilder();
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			str.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-		}
-		return str.toString();
 	}
 }

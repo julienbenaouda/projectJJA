@@ -1,4 +1,4 @@
-package test;
+package test.backend.time;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class ClockTest {
     public void getSystemTime() {
         Assert.assertEquals("Initial SystemTime must be minimal!", LocalDateTime.MIN, clock.getTime());
         LocalDateTime newTime = LocalDateTime.of(2000, 1, 1, 0, 0);
-        clock.updateSystemTime(newTime);
+        clock.updateTime(newTime);
         Assert.assertEquals("Wrong result of getSystemTime!", newTime, clock.getTime());
     }
 
@@ -42,23 +42,23 @@ public class ClockTest {
     @Test
     public void updateSystemTime() {
         LocalDateTime firstTime = LocalDateTime.of(2000, 1, 1, 0, 0);
-        clock.updateSystemTime(firstTime);
+        clock.updateTime(firstTime);
         Assert.assertEquals("SystemTime is not updated!", firstTime, clock.getTime());
         LocalDateTime secondTime = LocalDateTime.of(54321, 12, 31, 23, 59);
-        clock.updateSystemTime(secondTime);
+        clock.updateTime(secondTime);
         Assert.assertEquals("SystemTime is not updated!", secondTime, clock.getTime());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void updateSystemTimeToMinimal() {
-        clock.updateSystemTime(LocalDateTime.MIN);
+        clock.updateTime(LocalDateTime.MIN);
         Assert.fail("The clock can be updated to the minimal time!");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void updateSystemTimeToPast() {
-        clock.updateSystemTime(LocalDateTime.of(2000, 1, 1, 0, 0));
-        clock.updateSystemTime(LocalDateTime.of(1999, 12, 31,23, 59));
+        clock.updateTime(LocalDateTime.of(2000, 1, 1, 0, 0));
+        clock.updateTime(LocalDateTime.of(1999, 12, 31,23, 59));
         Assert.fail("The clock can be updated to the past!");
     }
 

@@ -74,7 +74,21 @@ public class SelectionSection<Type> extends Section {
 	}
 
 	/**
-	 * Add a map of optionNames to the selection.
+	 * Add a collection of options to the selection.
+	 * @param options the collection of options.
+	 * @throws NullPointerException if an argument is null.
+	 */
+	public void addOptions(Collection<String> options) {
+		if (options == null) {
+			throw new NullPointerException("Options cannot be null!");
+		}
+		for (String option: options) {
+			addOption(option);
+		}
+	}
+
+	/**
+	 * Add a map of options to the selection.
 	 * @param options the map of options.
 	 * @throws NullPointerException if an argument is null.
 	 */

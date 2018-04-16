@@ -1,17 +1,16 @@
 /**
  * 
  */
-package test;
-
-import static org.junit.Assert.*;
-
-import java.time.LocalTime;
+package test.backend.user;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.user.UserManager;
+
+import java.time.LocalTime;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Julien Benaouda

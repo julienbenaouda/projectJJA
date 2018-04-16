@@ -1,12 +1,12 @@
-package test;
+package test.backend.importexport;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.backend.importExport.ImportExportException;
-import taskman.backend.importExport.XmlObject;
+import taskman.backend.importexport.ImportExportException;
+import taskman.backend.importexport.XmlObject;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;

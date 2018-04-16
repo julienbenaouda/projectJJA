@@ -3,6 +3,7 @@ package taskman.backend.project;
 import taskman.backend.user.User;
 import taskman.backend.visitor.Entity;
 import taskman.backend.visitor.Visitor;
+import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,29 +28,11 @@ public class ProjectOrganizer implements Entity {
     }
 
     /**
-     * Returns all project names.
-     * @return a List of Strings.
+     * Returns all projects.
+     * @return a List of ProjectWrappers.
      */
-    public List<String> getProjectNames() {
-        ArrayList<String> names = new ArrayList<>();
-        for (Project project: this.projects) {
-            names.add(project.getName());
-        }
-        return names;
-    }
-
-    /**
-     * Returns if a project with the given name exists.
-     * @param name a String with a possible name of a project.
-     * @return a Boolean.
-     */
-    public Boolean projectExists(String name) {
-        for (Project project: this.projects) {
-            if (project.getName().equals(name)){
-                return true;
-            }
-        }
-        return false;
+    public List<ProjectWrapper> getProjects() {
+        return new ArrayList<>(this.projects);
     }
 
     /**
@@ -66,7 +49,6 @@ public class ProjectOrganizer implements Entity {
         }
         throw new IllegalArgumentException("A project with name '" + name + "' does not exist!");
     }
-
 
     /**
      * Add a project with the properties.

@@ -1,11 +1,11 @@
-package test;
+package test.backend;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.*;
-import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
@@ -14,6 +14,7 @@ import taskman.backend.user.UserManager;
 
 import java.io.File;
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.junit.Assert.*;
@@ -51,8 +52,8 @@ public class ControllerTest {
     public void constructor() {
     	userManager.createUser("test", "myPassword", "developer", startBreak, resourceManager);
     	userManager.login("test", "myPassword");
-        assertEquals("Constructor does not initialize system time!", TimeParser.convertLocalDateTimeToString(clock.getTime()), controller.getSystemTime());
-        assertEquals("Constructor does not initialize user type!", "test", controller.getCurrentUserName());
+        assertEquals("Constructor does not initialize system time!", TimeParser.convertLocalDateTimeToString(clock.getTime()), controller.getTime());
+        assertEquals("Constructor does not initialize user type!", "test", controller.getCurrentUser().getName());
     }
 
     @Test
@@ -65,10 +66,10 @@ public class ControllerTest {
 
         String projectName = "test name";
 
-        assertEquals("Initial project list should be empty!", 0, projectOrganizer.getProjectNames().size());
+        assertEquals("Initial project list should be empty!", 0, projectOrganizer.getProjects().size());
         String due = "06/07/2008 09:10";
         controller.createProject(projectName, "test description", due);
-        assertEquals("project list should contain one project!", 1, projectOrganizer.getProjectNames().size());
+        assertEquals("project list should contain one project!", 1, projectOrganizer.getProjects().size());
         assertTrue("The project name is incorrect!", controller.getProjectNames().contains(projectName));
         assertNotNull("project details cannot be null!", controller.getProjectDetails(projectName));
 
@@ -93,13 +94,13 @@ public class ControllerTest {
 
     @Test
     public void system_time() {
-        String time = controller.getSystemTime();
-        String newTime = "09/03/2018 17:13";
+        LocalDateTime time = controller.getTime();
+        LocalDateTime newTime = LocalDateTime.of(2018, 3,9, 17, 13);
         assertNotEquals("Initial time is equal to example time!", newTime, time);
-        controller.updateSystemTime(newTime);
-        assertEquals("time is not updated!", newTime, controller.getSystemTime());
+        controller.updateTime(newTime);
+        assertEquals("time is not updated!", newTime, controller.getTime());
         try {
-            controller.updateSystemTime(time);
+            controller.updateTime(time);
             fail("time should not be updated to the past!");
         }
         catch (Exception e) {
