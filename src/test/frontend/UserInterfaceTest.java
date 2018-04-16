@@ -2,7 +2,6 @@ package test.frontend;
 
 public class UserInterfaceTest {
 
-	/*
 	TODO: zorgen dat de tests compileren!
 
 	private UserInterfaceMock ui;
@@ -364,6 +363,7 @@ public class UserInterfaceTest {
 		} catch (UnsupportedOperationException e) {}
 		Assert.assertTrue(ui.getOutput().contains("Alternative added successfully"));
 	}
-	*/
+
+
 
 }

@@ -91,19 +91,19 @@ public class ResourceManager {
 
 
     /**
-     * Returns a map ofresource  types and as values a list of available resources for that resource type at the given startTime for the given task.
+     * Returns a list of available resources for the given resource type at the given startTime for the given task.
      *
-     * @param task the task to get the available resources from
-     * @param startTime the start time on which the resources needs to be planned
-     * @return a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task
+     * @param task the task to get the available resources for.
+     * @param startTime the start time on which the resources needs to be planned.
+     * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
-    public Map<ResourceType, List<Resource>> getAvailableResources(Task task, LocalDateTime startTime){
+    public List<Resource> getAvailableResources(Task task, LocalDateTime startTime){
         Map<ResourceType, Integer> requirements = task.getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        Map<ResourceType ,List<Resource>> availableResources = new HashMap<>();
+        List<Resource> availableResources = new ArrayList<>();
         for (ResourceType resourceType : requirements.keySet()){
-            availableResources.put(resourceType, resourceType.getAvailableResources(timeSpan));
+            availableResources.addAll(resourceType.getAvailableResources(timeSpan));
         }
         return availableResources;
     }

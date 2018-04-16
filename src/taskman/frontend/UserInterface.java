@@ -3,14 +3,16 @@ package taskman.frontend;
 import taskman.backend.Controller;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.time.TimeParser;
-import taskman.backend.wrappers.*;
+import taskman.backend.wrappers.ProjectWrapper;
+import taskman.backend.wrappers.ResourceWrapper;
+import taskman.backend.wrappers.TaskWrapper;
+import taskman.backend.wrappers.UserWrapper;
 import taskman.frontend.sections.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is responsible for the user interface of the taskman application.
@@ -294,16 +296,37 @@ public class UserInterface {
 		timeSelection.show();
 		LocalDateTime startTime = timeSelection.getAnswerObject();
 
-		Map<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> available =
-				controller.getAvailableResources(project.getName(), task.getName(), startTime);
-		TitleSection resourceTitle = new TitleSection("suggested resources");
-		resourceTitle.show();
-		TextSection suggestion = new TextSection("", true);
-		for (Map.Entry<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> e: available.entrySet()) {
-			for (ResourceWrapper w: e.getKey()) {
-				// TODO
+		List<ResourceWrapper> suggestion = controller.getAvailableResources(project.getName(), task.getName(), startTime);
+		ResourceWrapper resourceToChange;
+		while (true) {
+			TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
+			resourceTitle.show();
+			SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
+			resourceSelection.addOption("continue", null);
+			for (ResourceWrapper resourceWrapper: suggestion) {
+				resourceSelection.addOption(resourceWrapper.getType().getName(), resourceWrapper);
+			}
+			resourceSelection.show();
+			resourceToChange = resourceSelection.getAnswerObject();
+
+			if (resourceToChange == null) {
+				break;
+			} else {
+				TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
+				alternativeResourceTitle.show();
+				SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
+				for (ResourceWrapper alternative: controller.getAlternativeResources(project.getName(), task.getName(), resourceToChange, startTime)) {
+					alternativeSelection.addOption(alternative.getType().getName(), alternative);
+				}
+				alternativeSelection.show();
+				ResourceWrapper alternative = alternativeSelection.getAnswerObject();
+				suggestion.remove(resourceToChange);
+				suggestion.add(alternative);
 			}
 		}
+
+
+
 
 	}
 

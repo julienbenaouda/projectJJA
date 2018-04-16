@@ -9,11 +9,12 @@ import taskman.backend.task.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-/**
+*
  * This is a test class for the task class.
  * @author Jeroen Van Der Donckt
  *
- */
+
+
 public class TaskTest {
 
 	private static Task root;

@@ -1,11 +1,11 @@
-package test;
-
-import static org.junit.Assert.*;
+package test.backend.resource;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.resource.ResourceManager;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class ResourceManagerTest {
 	private ResourceManager resourceManager;

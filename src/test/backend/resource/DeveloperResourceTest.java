@@ -1,19 +1,16 @@
-package test;
+package test.backend.resource;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.resource.DeveloperResource;
+import taskman.backend.resource.ResourceType;
+import taskman.backend.time.TimeSpan;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.backend.resource.DeveloperResource;
-import taskman.backend.resource.Reservation;
-import taskman.backend.resource.ResourceType;
-import taskman.backend.task.Task;
-import taskman.backend.time.TimeSpan;
+import static org.junit.Assert.*;
 
 public class DeveloperResourceTest {
 	private DeveloperResource dr;

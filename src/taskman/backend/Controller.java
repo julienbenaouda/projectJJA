@@ -3,6 +3,7 @@ package taskman.backend;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
@@ -11,17 +12,16 @@ import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.ProjectWrapper;
-import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.backend.wrappers.ResourceWrapper;
 import taskman.backend.wrappers.UserWrapper;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -220,14 +220,30 @@ public class Controller {
     }
 
     /**
-     * Returns a map of resource types and lists of available resources.
-     * @param taskName the name of the task to get the available resources from.
+     * Returns a list of available resources for the given resource type at the given startTime for the given task.
+     * @param taskName the name of the task to get the available resources for.
      * @param startTime the start time on which the resources needs to be planned.
-     * @return a map of resource types and as values a list of available resources for that resource type at the given startTime for the given task.
+     * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
-    public Map<? extends ResourceTypeWrapper, ? extends List<? extends ResourceWrapper>> getAvailableResources(String projectName, String taskName, LocalDateTime startTime) {
+    public List<ResourceWrapper> getAvailableResources(String projectName, String taskName, LocalDateTime startTime) {
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        return resourceManager.getAvailableResources(task, startTime);
+        return new ArrayList<>(resourceManager.getAvailableResources(task, startTime));
+    }
+
+
+
+    /**
+     * Returns a list of resources as alternatives for the given resource.
+     * @param projectName the name of the project of the task.
+     * @param taskName the name of the task.
+     * @param wrapper a resource wrapper to search alternatives for.
+     * @param startTime the start time on which the resources needs to be planned.
+     * @return a list of resources as alternatives for the given resource and the given task at the given time.
+     */
+    public List<? extends ResourceWrapper> getAlternativeResources(String projectName, String taskName, ResourceWrapper wrapper, LocalDateTime startTime) {
+        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
+        Resource resource = (Resource) wrapper;
+        return resourceManager.getAlternativeResources(resource, task, startTime);
     }
 
     /**
