@@ -119,13 +119,14 @@ public class ResourceManager {
     public List<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        // TODO zorgen dat resource er wel niet bij zit
-        Iterator<ResourceType> r = resource.getType().getAvailableResources(timeSpan);
-        while(r.hasNext()) {
-        	if(r.next() == resource) {
-        		r.remove();
+        List<Resource> r = resource.getType().getAvailableResources(timeSpan);
+        Iterator<Resource> i = r.iterator();
+        while(i.hasNext()) {
+        	if(i.next() == resource) {
+        		i.remove();
         	}
         }
+        return r;
     }
 
 
