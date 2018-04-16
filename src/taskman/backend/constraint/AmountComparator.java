@@ -1,4 +1,4 @@
-package taskman.backend.resource;
+package taskman.backend.constraint;
 
 /**
  * This enum represents a comparator for a constraint.

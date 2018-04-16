@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import taskman.backend.resource.AmountComparator;
+import taskman.backend.constraint.AmountComparator;
 
 public class AmountComparatorTest {
 
