@@ -215,6 +215,17 @@ public class ResourceManager {
         }
         return true;
     }
+    
+    /**
+     * tests a map of requirements on it's correctness
+     * @param requirements the requirements to test
+     * @throws IllegalArgumentException when the requirements are not valid
+     */
+    public void testREquirements(HashMap<ResourceType, Integer> requirements) {
+    	if(!checkRequirements(requirements)) {
+    		throw new IllegalArgumentException("The list of requirements doesn't match the constraints.");
+    	}
+    }
 
 
     /**

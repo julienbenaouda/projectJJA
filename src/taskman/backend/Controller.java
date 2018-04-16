@@ -253,6 +253,19 @@ public class Controller {
         Project project = this.projectOrganizer.getProject(projectName);
         project.getTask(taskIndex).addDependency(project.getTask(dependencyTaskIndex));
     }
+    
+    /**
+     * adds a requirement to a task
+     * @param projectName the name of the project
+     * @param taskName the name of the task
+     * @param type the type of the resource
+     * @param amount the amount of resources needed
+     */
+    public void addRequirementToTask(String projectName, String taskName, String resourceType, int amount) {
+    	Project p = this.projectOrganizer.getProject(projectName);
+    	p.getTask(taskName).addRequirement(resourceManager.getResourceType(resourceType), amount);
+    	resourceManager.testRequirements(p.getTask(taskName).getRequirements());
+    }
 
     /**
      * Return the status of the task.
