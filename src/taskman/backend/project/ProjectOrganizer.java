@@ -81,13 +81,4 @@ public class ProjectOrganizer implements Entity {
     public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) throws IllegalArgumentException {
         this.projects.add(new Project(name, description, creationTime, dueTime, user));
     }
-
-    /**
-     * Accepts a visitor.
-     * @param v the visitor to accept.
-     */
-    @Override
-    public void accept(Visitor v) {
-        v.visitProjectOrganizer(this);
-    }
 }

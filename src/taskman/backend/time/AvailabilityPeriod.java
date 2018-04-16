@@ -106,14 +106,4 @@ public class AvailabilityPeriod implements Entity, AvailabilityPeriodWrapper {
 		}
 		return false;
 	}
-	
-	/**
-	 * accepts a visitor
-	 * @param v the visitor to accept
-	 */
-	@Override
-	public void accept(Visitor v)
-	{
-		v.visitAvailabilityPeriod(this);
-	}
 }

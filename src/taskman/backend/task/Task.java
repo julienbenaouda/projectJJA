@@ -412,14 +412,5 @@ public class Task implements Entity, TaskWrapper {
 
     // VISITOR PATTERN
 
-    /**
-     * Accepts a visitor
-     *
-     * @param v the visitor to be accepted
-     */
-    @Override
-    public void accept(Visitor v) {
-        v.visitTask(this);
-    }
 
 }
