@@ -246,15 +246,25 @@ public class Controller {
     }
 
     /**
-     *
-     * @param projectName
-     * @param taskName
-     * @param resources
-     * @param startTime
-     * @throws IllegalArgumentException
+     * Plans a task for execution.
+     * @param projectName the name of the project of the task.
+     * @param taskName the name of the task.
+     * @param resources a list of resource types and resource names.
+     * @param startTime the planned start time.
      */
-    public void plan(String projectName, String taskName, List<Pair<String, String>> resources, LocalDateTime startTime) throws IllegalArgumentException {
-        
+    public void plan(String projectName, String taskName, List<Pair<String, String>> resources, LocalDateTime startTime) {
+        // TODO
+    }
+
+    /**
+     * Creates a constraint from a given string.
+     * @param string a string which represents a constraint.
+     * @post adds a constraint to the system.
+     * @throws IllegalArgumentException if the string does not represent a valid constraint.
+     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
+     */
+    public void addConstraint(String string) {
+        this.resourceManager.createConstraint(string);
     }
 
     /**

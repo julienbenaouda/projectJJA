@@ -7,10 +7,10 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.backend.resource.AmountComparator;
-import taskman.backend.resource.AndConstraint;
-import taskman.backend.resource.Constraint;
-import taskman.backend.resource.ConstraintComponent;
+import taskman.backend.constraint.AmountComparator;
+import taskman.backend.constraint.AndConstraint;
+import taskman.backend.constraint.Constraint;
+import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.resource.ResourceType;
 
 public class IfThenConstraintTest {
