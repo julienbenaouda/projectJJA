@@ -110,9 +110,4 @@ public class AvailabilityPeriod implements AvailabilityPeriodWrapper {
 	 * accepts a visitor
 	 * @param v the visitor to accept
 	 */
-	@Override
-	public void accept(Visitor v)
-	{
-		v.visitAvailabilityPeriod(this);
-	}
 }

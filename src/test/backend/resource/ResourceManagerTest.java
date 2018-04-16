@@ -21,8 +21,7 @@ import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.user.Developer;
 import taskman.backend.user.ProjectManager;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ResourceManagerTest {
 	private ResourceManager resourceManager;
@@ -40,7 +39,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testGetStartingTimes() {
-		Task t = new Task("test", 30l, 5.5);
+		Task t = new Task("task", "test", 30l, 5.5);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		Iterator<LocalDateTime> it = resourceManager.getStartingTimes(t, startTime);
 		for(int i = 0; i < 3; i++) {
@@ -52,7 +51,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testGetAvailableResources() {
-		Task task = new Task("test", 25l, 5.5);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -61,15 +60,15 @@ public class ResourceManagerTest {
 			type.addAvailability(i, always);
 		}
 		Resource resource = new Resource("resource3", type);
-		task.addRequirement(type, 1);
+		task.addRequirement(resourceManager, type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		Map<ResourceType, List<Resource>> resources = resourceManager.getAvailableResources(task, startTime);
-		assertTrue(resources.get(type).size() == 1);
+		List<Resource> resources = resourceManager.getAvailableResources(task, startTime);
+		assertTrue(resources.size() == 1);
 	}
 
 	@Test
 	public void testGetAlternativeResources() {
-		Task task = new Task("test", 25l, 5.5);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -79,7 +78,7 @@ public class ResourceManagerTest {
 		}
 		Resource resource = new Resource("resource1", type);
 		Resource alternative = new Resource("resource2", type);
-		task.addRequirement(type, 1);
+		task.addRequirement(resourceManager, type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		List<Resource> list = resourceManager.getAlternativeResources(resource, task, startTime);
 		assertTrue(list.size() == 1);
@@ -88,7 +87,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testPlan() {
-		Task task = new Task("test", 25l, 5.5);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -101,11 +100,11 @@ public class ResourceManagerTest {
 		ArrayList<Resource> resources = new ArrayList<>();
 		resources.add(resource);
 		resources.add(alternative);
-		task.addRequirement(type, 2);
+		task.addRequirement(resourceManager, type, 2);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		resourceManager.plan(task, resources, startTime);
-		Map<ResourceType, List<Resource>> map = resourceManager.getAvailableResources(task, startTime);
-		assertEquals(0, map.get(type).size());
+		List<Resource> list = resourceManager.getAvailableResources(task, startTime);
+		assertEquals(0, list.size());
 	}
 
 	@Test
@@ -130,7 +129,7 @@ public class ResourceManagerTest {
 		ResourceType type1 = new ResourceType("type1");
 		Constraint constraint = new Constraint(type1, AmountComparator.EQUALS, 5);
 		resourceManager.addConstraint(constraint);
-		Task task = new Task("test", 30l, 5.5);
+		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(type1, 5);
 		// assertTrue(resourceManager.)
 		// finish this test
