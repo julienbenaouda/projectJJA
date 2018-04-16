@@ -22,13 +22,14 @@ public enum AmountComparator {
 	 */
 	public boolean evaluate(int amount, int other) throws IllegalStateException {
 		int ordinal = ordinal();
-		switch(ordinal) {
-			case 0: return amount == other;
-			case 1: return amount != other;
-			case 2: return amount > other;
-			case 3: return amount >= other;
-			case 4: return amount < other;
-			case 5: return amount <= other;
+		String name = this.name();
+		switch(name) {
+			case "EQUALS": return amount == other;
+			case "NOT_EQUALS": return amount != other;
+			case "GREATER_THAN": return amount > other;
+			case "GREATER_THAN_OR_EQUALS": return amount >= other;
+			case "SMALLER_THAN": return amount < other;
+			case "SMALLER_THAN_OR_EQUALS": return amount <= other;
 			default: throw new IllegalStateException("There is no matching operation found with this operator.");
 		   // TODO: klopt deze volgorde?
 		}

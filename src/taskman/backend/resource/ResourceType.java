@@ -161,4 +161,18 @@ public class ResourceType {
 		}
 		return resources;
 	}
+
+	/**
+	 * Adds the availability for the given day 
+	 * @param weekDay the day for which to add the availability
+	 * @param availabilityPeriod the availability
+	 * @post the given availability is added to the list
+	 * @throws IllegalArgumentException when the weekday is less than 0 or greater than 6
+	 */
+	public void addAvailability(int weekDay, AvailabilityPeriod availabilityPeriod) throws IllegalArgumentException {
+		if(weekDay < 0 || weekDay > 6) {
+			throw new IllegalArgumentException("the number of the week day must be between 0 and 6");
+		}
+		availability.put(weekDay, availabilityPeriod)
+	}
 }
