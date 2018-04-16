@@ -13,6 +13,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import taskman.backend.resource.AmountComparator;
 import taskman.backend.resource.Constraint;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
