@@ -6,6 +6,12 @@ import taskman.backend.resource.ResourceManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Class representing an unavailable task state.
+ * Note: We apply here the State Pattern
+ *
+ * @author Jeroen Van Der Donckt
+ */
 public class TaskStateUnavailable extends TaskState {
 
     /**

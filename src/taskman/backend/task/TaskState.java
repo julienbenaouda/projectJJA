@@ -6,6 +6,12 @@ import taskman.backend.resource.ResourceManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Interface representing the task state.
+ * Note: We apply here the State Pattern
+ *
+ * @author Jeroen Van Der Donckt
+ */
 public abstract class TaskState {
 
     // TODO: moet niet alles protected staan?

@@ -63,15 +63,15 @@ public class Task implements Entity, TaskWrapper {
      */
     private String description;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getDescription()
-	 */
+    /**
+     * Returns the task description.
+     *
+     * @return the task description
+     */
     @Override
 	public String getDescription(){
         return description;
     }
-
 
     /**
      * Sets the task description to the given description.
@@ -89,15 +89,15 @@ public class Task implements Entity, TaskWrapper {
      */
     private long estimatedDuration;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getEstimatedDuration()
-	 */
+    /**
+     * Returns the estimated duration of the tsak in minutes.
+     *
+     * @return the estimated duration of the task in minutes
+     */
     @Override
 	public long getEstimatedDuration(){
         return estimatedDuration;
     }
-
 
     /**
      * Sets the estimated duration of the task to the given duration in minutes.
@@ -115,15 +115,15 @@ public class Task implements Entity, TaskWrapper {
      */
     private double acceptableDeviation;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getAcceptableDeviation()
-	 */
+    /**
+     * Returns the acceptable deviation of the task.
+     *
+     * @return the acceptable deviation of the task
+     */
     @Override
 	public double getAcceptableDeviation(){
         return acceptableDeviation;
     }
-
 
     /**
      * Sets the acceptable deviation of the task to the given deviation.
@@ -202,10 +202,11 @@ public class Task implements Entity, TaskWrapper {
         this.state = state;
     }
 
-    
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getStatus()
-	 */
+    /**
+     * Returns the status of the task state.
+     *
+     * @return the status of the task state
+     */
     @Override
 	public String getStatus(){
         return state.getStatus();
