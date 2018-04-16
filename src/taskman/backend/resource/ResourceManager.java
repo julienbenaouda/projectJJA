@@ -14,20 +14,21 @@ import java.util.*;
 /**
  * This class is responsible for creating, storing and retrieving resources of the system.
  *
- * @author Jeroen Van Der Donckt
+ * @author Jeroen Van Der Donckt, Julien Benaouda
  */
 public class ResourceManager {
 
     /**
      * Construct an empty resource manager.
      *
-     * @post the set of resource types is set to a new HashsSt and the list of constraints is set to a new Arraylist
+     * @post the set of resource types is set to a new HashsSet and the list of constraints is set to a new Arraylist
      */
     public ResourceManager() {
         this.resourceTypes = new HashSet<>();
         this.constraints = new ArrayList<>();
-        addResourceType("developer");
+        addResourceType("developer"); // This will add developer as a resource type
     }
+
 
     /**
      * Set representing the existing resource types in the system.
