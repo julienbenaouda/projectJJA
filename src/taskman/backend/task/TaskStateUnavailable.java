@@ -2,10 +2,17 @@ package taskman.backend.task;
 
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Class representing an unavailable task state.
+ * Note: We apply here the State Pattern
+ *
+ * @author Jeroen Van Der Donckt
+ */
 public class TaskStateUnavailable extends TaskState {
 
     /**
@@ -31,19 +38,36 @@ public class TaskStateUnavailable extends TaskState {
         task.addDependencyTask(dependency);
     }
 
+
+    /**
+     * Adds the given requirement to the task its requirements.
+     *
+     * @param resourceManager the resource manager of the system
+     * @param task the task to add the requirement to its requirements
+     * @param resourceType the resource type of the requirement
+     * @param amount the amount of the requirement
+     * @post the given requirement is added to the requirements of the task
+     */
+    @Override
+    public void addRequirement(ResourceManager resourceManager, Task task, ResourceType resourceType, int amount){
+        resourceManager.addRequirement(task, resourceType, amount);
+        // TODO: moet task wel meegegeven worden
+    }
+
     /**
      * Plan the task with given arguments.
      *
+     * @param resourceManager the resource manager of the system
      * @param task the task to plan
      * @param resources the resources that are used in the plan
      * @param startTime the start time of the plan
-     * @param resourceManager the resource manager of the system
      * @post the new task will be planned and the task state will be set to planned
      */
     @Override
-    public void plan(Task task, List<Resource> resources, LocalDateTime startTime, ResourceManager resourceManager) {
+    public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) {
         resourceManager.plan(task, resources, startTime);
         task.setState(new TaskStatePlanned());
+        // TODO: moet task wel meegegeven worden
     }
 
 }

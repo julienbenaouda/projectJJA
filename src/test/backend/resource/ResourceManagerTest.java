@@ -60,7 +60,7 @@ public class ResourceManagerTest {
 		for(int i = 0; i <= 6; i++) {
 			type.addAvailability(i, always);
 		}
-		Resource resource = new Resource(type);
+		Resource resource = new Resource("resource3", type);
 		task.addRequirement(type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		Map<ResourceType, List<Resource>> resources = resourceManager.getAvailableResources(task, startTime);
@@ -77,8 +77,8 @@ public class ResourceManagerTest {
 		for(int i = 0; i <= 6; i++) {
 			type.addAvailability(i, always);
 		}
-		Resource resource = new Resource(type);
-		Resource alternative = new Resource(type);
+		Resource resource = new Resource("resource1", type);
+		Resource alternative = new Resource("resource2", type);
 		task.addRequirement(type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		List<Resource> list = resourceManager.getAlternativeResources(resource, task, startTime);
@@ -96,8 +96,8 @@ public class ResourceManagerTest {
 		for(int i = 0; i <= 6; i++) {
 			type.addAvailability(i, always);
 		}
-		Resource resource = new Resource(type);
-		Resource alternative = new Resource(type);
+		Resource resource = new Resource("resource4", type);
+		Resource alternative = new Resource("resource5", type);
 		ArrayList<Resource> resources = new ArrayList<>();
 		resources.add(resource);
 		resources.add(alternative);
