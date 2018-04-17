@@ -153,7 +153,7 @@ public class ResourceManager {
      * @throws NoSuchElementException if there is no next element in the iterator
      */
     public Iterator<LocalDateTime> getStartingTimes(Plan plan, LocalDateTime startTime, long duration) throws NoSuchElementException {
-        Iterator<LocalDateTime> startingTimes = new Iterator<>() {
+        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
             LocalDateTime startingTime = TimeParser.roundUpLocalDateTime(startTime);
 
             @Override
@@ -312,7 +312,8 @@ public class ResourceManager {
     public void removeResourceForUser(User user) {
         if (user.getUserType().equals("developer")) {
             Developer d = (Developer) user;
-            getResourceType("developer").removeResource(d.getResource());
+            getResourceType("developer").removeResource(getResourceType("developer").getResource(user.getName()));
+            // TODO: is dit wel goede code
         }
     }
 }
