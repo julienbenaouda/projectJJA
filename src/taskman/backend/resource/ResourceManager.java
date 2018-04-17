@@ -128,6 +128,27 @@ public class ResourceManager {
         }
         throw new NoSuchElementException("There is no plan associated with the given task.");
     }
+    
+    /**
+     * creates a new plan from the given task
+     * @param task the task to create a plan from
+     * @throws IllegalArgumentException when the given task is null
+     */
+    public void createPlan(Task task) {
+    	if(task == null) {
+    		throw new IllegalArgumentException("the task can't be null!");
+    	}
+    	Plan p = new Plan(task);
+    	addPlan(p);
+    }
+    
+    /**
+     * adds a plan to the list of plans
+     * @param plan the plan to add
+     */
+    private void addPlan(Plan plan) {
+    	plans.add(plan);
+    }
 
 
     /**
@@ -328,8 +349,7 @@ public class ResourceManager {
                 throw new IllegalArgumentException("A user must take a break");
             }
             Developer d = (Developer) user;
-            DeveloperResource r = new DeveloperResource(d.getName(), getResourceType("developer"), startBreak, d);
-            d.changeResource(r);
+            getResourceType("developer").createResourceFromUser(d.getName(), startBreak, d);
     	}
     }
 

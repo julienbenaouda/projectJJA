@@ -205,7 +205,7 @@ public class Controller {
     public void createTask(String projectName, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
         Project project = this.projectOrganizer.getProject(projectName);
         User user = this.userManager.getCurrentUser();
-        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, user);
+        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, resourceManager, user);
     }
 
     /**
@@ -310,7 +310,7 @@ public class Controller {
      */
     public void addRequirementToTask(String projectName, String taskName, String resourceType, int amount) {
         Project p = this.projectOrganizer.getProject(projectName);
-        p.getTask(taskName).addRequirement(resourceManager.getResourceType(resourceType), amount);
+        p.getTask(taskName).addRequirement(resourceManager, resourceManager.getResourceType(resourceType), amount);
         resourceManager.testRequirements(p.getTask(taskName).getRequirements());
     }
 

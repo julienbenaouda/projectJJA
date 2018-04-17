@@ -5,6 +5,7 @@ import org.junit.Test;
 import taskman.backend.resource.DeveloperResource;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,11 +16,13 @@ import static org.junit.Assert.*;
 public class DeveloperResourceTest {
 	private DeveloperResource dr;
 	private LocalTime breakTime;
+	private Developer d;
 
 	@Before
 	public void setUp() {
 		breakTime = LocalTime.of(12, 0);
-		dr = new DeveloperResource(new ResourceType("test"), breakTime);
+		d = new Developer("test", "test");
+		dr = new DeveloperResource("test", new ResourceType("test"), breakTime, d);
 	}
 
 	@Test
@@ -45,7 +48,7 @@ public class DeveloperResourceTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testDeveloperResource_illegal() {
-		dr = new DeveloperResource(new ResourceType("test"), null);
+		dr = new DeveloperResource("test", new ResourceType("test"), null, null);
 	}
 
 }

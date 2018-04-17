@@ -25,13 +25,14 @@ public class Task implements TaskWrapper {
      * @param acceptableDeviation the acceptable  deviation of the task
      * @post a new task is created with the given attributes and unavailable status
      */
-    public Task(String name, String description, long estimatedDuration, double acceptableDeviation) {
+    public Task(String name, String description, long estimatedDuration, double acceptableDeviation, ResourceManager resourceManager) {
         setName(name);
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
         setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
+        resourceManager.createPlan(this);
     }
 
     /**

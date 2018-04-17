@@ -1,6 +1,5 @@
 package taskman.backend.resource;
 
-import taskman.backend.task.Task;
 import taskman.backend.time.TimeSpan;
 
 import java.time.LocalDateTime;
@@ -22,8 +21,8 @@ public class Reservation {
      * @throws IllegalArgumentException when the resource or timespan is null
      */
     public Reservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
-    	if( resource == null || timeSpan == null) {
-    		throw new IllegalArgumentException("A reservation must have a resource and time span!");
+    	if( resource == null || startTime == null || endTime == null) {
+    		throw new IllegalArgumentException("A reservation must have a resource, start time and end time !");
     	}
     	TimeSpan timeSpan = new TimeSpan(startTime, endTime);
         setResource(resource);

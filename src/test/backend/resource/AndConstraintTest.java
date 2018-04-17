@@ -21,7 +21,7 @@ public class AndConstraintTest {
 	private ResourceType type2;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		type1 = new ResourceType("type1");
 		type2 = new ResourceType("type2");
 		constraint1 = new Constraint(type1, AmountComparator.EQUALS, 1);
