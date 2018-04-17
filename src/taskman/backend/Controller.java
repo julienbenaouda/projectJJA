@@ -205,7 +205,7 @@ public class Controller {
      * @param task the task wrapper.
      */
     public Iterator<LocalDateTime> getStartingsTimes(TaskWrapper task) {
-        return this.resourceManager.getStartingTimes((Task) task, this.clock.getTime()); // TODO: @Jeroen
+        return this.resourceManager.getStartingTimes(((Task) task).getPlan(), this.clock.getTime(), ((Task) task).getEstimatedDuration());
     }
 
     /**
@@ -215,7 +215,7 @@ public class Controller {
      * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
     public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAvailableResources((Task) task, startTime)); // TODO: @Jeroen
+        return new ArrayList<>(resourceManager.getAvailableResources(((Task) task).getPlan(), startTime, ((Task) task).getEstimatedDuration()));
     }
 
     /**
@@ -226,7 +226,7 @@ public class Controller {
      * @return a list of resources as alternatives for the given resource and the given task at the given time.
      */
     public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, (Task) task, startTime)); // TODO: @Jeroen
+        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, startTime, ((Task) task).getEstimatedDuration()));
     }
 
     /**
