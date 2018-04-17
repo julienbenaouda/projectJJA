@@ -141,6 +141,7 @@ public class ResourceManagerTest {
 		task.addRequirement(resourceManager, type1, 4);
 	}
 	
+	// TODO @Jeroen deze test werkt nog niet
 	@Test
 	public void testMultipleResources() {
 		Task t = new Task("test", "test", 20l, 5.5);
