@@ -51,7 +51,7 @@ public class TaskTest {
 			private TaskState state;
 
 			@Override
-			public void updateStatus(User user, LocalDateTime startTime, LocalDateTime endTime, String status) {
+			public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
 				switch (status){
 					case "finished" : state = new TaskStateFinished();
 						break;
@@ -67,7 +67,7 @@ public class TaskTest {
 				return state;
 			}
 		};
-		root.updateStatus(null, null, null,"unavailable");
+		root.updateStatus(null, null,"unavailable", null);
 
 		Task dependency1_1 = new Task ("task", "dependency 1_1 description", estimatedDuration, acceptableDeviation){
 			private Task alternative;
@@ -373,7 +373,7 @@ public class TaskTest {
 			private TimeSpan timeSpan;
 
 			@Override
-			public void updateStatus(User user, LocalDateTime startTime, LocalDateTime endTime, String status) {
+			public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
 				switch (status){
 					case "finished" : state = new TaskStateFinished();
 						break;
@@ -396,7 +396,7 @@ public class TaskTest {
 		};
 		LocalDateTime startTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
-		task.updateStatus(null, startTime, endTime, "finished");
+		task.updateStatus(startTime, endTime, "finished", null);
 		Assert.assertEquals("The delay is not correctly calculated", 5, task.getDelay(), 0);
 	}
 
@@ -414,12 +414,12 @@ public class TaskTest {
 
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
-		resourceList.add(developer);
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		updateStatusTask.plan(resourceManager, admin, resourceList, startTime);
 
 		Assert.assertEquals("The status is not available", true, updateStatusTask.getStatus().equals("available"));
 		Assert.assertEquals("The time span is not null", null, updateStatusTask.getTimeSpan());
-		updateStatusTask.updateStatus(developer, startTime, endTime, "finished");
+		updateStatusTask.updateStatus(startTime, endTime, "finished", developer);
 		Assert.assertEquals("The status is not finished", TaskStateFinished.class, updateStatusTask.getState().getClass());
 		Assert.assertEquals("The start time is not correctly set", startTime, updateStatusTask.getTimeSpan().getStartTime());
 		Assert.assertEquals("The end time is not correctly set", endTime, updateStatusTask.getTimeSpan().getEndTime());
@@ -433,10 +433,10 @@ public class TaskTest {
 
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
-		resourceList.add(developer.getResource());
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		invalidUpdateStatusTask.plan(resourceManager, admin, resourceList, startTime);
 
-		invalidUpdateStatusTask.updateStatus(developer, startTime, endTime,  "failed");
+		invalidUpdateStatusTask.updateStatus(startTime, endTime,  "failed", developer);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
@@ -447,10 +447,10 @@ public class TaskTest {
 
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
-		resourceList.add(developer.getResource());
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		invalidUpdateStatusTask.plan(resourceManager, admin, resourceList, startTime);
 
-		invalidUpdateStatusTask.updateStatus(developer ,startTime, endTime, "inactive");
+		invalidUpdateStatusTask.updateStatus(startTime, endTime, "inactive", developer);
 	}
 
 	@Test
@@ -459,7 +459,7 @@ public class TaskTest {
 			private TaskState state;
 
 			@Override
-			public void updateStatus(User user, LocalDateTime startTime, LocalDateTime endTime, String status) {
+			public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
 				switch (status){
 					case "finished" : state = new TaskStateFinished();
 						break;
@@ -473,7 +473,7 @@ public class TaskTest {
 				return state;
 			}
 		};
-		setAlternative.updateStatus(null, null, null, "failed");
+		setAlternative.updateStatus(null, null, "failed", null);
 
 		Assert.assertEquals("There is already an alternative", null, setAlternative.getAlternative());
 		Task alternative = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
@@ -494,7 +494,7 @@ public class TaskTest {
 			private TaskState state;
 
 			@Override
-			public void updateStatus(User user, LocalDateTime startTime, LocalDateTime endTime, String status) {
+			public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
 				switch (status){
 					case "finished" : state = new TaskStateFinished();
 						break;
@@ -508,7 +508,7 @@ public class TaskTest {
 				return state;
 			}
 		};
-		setAlternative.updateStatus(null, null, null, "failed");
+		setAlternative.updateStatus(null, null, "failed", null);
 		setAlternative.setAlternative(setAlternative);
 	}
 
@@ -542,31 +542,31 @@ public class TaskTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive1(){
-		root.updateStatus(null,null, null, "failed");
+		root.updateStatus(null, null, "failed", null);
 		root.setAlternative(alternative1_3);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive2(){
-		root.updateStatus(null,null, null, "failed");
+		root.updateStatus(null, null, "failed", null);
 		root.setAlternative(alternative1_2_1);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive3(){
-		root.updateStatus(null,null, null, "failed");
+		root.updateStatus(null, null, "failed", null);
 		root.setAlternative(alternative1_3d);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalAddDependencyRecursive1(){
-		root.updateStatus(null,null, null, "unavailable");
+		root.updateStatus(null, null, "unavailable", null);
 		root.addDependency(dependency1_2);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalAddDependencyRecursive2(){
-		root.updateStatus(null,null, null, "unavailable");
+		root.updateStatus(null, null, "unavailable", null);
 		root.addDependency(dependency1_1_3);
 	}
 
