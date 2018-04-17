@@ -14,9 +14,11 @@ import taskman.Pair;
 import taskman.backend.Controller;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceWrapper;
 
 public class XmlObjectTest {
 	private ProjectOrganizer po;
@@ -58,13 +60,11 @@ public class XmlObjectTest {
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
 		controller.addRequirementToTask("test", "test", "type1", 1);
 		controller.addRequirementToTask("test", "test", "developer", 1);
-		Pair<String, String> p1 = new Pair("developer", "test");
-		Pair<String, String> p2 = new Pair("type1", "testResource");
-		ArrayList<Pair<String, String>> resources = new ArrayList<>();
-		resources.add(p1);
-		resources.add(p2);
+		ArrayList<ResourceWrapper> resources = new ArrayList<>();
+		resources.add(rm.getResourceType("developer").getResource("test"));
+		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
-		controller.plan("test", "test", resources, startTime);
+		controller.plan(po.getProject("test").getTask("test"), resources, startTime);
 		rm.createConstraint("== type1 1");
 		try {
 			assertNotNull(o.toXMLString());
@@ -90,11 +90,11 @@ public class XmlObjectTest {
 		controller.addRequirementToTask("test", "test", "developer", 1);
 		Pair<String, String> p1 = new Pair("developer", "test");
 		Pair<String, String> p2 = new Pair("type1", "testResource");
-		ArrayList<Pair<String, String>> resources = new ArrayList<>();
-		resources.add(p1);
-		resources.add(p2);
+		ArrayList<ResourceWrapper> resources = new ArrayList<>();
+		resources.add(rm.getResourceType("developer").getResource("test"));
+		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
-		controller.plan("test", "test", resources, startTime);
+		controller.plan(po.getProject("test").getTask("test"), resources, startTime);
 		rm.createConstraint("== type1 1");
 		String xml = "";
 		try {

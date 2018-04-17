@@ -4,6 +4,7 @@ import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.wrappers.ResourceTypeWrapper;
+import taskman.backend.wrappers.ResourceWrapper;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class ResourceType implements ResourceTypeWrapper {
 	 *
 	 * @return the list of resources
 	 */
-	private List<Resource> getResources() {
+	public List<Resource> getResources() {
 		return resources;
 	}
 
