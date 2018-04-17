@@ -1,5 +1,9 @@
 package taskman.backend.task;
 
+import java.time.LocalDateTime;
+
+import taskman.backend.time.TimeSpan;
+
 /**
  * Class representing a planned task state.
  * Note: We apply here the State Pattern
@@ -15,6 +19,22 @@ public class TaskStatePlanned extends TaskState {
         setStatus("planned");
     }
 
-    // TODO: transition to available
+    /**
+     * makes a task available
+     * @param task the task to make available
+     * @param startTime the start time to set the tasks time span to
+     * @throws IllegalStateException when one of the tasks dependencies is not yet finished
+     * @post the state of the task is set to available
+     */
+    @Override
+    public void makeAvailable(Task task, LocalDateTime startTime) {
+    	for(Task t: task.getDependencies()) {
+    		if(!t.getStatus().equals("finished")) {
+    			throw new IllegalStateException("The state of the task can't be changed because one of its dependencies is not yet finished");
+    		}
+    	}
+    	task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
+    	task.setState(new TaskStateAvailable());
+    }
 
 }

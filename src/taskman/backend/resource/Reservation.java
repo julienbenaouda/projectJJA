@@ -97,4 +97,9 @@ public class Reservation {
     	}
     	return false;
     }
+
+
+    public void finishEarlier(LocalDateTime endTime) {
+    	setTimeSpan(new TimeSpan(getTimeSpan().getStartTime(), endTime));
+    }
 }
