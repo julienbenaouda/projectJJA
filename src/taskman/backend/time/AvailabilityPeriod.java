@@ -105,9 +105,4 @@ public class AvailabilityPeriod implements AvailabilityPeriodWrapper {
 		}
 		return false;
 	}
-	
-	/**
-	 * accepts a visitor
-	 * @param v the visitor to accept
-	 */
 }

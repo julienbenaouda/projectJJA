@@ -16,20 +16,22 @@ import java.util.*;
 /**
  * This class is responsible for creating, storing and retrieving resources of the system.
  *
- * @author Jeroen Van Der Donckt
+ * @author Jeroen Van Der Donckt, Julien Benaouda
  */
 public class ResourceManager {
 
     /**
      * Construct an empty resource manager.
      *
-     * @post the set of resource types is set to a new HashsSt and the list of constraints is set to a new Arraylist
+     * @post the set of resource types is set to a new HashsSet and the list of constraints is set to a new Arraylist
      */
     public ResourceManager() {
         this.resourceTypes = new HashSet<>();
         this.constraints = new ArrayList<>();
-        addResourceType("developer");
+        this.plans = new HashSet<>();
+        addResourceType("developer"); // This will add developer as a resource type
     }
+
 
     /**
      * Set representing the existing resource types in the system.
@@ -41,9 +43,9 @@ public class ResourceManager {
      *
      * @param name the name of the resource type
      * @return the resource type with the given name
-     * @throws IllegalArgumentException if there exists no resource type with the given name
+     * @throws NoSuchElementException if there exists no resource type with the given name
      */
-    public ResourceType getResourceType(String name) throws IllegalArgumentException{
+    public ResourceType getResourceType(String name) throws NoSuchElementException {
         Iterator<ResourceType> iterator = resourceTypes.iterator();
         while (iterator.hasNext()){
             ResourceType resourceType = iterator.next();
@@ -51,7 +53,7 @@ public class ResourceManager {
                 return resourceType;
             }
         }
-        throw new IllegalArgumentException("There exists no resource type with the given name.");
+        throw new NoSuchElementException("There exists no resource type with the given name.");
     }
 
     /**
@@ -92,6 +94,7 @@ public class ResourceManager {
 
     /**
      * Creates a constraint from a given string.
+     *
      * @param string a string which represents a constraint.
      * @post adds a constraint to the resource manager.
      * @throws IllegalArgumentException if the string does not represent a valid constraint.
@@ -101,6 +104,53 @@ public class ResourceManager {
         addConstraint(ConstraintComponent.parseConstraint(string, this));
     }
 
+
+    // TODO: Resource Manager moet de plans aanmaken
+    /**
+     * Represents the plans that are made for the resources for all the tasks.
+     */
+    private Set<Plan> plans;
+
+    /**
+     * Returns the plan associated with the given task
+     *
+     * @param task the task to get the plan from
+     * @return the plan associated with the given task
+     * @throws NoSuchElementException if there is no plan associated with the given task
+     */
+    public Plan getPlan(Task task) throws NoSuchElementException {
+        Iterator<Plan> iterator = plans.iterator();
+        while (iterator.hasNext()){
+            Plan plan = iterator.next();
+            if (plan.getTask() == task){
+                return plan;
+            }
+        }
+        throw new NoSuchElementException("There is no plan associated with the given task.");
+    }
+    
+    /**
+     * creates a new plan from the given task
+     * @param task the task to create a plan from
+     * @throws IllegalArgumentException when the given task is null
+     */
+    public void createPlan(Task task) {
+    	if(task == null) {
+    		throw new IllegalArgumentException("the task can't be null!");
+    	}
+    	Plan p = new Plan(task);
+    	addPlan(p);
+    }
+    
+    /**
+     * adds a plan to the list of plans
+     * @param plan the plan to add
+     */
+    private void addPlan(Plan plan) {
+    	plans.add(plan);
+    }
+
+
     /**
      * Returns a list of available resources for the given resource type at the given startTime for the given task.
      *
@@ -109,7 +159,7 @@ public class ResourceManager {
      * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
     public List<Resource> getAvailableResources(Task task, LocalDateTime startTime){
-        Map<ResourceType, Integer> requirements = task.getRequirements();
+        Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         List<Resource> availableResources = new ArrayList<>();
@@ -118,6 +168,7 @@ public class ResourceManager {
         }
         return availableResources;
     }
+
 
     /**
      * Returns a list of resources as alternatives for the given resource and the given task at the given time.
@@ -157,7 +208,7 @@ public class ResourceManager {
 
             @Override
             public boolean hasNext() {
-                Map<ResourceType, Integer> requirements = task.getRequirements();
+                Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
                 boolean enoughResources = true;
                 for (ResourceType resourceType : requirements.keySet()){
                     if (resourceType.getNbOfResources() < requirements.get(resourceType)){
@@ -216,7 +267,7 @@ public class ResourceManager {
      * @return true if the given time is available for the given task, otherwise false
      */
     private boolean isAvailableStartingTime(Task task, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
-        Map<ResourceType, Integer> requirements = task.getRequirements();
+        Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
         long duration = task.getEstimatedDuration();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         for (ResourceType resourceType : requirements.keySet()){
@@ -226,9 +277,11 @@ public class ResourceManager {
         }
         return true;
     }
-    
+
+
     /**
-     * tests a map of requirements on it's correctness
+     * Tests a map of requirements on its correctness.
+     *
      * @param requirements the requirements to test
      * @throws IllegalArgumentException when the requirements are not valid
      */
@@ -237,7 +290,6 @@ public class ResourceManager {
     		throw new IllegalArgumentException("The list of requirements doesn't match the constraints.");
     	}
     }
-
 
     /**
      * Checks the given requirements with the constraints of the system.
@@ -254,6 +306,22 @@ public class ResourceManager {
         return true;
     }
 
+    /**
+     * Adds the given requirement to the plan of the corresponding task.
+     *
+     * @param task the task to add the requirement to
+     * @param resourceType the resource type of the requirement
+     * @param amount the amount of the requirement
+     */
+    public void addRequirement(Task task, ResourceType resourceType, int amount){
+        Map<ResourceType, Integer> requirementsCopy = getPlan(task).getRequirements();
+        requirementsCopy.put(resourceType, amount);
+        if (checkRequirements(requirementsCopy)){ // TODO: moet deze check hier of bij Plan gebeuren?
+            getPlan(task).addRequirement(resourceType, amount);
+        } else {
+            throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
+        }
+    }
 
     /**
      * Plans the given resources for the given task at the given start time.
@@ -261,22 +329,10 @@ public class ResourceManager {
      * @param task the task to plan the resources for
      * @param resources the resource to plan
      * @param startTime the starting time to plan the resources at
-     * @throws IllegalArgumentException the requirements of the task violate the system its constraints
-     * @post the resources are planned for the given task at a newly created time span (based on the start time)
+     * @post the resources are planned for the given task at the given start time
      */
     public void plan(Task task, List<Resource> resources, LocalDateTime startTime) throws IllegalArgumentException {
-        // TODO
-        Map<ResourceType, Integer> requirements = task.getRequirements();
-        long duration = task.getEstimatedDuration();
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        if (checkRequirements(requirements)){
-            for (Resource resource : resources){
-                resource.createReservation(task, timeSpan);
-            }
-        } else {
-        	throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
-        }
-        // TODO is het niet beter om deze requirements vroeger te checken
+        getPlan(task).createReservation(resources, startTime);
     }
 
 
@@ -293,8 +349,7 @@ public class ResourceManager {
                 throw new IllegalArgumentException("A user must take a break");
             }
             Developer d = (Developer) user;
-            DeveloperResource r = new DeveloperResource(d.getName(), getResourceType("developer"), startBreak, d);
-            d.changeResource(r);
+            getResourceType("developer").createResourceFromUser(d.getName(), startBreak, d);
     	}
     }
 

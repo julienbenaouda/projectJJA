@@ -1,4 +1,4 @@
-package taskman.backend.importexport;
+package taskman.backend.importExport;
 
 /**
  * This class represents an ImportExportException. It is thrown when an exception occurs when importing or exporting data to a file.

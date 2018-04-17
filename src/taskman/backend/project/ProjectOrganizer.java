@@ -79,8 +79,4 @@ public class ProjectOrganizer {
     	return false;
     }
 
-    /**
-     * Accepts a visitor.
-     * @param v the visitor to accept.
-     */
 }

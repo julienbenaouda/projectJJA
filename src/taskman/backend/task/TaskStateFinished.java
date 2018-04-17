@@ -1,7 +1,6 @@
 package taskman.backend.task;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 /**
  * Class representing a finished task state.

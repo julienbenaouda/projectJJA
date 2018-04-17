@@ -2,8 +2,10 @@ package taskman.backend.resource;
 
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
 import taskman.backend.wrappers.ResourceTypeWrapper;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -158,6 +160,17 @@ public class ResourceType implements ResourceTypeWrapper {
 			throw new IllegalArgumentException("This resource already exists. Please try another name.");
 		}
 		Resource r = new Resource(name, this);
+		addResource(r);
+	}
+	
+	/**
+	 * creates a resource from a developer
+	 * @param name the name of the resource
+	 * @param startBreak the start time of the break of the developer
+	 * @param d the developer to link to the resource
+	 */
+	public void createResourceFromUser(String name, LocalTime startBreak, Developer d) {
+		Resource r = new DeveloperResource(name, this, startBreak, d);
 		addResource(r);
 	}
 

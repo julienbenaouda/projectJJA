@@ -1,6 +1,5 @@
 package taskman.backend.resource;
 
-import taskman.backend.task.Task;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.wrappers.ResourceWrapper;
 
@@ -10,15 +9,16 @@ import java.util.List;
 /**
  * Class representing a resource item.
  *
- * @author Jeroen Van Der Donckt, Julien Benaouda
+ * @author Jeroen Van Der Donckt, Julien Benaouda, Alexander Braekevelt
  */
 public class Resource implements ResourceWrapper {
 
     /**
-     * Creates a new resource item with the given resource type.
+     * Creates a new resource item with the given name and resource type.
      *
+	 * @param name the name of the resource item
      * @param type the resource type of the resource item
-     * @post a new resource item is created with given resource type
+     * @post a new resource item is created with given resource type and reservations is initialized to an empty ArrayList
      */
     public Resource(String name, ResourceType type){
     	this.name = name;
@@ -26,16 +26,22 @@ public class Resource implements ResourceWrapper {
         reservations = new ArrayList<>();
     }
 
-    private final String name;
+
+	/**
+	 * Represents the name of he resource.
+	 */
+	private final String name;
 
 	/**
 	 * Returns the name of the resource.
+	 *
 	 * @return the name of the resource.
 	 */
 	@Override
 	public String getName() {
     	return this.name;
     }
+
 
     /**
      * Represents the resource type of the resource item.
@@ -67,12 +73,12 @@ public class Resource implements ResourceWrapper {
 
 
 	/**
-	 * represents the list of reservations
+	 * Represents the list of reservations.
 	 */
 	private ArrayList<Reservation> reservations;
 
 	/**
-	 * Returns the list of reservations for this resource
+	 * Returns the list of reservations for this resource.
 	 *
 	 * @return the list of reservations for this resource
 	 */
@@ -81,7 +87,7 @@ public class Resource implements ResourceWrapper {
 	}
 
 	/**
-	 * Adds a reservation to the list of reservations
+	 * Adds a reservation to the list of reservations.
 	 *
 	 * @param r the reservation to add
 	 * @post the given reservation is added to this resource
@@ -90,18 +96,7 @@ public class Resource implements ResourceWrapper {
 	{
 		reservations.add(r);
 	}
-	
-	/**
-	 * Creates a new reservation for this resource.
-	 *
-	 * @param task the task to create a reservation for
-	 * @param timeSpan the time span of the reservation
-	 * @post a new reservation is created and added to this resource
-	 */
-	public void createReservation(Task task, TimeSpan timeSpan) {
-		Reservation r = new Reservation(task, this, timeSpan);
-		addReservation(r);
-	}
+
 
 	/**
 	 * Checks if a resource is available at the given time span.

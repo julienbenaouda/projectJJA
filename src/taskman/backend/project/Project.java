@@ -1,6 +1,7 @@
 package taskman.backend.project;
 
 
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
@@ -77,11 +78,11 @@ public class Project implements ProjectWrapper {
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project
      */
-    public void createTask(String name, String description, long estimatedDuration, double acceptableDeviation, User user) {
+    public void createTask(String name, String description, long estimatedDuration, double acceptableDeviation, ResourceManager resourceManager, User user) {
     	if(!(user instanceof ProjectManager)) {
     		throw new OperationNotPermittedException("you are not allowed to created tasks!");
     	}
-    	Task t = new Task(name, description, estimatedDuration, acceptableDeviation);
+    	Task t = new Task(name, description, estimatedDuration, acceptableDeviation, resourceManager);
     	addTask(t);
     }
 
@@ -235,5 +236,6 @@ public class Project implements ProjectWrapper {
 		}
 		return "finished";
 	}
+
 
 }
