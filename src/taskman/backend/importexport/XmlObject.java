@@ -1,15 +1,9 @@
-/**
- * 
- */
-package taskman.backend.importExport;
+package taskman.backend.importexport;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.OutputStream;
-import java.nio.file.Path;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
