@@ -210,13 +210,17 @@ public class Task implements TaskWrapper {
     /**
      * Updates the status of the task.
      *
+     * @param user the user to update the task status for
      * @param startTime the start time of the task
      * @param endTime the end time of the task
      * @param status the new status of the task
      * @post the time span and status of the task will be updated
      */
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) throws IllegalStateException, IllegalArgumentException {
-        getState().updateStatus(this, startTime, endTime, status);
+    public void updateStatus(User user, LocalDateTime startTime, LocalDateTime endTime, String status) throws IllegalStateException, IllegalArgumentException {
+        if (getPlan().isDeveloperFromPlan(user)) {
+            getState().updateStatus(this, startTime, endTime, status);
+        }
+        throw new IllegalArgumentException("The user must be a developer of the task.");
     }
 
 

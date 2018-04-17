@@ -1,6 +1,8 @@
 package taskman.backend.resource;
 
 import taskman.backend.task.Task;
+import taskman.backend.user.Developer;
+import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -106,6 +108,28 @@ public class Plan {
             Reservation reservation = new Reservation(resource, startTime, endTime);
             reservations.add(reservation);
         }
+    }
+
+
+    /**
+     * Returns if the user is a developer used in the plan.
+     *
+     * @param user the user we want to check
+     * @return true if the user is a developer for the plan, otherwise false
+     */
+    public boolean isDeveloperFromPlan(User user){
+        if (!(user instanceof Developer)){
+            return false;
+        }
+        Developer developer = (Developer) user;
+        for (Reservation reservation : getReservations()){
+            if (reservation.getResource() instanceof DeveloperResource){
+                if (((DeveloperResource)reservation.getResource()).getDeveloper() == developer){
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
 
