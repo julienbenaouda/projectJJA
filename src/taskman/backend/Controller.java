@@ -311,7 +311,6 @@ public class Controller {
     public void addRequirementToTask(String projectName, String taskName, String resourceType, int amount) {
         Project p = this.projectOrganizer.getProject(projectName);
         p.getTask(taskName).addRequirement(resourceManager, resourceManager.getResourceType(resourceType), amount);
-        resourceManager.testRequirements(p.getTask(taskName).getRequirements());
     }
 
     /**
