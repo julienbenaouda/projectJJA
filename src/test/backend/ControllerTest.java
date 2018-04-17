@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.*;
-import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;

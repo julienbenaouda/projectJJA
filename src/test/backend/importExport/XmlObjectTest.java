@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import taskman.Pair;
 import taskman.backend.Controller;
-import taskman.backend.importExport.XmlObject;
+import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;

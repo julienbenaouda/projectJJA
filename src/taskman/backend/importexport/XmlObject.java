@@ -1,23 +1,16 @@
-/**
- * 
- */
-package taskman.backend.importExport;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.OutputStream;
-import java.nio.file.Path;
+package taskman.backend.importexport;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 /**
  * @author Julien Benaouda, Alexander Braekevelt

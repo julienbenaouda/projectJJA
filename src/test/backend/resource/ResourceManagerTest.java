@@ -35,9 +35,9 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testGetStartingTimes() {
-		Task t = new Task("task", "test", 30l, 5.5, resourceManager);
+		Task t = new Task("task", "test", 30l, 5.5);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		Iterator<LocalDateTime> it = resourceManager.getStartingTimes(t, startTime);
+		Iterator<LocalDateTime> it = resourceManager.getStartingTimes(t.getPlan(), startTime, t.getEstimatedDuration());
 		for(int i = 0; i < 3; i++) {
 			LocalDateTime next = it.next();
 			assertFalse(next.isBefore(startTime));
@@ -47,7 +47,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testGetAvailableResources() {
-		Task task = new Task("task", "test", 25l, 5.5, resourceManager);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -58,13 +58,13 @@ public class ResourceManagerTest {
 		type.createResource("resource3");
 		task.addRequirement(resourceManager, type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		List<Resource> resources = resourceManager.getAvailableResources(task, startTime);
+		List<Resource> resources = resourceManager.getAvailableResources(task.getPlan(), startTime, task.getEstimatedDuration());
 		assertTrue(resources.size() == 1);
 	}
 
 	@Test
 	public void testGetAlternativeResources() {
-		Task task = new Task("task", "test", 25l, 5.5, resourceManager);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -76,14 +76,14 @@ public class ResourceManagerTest {
 		type.createResource("resource2");
 		task.addRequirement(resourceManager, type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		List<Resource> list = resourceManager.getAlternativeResources(type.getResource("resource1"), task, startTime);
+		List<Resource> list = resourceManager.getAlternativeResources(type.getResource("resource1"), startTime, task.getEstimatedDuration());
 		assertTrue(list.size() == 1);
 		assertEquals(type.getResource("resource2"), list.get(0));
 	}
 
 	@Test
 	public void testPlan() {
-		Task task = new Task("task", "test", 25l, 5.5, resourceManager);
+		Task task = new Task("task", "test", 25l, 5.5);
 		ResourceType type = new ResourceType("test");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
@@ -98,8 +98,8 @@ public class ResourceManagerTest {
 		resources.add(alternative);
 		task.addRequirement(resourceManager, type, 2);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		resourceManager.plan(task, resources, startTime);
-		List<Resource> list = resourceManager.getAvailableResources(task, startTime);
+		resourceManager.plan(task.getPlan(), resources, startTime);
+		List<Resource> list = resourceManager.getAvailableResources(task.getPlan(), startTime, task.getEstimatedDuration());
 		assertEquals(0, list.size());
 	}
 
@@ -126,9 +126,9 @@ public class ResourceManagerTest {
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
 		resourceManager.createConstraint(string);
-		Task task = new Task("task", "test", 30l, 5.5, resourceManager);
+		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 5);
-		assertEquals(1, resourceManager.getPlan(task).getRequirements().size());
+		assertEquals(1, task.getPlan().getRequirements().size());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -137,7 +137,7 @@ public class ResourceManagerTest {
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
 		resourceManager.createConstraint(string);
-		Task task = new Task("task", "test", 30l, 5.5, resourceManager);
+		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 4);
 	}
 }

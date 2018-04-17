@@ -1,7 +1,7 @@
 package taskman.backend;
 
-import taskman.backend.importExport.ImportExportException;
-import taskman.backend.importExport.XmlObject;
+import taskman.backend.importexport.ImportExportException;
+import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.Resource;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -195,7 +196,8 @@ public class Controller {
      * @post a new task is created and added to the project in the system.
      */
     public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
-        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, resourceManager, this.userManager.getCurrentUser());
+        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
+
     }
 
     /**
@@ -203,7 +205,7 @@ public class Controller {
      * @param task the task wrapper.
      */
     public Iterator<LocalDateTime> getStartingsTimes(TaskWrapper task) {
-        return this.resourceManager.getStartingTimes((Task) task, this.clock.getTime());
+        return this.resourceManager.getStartingTimes((Task) task, this.clock.getTime()); // TODO: @Jeroen
     }
 
     /**
@@ -213,7 +215,7 @@ public class Controller {
      * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
     public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAvailableResources((Task) task, startTime));
+        return new ArrayList<>(resourceManager.getAvailableResources((Task) task, startTime)); // TODO: @Jeroen
     }
 
     /**
@@ -224,7 +226,7 @@ public class Controller {
      * @return a list of resources as alternatives for the given resource and the given task at the given time.
      */
     public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, (Task) task, startTime));
+        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, (Task) task, startTime)); // TODO: @Jeroen
     }
 
     /**
@@ -234,7 +236,8 @@ public class Controller {
      * @param startTime the planned start time.
      */
     public void plan(TaskWrapper task, List<ResourceWrapper> resources, LocalDateTime startTime) {
-        // TODO
+        List<Resource> converted = resources.stream().map(r -> (Resource) r).collect(Collectors.toList());
+        ((Task) task).plan(this.resourceManager, this.userManager.getCurrentUser(), converted, startTime);
     }
 
     /**
@@ -323,8 +326,7 @@ public class Controller {
      * @post the start time, end time and status of the task will be updated.
      */
     public void updateTaskStatus(TaskWrapper task, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
-        // TODO: check if developer is member of task team!
-        ((Task) task).updateStatus(startTime, endTime, status, this.getCurrentUser());
+        ((Task) task).updateStatus(startTime, endTime, status, this.userManager.getCurrentUser());
     }
 
     /**

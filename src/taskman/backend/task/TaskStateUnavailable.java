@@ -50,7 +50,7 @@ public class TaskStateUnavailable extends TaskState {
      */
     @Override
     public void addRequirement(ResourceManager resourceManager, Task task, ResourceType resourceType, int amount){
-        resourceManager.addRequirement(task, resourceType, amount);
+        resourceManager.addRequirement(task.getPlan(), resourceType, amount);
         // TODO: moet task wel meegegeven worden
     }
 
@@ -65,7 +65,7 @@ public class TaskStateUnavailable extends TaskState {
      */
     @Override
     public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) {
-        resourceManager.plan(task, resources, startTime);
+        resourceManager.plan(task.getPlan(), resources, startTime);
         task.setState(new TaskStatePlanned());
         // TODO: moet task wel meegegeven worden
     }

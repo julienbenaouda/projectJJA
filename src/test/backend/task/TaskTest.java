@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.*;
 import taskman.backend.time.TimeSpan;
 
@@ -25,8 +26,10 @@ public class TaskTest {
 	private static Task dependency1_1_3;
 	private static Task alternative1_3d;
 
+
 	@BeforeClass
 	public static void setUp(){
+
 		long duration = 22;
 		double deviation = 0.15;
 		Task task = new Task("task", "Very interesting description.", duration, deviation);
@@ -219,8 +222,6 @@ public class TaskTest {
 
 		dependency1_2_1.setAlternative(alternative1_2_1);
 		dependency1_2_2.setAlternative(alternative1_2_2);
-
-		root.updateStatus(null, null, "failed");
 	}
 
 
@@ -424,7 +425,7 @@ public class TaskTest {
 		LocalDateTime starTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
-		invalidUpdateStatusTask.updateStatus(starTime, endTime, "inactive");
+		invalidUpdateStatusTask.updateStatus( starTime, endTime, "inactive");
 	}
 
 	@Test
@@ -516,26 +517,31 @@ public class TaskTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive1(){
+		root.updateStatus(null, null, "failed");
 		root.setAlternative(alternative1_3);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive2(){
+		root.updateStatus(null, null, "failed");
 		root.setAlternative(alternative1_2_1);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalSetAlternativeRecursive3(){
+		root.updateStatus(null, null, "failed");
 		root.setAlternative(alternative1_3d);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalAddDependencyRecursive1(){
+		root.updateStatus(null, null, "unavailable");
 		root.addDependency(dependency1_2);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalAddDependencyRecursive2(){
+		root.updateStatus(null, null, "unavailable");
 		root.addDependency(dependency1_1_3);
 	}
 

@@ -1,5 +1,6 @@
 package taskman.backend.task;
 
+import taskman.backend.resource.Plan;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
@@ -23,16 +24,16 @@ public class Task implements TaskWrapper {
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
-     * @post a new task is created with the given attributes and unavailable status
+     * @post a new task is created with the given attributes and unavailable status, empty dependencies list and a new plan
      */
-    public Task(String name, String description, long estimatedDuration, double acceptableDeviation, ResourceManager resourceManager) {
+    public Task(String name, String description, long estimatedDuration, double acceptableDeviation) {
         setName(name);
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
         setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
-        resourceManager.createPlan(this);
+        plan = new Plan(this);
     }
 
     /**
@@ -212,10 +213,14 @@ public class Task implements TaskWrapper {
      * @param startTime the start time of the task
      * @param endTime the end time of the task
      * @param status the new status of the task
+     * @param user the user to update the task status for
      * @post the time span and status of the task will be updated
      */
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status) throws IllegalStateException, IllegalArgumentException {
-        getState().updateStatus(this, startTime, endTime, status);
+    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) throws IllegalStateException, IllegalArgumentException {
+        if (getPlan().isDeveloperFromPlan(user)) {
+            getState().updateStatus(this, startTime, endTime, status);
+        }
+        throw new IllegalArgumentException("The user must be a developer of the task.");
     }
 
 
@@ -305,6 +310,22 @@ public class Task implements TaskWrapper {
         }
         dependencies.remove(dependency);
     }
+
+
+    /**
+     * Represents the plan of the task.
+     */
+    private Plan plan;
+
+    /**
+     * Returns the plan of the task.
+     *
+     * @return the plan of the task
+     */
+    public Plan getPlan(){
+        return plan;
+    }
+
 
     /**
      * Adds the given requirement to the task its requirements.
