@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.*;
 import taskman.backend.time.TimeSpan;
 
@@ -24,17 +25,21 @@ public class TaskTest {
 	private static Task dependency1_2;
 	private static Task dependency1_1_3;
 	private static Task alternative1_3d;
+	private static ResourceManager resourceManager;
+
 
 	@BeforeClass
 	public static void setUp(){
+		resourceManager = new ResourceManager();
+
 		long duration = 22;
 		double deviation = 0.15;
-		Task task = new Task("task", "Very interesting description.", duration, deviation);
+		Task task = new Task("task", "Very interesting description.", duration, deviation, resourceManager);
 
 		long estimatedDuration = 5;
 		double acceptableDeviation = 0.2356;
 
-		root = new Task("task", "root description", estimatedDuration, acceptableDeviation){
+		root = new Task("task", "root description", estimatedDuration, acceptableDeviation, resourceManager){
 			private TaskState state;
 
 			@Override
@@ -56,7 +61,7 @@ public class TaskTest {
 		};
 		root.updateStatus(null, null,"unavailable");
 
-		Task dependency1_1 = new Task ("task", "dependency 1_1 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_1 = new Task ("task", "dependency 1_1 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 
 			@Override
@@ -67,7 +72,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		dependency1_2 = new Task ("task", "dependency 1_2 description", estimatedDuration, acceptableDeviation){
+		dependency1_2 = new Task ("task", "dependency 1_2 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 
 			@Override
@@ -78,7 +83,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		Task dependency1_3 = new Task ("task", "dependency 1_3 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_3 = new Task ("task", "dependency 1_3 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 
 			@Override
@@ -94,9 +99,9 @@ public class TaskTest {
 		root.addDependency(dependency1_2);
 		root.addDependency(dependency1_3);
 
-		Task alternative1_1 = new Task ("task", "alternative 1_1 description", estimatedDuration, acceptableDeviation);
+		Task alternative1_1 = new Task ("task", "alternative 1_1 description", estimatedDuration, acceptableDeviation, resourceManager);
 		Task alternative1_2 = null;
-		alternative1_3 = new Task ("task", "alternative 1_3 description", estimatedDuration, acceptableDeviation){
+		alternative1_3 = new Task ("task", "alternative 1_3 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -107,7 +112,7 @@ public class TaskTest {
 			public Task getAlternative(){ return alternative; }
 		};
 
-		Task alternative1_3a = new Task ("task", "alternative 1_3a description", estimatedDuration, acceptableDeviation) {
+		Task alternative1_3a = new Task ("task", "alternative 1_3a description", estimatedDuration, acceptableDeviation, resourceManager) {
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -117,7 +122,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		Task alternative1_3b = new Task ("task", "alternative 1_3b description", estimatedDuration, acceptableDeviation){
+		Task alternative1_3b = new Task ("task", "alternative 1_3b description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -127,7 +132,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		Task alternative1_3c = new Task ("task", "alternative 1_3c description", estimatedDuration, acceptableDeviation){
+		Task alternative1_3c = new Task ("task", "alternative 1_3c description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -137,7 +142,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		alternative1_3d = new Task ("task", "alternative 1_3d description", estimatedDuration, acceptableDeviation);
+		alternative1_3d = new Task ("task", "alternative 1_3d description", estimatedDuration, acceptableDeviation, resourceManager);
 		alternative1_3.setAlternative(alternative1_3a);
 		alternative1_3a.setAlternative(alternative1_3b);
 		alternative1_3b.setAlternative(alternative1_3c);
@@ -147,7 +152,7 @@ public class TaskTest {
 		dependency1_2.setAlternative(alternative1_2);
 		dependency1_3.setAlternative(alternative1_3);
 
-		Task dependency1_1_1 = new Task ("task", "dependency 1_1_1 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_1_1 = new Task ("task", "dependency 1_1_1 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -157,7 +162,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		Task dependency1_1_2 = new Task ("task", "dependency 1_1_2 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_1_2 = new Task ("task", "dependency 1_1_2 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -167,7 +172,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		dependency1_1_3 = new Task ("task", "dependency 1_1_3 description", estimatedDuration, acceptableDeviation){
+		dependency1_1_3 = new Task ("task", "dependency 1_1_3 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -182,15 +187,15 @@ public class TaskTest {
 		dependency1_1.addDependency(dependency1_1_2);
 		dependency1_1.addDependency(dependency1_1_3);
 
-		Task alternative1_1_1 = new Task ("task", "alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
-		Task alternative1_1_2 = new Task ("task", "alternative 1_1_1 description", estimatedDuration, acceptableDeviation);
+		Task alternative1_1_1 = new Task ("task", "alternative 1_1_1 description", estimatedDuration, acceptableDeviation, resourceManager);
+		Task alternative1_1_2 = new Task ("task", "alternative 1_1_1 description", estimatedDuration, acceptableDeviation, resourceManager);
 		Task alternative1_1_3 = null;
 
 		dependency1_1_1.setAlternative(alternative1_1_1);
 		dependency1_1_2.setAlternative(alternative1_1_2);
 		dependency1_1_3.setAlternative(alternative1_1_3);
 
-		Task dependency1_2_1 = new Task ("task", "dependency 1_2_1 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_2_1 = new Task ("task", "dependency 1_2_1 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -200,7 +205,7 @@ public class TaskTest {
 			@Override
 			public Task getAlternative(){ return alternative; }
 		};
-		Task dependency1_2_2 = new Task ("task", "dependency 1_2_2 description", estimatedDuration, acceptableDeviation){
+		Task dependency1_2_2 = new Task ("task", "dependency 1_2_2 description", estimatedDuration, acceptableDeviation, resourceManager){
 			private Task alternative;
 			@Override
 			public void setAlternative(Task alternative){
@@ -214,8 +219,8 @@ public class TaskTest {
 		dependency1_2.addDependency(dependency1_2_1);
 		dependency1_2.addDependency(dependency1_2_2);
 
-		alternative1_2_1 = new Task ("task", "alternative 1_2_1 description", estimatedDuration, acceptableDeviation);
-		Task alternative1_2_2 = new Task ("\"alternative 1_2_2", "alternative 1_2_2 description", estimatedDuration, acceptableDeviation);
+		alternative1_2_1 = new Task ("task", "alternative 1_2_1 description", estimatedDuration, acceptableDeviation, resourceManager);
+		Task alternative1_2_2 = new Task ("\"alternative 1_2_2", "alternative 1_2_2 description", estimatedDuration, acceptableDeviation, resourceManager);
 
 		dependency1_2_1.setAlternative(alternative1_2_1);
 		dependency1_2_2.setAlternative(alternative1_2_2);
@@ -226,7 +231,7 @@ public class TaskTest {
 
 	@Test
 	public void testTask(){
-		Task task = new Task("task", "Very interesting description.", 22, 0.15);
+		Task task = new Task("task", "Very interesting description.", 22, 0.15, resourceManager);
 		Assert.assertEquals("task", task.getName());
 		Assert.assertEquals("The descriptions are not equal", "Very interesting description.", task.getDescription());
 		Assert.assertEquals("The estimated durations are not equal", 22, task.getEstimatedDuration());
@@ -356,7 +361,7 @@ public class TaskTest {
 
 	@Test
 	public void testDelay(){
-		Task task = new Task("task", "Description1", 20, 0.5){
+		Task task = new Task("task", "Description1", 20, 0.5, resourceManager){
 			private TaskState state;
 
 			private TimeSpan timeSpan;
@@ -391,13 +396,13 @@ public class TaskTest {
 
 	@Test (expected = IllegalStateException.class)
 	public void testIlegalStateDelay(){
-		Task task = new Task("task", "Descr", 14, 0.2315);
+		Task task = new Task("task", "Descr", 14, 0.2315, resourceManager);
 		task.getDelay();
 	}
 
 	@Test
 	public void testUpdateStatus(){
-		Task updateStatusTask = new Task("task", "Very inspiring description.", 33, 1.0589);
+		Task updateStatusTask = new Task("task", "Very inspiring description.", 33, 1.0589, resourceManager);
 		LocalDateTime starTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
@@ -411,7 +416,7 @@ public class TaskTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testInvalidEndTimeUpdateStatus(){
-		Task invalidUpdateStatusTask = new Task("task", "description 1234", 15, 0.13);
+		Task invalidUpdateStatusTask = new Task("task", "description 1234", 15, 0.13, resourceManager);
 		LocalDateTime endTime = LocalDateTime.now();
 		LocalDateTime startTime = LocalDateTime.now().plus(35, ChronoUnit.MINUTES);
 
@@ -420,7 +425,7 @@ public class TaskTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testInvalidStatusUpdateStatus(){
-		Task invalidUpdateStatusTask = new Task("task", "description 1234", 15, 0.13);
+		Task invalidUpdateStatusTask = new Task("task", "description 1234", 15, 0.13, resourceManager);
 		LocalDateTime starTime = LocalDateTime.now();
 		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
@@ -429,7 +434,7 @@ public class TaskTest {
 
 	@Test
 	public void testAlternative(){
-		Task setAlternative = new Task("task", "description of this task", 24, 1){
+		Task setAlternative = new Task("task", "description of this task", 24, 1, resourceManager){
 			private TaskState state;
 
 			@Override
@@ -450,21 +455,21 @@ public class TaskTest {
 		setAlternative.updateStatus(null, null, "failed");
 
 		Assert.assertEquals("There is already an alternative", null, setAlternative.getAlternative());
-		Task alternative = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
+		Task alternative = new Task("task", "DescRiPTioNNNNN", 245, 0.015, resourceManager);
 		setAlternative.setAlternative(alternative);
 		Assert.assertEquals("The alternative is not correctly set", alternative, setAlternative.getAlternative());
 	}
 
 	@Test (expected = IllegalStateException.class)
 	public void testInvaladSetAlternative(){
-		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
-		Task alternative = new Task("task", "alternative task", 2, 0.25);
+		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015, resourceManager);
+		Task alternative = new Task("task", "alternative task", 2, 0.25, resourceManager);
 		task.setAlternative(alternative);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testInvalidSetAlternativeToItself(){
-		Task setAlternative = new Task("task", "description of this task", 24, 1){
+		Task setAlternative = new Task("task", "description of this task", 24, 1, resourceManager){
 			private TaskState state;
 
 			@Override
@@ -490,10 +495,10 @@ public class TaskTest {
 
 	@Test
 	public void testAddDepedency_RemoveDepedency(){
-		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
+		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015, resourceManager);
 		Assert.assertEquals("The depedencies list is not empty", 0, task.getDependencies().size());
 
-		Task dependency = new Task("task", "Another interesting description.", 2, 0);
+		Task dependency = new Task("task", "Another interesting description.", 2, 0, resourceManager);
 		task.addDependency(dependency);
 		Assert.assertEquals("The depedencies list does not contains 1 depedency", 1, task.getDependencies().size());
 		Assert.assertEquals("The depedency in the list is not the newly added depedency", dependency, task.getDependencies().get(0));
@@ -504,13 +509,13 @@ public class TaskTest {
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalAddItself(){
-		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
+		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015, resourceManager);
 		task.addDependency(task);
 	}
 
 	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalRemoveDependency(){
-		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015);
+		Task task = new Task("task", "DescRiPTioNNNNN", 245, 0.015, resourceManager);
 		task.removeDependency(task);
 	}
 

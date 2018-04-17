@@ -1,7 +1,6 @@
 package taskman.backend.resource;
 
 import taskman.backend.constraint.ConstraintComponent;
-import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeParser;
 import taskman.backend.time.TimeSpan;
@@ -28,7 +27,6 @@ public class ResourceManager {
     public ResourceManager() {
         this.resourceTypes = new HashSet<>();
         this.constraints = new ArrayList<>();
-        this.plans = new HashSet<>();
         addResourceType("developer"); // This will add developer as a resource type
     }
 
@@ -76,7 +74,7 @@ public class ResourceManager {
     /**
      * Returns the constraints for the resource types.
      *
-     * @return the list of constraints for the resource types.
+     * @return the list of constraints for the resource types
      */
     private List<ConstraintComponent> getConstraint(){
         return constraints;
@@ -95,73 +93,27 @@ public class ResourceManager {
     /**
      * Creates a constraint from a given string.
      *
-     * @param string a string which represents a constraint.
-     * @post adds a constraint to the resource manager.
-     * @throws IllegalArgumentException if the string does not represent a valid constraint.
-     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
+     * @param string a string which represents a constraint
+     * @post adds a constraint to the resource manager
+     * @throws IllegalArgumentException if the string does not represent a valid constraint
+     * @throws NumberFormatException if a number in the string cannot be parsed to an integer
      */
     public void createConstraint(String string) {
         addConstraint(ConstraintComponent.parseConstraint(string, this));
     }
 
 
-    // TODO: Resource Manager moet de plans aanmaken
-    /**
-     * Represents the plans that are made for the resources for all the tasks.
-     */
-    private Set<Plan> plans;
-
-    /**
-     * Returns the plan associated with the given task
-     *
-     * @param task the task to get the plan from
-     * @return the plan associated with the given task
-     * @throws NoSuchElementException if there is no plan associated with the given task
-     */
-    public Plan getPlan(Task task) throws NoSuchElementException {
-        Iterator<Plan> iterator = plans.iterator();
-        while (iterator.hasNext()){
-            Plan plan = iterator.next();
-            if (plan.getTask() == task){
-                return plan;
-            }
-        }
-        throw new NoSuchElementException("There is no plan associated with the given task.");
-    }
-    
-    /**
-     * creates a new plan from the given task
-     * @param task the task to create a plan from
-     * @throws IllegalArgumentException when the given task is null
-     */
-    public void createPlan(Task task) {
-    	if(task == null) {
-    		throw new IllegalArgumentException("the task can't be null!");
-    	}
-    	Plan p = new Plan(task);
-    	addPlan(p);
-    }
-    
-    /**
-     * adds a plan to the list of plans
-     * @param plan the plan to add
-     */
-    private void addPlan(Plan plan) {
-    	plans.add(plan);
-    }
-
-
     /**
      * Returns a list of available resources for the given resource type at the given startTime for the given task.
      *
-     * @param task the task to get the available resources for.
-     * @param startTime the start time on which the resources needs to be planned.
-     * @return a list of available resources for the given resource type at the given startTime for the given task.
+     * @param plan the plan to get the available resources for
+     * @param startTime the start time on which the resources needs to be planned
+     * @param duration the duration of the reservation time
+     * @return a list of available resources for the given resource type at the given startTime for the given task
      */
-    public List<Resource> getAvailableResources(Task task, LocalDateTime startTime){
-        Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
-        long duration = task.getEstimatedDuration();
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+    public List<Resource> getAvailableResources(Plan plan, LocalDateTime startTime, long duration){
+        Map<ResourceType, Integer> requirements = plan.getRequirements();
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration)); // TODO: moet die verantwoordelijkheid voor time span creeren hier???
         List<Resource> availableResources = new ArrayList<>();
         for (ResourceType resourceType : requirements.keySet()){
             availableResources.addAll(resourceType.getAvailableResources(timeSpan));
@@ -174,12 +126,11 @@ public class ResourceManager {
      * Returns a list of resources as alternatives for the given resource and the given task at the given time.
      *
      * @param resource the resource to get a list of alternatives for
-     * @param task the task to get a list of alternatives for
      * @param startTime the start time on which the alternative resources will be planned
-     * @return a list of resources as alternatives for the given resource and the given task at the given time.
+     * @param duration the duration of the reservation time
+     * @return a list of resources as alternatives for the given resource and the given task at the given time
      */
-    public List<Resource> getAlternativeResources(Resource resource, Task task, LocalDateTime startTime){
-        long duration = task.getEstimatedDuration();
+    public List<Resource> getAlternativeResources(Resource resource,  LocalDateTime startTime, long duration){
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         List<Resource> r = resource.getType().getAvailableResources(timeSpan);
         Iterator<Resource> i = r.iterator();
@@ -195,20 +146,19 @@ public class ResourceManager {
     /**
      * Returns an iterator of the starting times (on or after the given time) for the given task.
      *
-     * @param task the task to get the starting times for
+     * @param plan the plan to get the starting times for
      * @param startTime the time on or before the starting times
+     * @param duration the duration of the reservations
      * @return an iterator of starting times (on or after the given time) for the given task
      * @throws NoSuchElementException if there is no next element in the iterator
      */
-    public Iterator<LocalDateTime> getStartingTimes(Task task, LocalDateTime startTime) throws NoSuchElementException {
-        // TODO: zorgen dat dit een iterator returnt
-        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
-
+    public Iterator<LocalDateTime> getStartingTimes(Plan plan, LocalDateTime startTime, long duration) throws NoSuchElementException {
+        Iterator<LocalDateTime> startingTimes = new Iterator<>() {
             LocalDateTime startingTime = TimeParser.roundUpLocalDateTime(startTime);
 
             @Override
             public boolean hasNext() {
-                Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
+                Map<ResourceType, Integer> requirements = plan.getRequirements();
                 boolean enoughResources = true;
                 for (ResourceType resourceType : requirements.keySet()){
                     if (resourceType.getNbOfResources() < requirements.get(resourceType)){
@@ -216,7 +166,6 @@ public class ResourceManager {
                     }
                 }
 
-                long duration = task.getEstimatedDuration();
                 boolean hasAvailablePeriod = false;
                 for (int day = 1; day <= 7; day++){
                     AvailabilityPeriod availabilityPeriod = new AvailabilityPeriod(LocalTime.MIN, LocalTime.MAX);
@@ -248,7 +197,7 @@ public class ResourceManager {
             @Override
             public LocalDateTime next() {
                 if (hasNext()) {
-                    while (!isAvailableStartingTime(task, startingTime)) {
+                    while (!isAvailableStartingTime(plan, startingTime, duration)) {
                         startingTime = startingTime.plusHours(1);
                     }
                     return startingTime;
@@ -262,13 +211,13 @@ public class ResourceManager {
     /**
      * Returns if the given time is an available starting time for the given task.
      *
-     * @param task the task to check the starting time for
+     * @param plan the plan to check the starting time for
      * @param startTime the starting time to check
+     * @param duration the duration of the reservations
      * @return true if the given time is available for the given task, otherwise false
      */
-    private boolean isAvailableStartingTime(Task task, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
-        Map<ResourceType, Integer> requirements = getPlan(task).getRequirements();
-        long duration = task.getEstimatedDuration();
+    private boolean isAvailableStartingTime(Plan plan, LocalDateTime startTime, long duration){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
+        Map<ResourceType, Integer> requirements = plan.getRequirements();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         for (ResourceType resourceType : requirements.keySet()){
             if (!resourceType.hasAvailableResources(timeSpan, requirements.get(resourceType))) {
@@ -309,15 +258,15 @@ public class ResourceManager {
     /**
      * Adds the given requirement to the plan of the corresponding task.
      *
-     * @param task the task to add the requirement to
+     * @param plan the task to add the requirement to
      * @param resourceType the resource type of the requirement
      * @param amount the amount of the requirement
      */
-    public void addRequirement(Task task, ResourceType resourceType, int amount){
-        Map<ResourceType, Integer> requirementsCopy = getPlan(task).getRequirements();
+    public void addRequirement(Plan plan, ResourceType resourceType, int amount){
+        Map<ResourceType, Integer> requirementsCopy = plan.getRequirements();
         requirementsCopy.put(resourceType, amount);
         if (checkRequirements(requirementsCopy)){ // TODO: moet deze check hier of bij Plan gebeuren?
-            getPlan(task).addRequirement(resourceType, amount);
+            plan.addRequirement(resourceType, amount);
         } else {
             throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
         }
@@ -326,13 +275,13 @@ public class ResourceManager {
     /**
      * Plans the given resources for the given task at the given start time.
      *
-     * @param task the task to plan the resources for
+     * @param plan the plan of the task to make reservations for
      * @param resources the resource to plan
      * @param startTime the starting time to plan the resources at
      * @post the resources are planned for the given task at the given start time
      */
-    public void plan(Task task, List<Resource> resources, LocalDateTime startTime) throws IllegalArgumentException {
-        getPlan(task).createReservation(resources, startTime);
+    public void plan(Plan plan, List<Resource> resources, LocalDateTime startTime) throws IllegalArgumentException {
+        plan.createReservation(resources, startTime);
     }
 
 
