@@ -330,7 +330,7 @@ public class Controller {
     public void updateTaskStatus(String projectName, String taskName, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
         // TODO: check if developer is member of task team!
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        task.updateStatus(startTime, endTime, status);
+        task.updateStatus((User) getCurrentUser(), startTime, endTime, status);
     }
 
     /**

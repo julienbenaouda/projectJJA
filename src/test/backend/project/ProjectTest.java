@@ -90,7 +90,7 @@ public class ProjectTest {
 	{
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, "finished");
+		t.updateStatus(null, creation, due, "finished"); // TODO
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("finished", p.getStatus(due));
 	}
@@ -100,7 +100,7 @@ public class ProjectTest {
 	{
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, "failed");
+		t.updateStatus(null, creation, due, "failed"); // TODO
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("failed", p.getStatus(due));
 	}
