@@ -3,6 +3,14 @@
  */
 package taskman.backend.importExport;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.OutputStream;
+import java.nio.file.Path;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
@@ -114,6 +122,43 @@ public class XmlObject {
 			throw new ImportExportException("Something went wrong during the parsing of the string: " +e.getMessage());
 		}
 		return obj;
+	}
+	
+	/**
+	 * saves the system to an XML file
+	 * @param path the path of the file
+	 * @throws ImportExportException 
+	 */
+	public void saveToFile(String path) throws ImportExportException {
+		try {
+			FileWriter f = new FileWriter(path);
+			BufferedWriter w = new BufferedWriter(f);
+			w.write(toXMLString());
+			w.close();
+		} catch(Exception e) {
+			throw new ImportExportException("Something went wrong writing the string to file: " +e.getMessage());
+		}
+	}
+	
+	/**
+	 * restores a string from a file and parses it
+	 * @param path the path to the file
+	 * @return an xml object containing all system data
+	 * @throws ImportExportException when something goes wrong during the parsing of the file
+	 */
+	public static XmlObject restoreFromFile(String path) throws ImportExportException {
+		try {
+			FileReader f = new FileReader(path);
+			BufferedReader r = new BufferedReader(f);
+			String line = null;
+			StringBuilder sb = new StringBuilder();
+			while((line = r.readLine()) != null) {
+				sb.append(line);
+			}
+			return fromXMLString(sb.toString());
+		} catch (Exception e) {
+			throw new ImportExportException("Something went wrong druing parsing of the file: " +e.getMessage());
+		}
 	}
 
 }
