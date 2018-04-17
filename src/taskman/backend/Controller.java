@@ -205,7 +205,7 @@ public class Controller {
     public void createTask(String projectName, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
         Project project = this.projectOrganizer.getProject(projectName);
         User user = this.userManager.getCurrentUser();
-        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, resourceManager, user);
+        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, user);
     }
 
     /**
@@ -217,7 +217,7 @@ public class Controller {
      */
     public Iterator<LocalDateTime> getStartingsTimes(String projectName, String taskName) {
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        return this.resourceManager.getStartingTimes(task, this.clock.getTime());
+        return this.resourceManager.getStartingTimes(task.getPlan(), this.clock.getTime(), task.getEstimatedDuration());
     }
 
     /**
@@ -228,7 +228,7 @@ public class Controller {
      */
     public List<ResourceWrapper> getAvailableResources(String projectName, String taskName, LocalDateTime startTime) {
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        return new ArrayList<>(resourceManager.getAvailableResources(task, startTime));
+        return new ArrayList<>(resourceManager.getAvailableResources(task.getPlan(), startTime, task.getEstimatedDuration()));
     }
 
     /**
@@ -242,7 +242,7 @@ public class Controller {
     public List<? extends ResourceWrapper> getAlternativeResources(String projectName, String taskName, ResourceWrapper wrapper, LocalDateTime startTime) {
         Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
         Resource resource = (Resource) wrapper;
-        return resourceManager.getAlternativeResources(resource, task, startTime);
+        return resourceManager.getAlternativeResources(resource, startTime, task.getEstimatedDuration());
     }
 
     /**
