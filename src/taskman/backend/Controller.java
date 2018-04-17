@@ -99,8 +99,8 @@ public class Controller {
      * Returns a list of all users.
      * @return a list of UserWrappers.
      */
-    public List<? extends UserWrapper> getUsers() {
-        return this.userManager.getUsers();
+    public List<UserWrapper> getUsers() {
+        return new ArrayList<>(this.userManager.getUsers());
     }
 
     /**

@@ -102,6 +102,21 @@ public class SelectionSection<Type> extends Section {
 	}
 
 	/**
+	 * Add a list of options to the selection, one for the names and one for the objects.
+	 * @param optionNames the names of options.
+	 * @param optionObjects the objects of options.
+	 * @throws NullPointerException if an argument is null.
+	 */
+	public void addOptions(List<String> optionNames, List<Type> optionObjects) {
+		if (optionNames == null || optionObjects == null) {
+			throw new NullPointerException("Options cannot be null!");
+		}
+		for (int i = 0; i < Math.min(optionNames.size(), optionObjects.size()); i++) {
+			addOption(optionNames.get(i), optionObjects.get(i));
+		}
+	}
+
+	/**
 	 * Shows the selection.
 	 * @throws Cancel if the user cancels the section.
 	 */
