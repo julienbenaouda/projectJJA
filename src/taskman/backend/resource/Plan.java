@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class representing a plan.
@@ -55,15 +56,15 @@ public class Plan {
     /**
      * Represents the requirements of the plan.
      */
-    private HashMap<ResourceType, Integer> requirements;
+    private Map<ResourceType, Integer> requirements;
 
     /**
      * Returns the requirements of the plan.
      *
      * @return the requirements of the plan
      */
-    public HashMap<ResourceType, Integer> getRequirements(){
-        return (HashMap<ResourceType, Integer>) requirements.clone();
+    public Map<ResourceType, Integer> getRequirements(){
+        return  new HashMap<>(requirements);
     }
 
     /**
@@ -106,5 +107,6 @@ public class Plan {
             reservations.add(reservation);
         }
     }
+
 
 }
