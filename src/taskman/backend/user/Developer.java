@@ -26,36 +26,4 @@ public class Developer extends User {
 	public String getUserType() {
 		return "developer";
 	}
-
-	/**
-	 * @return the Resource of the developer
-	 */
-	public DeveloperResource getResource()
-	{
-		return resource;
-	}
-	
-	/**
-	 * changes the Resource of the developer to thee given Resource
-	 * @param resource the Resource to change the developer to
-	 * @throws IllegalArgumentException when the Resource is not "developer" // TODO: gebeurt nooit? + check null?
-	 */
-	public void changeResource(DeveloperResource resource) {
-		setResource(resource);
-	}
-	
-	/**
-	 * sets the Resource of the developer to the given Resource
-	 * @param resource the Resource to set the developer to
-	 */
-	private void setResource(DeveloperResource resource)
-	{
-		this.resource = resource;
-	}
-	
-	/**
-	 * represents the Resource of the developer
-	 */
-	private DeveloperResource resource;
-
 }

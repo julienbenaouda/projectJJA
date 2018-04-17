@@ -320,7 +320,8 @@ public class ResourceManager {
     public void removeResourceForUser(User user) {
         if (user.getUserType().equals("developer")) {
             Developer d = (Developer) user;
-            getResourceType("developer").removeResource(d.getResource());
+            getResourceType("developer").removeResource(getResourceType("developer").getResource(user.getName()));
+            // TODO: is dit wel goede code
         }
     }
     
