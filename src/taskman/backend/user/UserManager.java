@@ -94,15 +94,13 @@ public class UserManager {
 
 	/**
 	 * Removes a user from the list of users.
-	 * @param name the name of the user.
+	 * @param user the user.
 	 * @param password the password of the user.
 	 * @post a user is removed from the list of users.
-	 * @throws IllegalArgumentException when an user with the given name can't be found.
 	 * @throws IllegalArgumentException if the password is incorrect.
 	 * @throws IllegalStateException if the resource for the user cannot be removed.
 	 */
-	public void removeUser(String name, String password, ResourceManager resourceManager) throws IllegalArgumentException, IllegalStateException {
-		User user = getUser(name);
+	public void removeUser(User user, String password, ResourceManager resourceManager) throws IllegalArgumentException, IllegalStateException {
 		if (!user.getPassword().equals(password)) throw new IllegalArgumentException("Invalid password!");
 		resourceManager.removeResourceForUser(user);
 		users.remove(user);
@@ -161,9 +159,9 @@ public class UserManager {
 	 */
 	public void login(String name, String password) throws IllegalArgumentException
 	{
-		User u = getUser(name);
-		if(password.equals(u.getPassword())) {
-			setCurrentUser(u);
+		User user = getUser(name);
+		if(password.equals(user.getPassword())) {
+			setCurrentUser(user);
 		} else {
 			throw new IllegalArgumentException("The password for user " + name +" is incorrect. Please try again.");
 		}

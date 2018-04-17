@@ -1,18 +1,13 @@
 package taskman.frontend;
 
-import taskman.Pair;
 import taskman.backend.Controller;
 import taskman.backend.importExport.ImportExportException;
 import taskman.backend.time.TimeParser;
-import taskman.backend.wrappers.ProjectWrapper;
-import taskman.backend.wrappers.ResourceWrapper;
-import taskman.backend.wrappers.TaskWrapper;
-import taskman.backend.wrappers.UserWrapper;
+import taskman.backend.wrappers.*;
 import taskman.frontend.sections.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -140,7 +135,7 @@ public class UserInterface {
 		selection.show();
 		FormSection form = new FormSection(false, "Password:");
 		form.show();
-		controller.removeUser(selection.getAnswerObject().getName(), form.getAnswer(0));
+		controller.removeUser(selection.getAnswerObject(), form.getAnswer(0));
 		TextSection success = new TextSection("User removed successfully!", false);
 		success.show();
 	}
@@ -155,7 +150,7 @@ public class UserInterface {
 		title.show();
 		FormSection form = new FormSection(false, "Path to file:");
 		form.show();
-		this.controller = Controller.importSystem(form.getAnswer(0));
+		this.controller.importSystem(form.getAnswer(0));
 		Section success = new TextSection("Imported successfully!", false);
 		success.show();
 	}
@@ -180,7 +175,7 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void loggedInMenu() throws Cancel {
-		TitleSection title = new TitleSection("main menu");
+		TitleSection title = new TitleSection("Welcome " + controller.getCurrentUser().getName() + "!");
 		MenuSection menu = new MenuSection("logout");
 		menu.addOption("show projects and tasks", this::showProjectsAndTasks);
 		menu.addOption("create project", this::createProject);
@@ -189,9 +184,9 @@ public class UserInterface {
 		menu.addOption("update task status", this::updateTaskStatus);
 		menu.addOption("add alternative to task", this::addAlternativeToTask);
 		menu.addOption("add dependency to task", this::addDependencyToTask);
-		menu.addOption("add resource type", this::addResourceType);
-		menu.addOption("add resource type constraint", this::addConstraint);
-		menu.addOption("add resource", this::addResource);
+		menu.addOption("create resource type", this::createResourceType);
+		menu.addOption("create resource type constraint", this::createConstraint);
+		menu.addOption("create resource", this::createResource);
 		menu.addOption("show system time", this::showTime);
 		menu.addOption("advance system time", this::advanceTime);
 		while (true) {
@@ -239,7 +234,7 @@ public class UserInterface {
 		title.show();
 		FormSection form = new FormSection(true, "Name:", "Description:", "Due time (dd/mm/yyyy hh:mm):");
 		form.show();
-		controller.createProject(form.getAnswer(0), form.getAnswer(1), form.getAnswer(2));
+		controller.createProject(form.getAnswer(0), form.getAnswer(1), TimeParser.convertStringToLocalDateTime(form.getAnswer(2)));
 		Section success = new TextSection("project created successfully!", false);
 		success.show();
 	}
@@ -260,7 +255,7 @@ public class UserInterface {
 		title.show();
 		form.show();
 		controller.createTask(
-				project.getName(),
+				project,
 				form.getAnswer(0),
 				form.getAnswer(1),
 				Long.parseLong(form.getAnswer(2)),
@@ -275,25 +270,23 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void planTask() throws Cancel {
-		TitleSection taskTitle = new TitleSection("select unplanned task to plan");
+		TitleSection taskTitle = new TitleSection("select task to plan");
 		taskTitle.show();
-		SelectionSection<Pair<ProjectWrapper, TaskWrapper>> selection1 = new SelectionSection<>(true);
-		for (ProjectWrapper project: controller.getProjects()) {
+		SelectionSection<TaskWrapper> selection1 = new SelectionSection<>(true);
+		for (ProjectWrapper project: controller.getProjects()) { // TODO: controller.getTasksToPlan()
 			for (TaskWrapper task: project.getTasks()) {
 				if (task.getStatus().equals("unavailable")) {
-					selection1.addOption(project.getName() + " - " + task.getName(), new Pair<>(project, task));
+					selection1.addOption(project.getName() + " - " + task.getName(), task);
 				}
 			}
 		}
 		selection1.show();
-		Pair<ProjectWrapper, TaskWrapper> pair = selection1.getAnswerObject();
-		ProjectWrapper project = pair.getFirst();
-		TaskWrapper task = pair.getSecond();
+		TaskWrapper task = selection1.getAnswerObject();
 
 		TitleSection timeTitle = new TitleSection("select start time");
 		timeTitle.show();
 		SelectionSection<LocalDateTime> timeSelection = new SelectionSection<>(true);
-		Iterator<LocalDateTime> times = controller.getStartingsTimes(project.getName(), task.getName());
+		Iterator<LocalDateTime> times = controller.getStartingsTimes(task);
 		for (int i = 1; i <= 3 && times.hasNext(); i++) {
 			LocalDateTime nextTime = times.next();
 			timeSelection.addOption(TimeParser.convertLocalDateTimeToString(nextTime), nextTime);
@@ -301,9 +294,9 @@ public class UserInterface {
 		timeSelection.show();
 		LocalDateTime startTime = timeSelection.getAnswerObject();
 
-		List<ResourceWrapper> suggestion = controller.getAvailableResources(project.getName(), task.getName(), startTime);
+		List<ResourceWrapper> suggestion = controller.getAvailableResources(task, startTime);
 		ResourceWrapper resourceToChange;
-		while (true) {
+		do {
 			TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
 			resourceTitle.show();
 			SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
@@ -314,13 +307,11 @@ public class UserInterface {
 			resourceSelection.show();
 			resourceToChange = resourceSelection.getAnswerObject();
 
-			if (resourceToChange == null) {
-				break;
-			} else {
+			if (resourceToChange != null) {
 				TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
 				alternativeResourceTitle.show();
 				SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
-				for (ResourceWrapper alternative: controller.getAlternativeResources(project.getName(), task.getName(), resourceToChange, startTime)) {
+				for (ResourceWrapper alternative: controller.getAlternativeResources(task, resourceToChange, startTime)) {
 					alternativeSelection.addOption(alternative.getName() + " ("+ alternative.getType().getName() + ")", alternative);
 				}
 				alternativeSelection.show();
@@ -328,14 +319,9 @@ public class UserInterface {
 				suggestion.remove(resourceToChange);
 				suggestion.add(alternative);
 			}
-		}
+		} while (resourceToChange != null);
 
-		List<Pair<String, String>> resourceInfo = new ArrayList<>();
-		for (ResourceWrapper resource: suggestion) {
-			resourceInfo.add(new Pair<>(resource.getType().getName(), resource.getName()));
-		}
-		controller.plan(project.getName(), task.getName(), resourceInfo, startTime);
-
+		controller.plan(task, suggestion, startTime);
 		TextSection success = new TextSection("Task planned successfully!", false);
 		success.show();
 	}
@@ -347,22 +333,21 @@ public class UserInterface {
 	private void updateTaskStatus() throws Cancel {
 		TitleSection titleSelection1 = new TitleSection("select an available task");
 		titleSelection1.show();
-		SelectionSection<Pair<ProjectWrapper, TaskWrapper>> selection1 = new SelectionSection<>(true);
+		SelectionSection<TaskWrapper> selection1 = new SelectionSection<>(true);
 		for (ProjectWrapper project: controller.getProjects()) {
-			for (TaskWrapper task: project.getTasks()) {
+			for (TaskWrapper task: project.getTasks()) { // TODO: controller.getTasksToUpdate()
 				if (task.getStatus().equals("available")) {
-					selection1.addOption(project.getName() + " - " + task.getName(), new Pair<>(project, task));
+					selection1.addOption(project.getName() + " - " + task.getName(), task);
 				}
 			}
 		}
 		selection1.show();
-		Pair<ProjectWrapper, TaskWrapper> pair = selection1.getAnswerObject();
-		ProjectWrapper project = pair.getFirst();
-		TaskWrapper task = pair.getSecond();
+		TaskWrapper task = selection1.getAnswerObject();
 
 		TitleSection titleSelection2 = new TitleSection("select a task status");
 		titleSelection2.show();
-		SelectionSection selection2 = new SelectionSection(true);
+		SelectionSection selection2 = new SelectionSection(true); // TODO: controller.getNewStatusOptions
+		selection2.addOption("executing");
 		selection2.addOption("failed");
 		selection2.addOption("finished");
 		selection2.show();
@@ -376,8 +361,7 @@ public class UserInterface {
 		form.show();
 
 		controller.updateTaskStatus(
-				project.getName(),
-				task.getName(),
+				task,
 				TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),
 				TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),
 				selection2.getAnswer()
@@ -392,7 +376,7 @@ public class UserInterface {
 		ProjectWrapper project = selectProject(true, "select project of task");
 		TaskWrapper task = selectTask(true, "select task", project);
 		TaskWrapper alternative = selectTask(true, "select alternative task", project);
-		controller.addAlternativeToTask(project.getName(), task.getName(), alternative.getName());
+		controller.addAlternativeToTask(task, alternative);
 		Section success = new TextSection("Alternative added successfully!", false);
 		success.show();
 	}
@@ -405,7 +389,7 @@ public class UserInterface {
 		ProjectWrapper project = selectProject(true, "select project of task");
 		TaskWrapper task = selectTask(true, "select task", project);
 		TaskWrapper dependency = selectTask(true, "select dependent task", project);
-		controller.addDependencyToTask(project.getName(), task.getName(), dependency.getName());
+		controller.addDependencyToTask(task, dependency);
 		Section success = new TextSection("Dependency added successfully!", false);
 		success.show();
 	}
@@ -414,25 +398,27 @@ public class UserInterface {
 	 * Shows the resource type creation form.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void addResourceType() throws Cancel {
+	private void createResourceType() throws Cancel {
 		TitleSection title = new TitleSection("create resource type");
 		title.show();
-		FormSection form = new FormSection(false, "");
+		FormSection form = new FormSection(false, "Name:");
 		form.show();
-
+		controller.createResourceType(form.getAnswer(0));
+		Section success = new TextSection("Resource type created successfully!", false);
+		success.show();
 	}
 
 	/**
 	 * Shows the constraint creation form.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void addConstraint() throws Cancel {
+	private void createConstraint() throws Cancel {
 		TitleSection title = new TitleSection("create constraint");
 		title.show();
 		FormSection form = new FormSection(false, "Constraint:");
 		form.show();
-		controller.addConstraint(form.getAnswer(0));
-		Section success = new TextSection("Constraint added successfully!", false);
+		controller.createConstraint(form.getAnswer(0));
+		Section success = new TextSection("Constraint created successfully!", false);
 		success.show();
 	}
 
@@ -440,8 +426,24 @@ public class UserInterface {
 	 * Shows the resource creation form.
 	 * @throws Cancel when the user cancels the section.
 	 */
-	private void addResource() {
-		// TODO
+	private void createResource() throws Cancel {
+		TitleSection title1 = new TitleSection("select resource type");
+		title1.show();
+		SelectionSection<ResourceTypeWrapper> selection = new SelectionSection<>(true);
+		for (ResourceTypeWrapper type: this.controller.getResourceTypes()) {
+			selection.addOption(type.getName(), type);
+		}
+		selection.show();
+		ResourceTypeWrapper type = selection.getAnswerObject();
+
+		TitleSection title2 = new TitleSection("create resource");
+		title2.show();
+		FormSection form = new FormSection(false, "Name:");
+		form.show();
+
+		controller.createResource(type, form.getAnswer(0));
+		Section success = new TextSection("Resource created successfully!", false);
+		success.show();
 	}
 
 	/**
@@ -451,7 +453,9 @@ public class UserInterface {
 	private void showTime() throws Cancel {
 		TitleSection titleInfo = new TitleSection("system time");
 		titleInfo.show();
-		Section info = new TextSection("The system time is: " + controller.getTime(), true);
+		Section info = new TextSection(
+				"The system time is: " + TimeParser.convertLocalDateTimeToString(controller.getTime()
+				), true);
 		info.show();
 	}
 
@@ -480,8 +484,9 @@ public class UserInterface {
 		titleProjectSelection.show();
 		SelectionSection<ProjectWrapper> projectSelection = new SelectionSection<>(withCancel);
 		for (ProjectWrapper project : controller.getProjects()) {
-			String status = controller.getProjectStatus(project.getName());
-			projectSelection.addOption(project.getName() + " (status: " + status + ")", project);
+			projectSelection.addOption(
+					project.getName() + " (status: " + controller.getProjectStatus(project) + ")"
+					, project);
 		}
 		projectSelection.show();
 		return projectSelection.getAnswerObject();

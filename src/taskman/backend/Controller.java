@@ -1,20 +1,18 @@
 package taskman.backend;
 
-import taskman.Pair;
 import taskman.backend.importExport.ImportExportException;
+import taskman.backend.importExport.XmlObject;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
-import taskman.backend.time.TimeParser;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
-import taskman.backend.wrappers.ProjectWrapper;
-import taskman.backend.wrappers.ResourceWrapper;
-import taskman.backend.wrappers.UserWrapper;
+import taskman.backend.wrappers.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -124,23 +122,21 @@ public class Controller {
     }
 
     /**
-     * Adds a new user to the system.
-     * @param name the name of the user.
+     * Removes a user from the system.
+     * @param user the user wrapper.
      * @param password the password of the user.
-     * @post a new user is added to the system.
-     * @throws IllegalArgumentException when an user with the given name can't be found.
+     * @post a user is removed from the system.
      * @throws IllegalArgumentException if the password is incorrect.
      * @throws IllegalStateException if the resource for the user cannot be removed.
      */
-    public void removeUser(String name, String password) throws IllegalArgumentException, IllegalStateException {
-        this.userManager.removeUser(name, password, resourceManager);
+    public void removeUser(UserWrapper user, String password) throws IllegalArgumentException, IllegalStateException {
+        this.userManager.removeUser((User) user, password, resourceManager);
     }
 
     /**
      * Logs in with the given username and password.
      * @param name the name of the user to log in.
      * @param password the password of the user to log in with.
-     * @throws IllegalArgumentException when an user with the given name can't be found.
      * @throws IllegalArgumentException when the password for the user with the given name is incorrect.
      * @post the user is logged in and is now used in the system.
      */
@@ -165,12 +161,12 @@ public class Controller {
 
     /**
      * Return the status (active, finished, failed) of the project with the given name.
-     * @param projectname a String.
+     * @param project a ProjectWrapper.
      * @return a String.
      * @throws IllegalArgumentException if no project is found with the given name.
      */
-    public String getProjectStatus(String projectname) throws IllegalArgumentException {
-        return this.projectOrganizer.getProject(projectname).getStatus(this.clock.getTime());
+    public String getProjectStatus(ProjectWrapper project) throws IllegalArgumentException {
+        return ((Project) project).getStatus(this.clock.getTime());
     }
 
     /**
@@ -182,77 +178,62 @@ public class Controller {
      * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
-    public void createProject(String name, String description, String dueTime) throws DateTimeParseException, IllegalArgumentException {
-        LocalDateTime creationTimeObject = clock.getTime();
-        LocalDateTime dueTimeObject = TimeParser.convertStringToLocalDateTime(dueTime);
-        User user = this.userManager.getCurrentUser();
-        this.projectOrganizer.createProject(name, description, creationTimeObject, dueTimeObject, user);
+    public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException {
+        this.projectOrganizer.createProject(name, description, clock.getTime(), dueTime, this.userManager.getCurrentUser());
     }
 
     /**
      * Adds a task with the given properties.
-     * @param projectName the project name.
+     * @param project the project wrapper.
      * @param taskName the name of the task.
      * @param description the description of the task.
      * @param estimatedDuration the estimated duration of the task as Long.
      * @param acceptableDeviation the acceptable deviation of the task as Double.
-     * @throws IllegalArgumentException if no project is found with the given name.
      * @throws OperationNotPermittedException if no user is logged in.
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @throws NumberFormatException if estimatedDuration is not a Long or acceptableDeviation is not a Double.
      * @post a new task is created and added to the project in the system.
      */
-    public void createTask(String projectName, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
-        Project project = this.projectOrganizer.getProject(projectName);
-        User user = this.userManager.getCurrentUser();
-        project.createTask(taskName,description, estimatedDuration,acceptableDeviation, resourceManager, user);
+    public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
+        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, resourceManager, this.userManager.getCurrentUser());
     }
 
     /**
      * Returns an iterator of the starting times for the given task.
-     * @param projectName the project of the task.
-     * @param taskName the name of the task.
-     * @throws IllegalArgumentException if no project is found with the given name.
-     * @throws IllegalArgumentException if no task exists with the given name.
+     * @param task the task wrapper.
      */
-    public Iterator<LocalDateTime> getStartingsTimes(String projectName, String taskName) {
-        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        return this.resourceManager.getStartingTimes(task, this.clock.getTime());
+    public Iterator<LocalDateTime> getStartingsTimes(TaskWrapper task) {
+        return this.resourceManager.getStartingTimes((Task) task, this.clock.getTime());
     }
 
     /**
      * Returns a list of available resources for the given resource type at the given startTime for the given task.
-     * @param taskName the name of the task to get the available resources for.
+     * @param task the task to get the available resources for.
      * @param startTime the start time on which the resources needs to be planned.
      * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
-    public List<ResourceWrapper> getAvailableResources(String projectName, String taskName, LocalDateTime startTime) {
-        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        return new ArrayList<>(resourceManager.getAvailableResources(task, startTime));
+    public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
+        return new ArrayList<>(resourceManager.getAvailableResources((Task) task, startTime));
     }
 
     /**
      * Returns a list of resources as alternatives for the given resource.
-     * @param projectName the name of the project of the task.
-     * @param taskName the name of the task.
-     * @param wrapper a resource wrapper to search alternatives for.
+     * @param task the task.
+     * @param resource a resource wrapper to search alternatives for.
      * @param startTime the start time on which the resources needs to be planned.
      * @return a list of resources as alternatives for the given resource and the given task at the given time.
      */
-    public List<? extends ResourceWrapper> getAlternativeResources(String projectName, String taskName, ResourceWrapper wrapper, LocalDateTime startTime) {
-        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        Resource resource = (Resource) wrapper;
-        return resourceManager.getAlternativeResources(resource, task, startTime);
+    public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
+        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, (Task) task, startTime));
     }
 
     /**
      * Plans a task for execution.
-     * @param projectName the name of the project of the task.
-     * @param taskName the name of the task.
+     * @param task the task.
      * @param resources a list of resource types and resource names.
      * @param startTime the planned start time.
      */
-    public void plan(String projectName, String taskName, List<Pair<String, String>> resources, LocalDateTime startTime) {
+    public void plan(TaskWrapper task, List<ResourceWrapper> resources, LocalDateTime startTime) {
         // TODO
     }
 
@@ -263,104 +244,112 @@ public class Controller {
      * @throws IllegalArgumentException if the string does not represent a valid constraint.
      * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
      */
-    public void addConstraint(String string) {
+    public void createConstraint(String string) {
         this.resourceManager.createConstraint(string);
     }
 
     /**
+     * Returns a list of the resource types.
+     * @return a list of the resource types.
+     */
+    public List<ResourceTypeWrapper> getResourceTypes() {
+        return new ArrayList<>(this.resourceManager.getResourceTypes());
+    }
+
+    /**
+     * Creates and adds the resource type with the given name to the resource types.
+     * @param name the name of the resource type
+     * @post a resource type with given name is created and added to the resource types
+     */
+    public void createResourceType(String name) {
+        this.resourceManager.createResourceType(name);
+    }
+
+    /**
+     * Creates a new resource with given name.
+     * @param type the type of the resource.
+     * @param name the name of the resource.
+     * @throws IllegalArgumentException when the name is null or already exists.
+     */
+    public void createResource(ResourceTypeWrapper type, String name) {
+        ((ResourceType) type).createResource(name);
+    }
+
+    /**
      * Sets the alternative of the given task to the given alternative task
-     * @param projectName the name of the project which holds both tasks
-     * @param taskName the name of the task
-     * @param alternativeTaskName the name of the alternative task
-     * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task or its alternative.
+     * @param task the task.
+     * @param alternative the alternative task.
      * @throws IllegalStateException the task must be failed to set the alternative task.
      * @throws IllegalArgumentException the alternative may not be the same task or its alternative or
      *                                  one of its dependencies or one of these alternatives recursively.
      * @post the alternative task of the task is set to the given task.
      */
-    public void addAlternativeToTask(String projectName, String taskName, String alternativeTaskName) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
-        Project project = this.projectOrganizer.getProject(projectName);
-        project.getTask(taskName).setAlternative(project.getTask(alternativeTaskName));
+    public void addAlternativeToTask(TaskWrapper task, TaskWrapper alternative) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
+        ((Task) task).setAlternative((Task) alternative);
     }
 
     /**
      * Adds the given dependency to the given task
-     * @param projectName the name of the project which holds both tasks.
-     * @param taskName the index of the task.
-     * @param dependencyTaskName the index of the dependency.
-     * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task or the dependency.
+     * @param task the task.
+     * @param dependency the dependency.
      * @throws IllegalArgumentException when the dependency is the task or its alternative or
      *                                  one of its dependencies or one of these alternatives recursively.
      * @throws IllegalStateException if the task is already finished or failed.
      * @post the dependency is added to the task.
      */
-    public void addDependencyToTask(String projectName, String taskName, String dependencyTaskName) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
-        Project project = this.projectOrganizer.getProject(projectName);
-        project.getTask(taskName).addDependency(project.getTask(dependencyTaskName));
+    public void addDependencyToTask(TaskWrapper task, TaskWrapper dependency) throws IllegalArgumentException, IndexOutOfBoundsException, IllegalStateException {
+        ((Task) task).addDependency((Task) dependency);
     }
 
     /**
      * adds a requirement to a task
-     * @param projectName the name of the project
-     * @param taskName the name of the task
-     * @param resourceType the type of the resource
-     * @param amount the amount of resources needed
+     * @param task the task.
+     * @param resourceType the type of the resource.
+     * @param amount the amount of resources needed.
      */
-    public void addRequirementToTask(String projectName, String taskName, String resourceType, int amount) {
-        Project p = this.projectOrganizer.getProject(projectName);
-        p.getTask(taskName).addRequirement(resourceManager, resourceManager.getResourceType(resourceType), amount);
+    public void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount) {
+        ((Task) task).addRequirement(resourceManager, (ResourceType) resourceType, amount);
     }
 
     /**
      * Updates the status of the given task.
-     * @param projectName the name of the project of the task.
-     * @param taskName the name of the task to update.
+     * @param task the task to update.
      * @param startTime the start time of the task.
      * @param endTime the end time of the task.
-     * @param status the new status of the task?
+     * @param status the new status of the task.
      * @throws DateTimeParseException if the start or end time cannot be parsed.
      * @throws IllegalArgumentException if the status does not exist.
-     * @throws IllegalArgumentException if the project does not exist.
-     * @throws IndexOutOfBoundsException if the project does not contain the task.
      * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid.
-     * @post the start time, end time and status of the task will be updated
+     * @post the start time, end time and status of the task will be updated.
      */
-    public void updateTaskStatus(String projectName, String taskName, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
+    public void updateTaskStatus(TaskWrapper task, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
         // TODO: check if developer is member of task team!
-        Task task = this.projectOrganizer.getProject(projectName).getTask(taskName);
-        task.updateStatus(startTime, endTime, status);
+        ((Task) task).updateStatus(startTime, endTime, status, this.getCurrentUser());
     }
 
     /**
      * Save the status of the system to a file.
      * @param path a String with a location in the file system.
+     * @post the system is saved to the file.
      * @throws ImportExportException if the system can't be saved to the file.
      */
     public void exportSystem(String path) throws ImportExportException {
-        /* TODO:
-        ImportExportHandler exporter = new ImportExportHandler();
-        exporter.addClock(this.clock);
-        exporter.addUser(this.user);
-        exporter.addProjects(this.projects.values());
-        exporter.exportToPath(path);
-        */
+        XmlObject xml = new XmlObject(this.projectOrganizer, this.userManager, this.resourceManager, this.clock);
+        xml.saveToFile(path);
     }
 
     /**
      * Restore the status of a system from a file.
      * @param path a String with a location in the file system.
-     * @return a new Controller with the restored system.
+     * @post the system is restored from the file.
      * @throws ImportExportException if the system can't be restored from the file.
      */
-    public static Controller importSystem(String path) throws ImportExportException {
-        /* TODO:
-        ImportExportHandler importer = new ImportExportHandler();
-        importer.importFromPath(path);
-        return new Controller(importer.getClock(), importer.getUser(), importer.getProjects());
-        */
-        return null;
+    public void importSystem(String path) throws ImportExportException {
+        XmlObject xml = XmlObject.restoreFromFile(path);
+        this.projectOrganizer = xml.getProjectOrganizer();
+        this.userManager = xml.getUserManager();
+        this.resourceManager = xml.getResourceManager();
+        this.clock = xml.getClock();
     }
 
 }

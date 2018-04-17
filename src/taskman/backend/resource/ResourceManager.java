@@ -29,7 +29,7 @@ public class ResourceManager {
         this.resourceTypes = new HashSet<>();
         this.constraints = new ArrayList<>();
         this.plans = new HashSet<>();
-        addResourceType("developer"); // This will add developer as a resource type
+        createResourceType("developer"); // This will add developer as a resource type
     }
 
 
@@ -57,12 +57,20 @@ public class ResourceManager {
     }
 
     /**
+     * Returns a list of the resource types.
+     * @return a list of the resource types.
+     */
+    public List<ResourceType> getResourceTypes() {
+        return new ArrayList<>(this.resourceTypes);
+    }
+
+    /**
      * Creates and adds the resource type with the given name to the resource types.
      *
      * @param name the name of the resource type
      * @post a resource type with given name is created and added to the resource types
      */
-    public void addResourceType(String name){
+    public void createResourceType(String name){
         ResourceType resourceType = new ResourceType(name);
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
     }

@@ -52,7 +52,7 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		controller.createTask("test", "test", "test", 60l, 5.0);
-		rm.addResourceType("type1");
+		rm.createResourceType("type1");
 		rm.getResourceType("type1").createResource("testResource");
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
@@ -82,7 +82,7 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		controller.createTask("test", "test", "test", 60l, 5.0);
-		rm.addResourceType("type1");
+		rm.createResourceType("type1");
 		rm.getResourceType("type1").createResource("testResource");
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);

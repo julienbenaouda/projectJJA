@@ -29,7 +29,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testAddResourceType() {
-		resourceManager.addResourceType("test");
+		resourceManager.createResourceType("test");
 		assertNotNull(resourceManager.getResourceType("test"));
 	}
 
@@ -122,7 +122,7 @@ public class ResourceManagerTest {
 	
 	@Test
 	public void testCheckRequirements_true() {
-		resourceManager.addResourceType("type1");
+		resourceManager.createResourceType("type1");
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
 		resourceManager.createConstraint(string);
@@ -133,7 +133,7 @@ public class ResourceManagerTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testCheckRequirements_false() {
-		resourceManager.addResourceType("type1");
+		resourceManager.createResourceType("type1");
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
 		resourceManager.createConstraint(string);

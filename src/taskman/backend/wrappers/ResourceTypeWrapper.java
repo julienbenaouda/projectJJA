@@ -1,5 +1,7 @@
 package taskman.backend.wrappers;
 
+import java.util.List;
+
 public interface ResourceTypeWrapper {
 
 	/**
@@ -8,4 +10,9 @@ public interface ResourceTypeWrapper {
 	 */
 	String getName();
 
+	/**
+	 * Returns the resources of the resource type.
+	 * @return the list of resources.
+	 */
+	List<ResourceWrapper> getResources();
 }
