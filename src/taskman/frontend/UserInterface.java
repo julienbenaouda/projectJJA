@@ -412,12 +412,14 @@ public class UserInterface {
 
 	/**
 	 * Shows the resource type creation form.
+	 * @throws Cancel when the user cancels the section.
 	 */
-	private void addResourceType() {
+	private void addResourceType() throws Cancel {
 		TitleSection title = new TitleSection("create resource type");
 		title.show();
 		FormSection form = new FormSection(false, "");
-		// TODO
+		form.show();
+
 	}
 
 	/**
@@ -436,6 +438,7 @@ public class UserInterface {
 
 	/**
 	 * Shows the resource creation form.
+	 * @throws Cancel when the user cancels the section.
 	 */
 	private void addResource() {
 		// TODO
