@@ -1,31 +1,45 @@
 package taskman.backend.resource;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import taskman.backend.task.Task;
-import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.wrappers.ResourceWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing a resource item.
  *
- * @author Jeroen Van Der Donckt, Julien Benaouda
+ * @author Jeroen Van Der Donckt, Julien Benaouda, Alexander Braekevelt
  */
-public class Resource {
+public class Resource implements ResourceWrapper {
 
     /**
-     * Creates a new resource item with the given resource type.
+     * Creates a new resource item with the given name and resource type.
      *
+	 * @param name the name of the resource item
      * @param type the resource type of the resource item
-     * @post a new resource item is created with given resource type
+     * @post a new resource item is created with given resource type and reservations is initialized to an empty ArrayList
      */
-    public Resource(ResourceType type){
+    public Resource(String name, ResourceType type){
+    	this.name = name;
         setType(type);
         reservations = new ArrayList<>();
+    }
+
+
+	/**
+	 * Represents the name of he resource.
+	 */
+	private final String name;
+
+	/**
+	 * Returns the name of the resource.
+	 *
+	 * @return the name of the resource.
+	 */
+	@Override
+	public String getName() {
+    	return this.name;
     }
 
 
@@ -50,22 +64,21 @@ public class Resource {
      * @post the resource type of the resource item is set to the given type
      * @throws IllegalArgumentException when the type is null
      */
-	private void setType(ResourceType type) {
+	public void setType(ResourceType type) {
 		if(type == null) {
 			throw new IllegalArgumentException("A resource must have a type!");
 		}
 	    this.type = type;
-	    type.addResource(this);
     }
 
 
 	/**
-	 * represents the list of reservations
+	 * Represents the list of reservations.
 	 */
 	private ArrayList<Reservation> reservations;
 
 	/**
-	 * Returns the list of reservations for this resource
+	 * Returns the list of reservations for this resource.
 	 *
 	 * @return the list of reservations for this resource
 	 */
@@ -74,7 +87,7 @@ public class Resource {
 	}
 
 	/**
-	 * Adds a reservation to the list of reservations
+	 * Adds a reservation to the list of reservations.
 	 *
 	 * @param r the reservation to add
 	 * @post the given reservation is added to this resource
@@ -83,18 +96,7 @@ public class Resource {
 	{
 		reservations.add(r);
 	}
-	
-	/**
-	 * Creates a new reservation for this resource.
-	 *
-	 * @param task the task to create a reservation for
-	 * @param timeSpan the time span of the reservation
-	 * @post a new reservation is created and added to this resource
-	 */
-	public void createReservation(Task task, TimeSpan timeSpan) {
-		Reservation r = new Reservation(task, this, timeSpan);
-		addReservation(r);
-	}
+
 
 	/**
 	 * Checks if a resource is available at the given time span.
@@ -109,5 +111,13 @@ public class Resource {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Returns if the resource can be safely removed.
+	 * @return if the resource can be safely removed.
+	 */
+	public boolean canRemove() {
+		return this.reservations.isEmpty();
 	}
 }

@@ -2,10 +2,17 @@ package taskman.backend.task;
 
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Interface representing the task state.
+ * Note: We apply here the State Pattern
+ *
+ * @author Jeroen Van Der Donckt
+ */
 public abstract class TaskState {
 
     // TODO: moet niet alles protected staan?
@@ -77,20 +84,34 @@ public abstract class TaskState {
      * @post the dependency is added to the task
      */
     public void addDependency(Task task, Task dependency) throws IllegalStateException, IllegalArgumentException {
-        throw new IllegalStateException("The dependency must be added to an inactive task.");
+        throw new IllegalStateException("The dependency must be added to an unavailable task.");
         // TODO: is dit correct? Of moet het enkel een available task zijn
+    }
+
+    /**
+     * Adds the given requirement to the requirements of the given task.
+     *
+     * @param resourceManager the resource manager of the system
+     * @param task the task to add the requirement to its requirements
+     * @param resourceType the resource type of the requirement
+     * @param amount the amount of the requirement
+     * @throws IllegalStateException
+     * @post the requirement is added to the requirements of the task
+     */
+    public void addRequirement(ResourceManager resourceManager, Task task, ResourceType resourceType, int amount) throws IllegalStateException {
+        throw new IllegalStateException("The requirement must be added to an unavailable task.");
     }
 
     /**
      * Plans the task with given resources at the given start time.
      *
+     * @param resourceManager the resource manager of the system
      * @param task the task to plan
      * @param resources the resources that are used in the plan
      * @param startTime the start time of the plan
-     * @param resourceManager the resource manager of the system
      * @throws IllegalStateException the task must be unavailable
      */
-    public void plan(Task task, List<Resource> resources, LocalDateTime startTime, ResourceManager resourceManager) throws IllegalStateException {
+    public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) throws IllegalStateException {
         throw new IllegalStateException("The task can only planned in unavailable state.");
     }
 

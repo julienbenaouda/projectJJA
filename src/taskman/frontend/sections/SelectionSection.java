@@ -1,14 +1,12 @@
 package taskman.frontend.sections;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
- * This class is responsible for letting the user choose between a number of options.
+ * This class is responsible for letting the user choose between a number of optionNames.
  * @author Alexander Braekevelt
  */
-public class SelectionSection extends Section {
+public class SelectionSection<Type> extends Section {
 
 	/**
 	 * Represents the option to cancel between each answer.
@@ -19,10 +17,11 @@ public class SelectionSection extends Section {
 	/**
 	 * Represents the options the user can choose.
 	 */
-	private final List<String> options;
+	private final List<String> optionNames;
+	private final List<Type> optionObjects;
 
 	/**
-	 * Represents the answer of the user.
+	 * Represents the choice of the user.
 	 */
 	private Integer answer;
 
@@ -38,7 +37,7 @@ public class SelectionSection extends Section {
 	/**
 	 * Constructs a selection section.
 	 * @param withCancel if the user can cancel.
-	 * @param cancelText the name of the option to exit.
+	 * @param cancelText the name of the exit option.
 	 * @throws NullPointerException if an argument is null.
 	 */
 	public SelectionSection(Boolean withCancel, String cancelText) throws NullPointerException {
@@ -47,19 +46,31 @@ public class SelectionSection extends Section {
 		}
 		this.withCancel = withCancel;
 		this.cancelText = cancelText;
-		this.options = new ArrayList<>();
+		this.optionNames = new ArrayList<>();
+		this.optionObjects = new ArrayList<>();
 	}
 
 	/**
 	 * Adds an option to the selection.
-	 * @param option the name of the option.
+	 * @param name the name of the option.
+	 * @throws NullPointerException if the name is null.
+	 */
+	public void addOption(String name) throws NullPointerException {
+		addOption(name, null);
+	}
+
+	/**
+	 * Adds an option to the selection.
+	 * @param name the name of the option.
+	 * @param object the object of the option.
 	 * @throws NullPointerException if an argument is null.
 	 */
-	public void addOption(String option) throws NullPointerException {
-		if (option == null) {
+	public void addOption(String name, Type object) throws NullPointerException {
+		if (name == null) {
 			throw new NullPointerException("Option cannot be null!");
 		}
-		this.options.add(option);
+		this.optionNames.add(name);
+		this.optionObjects.add(object);
 	}
 
 	/**
@@ -77,8 +88,22 @@ public class SelectionSection extends Section {
 	}
 
 	/**
+	 * Add a map of options to the selection.
+	 * @param options the map of options.
+	 * @throws NullPointerException if an argument is null.
+	 */
+	public void addOptions(Map<String, Type> options) {
+		if (options == null) {
+			throw new NullPointerException("Options cannot be null!");
+		}
+		for (Map.Entry<String, Type> option: options.entrySet()) {
+			addOption(option.getKey(), option.getValue());
+		}
+	}
+
+	/**
 	 * Shows the selection.
-	 * @throws Cancel when the user cancels the section.
+	 * @throws Cancel if the user cancels the section.
 	 */
 	@Override
 	public void show() throws Cancel {
@@ -87,10 +112,12 @@ public class SelectionSection extends Section {
 		println("Options:");
 		ArrayList<String> validSelections = new ArrayList<>();
 
-		// Add options
-		for (Integer i = 1; i <= this.options.size(); i++) {
-			println(String.format("%2d - %s", i, this.options.get(i - 1)));
+		// Add optionNames
+		Integer i = 1;
+		for (String option: this.optionNames) {
+			println(String.format("%2d - %s", i, option));
 			validSelections.add(i.toString());
+			i++;
 		}
 
 		// Add cancel
@@ -124,25 +151,25 @@ public class SelectionSection extends Section {
 		if (!hasAnswer()) {
 			throw new IllegalStateException("Selection does not contain an answer.");
 		}
-		return this.options.get(this.answer);
+		return this.optionNames.get(this.answer);
 	}
 
 	/**
 	 * Returns the answer of the user.
-	 * @return an Integer.
+	 * @return a Type.
 	 * @throws IllegalStateException if the selection does not contain an answer.
 	 */
-	public Integer getAnswerNumber() throws IllegalStateException {
+	public Type getAnswerObject() throws IllegalStateException {
 		if (!hasAnswer()) {
 			throw new IllegalStateException("Selection does not contain an answer.");
 		}
-		return this.answer;
+		return this.optionObjects.get(this.answer);
 	}
 
 	/**
 	 * Reset the answer.
 	 */
-	private void resetAnswer() {
+	public void resetAnswer() {
 		this.answer = null;
 	}
 

@@ -1,23 +1,29 @@
 package taskman.backend.resource;
 
-import java.util.*;
-
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
+import taskman.backend.wrappers.ResourceTypeWrapper;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for storing and retrieving resource types of the system.
  *
  * @author Jeroen Van Der Donckt, Julien Benaouda
  */
-public class ResourceType {
+public class ResourceType implements ResourceTypeWrapper {
 
     /**
      * Creates a new resource type with given name.
      *
      * @param name the name of the resource type
      */
-    public  ResourceType(String name){
+    public ResourceType(String name){
         setName(name);
         availability = new HashMap<>();
         resources = new ArrayList<>();
@@ -104,6 +110,35 @@ public class ResourceType {
 	public int getNbOfResources(){
 	    return resources.size();
     }
+
+	/**
+	 * Returns if a resource with the given name exists.
+	 * @param name the name of the resource.
+	 * @return if a resource with the given name exists.
+	 */
+	public boolean hasResource(String name) throws IllegalArgumentException {
+		for (Resource resource: this.resources) {
+			if (resource.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the resource for a given name.
+	 * @param name the name of the resource.
+	 * @return the resource with the given name.
+	 * @throws IllegalArgumentException if no resource with the given name is found.
+	 */
+	public Resource getResource(String name) throws IllegalArgumentException {
+		for (Resource resource: this.resources) {
+			if (resource.getName().equals(name)) {
+				return resource;
+			}
+		}
+		throw new IllegalArgumentException("No resource with name " + name + " found!");
+    }
 	
 	/**
 	 * Adds a resource to the list of resources.
@@ -111,8 +146,47 @@ public class ResourceType {
 	 * @param resource the resource to add
 	 * @post the given resource is added to the list of resources
 	 */
-	public void addResource(Resource resource) {
+	private void addResource(Resource resource) {
 		resources.add(resource);
+	}
+	
+	/**
+	 * creates a new resource with given name
+	 * @param name the name of the resource
+	 * @throws IllegalArgumentException when the name is null or already exists
+	 */
+	public void createResource(String name) {
+		if(name == null || hasResource(name)) {
+			throw new IllegalArgumentException("This resource already exists. Please try another name.");
+		}
+		Resource r = new Resource(name, this);
+		addResource(r);
+	}
+	
+	/**
+	 * creates a resource from a developer
+	 * @param name the name of the resource
+	 * @param startBreak the start time of the break of the developer
+	 * @param d the developer to link to the resource
+	 */
+	public void createResourceFromUser(String name, LocalTime startBreak, Developer d) {
+		Resource r = new DeveloperResource(name, this, startBreak, d);
+		addResource(r);
+	}
+
+	/**
+	 * Removes a resource from the list of resources.
+	 *
+	 * @param resource the resource to remove
+	 * @post the given resource is removes from the list of resources
+	 * @throws IllegalStateException if the resource cannot be removed.
+	 */
+	public void removeResource(Resource resource) throws IllegalStateException {
+		if (resource.canRemove()) {
+			resources.remove(resource);
+		} else {
+			throw new IllegalStateException("The resource cannot be removed!");
+		}
 	}
 
 	/**
@@ -129,10 +203,9 @@ public class ResourceType {
 				numberAvailable += 1;
 			}
 		}
-		if (numberAvailable >= amount){
+		if (numberAvailable >= amount) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
@@ -163,7 +236,8 @@ public class ResourceType {
 	}
 
 	/**
-	 * Adds the availability for the given day 
+	 * Adds the availability for the given day .
+	 *
 	 * @param weekDay the day for which to add the availability
 	 * @param availabilityPeriod the availability
 	 * @post the given availability is added to the list

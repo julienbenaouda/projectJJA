@@ -1,26 +1,25 @@
 package taskman.backend.project;
 
 
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a project.
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
-public class Project implements Entity, ProjectWrapper {
+public class Project implements ProjectWrapper {
 
 	/**
-	 * creates a new project with the given values
-	 *
+	 * Creates a new project with the given values.
 	 * @param name the project name
 	 * @param description the project description
 	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
@@ -41,76 +40,89 @@ public class Project implements Entity, ProjectWrapper {
 		taskList = new ArrayList<>();
 	}
 
-    
+	/**
+	 * The list of tasks for the project.
+	 */
+	private ArrayList<Task> taskList;
+
+	/**
+	 * Returns a list with all tasks of a project
+	 * @return the tasks of the project.
+	 */
+	@Override
+	public List<Task> getTasks() {
+		return new ArrayList<>(taskList);
+	}
+
+	/**
+	 * Return the Task with the given name.
+	 * @param name a String.
+	 * @return a Task.
+	 * @throws IllegalArgumentException if no task exists with the given name.
+	 */
+	public Task getTask(String name) throws IllegalArgumentException {
+		for (Task t: this.taskList) {
+			if (t.getName().equals(name)) {
+				return t;
+			}
+		}
+		throw new IllegalArgumentException("A task with the given name does not exist!");
+	}
+
     /**
      * Create a new task with the given parameters
+     * @param name the name of the task.
      * @param description the description of the task
      * @param estimatedDuration the estimated duration of the task (in minutes)
      * @param acceptableDeviation the acceptable deviation of the task
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @post a new task is created and added to the project
      */
-    public void createTask(String description, long estimatedDuration, double acceptableDeviation, User user) {
+    public void createTask(String name, String description, long estimatedDuration, double acceptableDeviation, ResourceManager resourceManager, User user) {
     	if(!(user instanceof ProjectManager)) {
     		throw new OperationNotPermittedException("you are not allowed to created tasks!");
     	}
-    	Task t = new Task(description, estimatedDuration, acceptableDeviation);
-    	addTaskToList(t);
+    	Task t = new Task(name, description, estimatedDuration, acceptableDeviation, resourceManager);
+    	addTask(t);
     }
 
     /**
      * Adds a new task to the projects task list.
-     *
-     * @param task the task to add
-     * @throws IllegalStateException the illegal state exception
-     * @post The given task is added to the project
+     * @param task the task to add.
+     * @post The given task is added to the project.
      */
-    private void addTaskToList(Task task) throws IllegalStateException { // TODO: waarom gooit dit illegal state exception?
+    private void addTask(Task task) {
     	taskList.add(task);
     }
-    
-    /* (non-Javadoc)
-	 * @see taskman.backend.project.ProjectWrapper#getStatus(java.time.LocalDateTime)
-	 */
-    @Override
-	public String getStatus(LocalDateTime systemtime) {
-    	if (systemtime.isBefore(this.dueTime)) {
-    		return "active";
-		}
-		for (Task task: taskList) {
-			if (!task.getStatus().equals("finished")) {
-				return "failed";
-			}
-		}
-		return "finished";
-	}
 
     /**
      * This method removes a task from the projects task list.
-     *
-     * @param task the task to remove from the project
-	 * @post the task is removed from the project
+     * @param task the task to remove from the project.
+	 * @post the task is removed from the project.
      */
-    public void removeTask(Task task) {
+    private void removeTask(Task task) {
 		taskList.remove(task);
 	}
 
-	// TODO: getTaskDetails() en getAvailableTaskDetails() heb ik verwijderd
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.project.ProjectWrapper#getName()
+	/**
+	 * The name of the project.
 	 */
-    @Override
+	private String name;
+
+	/**
+	 * Returns the name of the project.
+	 * @return the name of the project.
+	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
 	/**
 	 * Sets the name of the project to the given name.
-	 *
 	 * @param name the name of the project.
-	 * @throws IllegalArgumentException when the name is empty
-	 * @post the name of the project is set to the given name
+	 * @throws IllegalArgumentException when the name is empty.
+	 * @post the name of the project is set to the given name.
 	 */
 	private void setName(String name) {
 		if(name.equals("") || name == null)
@@ -121,12 +133,13 @@ public class Project implements Entity, ProjectWrapper {
 	}
 
 	/**
-	 * The name of the project.
+	 * The project description.
 	 */
-	private String name;
+	private String description;
 
-    /* (non-Javadoc)
-	 * @see taskman.backend.project.ProjectWrapper#getDescription()
+	/**
+	 * Returns the project description.
+	 * @return the project description.
 	 */
     @Override
 	public String getDescription() {
@@ -135,10 +148,9 @@ public class Project implements Entity, ProjectWrapper {
 
 	/**
 	 * Sets the project description to the given description.
-	 *
-	 * @param description the description of the project
-	 * @throws IllegalArgumentException when de project description is null
-	 * @post the project description is set to the given description
+	 * @param description the description of the project.
+	 * @throws IllegalArgumentException when de project description is null.
+	 * @post the project description is set to the given description.
 	 */
 	private void setDescription(String description) {
 		if(description == null) // TODO is dit echt nodig? Anders moet dit ook bij task gebeuren
@@ -148,26 +160,21 @@ public class Project implements Entity, ProjectWrapper {
 		this.description = description.trim();
 	}
 
+
 	/**
-	 * The project description.
+	 * Return the creation time of the project.
+	 * @return a LocalDateTime.
 	 */
-	private String description;
-
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.project.ProjectWrapper#getCreationTime()
-	 */
-    @Override
+	@Override
 	public LocalDateTime getCreationTime() {
 		return creationTime;
 	}
 
 	/**
 	 * Sets the creation time of the project.
-	 *
-	 * @param creationTime the creationTime of the project
-	 * @throws IllegalArgumentException when the given date is null
-	 * @post the creation time of the project is set to the given creation time
+	 * @param creationTime the creationTime of the project.
+	 * @throws IllegalArgumentException when the given date is null.
+	 * @post the creation time of the project is set to the given creation time.
 	 */
 	private void setCreationTime(LocalDateTime creationTime) {
 		if(creationTime == null) { // TODO: moet dit? anders moet dit ook in TASK
@@ -182,20 +189,20 @@ public class Project implements Entity, ProjectWrapper {
 	 */
 	private LocalDateTime creationTime;
 
-    /* (non-Javadoc)
-	 * @see taskman.backend.project.ProjectWrapper#getDueTime()
+	/**
+	 * Return the creation time of the project.
+	 * @return a LocalDateTime.
 	 */
-    @Override
+	@Override
 	public LocalDateTime getDueTime() {
 		return dueTime;
 	}
 
 	/**
 	 * Sets the due time of the project.
-	 *
-	 * @param dueTime the dueTime of the project
-	 * @throws IllegalArgumentException when the due time is earlier or equal than the creation time or when the due time is null
-	 * @post the due time of the project is set to the given due time
+	 * @param dueTime the dueTime of the project.
+	 * @throws IllegalArgumentException when the due time is earlier or equal than the creation time or when the due time is null.
+	 * @post the due time of the project is set to the given due time.
 	 */
 	private void setDueTime(LocalDateTime dueTime) {
 		if (dueTime == null){ // TODO: moet dit anders bij task dit ook
@@ -213,39 +220,22 @@ public class Project implements Entity, ProjectWrapper {
 	 */
 	private LocalDateTime dueTime;
 
-
 	/**
-	 * Returns the task at the given index.
-	 *
-	 * @param index the index of the task
-	 * @return the task at the given index in the tasklist
-	 * @throws IndexOutOfBoundsException if the index is not in range of the tasklist
+	 * Return the status of the project at the given time.
+	 * @param time a LocalDateTime.
+	 * @return a String.
 	 */
-	public Task getTask(int index) throws IndexOutOfBoundsException{
-		return taskList.get(index);
+	public String getStatus(LocalDateTime time) {
+		if (time.isBefore(this.dueTime)) {
+			return "active";
+		}
+		for (Task task: taskList) {
+			if (!task.getStatus().equals("finished")) {
+				return "failed";
+			}
+		}
+		return "finished";
 	}
 
-    /**
-     * Returns a list with all tasks of a project
-     *
-     * @return the tasks of the project
-     */
-    public ArrayList<Task> getTasks() {
-		return ((ArrayList<Task>)taskList.clone());
-	}
-
-	/**
-	 * Return the number of tasks in the project.
-	 * @return an Integer.
-	 */
-	public Integer getNumberOfTasks() {
-    	return this.taskList.size();
-	}
-
-
-	/**
-	 * The list of tasks for the project.
-	 */
-	private ArrayList<Task> taskList;
 
 }

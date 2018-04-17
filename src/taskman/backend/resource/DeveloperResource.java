@@ -20,8 +20,8 @@ public class DeveloperResource extends Resource {
 	 * @param type the type of the userResource
 	 * @param startBreak the time when the break of the developer starts
 	 */
-	public DeveloperResource(ResourceType type, LocalTime startBreak, Developer d) {
-		super(type);
+	public DeveloperResource(String name, ResourceType type, LocalTime startBreak, Developer d) {
+		super(name, type);
 		addBreakTime(startBreak);
 		setDeveloper(d);
 	}

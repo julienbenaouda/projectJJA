@@ -25,7 +25,7 @@ TODO:
   (easiest way = inject hashmap in controller => easy is constructor injection)
   (add clock and project hashmap in controller)
   => Controller could easiliy delegate import and export to external class
-  !! Controller is only a glue
+  !! Controller is only first glue
 - Interaction sequence diagrams, add before submitting
 - Class diagram should not be reverse engineered!! Should have the correct relations
   Should show the interesting decisions of the design, interesting methods and design decisions

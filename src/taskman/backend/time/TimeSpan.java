@@ -5,8 +5,6 @@ package taskman.backend.time;
 
 import java.time.LocalDateTime;
 
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.TimeSpanWrapper;
 
 /**
@@ -14,7 +12,7 @@ import taskman.backend.wrappers.TimeSpanWrapper;
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
-public class TimeSpan implements Entity, TimeSpanWrapper {
+public class TimeSpan implements TimeSpanWrapper {
 
 	/**
 	 * Creates a new timespan object with given starttime and endtime

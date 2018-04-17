@@ -4,7 +4,7 @@ title __IMPORTEXPORT's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.importExport {
+      package taskman.backend.importexport {
         class ImportExportException {
             + ImportExportException()
         }
@@ -45,7 +45,7 @@ title __IMPORTEXPORT's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.importExport {
+      package taskman.backend.importexport {
         class XmlObject {
             - doc : Document
             - element : Element

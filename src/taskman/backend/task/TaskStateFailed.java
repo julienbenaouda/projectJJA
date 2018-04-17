@@ -1,7 +1,11 @@
 package taskman.backend.task;
 
-import java.time.LocalDateTime;
-
+/**
+ * Class representing a failed task state.
+ * Note: We apply here the State Pattern
+ *
+ * @author Jeroen Van Der Donckt
+ */
 public class TaskStateFailed extends TaskState {
 
     /**

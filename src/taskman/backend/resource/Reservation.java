@@ -1,6 +1,5 @@
 package taskman.backend.resource;
 
-import taskman.backend.task.Task;
 import taskman.backend.time.TimeSpan;
 
 import java.time.LocalDateTime;
@@ -15,45 +14,20 @@ public class Reservation {
     /**
      * Creates a new reservation with the given values.
      *
-     * @param task the task of the reservation
      * @param resource the resource of the reservation
-     * @param timeSpan the time span of the reservation
-     * @post a new reservation is created with given attributes
-     * @throws IllegalArgumentException when the task, resource or timespan is null
+     * @param startTime the start time of the reservation
+     * @param endTime the end time of the reservation
+     * @post a new reservation is created with given attributes and added to the resource
+     * @throws IllegalArgumentException when the resource or timespan is null
      */
-    public Reservation(Task task, Resource resource, TimeSpan timeSpan){
-    	if(task == null || resource == null || timeSpan == null) {
-    		throw new IllegalArgumentException("A reservation must have a task, resource and time span!");
+    public Reservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+    	if( resource == null || startTime == null || endTime == null) {
+    		throw new IllegalArgumentException("A reservation must have a resource, start time and end time !");
     	}
-        setTask(task);
+    	TimeSpan timeSpan = new TimeSpan(startTime, endTime);
         setResource(resource);
         setTimeSpan(timeSpan);
-    }
-
-
-    /**
-     * The task of the reservation.
-     */
-    private Task task;
-
-    /**
-     * Returns the task of the reservation.
-     *
-     * @return the task of the reservation
-     */
-    public Task getTask(){
-        return task;
-    }
-    // TODO: dit de verantwoordelijkheid geven over de bidirectioneele verbinding
-
-    /**
-     * Sets the task of the reservation to the given task.
-     *
-     * @param task the task of the reservation
-     * @post the task of the reservation is set to the given task
-     */
-    private void setTask(Task task){
-        this.task = task;
+        resource.addReservation(this);
     }
 
 

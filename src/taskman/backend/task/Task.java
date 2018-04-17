@@ -1,81 +1,77 @@
 package taskman.backend.task;
 
-import java.time.LocalDateTime;
-import java.util.*;
-
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.User;
-import taskman.backend.visitor.Entity;
-import taskman.backend.visitor.Visitor;
 import taskman.backend.wrappers.TaskWrapper;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 /**
  * This class represents a task.
- *
  * @author Jeroen Van Der Donckt
  */
-public class Task implements Entity, TaskWrapper {
+public class Task implements TaskWrapper {
 
     /**
      * Creates a new task with the given values.
-     *
+     * @param name the name of the task.
      * @param description the task description
      * @param estimatedDuration the estimated duration of the task in minutes
      * @param acceptableDeviation the acceptable  deviation of the task
      * @post a new task is created with the given attributes and unavailable status
      */
-    public Task(String description, long estimatedDuration, double acceptableDeviation) {
+    public Task(String name, String description, long estimatedDuration, double acceptableDeviation, ResourceManager resourceManager) {
+        setName(name);
         setDescription(description);
         setEstimatedDuration(estimatedDuration);
         setAcceptableDeviation(acceptableDeviation);
         setState(new TaskStateUnavailable());
         dependencies = new ArrayList<>();
-        requirements = new HashMap<ResourceType, Integer>();
+        resourceManager.createPlan(this);
     }
-
 
     /**
-     * Creates a new task with thte given values.
-     *
-     * @param description the task description
-     * @param estimatedDuration the estimated duration of the task in minutes
-     * @param acceptableDeviation the acceptable deviation of the task
-     * @param timeSpan the time span of the task
-     * @param state the task state of the task
-     * @post a new task is created with the given attributes
+     * The task name.
      */
-    private Task(String description, long estimatedDuration, double acceptableDeviation, TimeSpan timeSpan, TaskState state) {
-        setDescription(description);
-        setEstimatedDuration(estimatedDuration);
-        setAcceptableDeviation(acceptableDeviation);
-        setTimeSpan(timeSpan);
-        setState(state);
-        dependencies = new ArrayList<>();
+    private String name;
+
+    /**
+     * Returns the name of the task.
+     * @return a String.
+     */
+    public String getName() {
+        return this.name;
     }
 
+    /**
+     * Sets the name of the task.
+     */
+    private void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * The task description.
      */
     private String description;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getDescription()
-	 */
+    /**
+     * Returns the task description.
+     *
+     * @return the task description
+     */
     @Override
 	public String getDescription(){
         return description;
     }
 
-
     /**
      * Sets the task description to the given description.
-     *
      * @param description the description of the task
      * @post the task description is set to the given description
      */
@@ -83,21 +79,20 @@ public class Task implements Entity, TaskWrapper {
         this.description = description;
     }
 
-
     /**
      * The estimated duration of the task in minutes.
      */
     private long estimatedDuration;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getEstimatedDuration()
-	 */
+    /**
+     * Returns the estimated duration of the task in minutes.
+     *
+     * @return the estimated duration of the task in minutes
+     */
     @Override
 	public long getEstimatedDuration(){
         return estimatedDuration;
     }
-
 
     /**
      * Sets the estimated duration of the task to the given duration in minutes.
@@ -109,21 +104,20 @@ public class Task implements Entity, TaskWrapper {
         this.estimatedDuration = estimatedDuration;
     }
 
-
     /**
      * The acceptable deviation of the task.
      */
     private double acceptableDeviation;
 
-
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getAcceptableDeviation()
-	 */
+    /**
+     * Returns the acceptable deviation of the task.
+     *
+     * @return the acceptable deviation of the task
+     */
     @Override
 	public double getAcceptableDeviation(){
         return acceptableDeviation;
     }
-
 
     /**
      * Sets the acceptable deviation of the task to the given deviation.
@@ -134,7 +128,6 @@ public class Task implements Entity, TaskWrapper {
     private void setAcceptableDeviation(double acceptableDeviation){
         this.acceptableDeviation = acceptableDeviation;
     }
-
 
     /**
      * The time span of the task.
@@ -202,10 +195,11 @@ public class Task implements Entity, TaskWrapper {
         this.state = state;
     }
 
-    
-    /* (non-Javadoc)
-	 * @see taskman.backend.task.TaskWrapper#getStatus()
-	 */
+    /**
+     * Returns the status of the task state.
+     *
+     * @return the status of the task state
+     */
     @Override
 	public String getStatus(){
         return state.getStatus();
@@ -234,22 +228,18 @@ public class Task implements Entity, TaskWrapper {
         return getState().getDelay(this);
     }
 
-
     /**
      * The alternative task of the task.
      */
     private Task alternative;
 
-
     /**
      * Returns the alternative task of the task.
-     *
      * @return the alternative task
      */
     public Task getAlternative(){
         return alternative;
     }
-
 
     /**
      * Sets the alternative task of the task to the given task.
@@ -261,12 +251,9 @@ public class Task implements Entity, TaskWrapper {
     protected void setAlternativeTask(Task alternative){
         this.alternative = alternative;
     }
-    // TODO: dit is wel een skere oplossing
-
 
     /**
      * Sets the alternative task of the task to the given task.
-     *
      * @param alternative the alternative task of the task
      * @post the alternative task of the task is set to the given task
      */
@@ -274,37 +261,21 @@ public class Task implements Entity, TaskWrapper {
         getState().setAlternative(this, alternative);
     }
 
-
     /**
      * The dependencies of the task.
      */
     private ArrayList<Task> dependencies;
 
-
     /**
      * Returns a list with all dependencies of the task.
-     *
      * @return the dependencies of the task
      */
     public ArrayList<Task> getDependencies(){
         return (ArrayList<Task>) dependencies.clone();
     }
 
-
-    /**
-     * Sets the dependencies of the task.
-     *
-     * @param dependencies list of dependent tasks of the task
-     * @post the dependencies is set to the given dependent tasks
-     */
-    private void setDependencies(ArrayList<Task> dependencies){
-        this.dependencies = dependencies;
-    }
-
-
     /**
      * Adds a dependency to the task.
-     *
      * @param dependency task that needs to be added to the task
      * @post the dependency is added to the task
      * @implNote this method is protected (and exists) so that the State Pattern can use this (to implement addDependency())
@@ -312,12 +283,9 @@ public class Task implements Entity, TaskWrapper {
     protected void addDependencyTask(Task dependency){
         this.dependencies.add(dependency);
     }
-    // TODO: dit is wel een skere oplossing
-
 
     /**
      * Adds a dependency to the task.
-     *
      * @param dependency task that needs to be added to the task
      * @post the dependency is added to the task
      */
@@ -327,7 +295,6 @@ public class Task implements Entity, TaskWrapper {
 
     /**
      * Removes dependency of the given task.
-     *
      * @param dependency task that needs to be removed as dependency of the task
      * @throws IllegalArgumentException the dependency task must be a dependency of the task
      * @post the dependency is deleted from the task
@@ -338,41 +305,34 @@ public class Task implements Entity, TaskWrapper {
         }
         dependencies.remove(dependency);
     }
-    
-    /**
-     * Represents the list of requirements
-     */
-    private HashMap<ResourceType, Integer> requirements;
-    
-    /**
-     * returns the list of requirements
-     */
-    public Map<ResourceType, Integer> getRequirements()
-    {
-    	return (Map<ResourceType, Integer>) requirements.clone();
-    }
-    
-    /**
-     * adds a requirement to the list of requirements
-     */
-    public void addRequirement(ResourceType type, int amount) {
-    	requirements.put(type, amount);
-    }
 
     /**
-     * Plans the task with the given list of resources at the given start time
+     * Adds the given requirement to the task its requirements.
      *
-     * @param resources the list of resources necessary to plan the task
-     * @param startTime the start time of the planning
+     * @param resourceManager the resource manager of the system
+     * @param resourceType the resource type of the requirement
+     * @param amount the amount of the requirement
+     * @post the requirement is added to the requirements of the task.
+     */
+    public void addRequirement(ResourceManager resourceManager, ResourceType resourceType, int amount) {
+        getState().addRequirement(resourceManager, this, resourceType, amount);
+    }
+
+
+    /**
+     * Plans the task with the given list of resources at the given start time.
+     *
      * @param resourceManager the resource manager of the system
      * @param user the user that wants to plan the task
+     * @param resources the list of resources necessary to plan the task
+     * @param startTime the start time of the planning
      * @throws IllegalArgumentException the user must be allowed to plan the task
      */
-    public void plan(List<Resource> resources, LocalDateTime startTime, ResourceManager resourceManager, User user) throws IllegalStateException, IllegalArgumentException {
-        if (!user.isProjectManager()){
+    public void plan(ResourceManager resourceManager, User user, List<Resource> resources, LocalDateTime startTime) throws IllegalStateException, IllegalArgumentException {
+        if (!user.getUserType().equals("project manager")){
             throw new IllegalArgumentException("The user must be a project manager in order to plan tasks.");
         }
-        getState().plan(this, resources, startTime, resourceManager);
+        getState().plan(resourceManager,this, resources, startTime);
     }
 
 
@@ -380,7 +340,7 @@ public class Task implements Entity, TaskWrapper {
 
     /**
      * Checks if the searched task is equal to the root or one of its dependencies or alternatives (recursively).
-     * 
+     *
      * @param root the root task whose dependencies and alternatives will be further searched
      * @param searchedTask the task we want to search for
      * @return true if the task is found, false otherwise
@@ -408,9 +368,5 @@ public class Task implements Entity, TaskWrapper {
         }
         return false;
     }
-
-
-    // VISITOR PATTERN
-
 
 }

@@ -67,7 +67,7 @@
 
         class InfoSection {
             - text : String
-            - halt : boolean
+            - isBlocking : boolean
 
             + InfoSection(String, boolean)
             + show(): void
@@ -173,7 +173,7 @@
         }
       }
 
-      package taskman.backend.importExport {
+      package taskman.backend.importexport {
         class ImportExportException {
             + ImportExportException(String)
         }

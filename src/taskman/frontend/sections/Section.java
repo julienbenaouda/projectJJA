@@ -13,7 +13,7 @@ public abstract class Section {
 
     /**
      * Shows the section.
-     * @throws Cancel when the user cancels the section.
+     * @throws Cancel if the user cancels the section.
      */
     public abstract void show() throws Cancel;
 
