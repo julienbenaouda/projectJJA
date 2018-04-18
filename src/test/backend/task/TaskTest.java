@@ -13,6 +13,7 @@ import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -413,6 +414,7 @@ public class TaskTest {
 		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
 
 		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		updateStatusTask.plan(resourceManager, admin, resourceList, startTime);
