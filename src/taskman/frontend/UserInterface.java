@@ -338,7 +338,7 @@ public class UserInterface {
 		SelectionSection<TaskWrapper> selection1 = new SelectionSection<>(true);
 		for (ProjectWrapper project: controller.getProjects()) {
 			for (TaskWrapper task: controller.getTasks(project)) {
-				if (task.canBePlanned()) {
+				if (task.canBeUpdated()) {
 					selection1.addOption(project.getName() + " - " + task.getName(), task);
 				}
 			}

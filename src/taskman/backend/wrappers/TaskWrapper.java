@@ -29,16 +29,22 @@ public interface TaskWrapper {
 	double getAcceptableDeviation();
 
 	/**
+	 * Returns the status of the task.
+	 * @return the status of the task
+	 */
+	String getStatus();
+
+	/**
 	 * Returns if the task can be planned.
 	 * @return if the task can be planned.
 	 */
 	boolean canBePlanned();
 
 	/**
-	 * Returns the status of the task.
-	 * @return the status of the task
+	 * Returns if the task can be updated.
+	 * @return if the task can be updated.
 	 */
-	String getStatus();
+	boolean canBeUpdated();
 
 	/**
 	 * Returns the status this task can be updated to.

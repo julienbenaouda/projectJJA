@@ -185,15 +185,6 @@ public class Task implements TaskWrapper {
     }
 
     /**
-     * Returns if the task can be planned.
-     * @return if the task can be planned.
-     */
-    @Override
-    public boolean canBePlanned() {
-        return this.getState() instanceof TaskStateUnavailable;
-    }
-
-    /**
      * Sets the task state to the given state.
      *
      * @param state the task state of the task
@@ -212,6 +203,24 @@ public class Task implements TaskWrapper {
     @Override
 	public String getStatus(){
         return state.getStatus();
+    }
+
+    /**
+     * Returns if the task can be planned.
+     * @return if the task can be planned.
+     */
+    @Override
+    public boolean canBePlanned() {
+        return this.getState() instanceof TaskStateUnavailable;
+    }
+
+    /**
+     * Returns if the task can be updated.
+     * @return if the task can be update.
+     */
+    @Override
+    public boolean canBeUpdated() {
+        return this.getState() instanceof TaskStatePlanned || this.getState() instanceof TaskStateExecuting;
     }
 
     /**

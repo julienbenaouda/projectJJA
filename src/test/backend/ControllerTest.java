@@ -31,11 +31,9 @@ public class ControllerTest {
 
     @Before
     public void runBeforeMethod() {
-        userManager = new UserManager();
-        userManager.createUser("test", "test", "projectmanager", startBreak, resourceManager);
-        userManager.login("test", "test");
-        projectOrganizer = new ProjectOrganizer();
         clock = new Clock();
+        userManager = new UserManager();
+        projectOrganizer = new ProjectOrganizer();
         resourceManager = new ResourceManager();
         controller = new Controller(clock, userManager, projectOrganizer, resourceManager);
         startBreak = LocalTime.of(12, 0);
@@ -43,22 +41,42 @@ public class ControllerTest {
 
     @After
     public void runAfterMethod() {
+        clock = null;
+        userManager = null;
+        projectOrganizer = null;
+        resourceManager = null;
         controller = null;
+        startBreak = null;
+    }
+
+    private void addDeveloper() {
+        userManager.createUser("dev", "devpass", "developer", startBreak, resourceManager);
+    }
+
+    private void addProjectManager() {
+        userManager.createUser("pm", "pmpass", "project manager", null, resourceManager);
     }
 
     @Test
     public void constructor() {
-    	userManager.createUser("test", "myPassword", "developer", startBreak, resourceManager);
-    	userManager.login("test", "myPassword");
-        assertEquals("Constructor does not initialize system time!", TimeParser.convertLocalDateTimeToString(clock.getTime()), controller.getTime());
-        assertEquals("Constructor does not initialize user type!", "test", controller.getCurrentUser().getName());
+        assertEquals("Constructor does not initialize clock!", clock.getTime(), controller.getTime());
+        assertEquals("Constructor does not initialize user manager!", userManager.getCurrentUser(), controller.getCurrentUser());
+        assertEquals("Constructor does not initialize project organizer!", projectOrganizer.getProjects(), controller.getProjects());
+        assertEquals("Constructor does not initialize resource manager!", resourceManager.getResourceTypes(), controller.getResourceTypes());
+    }
+
+    @Test
+    public void user() {
+        assertNotNull("User cannot be null!", controller.getCurrentUser());
+        assertNotEquals("User cannot be ''!", "", controller.getCurrentUser().getName());
+        controller.createUser("testUser", "testPassword", "developer", startBreak);
+        controller.login("testUser", "testPassword");
+        assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUser().getName());
     }
 
     @Test
     public void project_and_task() {
-        // project and task are only tested to make sure that the controller works correctly.
-        // More extended tests are located in separate test classes.
-        userManager.createUser("pm", "test", "projectmanager", null, resourceManager);
+        userManager.createUser("pm", "test", "project manager", null, resourceManager);
         userManager.createUser("d", "test", "developer", startBreak, resourceManager);
         userManager.login("pm", "test");
 
@@ -102,15 +120,6 @@ String dependencyName = "task dependency";
         catch (Exception e) {
             assertEquals("Wrong exception when updating time to past! (" + e.getMessage() + ")", IllegalArgumentException.class, e.getClass());
         }
-    }
-
-    @Test
-    public void user() {
-        assertNotNull("user cannot be null!", controller.getCurrentUser().getName());
-        assertNotEquals("user cannot be ''!", "", controller.getCurrentUser().getName());
-        controller.createUser("testUser", "testPassword", "developer", startBreak);
-        controller.login("testUser", "testPassword");
-        assertEquals("The user name isn't correct!", "testUser", controller.getCurrentUser().getName());
     }
 
     private void deleteFile(String path) throws AccessDeniedException {
