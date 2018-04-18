@@ -121,6 +121,20 @@ public class Plan {
     }
 
     /**
+     * Creates a specific reservation with the given attributes and adds it to the reservations of the plan.
+     * The reservation is also set to an user specific state.
+     *
+     * @param resource the resource of the user specific reservation
+     * @param startTime the start time of the user specific reservation
+     * @param endTime the end time of the user specific reservation
+     */
+    private void addSpecificReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+        Reservation reservation = new Reservation(resource, startTime, endTime);
+        reservation.setUserSpecific();
+        reservations.add(reservation);
+    }
+
+    /**
      * Removes the given reservation from the plan its reservations.
      *
      * @param reservation the reservation to remove
@@ -151,7 +165,7 @@ public class Plan {
                 reservation.delete();
                 removeReservation(reservation);
                 // TODO: die boolean changable nog doen
-                addReservation(newResource, startTime, endTime);
+                addSpecificReservation(newResource, startTime, endTime);
                 changed = true;
             }
             index += 1;

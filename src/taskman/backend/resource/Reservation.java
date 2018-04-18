@@ -30,8 +30,6 @@ public class Reservation {
         resource.addReservation(this);
     }
 
-    public Reservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime, boolean userSpecific)
-
 
     /**
      * The resource of the reservation.
@@ -104,6 +102,31 @@ public class Reservation {
 
     public void finishEarlier(LocalDateTime endTime) {
     	setTimeSpan(new TimeSpan(getTimeSpan().getStartTime(), endTime));
+    }
+
+
+    /**
+     * Represents the user specific state; if the resource is specifically
+     * selected by the user.
+     */
+    private boolean userSpecific = false;
+
+    /**
+     * Returns the user specific state.
+     *
+     * @return the user specific state
+     */
+    public boolean isUserSpecific(){
+        return userSpecific;
+    }
+
+    /**
+     * Sets the use specific value to true.
+     *
+     * @post the user specific value is set to true
+     */
+    public void setUserSpecific(){
+        userSpecific = true;
     }
 
     /**
