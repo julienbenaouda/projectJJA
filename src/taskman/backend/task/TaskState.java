@@ -112,7 +112,6 @@ public abstract class TaskState {
      */
     public void addDependency(Task task, Task dependency) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The dependency must be added to an unavailable task.");
-        // TODO: is dit correct? Of moet het enkel een available task zijn
     }
 
     /**
@@ -130,7 +129,16 @@ public abstract class TaskState {
     }
 
     /**
-     * Initializes a plan for this task.
+     * Returns if the planned task is available.
+     *
+     * @return true if the planned task is available, otherwise false
+     */
+    public boolean isAvailable(Task task, LocalDateTime startTime){
+        return false;
+    }
+
+    /**
+     * Initializes a plan for this state.
      * @param task a task.
      * @param resourceManager a resource manager.
      * @param startTime the start time for the plan.
@@ -180,16 +188,6 @@ public abstract class TaskState {
      */
     public void cancelPlan(Task task) throws IllegalStateException {
         throw new IllegalStateException("Task must be in planned state!");
-    }
-
-    /**
-     * changes the status of a task to available
-     * @param task the task to change the status
-     * @param startTime the time to set the tasks timespan to
-     * @throws IllegalStateException when the task is not in the correct state to be changed to available
-     */
-    public void makeAvailable(Task task) throws IllegalStateException {
-    	throw new IllegalStateException("The task is not in the correct status and therefore can't be changed.");
     }
 
 }
