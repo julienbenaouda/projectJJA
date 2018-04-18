@@ -189,6 +189,7 @@ public class UserInterface {
 		menu.addOption("create resource", this::createResource);
 		menu.addOption("show system time", this::showTime);
 		menu.addOption("advance system time", this::advanceTime);
+		menu.addOption("start simulation", this::simulationMenu);
 		while (true) {
 			title.show();
 			menu.show();
@@ -505,6 +506,25 @@ public class UserInterface {
 		for (TaskWrapper task: project.getTasks()) taskSelection.addOption(task.getName(), task);
 		taskSelection.show();
 		return taskSelection.getAnswerObject();
+	}
+	
+	/**
+	 * show the simulation menu
+	 * @throws Cancel when the simulation is cancelled
+	 */
+	private void simulationMenu() throws Cancel {
+		TitleSection title = new TitleSection("Simulation!");
+		MenuSection menu = new MenuSection("cancel simulation");
+		while (true) {
+			title.show();
+			try {
+				menu.show();
+			} catch(Cancel c) {
+				controller.;
+				throw c;
+			}
+			menu.executeChoice();
+		}
 	}
 
 }
