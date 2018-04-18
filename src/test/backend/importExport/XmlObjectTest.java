@@ -66,12 +66,12 @@ public class XmlObjectTest {
 		ResourceType resourceType = rm.getResourceType("type1");
 		rm.getResourceType("type1").createResource("testResource");
 		LocalTime startBreak = LocalTime.of(12, 0);
-		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
+		um.createUser("testDeveloper", "test", "developer", startBreak, rm);
 		ResourceType developerResourceType = rm.getResourceType("developer");
 		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) resourceType, 1);
 		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) developerResourceType, 1);
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
-		resources.add(rm.getResourceType("developer").getResource("test"));
+		resources.add(rm.getResourceType("developer").getResource("testDeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		controller.plan(po.getProject("test").getTask("test"), resources, startTime);
@@ -105,7 +105,7 @@ public class XmlObjectTest {
 		Pair<String, String> p1 = new Pair("developer", "test");
 		Pair<String, String> p2 = new Pair("type1", "testResource");
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
-		resources.add(rm.getResourceType("developer").getResource("test"));
+		resources.add(rm.getResourceType("developer").getResource("testdeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		controller.plan(po.getProject("test").getTask("test"), resources, startTime);

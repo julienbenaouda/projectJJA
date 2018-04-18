@@ -1,5 +1,5 @@
-/*
-package test;
+
+package test.backend.resource;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ public class ResourceTest {
 	@Before
 	public void setUp() throws Exception {
 		type = new ResourceType("test");
-		resource = new Resource(type);
+		resource = new Resource("test", type);
 	}
 
 	@Test
@@ -33,20 +33,19 @@ public class ResourceTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testResource_illegal() {
-		resource = new Resource(null);
+		resource = new Resource("test", null);
 	}
 
 	@Test
 	public void testIsAvailable_false() {
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.AUGUST, 26, 0, 0);
-		TimeSpan t = new TimeSpan(start, end);
-		Task task = new Task("test", 25l, 5.5);
-		Reservation r = new Reservation(task, resource, t);
+		Task task = new Task("test", "test", 25l, 5.5);
+		Reservation r = new Reservation(resource, start, end);
 		resource.addReservation(r);
 		start = LocalDateTime.of(2018, Month.JUNE, 26, 0, 0);
 		end = LocalDateTime.of(2018, Month.AUGUST, 26, 0, 0);
-		t = new TimeSpan(start, end);
+		TimeSpan t = new TimeSpan(start, end);
 		assertFalse(resource.isAvailable(t));
 	}
 
@@ -55,8 +54,8 @@ public class ResourceTest {
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.AUGUST, 26, 0, 0);
 		TimeSpan t = new TimeSpan(start, end);
-		Task task = new Task("test", 25l, 5.5);
-		Reservation r = new Reservation(task, resource, t);
+		Task task = new Task("test", "test", 25l, 5.5);
+		Reservation r = new Reservation(resource, start, end);
 		resource.addReservation(r);
 		start = LocalDateTime.of(2018, Month.JUNE, 26, 0, 0);
 		end = LocalDateTime.of(2018, Month.JULY, 20, 0, 0);
@@ -68,11 +67,9 @@ public class ResourceTest {
 	public void testCreateReservation() {
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.AUGUST, 26, 0, 0);
-		TimeSpan timeSpan = new TimeSpan(start, end);
-		Task task = new Task("test", 25l, 5.5);
-		resource.createReservation(task, timeSpan);
-		assertTrue(resource.getReservations().size() == 1);
+		Reservation r = new Reservation(resource, start, end);
+		assertEquals(1, resource.getReservations().size());
 	}
 
 }
-*/
+

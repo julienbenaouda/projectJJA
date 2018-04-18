@@ -1,5 +1,5 @@
-/*
-package test;
+
+package test.backend.resource;
 
 import static org.junit.Assert.*;
 
@@ -19,23 +19,24 @@ public class ReservationTest {
 	private Reservation reservation;
 	private Resource resource;
 	private Task task;
-	private TimeSpan timeSpan;
+	private LocalDateTime start;
+	private LocalDateTime end;
 
+	
 	@Before
 	public void setUp() {
-		task = new Task("test", 25l, 5.5);
-		resource = new Resource(new ResourceType("test"));
-		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 26, 12, 25);
-		timeSpan = new TimeSpan(start, end);
-		reservation = new Reservation(task, resource, timeSpan);
+		task = new Task("test", "test", 25l, 5.5);
+		resource = new Resource("test", new ResourceType("test"));
+		start = LocalDateTime.of(2018, Month.JULY, 26, 11, 0);
+		end = LocalDateTime.of(2018, Month.JULY, 26, 12, 25);
+		reservation = new Reservation(resource, start, end);
 	}
 
 	@Test
 	public void testReservation_legal() {
-		assertEquals(task, reservation.getTask());
 		assertEquals(resource, reservation.getResource());
-		assertEquals(timeSpan, reservation.getTimeSpan());
+		assertEquals(start, reservation.getTimeSpan().getStartTime());
+		assertEquals(end, reservation.getTimeSpan().getEndTime());
 	}
 
 	@Test(expected=IllegalArgumentException.class)
@@ -58,6 +59,12 @@ public class ReservationTest {
 		TimeSpan overlappingTimeSpan = new TimeSpan(start, end);
 		assertFalse(reservation.overlaps(overlappingTimeSpan));
 	}
+	
+	public void testFinishEarlier() {
+		end = end.minusHours(1);
+		reservation.finishEarlier(end);
+		assertEquals(end, reservation.getTimeSpan().getEndTime());
+	}
 
 }
-*/
+
