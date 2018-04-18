@@ -1,5 +1,7 @@
 package taskman.backend.wrappers;
 
+import java.util.List;
+
 public interface TaskWrapper {
 
 	/**
@@ -27,9 +29,21 @@ public interface TaskWrapper {
 	double getAcceptableDeviation();
 
 	/**
+	 * Returns if the task can be planned.
+	 * @return if the task can be planned.
+	 */
+	boolean canBePlanned();
+
+	/**
 	 * Returns the status of the task.
 	 * @return the status of the task
 	 */
 	String getStatus();
+
+	/**
+	 * Returns the status this task can be updated to.
+	 * @return a list of strings.
+	 */
+	List<String> getStatusTransitions();
 
 }

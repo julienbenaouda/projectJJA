@@ -98,7 +98,8 @@ public class ResourceType implements ResourceTypeWrapper {
 	 *
 	 * @return the list of resources
 	 */
-	private List<Resource> getResources() {
+	@Override
+	public List<Resource> getResources() {
 		return resources;
 	}
 

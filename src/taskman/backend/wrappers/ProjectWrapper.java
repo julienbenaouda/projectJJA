@@ -1,15 +1,8 @@
 package taskman.backend.wrappers;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface ProjectWrapper {
-
-	/**
-	 * Returns a list with all tasks of a project.
-	 * @return the tasks of the project.
-	 */
-	List<? extends TaskWrapper> getTasks();
 
 	/**
 	 * Returns the name of the project.

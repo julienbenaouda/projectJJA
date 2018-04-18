@@ -103,6 +103,14 @@ public class Controller {
     }
 
     /**
+     * Return the possible user types.
+     * @return a collection of user types.
+     */
+    public Collection<String> getUserTypes() {
+        return this.userManager.getUserTypes();
+    }
+
+    /**
      * Adds a new user to the system.
      * @param name the name of the user.
      * @param password the password of the user.
@@ -112,14 +120,6 @@ public class Controller {
      */
     public void createUser(String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
         this.userManager.createUser(name, password, type, startBreak, resourceManager);
-    }
-
-    /**
-     * Return the possible user types.
-     * @return a collection of user types.
-     */
-    public Collection<String> getUserTypes() {
-        return this.userManager.getUserTypes();
     }
 
     /**
@@ -157,7 +157,7 @@ public class Controller {
      * @return a List of ProjectWrappers.
      */
     public List<ProjectWrapper> getProjects() {
-        return this.projectOrganizer.getProjects();
+        return new ArrayList<>(this.projectOrganizer.getProjects(this.userManager.getCurrentUser()));
     }
 
     /**
@@ -184,6 +184,15 @@ public class Controller {
     }
 
     /**
+     * Returns the tasks of a project.
+     * @param project the project.
+     * @return a list of tasks.
+     */
+    public List<TaskWrapper> getTasks(ProjectWrapper project) {
+        return new ArrayList<>(((Project) project).getTasks(this.userManager.getCurrentUser()));
+    }
+
+    /**
      * Adds a task with the given properties.
      * @param project the project wrapper.
      * @param taskName the name of the task.
@@ -197,7 +206,6 @@ public class Controller {
      */
     public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
         ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
-
     }
 
     /**
@@ -205,7 +213,8 @@ public class Controller {
      * @param task the task wrapper.
      */
     public Iterator<LocalDateTime> getStartingsTimes(TaskWrapper task) {
-        return this.resourceManager.getStartingTimes((Task) task, this.clock.getTime()); // TODO: @Jeroen
+        Task t = (Task) task;
+        return this.resourceManager.getStartingTimes(t.getPlan(), t.getEstimatedDuration(), this.clock.getTime()); // TODO: @Jeroen
     }
 
     /**
@@ -215,7 +224,8 @@ public class Controller {
      * @return a list of available resources for the given resource type at the given startTime for the given task.
      */
     public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAvailableResources((Task) task, startTime)); // TODO: @Jeroen
+        Task t = (Task) task;
+        return new ArrayList<>(resourceManager.getAvailableResources(t.getPlan(), t.getEstimatedDuration(), startTime)); // TODO: @Jeroen
     }
 
     /**
@@ -226,7 +236,8 @@ public class Controller {
      * @return a list of resources as alternatives for the given resource and the given task at the given time.
      */
     public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
-        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, (Task) task, startTime)); // TODO: @Jeroen
+        Task t = (Task) task;
+        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, t.getEstimatedDuration(), startTime)); // TODO: @Jeroen
     }
 
     /**
@@ -238,17 +249,6 @@ public class Controller {
     public void plan(TaskWrapper task, List<ResourceWrapper> resources, LocalDateTime startTime) {
         List<Resource> converted = resources.stream().map(r -> (Resource) r).collect(Collectors.toList());
         ((Task) task).plan(this.resourceManager, this.userManager.getCurrentUser(), converted, startTime);
-    }
-
-    /**
-     * Creates a constraint from a given string.
-     * @param string a string which represents a constraint.
-     * @post adds a constraint to the system.
-     * @throws IllegalArgumentException if the string does not represent a valid constraint.
-     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
-     */
-    public void createConstraint(String string) {
-        this.resourceManager.createConstraint(string);
     }
 
     /**
@@ -266,6 +266,17 @@ public class Controller {
      */
     public void createResourceType(String name) {
         this.resourceManager.createResourceType(name);
+    }
+
+    /**
+     * Creates a constraint from a given string.
+     * @param string a string which represents a constraint.
+     * @post adds a constraint to the system.
+     * @throws IllegalArgumentException if the string does not represent a valid constraint.
+     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
+     */
+    public void createConstraint(String string) {
+        this.resourceManager.createConstraint(string);
     }
 
     /**

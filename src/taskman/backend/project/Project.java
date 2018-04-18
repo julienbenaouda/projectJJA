@@ -10,6 +10,7 @@ import taskman.backend.wrappers.ProjectWrapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a project.
@@ -48,9 +49,17 @@ public class Project implements ProjectWrapper {
 	 * Returns a list with all tasks of a project
 	 * @return the tasks of the project.
 	 */
-	@Override
 	public List<Task> getTasks() {
 		return new ArrayList<>(taskList);
+	}
+
+	/**
+	 * Returns a list with all tasks the user has access to.
+	 * @param user the user.
+	 * @return a list with all tasks the user has access to.
+	 */
+	public List<Task> getTasks(User user) {
+		return this.taskList.stream().filter(t -> t.hasAccessTo(user)).collect(Collectors.toList());
 	}
 
 	/**
@@ -101,6 +110,15 @@ public class Project implements ProjectWrapper {
      */
     private void removeTask(Task task) {
 		taskList.remove(task);
+	}
+
+	/**
+	 * Returns if the given user has access to this project.
+	 * @param user a User.
+	 * @return if the given user has access to this project.
+	 */
+	public boolean hasAccessTo(User user) {
+		return this.taskList.stream().anyMatch(t -> t.hasAccessTo(user));
 	}
 
 	/**

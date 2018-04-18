@@ -22,9 +22,6 @@ import static org.junit.Assert.*;
 
 public class ControllerTest {
 
-    
-    // TODO: zorgen dat de tests compileren!
-
     private static Controller controller;
     private Clock clock;
     private ProjectOrganizer projectOrganizer;

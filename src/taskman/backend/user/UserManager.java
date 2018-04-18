@@ -51,14 +51,25 @@ public class UserManager {
 	}
 
 	/**
+	 * Returns if a user with the given name exists.
+	 * @param name the name of a user.
+	 * @return if a user with the given name exists.
+	 */
+	public boolean hasUser(String name) {
+		return this.users.stream().anyMatch(u -> u.getName().equals(name));
+	}
+
+	/**
 	 * Adds a new user to the list of users.
 	 * @param name the name of the user.
 	 * @param password the password of the user.
 	 * @param type the type of user;
 	 * @throws IllegalArgumentException if the type is not valid.
+	 * @throws IllegalArgumentException if a user with the given name already exists.
 	 * @post a new user is added to the list of users.
 	 */
 	public void createUser(String name, String password, String type, LocalTime startBreak, ResourceManager resourceManager) throws IllegalArgumentException {
+		if (hasUser(name)) throw new IllegalArgumentException("A user with the given name already exists!");
 		switch (type) {
 			case "developer":
 				createDeveloper(name, password);

@@ -14,5 +14,5 @@ public interface ResourceTypeWrapper {
 	 * Returns the resources of the resource type.
 	 * @return the list of resources.
 	 */
-	List<ResourceWrapper> getResources();
+	List<? extends ResourceWrapper> getResources();
 }
