@@ -77,11 +77,10 @@ public class Controller {
     /**
      * Updates the time.
      * @param newTime the new time.
-     * @throws DateTimeParseException if the text cannot be parsed.
      * @throws IllegalArgumentException if the new time if before the old time.
      * @post the time of the system will be set to the given time.
      */
-    public void updateTime(LocalDateTime newTime) throws DateTimeParseException, IllegalArgumentException {
+    public void updateTime(LocalDateTime newTime) throws IllegalArgumentException {
         this.clock.updateTime(newTime);
     }
 
@@ -164,7 +163,6 @@ public class Controller {
      * Return the status (active, finished, failed) of the project with the given name.
      * @param project a ProjectWrapper.
      * @return a String.
-     * @throws IllegalArgumentException if no project is found with the given name.
      */
     public String getProjectStatus(ProjectWrapper project) throws IllegalArgumentException {
         return ((Project) project).getStatus(this.clock.getTime());

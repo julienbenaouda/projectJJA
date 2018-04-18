@@ -163,8 +163,8 @@ public class ResourceManagerTest {
 		t.plan(resourceManager, user, resources, startTime);
 		Task t2 = new Task("test", "test2", 60l, 5.5);
 		t2.addRequirement(resourceManager, type, 2);
-		List<Resource> r = resourceManager.getAvailableResources(t2.getPlan(), startTime, t2.getEstimatedDuration());
-		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), startTime, t2.getEstimatedDuration());
+		List<Resource> r = resourceManager.getAvailableResources(t2.getPlan(), t2.getEstimatedDuration(), startTime);
+		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), t2.getEstimatedDuration(), startTime);
 		System.out.println(i.next().getYear());
 		assertEquals(1, r.size());
 	}

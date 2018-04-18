@@ -2,6 +2,7 @@ package taskman.backend.project;
 
 
 import taskman.backend.task.Task;
+import taskman.backend.user.Developer;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
@@ -32,6 +33,9 @@ public class Project implements ProjectWrapper {
 	public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) {
 		if(!(user instanceof ProjectManager)) {
 			throw new OperationNotPermittedException("You don't have permission to create a project!");
+		}
+		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
+			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
 		setName(name);
 		setDescription(description);
@@ -118,7 +122,11 @@ public class Project implements ProjectWrapper {
 	 * @return if the given user has access to this project.
 	 */
 	public boolean hasAccessTo(User user) {
-		return this.taskList.stream().anyMatch(t -> t.hasAccessTo(user));
+		if (user instanceof Developer) {
+			return this.taskList.stream().anyMatch(t -> t.hasAccessTo(user));
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -224,10 +232,6 @@ public class Project implements ProjectWrapper {
 	private void setDueTime(LocalDateTime dueTime) {
 		if (dueTime == null){ // TODO: moet dit anders bij task dit ook
 			throw new IllegalArgumentException("The due time can't be null");
-		}
-		if(dueTime.compareTo(creationTime) <= 0) // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
-		{
-			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
 		this.dueTime = dueTime;
 	}

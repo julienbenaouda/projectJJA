@@ -1,7 +1,6 @@
 package taskman.backend.resource;
 
 import taskman.backend.constraint.ConstraintComponent;
-import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeParser;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
@@ -9,7 +8,6 @@ import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -161,45 +159,34 @@ public class ResourceManager {
      * @throws NoSuchElementException if there is no next element in the iterator
      */
     public Iterator<LocalDateTime> getStartingTimes(Plan plan, long duration, LocalDateTime startTime) throws NoSuchElementException {
-        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
+        return new Iterator<LocalDateTime>() {
             LocalDateTime startingTime = TimeParser.roundUpLocalDateTime(startTime);
 
             @Override
             public boolean hasNext() {
                 Map<ResourceType, Integer> requirements = plan.getRequirements();
-                boolean enoughResources = true;
-                for (ResourceType resourceType : requirements.keySet()){
-                    if (resourceType.getNbOfResources() < requirements.get(resourceType)){
-                        enoughResources = false;
-                    }
+                if (requirements.keySet().stream().anyMatch(t -> t.getNbOfResources() < requirements.get(t))) {
+                    return false;
                 }
 
                 boolean hasAvailablePeriod = false;
                 for (int day = 1; day <= 7; day++){
-                    AvailabilityPeriod availabilityPeriod = new AvailabilityPeriod(LocalTime.MIN, LocalTime.MAX);
+                    LocalTime startTime = LocalTime.MIN;
+                    LocalTime endTime = LocalTime.MAX;
                     for (ResourceType resourceType : requirements.keySet()){
-                        LocalTime startTime;
-                        LocalTime endTime;
-                        if (availabilityPeriod.getStartTime().isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
+                        if (startTime.isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
                             startTime = resourceType.getAvailabilityPeriod(day).getStartTime();
                         }
-                        else{
-                            startTime = availabilityPeriod.getStartTime();
-                        }
-                        if (availabilityPeriod.getEndTime().isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
+                        if (endTime.isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
                             endTime = resourceType.getAvailabilityPeriod(day).getEndTime();
                         }
-                        else{
-                            endTime = availabilityPeriod.getEndTime();
-                        }
-                        availabilityPeriod = new AvailabilityPeriod(startTime, endTime);
                     }
-                    if (availabilityPeriod.getStartTime().truncatedTo(ChronoUnit.HOURS).plus(duration, ChronoUnit.MINUTES).isBefore(availabilityPeriod.getEndTime())){
+                    if (TimeParser.roundUpLocalTime(startTime).plusMinutes(duration).isBefore(endTime)){
                         hasAvailablePeriod = true;
                     }
                 }
 
-                return enoughResources && hasAvailablePeriod;
+                return hasAvailablePeriod;
             }
 
             @Override
@@ -213,7 +200,6 @@ public class ResourceManager {
                 throw new NoSuchElementException("There is no starting time available.");
             }
         };
-        return startingTimes;
     }
 
     /**

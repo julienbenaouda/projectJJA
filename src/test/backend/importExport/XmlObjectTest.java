@@ -1,30 +1,24 @@
 package test.backend.importExport;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.Controller;
+import taskman.backend.importexport.XmlObject;
+import taskman.backend.project.Project;
+import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
+import taskman.backend.task.Task;
+import taskman.backend.time.Clock;
+import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceWrapper;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.Pair;
-import taskman.backend.Controller;
-import taskman.backend.importexport.XmlObject;
-import taskman.backend.project.Project;
-import taskman.backend.project.ProjectOrganizer;
-import taskman.backend.resource.Resource;
-import taskman.backend.resource.ResourceManager;
-import taskman.backend.resource.ResourceType;
-import taskman.backend.task.Task;
-import taskman.backend.time.Clock;
-import taskman.backend.user.UserManager;
-import taskman.backend.wrappers.ProjectWrapper;
-import taskman.backend.wrappers.ResourceTypeWrapper;
-import taskman.backend.wrappers.ResourceWrapper;
-import taskman.backend.wrappers.TaskWrapper;
+import static org.junit.Assert.*;
 
 public class XmlObjectTest {
 	private ProjectOrganizer po;
@@ -60,7 +54,7 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		Project project = po.getProject("test");
-		controller.createTask((ProjectWrapper) project, "test", "test", 60l, 5.0);
+		controller.createTask(project, "test", "test", 60L, 5.0);
 		Task task = project.getTask("test");
 		rm.createResourceType("type1");
 		ResourceType resourceType = rm.getResourceType("type1");
@@ -68,8 +62,8 @@ public class XmlObjectTest {
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
 		ResourceType developerResourceType = rm.getResourceType("developer");
-		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) resourceType, 1);
-		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) developerResourceType, 1);
+		controller.addRequirementToTask(task, resourceType, 1);
+		controller.addRequirementToTask(task, developerResourceType, 1);
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
 		resources.add(rm.getResourceType("developer").getResource("test"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
@@ -92,7 +86,7 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		Project project = po.getProject("test");
-		controller.createTask(project, "test", "test", 60l, 5.0);
+		controller.createTask(project, "test", "test", 60L, 5.0);
 		Task task = project.getTask("test");
 		rm.createResourceType("type1");
 		ResourceType resourceType = rm.getResourceType("type1");
@@ -100,10 +94,8 @@ public class XmlObjectTest {
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
 		ResourceType developerResourceType = rm.getResourceType("developer");
-		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) resourceType, 1);
-		controller.addRequirementToTask((TaskWrapper) task, (ResourceTypeWrapper) developerResourceType, 1);
-		Pair<String, String> p1 = new Pair("developer", "test");
-		Pair<String, String> p2 = new Pair("type1", "testResource");
+		controller.addRequirementToTask(task, resourceType, 1);
+		controller.addRequirementToTask(task, developerResourceType, 1);
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
 		resources.add(rm.getResourceType("developer").getResource("test"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));

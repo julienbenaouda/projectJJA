@@ -5,6 +5,7 @@ import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 import taskman.backend.wrappers.TaskWrapper;
 
@@ -223,17 +224,6 @@ public class Task implements TaskWrapper {
         return this.getState() instanceof TaskStatePlanned || this.getState() instanceof TaskStateExecuting;
     }
 
-    /**
-     * Returns the status this task can be updated to.
-     *
-     * @return a list of strings.
-     */
-    @Override
-    public List<String> getStatusTransitions() {
-        // TODO: hoe moet dit geïmplementeerd worden? Het is nodig om de user een status te laten kiezen bij updateTaskStatus.
-        return null;
-    }
-
 
     /**
      * Updates the status of the task.
@@ -447,7 +437,11 @@ public class Task implements TaskWrapper {
      * @return if the given user has access to this task.
      */
     public boolean hasAccessTo(User user) {
-        return this.getPlan().isDeveloperFromPlan(user);
+        if (user instanceof Developer) {
+            return this.getPlan().isDeveloperFromPlan(user);
+        } else {
+            return true;
+        }
     }
 
 }

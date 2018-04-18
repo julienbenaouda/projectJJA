@@ -142,10 +142,10 @@ public class Plan {
      */
     public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, Long duration) {
     	if(startsEarlier(startTime)) {
-    		if(resourceManager.getStartingTimes(this, startTime, duration).next().isAfter(startTime)) {
+    		if(resourceManager.getStartingTimes(this, duration, startTime).next().isAfter(startTime)) {
     			throw new IllegalArgumentException("Execution of this task can't start at the given start time because there are no resources available.");
     		} else {
-    			resourceManager.planBySystem(this, resourceManager.getAvailableResources(this, startTime, duration), startTime);
+    			resourceManager.planBySystem(this, resourceManager.getAvailableResources(this, duration, startTime), startTime);
     		}
     	}
     }

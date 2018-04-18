@@ -1,7 +1,5 @@
 package taskman.backend.wrappers;
 
-import java.util.List;
-
 public interface TaskWrapper {
 
 	/**
@@ -45,11 +43,5 @@ public interface TaskWrapper {
 	 * @return if the task can be updated.
 	 */
 	boolean canBeUpdated();
-
-	/**
-	 * Returns the status this task can be updated to.
-	 * @return a list of strings.
-	 */
-	List<String> getStatusTransitions();
 
 }
