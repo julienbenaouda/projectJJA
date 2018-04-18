@@ -320,7 +320,32 @@ public class ResourceManager {
     public void removeResourceForUser(User user) {
         if (user.getUserType().equals("developer")) {
             Developer d = (Developer) user;
-            getResourceType("developer").removeResource(d.getResource());
+            getResourceType("developer").removeResource(getResourceType("developer").getResource(user.getName()));
+            // TODO: is dit wel goede code
         }
+    }
+    
+    /**
+     * lets a plan be created by the system. The system itself choses the resources it will use.
+     * @param plan the plan to create new reservations for
+     * @param availableResources the list of resources from which the system can chose
+     * @param startTime the start time of the plan
+     * @post new reservations in the plan are generated for the resources needed
+     */
+    public void planBySystem(Plan plan, List<Resource> availableResources, LocalDateTime startTime) {
+    	Map<ResourceType, Integer> requirements = plan.getRequirements();
+    	List<Resource> resources = new ArrayList<>();
+    	for(ResourceType type: requirements.keySet()) {
+    		int i = 0;
+    		Iterator<Resource> it = availableResources.iterator();
+    		while(it.hasNext() && i < requirements.get(type).intValue()) {
+    			Resource r = it.next();
+    			if(r.getType() == type) {
+    				resources.add(r);
+    				it.remove();
+    			}
+    		}
+    	}
+    	plan(plan, resources, startTime);
     }
 }

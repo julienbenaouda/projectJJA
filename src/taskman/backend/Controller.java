@@ -214,7 +214,7 @@ public class Controller {
      */
     public Iterator<LocalDateTime> getStartingsTimes(TaskWrapper task) {
         Task t = (Task) task;
-        return this.resourceManager.getStartingTimes(t.getPlan(), t.getEstimatedDuration(), this.clock.getTime()); // TODO: @Jeroen
+        return this.resourceManager.getStartingTimes(t.getPlan(), t.getEstimatedDuration(), this.clock.getTime()); // TODO: @Jeroen, via task?
     }
 
     /**
@@ -225,7 +225,7 @@ public class Controller {
      */
     public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
         Task t = (Task) task;
-        return new ArrayList<>(resourceManager.getAvailableResources(t.getPlan(), t.getEstimatedDuration(), startTime)); // TODO: @Jeroen
+        return new ArrayList<>(resourceManager.getAvailableResources(t.getPlan(), t.getEstimatedDuration(), startTime)); // TODO: @Jeroen, via task?
     }
 
     /**
@@ -237,7 +237,7 @@ public class Controller {
      */
     public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
         Task t = (Task) task;
-        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, t.getEstimatedDuration(), startTime)); // TODO: @Jeroen
+        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, t.getEstimatedDuration(), startTime)); // TODO: @Jeroen, via task?
     }
 
     /**

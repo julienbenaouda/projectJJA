@@ -131,6 +131,41 @@ public class Plan {
         }
         return false;
     }
+    
+    /**
+     * 
+     * @param resourceManager the resourceManager to use to replan
+     * @param startTime the start time of the task
+     * @param duration the duration of the task
+     * @post if the start time is before the foreseen start time, a new plan is generated for the task
+     * @throws IllegalArgumentException when not enough resources are available to make a new plan for the given time
+     */
+    public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, Long duration) {
+    	if(startsEarlier(startTime)) {
+    		if(resourceManager.getStartingTimes(this, startTime, duration).next().isAfter(startTime)) {
+    			throw new IllegalArgumentException("Execution of this task can't start at the given start time because there are no resources available.");
+    		} else {
+    			resourceManager.planBySystem(this, resourceManager.getAvailableResources(this, startTime, duration), startTime);
+    		}
+    	}
+    }
+    
+    /**
+     * finishes the reservations if needed
+     * @param endTime the end tiem when the reservation should be finished
+     * @post if the end time is earlier then the foreseen endtime, the resources are set to available for the remaining time
+     */
+    public void finish(LocalDateTime endTime) {
+    	if(endTime.isBefore(getReservations().get(0).getTimeSpan().getEndTime())) {
+    		for(Reservation r: getReservations()) {
+    			r.finishEarlier(endTime);
+    		}
+    	}
+    }
+
+	private boolean startsEarlier(LocalDateTime startTime) {
+		return startTime.isBefore(getReservations().get(0).getTimeSpan().getStartTime());
+	}
 
 
 }

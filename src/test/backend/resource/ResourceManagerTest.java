@@ -140,4 +140,32 @@ public class ResourceManagerTest {
 		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 4);
 	}
+	
+	// TODO @Jeroen deze test werkt nog niet
+	@Test
+	public void testMultipleResources() {
+		Task t = new Task("test", "test", 20l, 5.5);
+		resourceManager.createResourceType("type");
+		ResourceType type = resourceManager.getResourceType("type");
+		t.addRequirement(resourceManager, type, 2);
+		type.createResource("r1");
+		type.createResource("r2");
+		type.createResource("r3");
+		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));
+		for(int j = 0; j < 7; j++) {
+			type.addAvailability(j, always);
+		}
+		ProjectManager user = new ProjectManager("test", "test");
+		ArrayList<Resource> resources = new ArrayList<>();
+		resources.add(type.getResource("r1"));
+		resources.add(type.getResource("r2"));
+		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
+		t.plan(resourceManager, user, resources, startTime);
+		Task t2 = new Task("test", "test2", 60l, 5.5);
+		t2.addRequirement(resourceManager, type, 2);
+		List<Resource> r = resourceManager.getAvailableResources(t2.getPlan(), startTime, t2.getEstimatedDuration());
+		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), startTime, t2.getEstimatedDuration());
+		System.out.println(i.next().getYear());
+		assertEquals(1, r.size());
+	}
 }

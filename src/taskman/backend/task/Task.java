@@ -383,6 +383,29 @@ public class Task implements TaskWrapper {
         }
         getState().plan(resourceManager,this, resources, startTime);
     }
+    
+    /**
+     * makes a task executing
+     * @param resourceManager the resource manager to pass to the state
+     * @param startTime the time when the task starts executing
+     * @param user the user to check the assignment for
+     * @post the status of the task is changed to executing
+     * @throws IllegalArgumentException when the user is not assigned to the task
+     */
+    public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, User user) throws IllegalArgumentException {
+        if (getPlan().isDeveloperFromPlan(user)) {
+            getState().execute(this, resourceManager, startTime);
+        }
+        throw new IllegalArgumentException("The user must be a developer of the task.");
+    }
+    
+    /**
+     * makes a task available
+     * @param startTime the current system time
+     */
+    public void makeAvailable(LocalDateTime startTime) {
+    	getState().makeAvailable(this, startTime);
+    }
 
 
     // LOOP CHECKING CODE

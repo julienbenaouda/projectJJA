@@ -49,6 +49,16 @@ public abstract class TaskState {
     public long getDelay(Task t) throws IllegalStateException {
         throw new IllegalStateException("Cannot calculate delay of task if not finished!");
     }
+    
+    /**
+     * Makes the task executing
+     * @param task the task to change to executing
+     * @param resourceManager the resourceManager to check for availability
+     * @throws IllegalStateException when the task is not in the correct state
+     */
+    public void execute(Task task, ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
+    	throw new IllegalStateException("A task can only be executed when it is in the planned state!");
+    }
 
     /**
      * Update the state of the task to the given state.
@@ -113,7 +123,17 @@ public abstract class TaskState {
      * @throws IllegalStateException the task must be unavailable
      */
     public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) throws IllegalStateException {
-        throw new IllegalStateException("The task can only planned in unavailable state.");
+        throw new IllegalStateException("The task can only be planned in unavailable state.");
+    }
+    
+    /**
+     * changes the status of a task to available
+     * @param task the task to change the status
+     * @param startTime the time to set the tasks timespan to
+     * @throws IllegalStateException when the task is not in the correct state to be changed to available
+     */
+    public void makeAvailable(Task task, LocalDateTime startTime) throws IllegalStateException {
+    	throw new IllegalStateException("The task is not in the correct status and therefore can't be changed.");
     }
 
 }

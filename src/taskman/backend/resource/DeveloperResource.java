@@ -114,7 +114,7 @@ public class DeveloperResource extends Resource {
 	
 	/**
 	 * sets the developer to the given developer
-	 * @param developer the developer of the resource
+	 * @param d the developer of the resource
 	 * @throws IllegalArgumentException when the developer is null
 	 */
 	private void setDeveloper(Developer d) {
