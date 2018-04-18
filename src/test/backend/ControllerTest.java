@@ -8,6 +8,7 @@ import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.simulation.SimulationManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.user.OperationNotPermittedException;
@@ -37,7 +38,7 @@ public class ControllerTest {
         userManager = new UserManager();
         projectOrganizer = new ProjectOrganizer();
         resourceManager = new ResourceManager();
-        controller = new Controller(clock, userManager, projectOrganizer, resourceManager);
+        controller = new Controller(clock, userManager, projectOrganizer, resourceManager, new SimulationManager());
         startBreak = LocalTime.of(12, 0);
     }
 

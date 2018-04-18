@@ -8,6 +8,7 @@ import taskman.backend.project.Project;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
+import taskman.backend.simulation.SimulationManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
@@ -34,7 +35,7 @@ public class XmlObjectTest {
 		um = new UserManager();
 		rm = new ResourceManager();
 		c = new Clock();
-		controller = new Controller(c, um, po, rm);
+		controller = new Controller(c, um, po, rm, new SimulationManager());
 		o = new XmlObject(po, um, rm, c);
 	}
 

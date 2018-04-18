@@ -106,7 +106,7 @@ public class ProjectTest {
 		List<Resource> resources = new ArrayList<>();
 		resources.add(r);
 		t.plan(rm, pm, resources, startTime);
-		t.makeAvailable(startTime);
+		t.makeAvailable();
 		t.makeExecuting(rm, startTime, d);
 		t.updateStatus(startTime, startTime.plusMinutes(60), "finished", d);
 		Assert.assertEquals("active", p.getStatus(creation));
@@ -127,7 +127,7 @@ public class ProjectTest {
 		List<Resource> resources = new ArrayList<>();
 		resources.add(r);
 		t.plan(rm, pm, resources, startTime);
-		t.makeAvailable(startTime);
+		t.makeAvailable();
 		t.makeExecuting(rm, startTime, d);
 		t.updateStatus(startTime, startTime.plusMinutes(100), "failed", d);
 		Assert.assertEquals("active", p.getStatus(creation));
