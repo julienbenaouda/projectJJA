@@ -5,6 +5,7 @@ import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
+import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 
 /**
@@ -12,12 +13,12 @@ import taskman.backend.user.UserManager;
  *
  * @author Jeroen Van Der Donckt, Alexander Braekevelt, Julien Benaouda
  */
-public class Simulation {
+public class SimulationManager {
 
     /**
      * Creates a new simulation.
      */
-    public Simulation(){};
+    public SimulationManager(){};
 
     /**
      * Represents the previous state of the simulation (an xml string).
@@ -52,22 +53,26 @@ public class Simulation {
      * @param clock the clock of the system
      * @post the previous state of the simulation is set to an xml string representing the system its state
      * @throws ImportExportException if there occurs an error while creating the xml string
+     * @throws IllegalArgumentException if the user is not a project manager
      */
-    public void start(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock) throws ImportExportException {
+    public void startSimulation(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock, User user) throws ImportExportException {
+    	if(!user.getUserType().equals("project manager")) {
+    		throw new IllegalArgumentException("The user is not allowed to perform this action");
+    	}
         XmlObject xmlObject = new XmlObject(projectOrganizer, userManager, resourceManager, clock);
         setPreviousState(xmlObject.toXMLString());
     }
 
     /**
      * Cancels the simulation.
-     *
+     * @return the xml object used to reconstruct the controller
      * @post the system its state is set back to the previous state of the simulation
      * @throws IllegalStateException if there is no previous state in the simulation
      * @throws ImportExportException if there occurs an error while resetting the system to the xml strong
      */
-    public void cancel() throws IllegalStateException, ImportExportException {
+    public XmlObject cancelSimulation() throws IllegalStateException, ImportExportException {
         if (getPreviousState() != null){
-            XmlObject.fromXMLString(getPreviousState());
+            return XmlObject.fromXMLString(getPreviousState());
         }
         else {
             throw new IllegalStateException("There is no previous state of the system saved.");
@@ -78,9 +83,9 @@ public class Simulation {
      * Executes the simulation.
      * The simulation is not revoked.
      *
-     * @pos the previous state of the simulation is set to null
+     * @post the previous state of the simulation is set to null
      */
-    public void execute() {
+    public void executeSimulation() {
         setPreviousState(null);
     }
 }

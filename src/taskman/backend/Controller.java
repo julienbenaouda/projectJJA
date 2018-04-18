@@ -7,6 +7,7 @@ import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
+import taskman.backend.simulation.SimulationManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.user.OperationNotPermittedException;
@@ -48,6 +49,11 @@ public class Controller {
      * represents the resource manager
      */
     private ResourceManager resourceManager;
+    
+    /**
+     * represents the simulation manager
+     */
+    private SimulationManager simulationManager;
 
     /**
      * Create a Controller for the given objects.
@@ -56,14 +62,15 @@ public class Controller {
      * @param projectOrganizer a project management system.
      * @throws NullPointerException if an argument is null.
      */
-    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer, ResourceManager resourceManager) throws NullPointerException{
-        if (clock == null || userManager == null || projectOrganizer == null || resourceManager == null) {
+    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer, ResourceManager resourceManager, SimulationManager simulationManager) throws NullPointerException{
+        if (clock == null || userManager == null || projectOrganizer == null || resourceManager == null || simulationManager == null) {
             throw new NullPointerException("Arguments cannot be null!");
         }
         this.clock = clock;
         this.userManager = userManager;
         this.projectOrganizer = projectOrganizer;
         this.resourceManager = resourceManager;
+        this.simulationManager = simulationManager;
     }
 
     /**
@@ -353,5 +360,66 @@ public class Controller {
         this.resourceManager = xml.getResourceManager();
         this.clock = xml.getClock();
     }
+    
+    /**
+     * starts the simulation
+     * @throws ImportExportException 
+     * @throws OperationNotPermittedException 
+     */
+    public void startSimulation() throws OperationNotPermittedException, ImportExportException {
+    	simulationManager.startSimulation(projectOrganizer, userManager, resourceManager, clock, userManager.getCurrentUser());
+    }
+
+    /**
+     * cancels the simulation
+     * @throws IllegalStateException when the simulation can't be cancelled
+     * @throws ImportExportException when the simulation can't cancelled
+     */
+	public void cancelSimulation() throws IllegalStateException, ImportExportException {
+		XmlObject obj = simulationManager.cancelSimulation();
+		setResourceManager(obj.getResourceManager());
+		setProjectOrganizer(obj.getProjectOrganizer());
+		setUserManager(obj.getUserManager());
+		setClock(obj.getClock());
+	}
+
+	/**
+	 * keeps the made simulation
+	 */
+	public void executeSimulation() {
+		simulationManager.executeSimulation();
+	}
+
+	/**
+	 * sets the clock to the given clock
+	 * @param clock the clock of the controller
+	 */
+	private void setClock(Clock clock) {
+		this.clock = clock;
+	}
+
+	/**
+	 * sets the user manager to the given user manager
+	 * @param userManager the userManager of the controller
+	 */
+	private void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
+	}
+
+	/**
+	 * sets the project organizer to the given organizer
+	 * @param projectOrganizer the projectOrganizer of the controller
+	 */
+	private void setProjectOrganizer(ProjectOrganizer projectOrganizer) {
+		this.projectOrganizer = projectOrganizer;
+	}
+
+	/**
+	 * sets the resourcemanager to the given resource manager
+	 * @param resourceManager the resourceManager of the controller
+	 */
+	private void setResourceManager(ResourceManager resourceManager) {
+		this.resourceManager = resourceManager;
+	}
 
 }

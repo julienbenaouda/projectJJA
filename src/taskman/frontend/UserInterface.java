@@ -511,20 +511,45 @@ public class UserInterface {
 	/**
 	 * show the simulation menu
 	 * @throws Cancel when the simulation is cancelled
+	 * @throws ImportExportException 
+	 * @throws IllegalStateException 
 	 */
-	private void simulationMenu() throws Cancel {
+	private void simulationMenu() throws Cancel, IllegalStateException, ImportExportException {
+		controller.startSimulation();
 		TitleSection title = new TitleSection("Simulation!");
 		MenuSection menu = new MenuSection("cancel simulation");
+		menu.addOption("show projects and tasks", this::showProjectsAndTasks);
+		menu.addOption("create task", this::createTask);
+		menu.addOption("plan task", this::planTask);
+		menu.addOption("execute simulation", this::executeSimulation);
 		while (true) {
 			title.show();
 			try {
 				menu.show();
 			} catch(Cancel c) {
-				controller.;
+				cancelSimulation();
 				throw c;
 			}
 			menu.executeChoice();
 		}
+	}
+	
+	/**
+	 * cancels the simulation
+	 * @throws ImportExportException 
+	 * @throws IllegalStateException 
+	 */
+	private void cancelSimulation() throws IllegalStateException, ImportExportException {
+		controller.cancelSimulation();
+	}
+
+	/**
+	 * executes the simulation
+	 * @throws Cancel when the action is cancelled 
+	 */
+	private void executeSimulation() throws Cancel {
+		controller.executeSimulation();
+		loggedInMenu();
 	}
 
 }
