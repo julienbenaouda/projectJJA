@@ -83,7 +83,7 @@ public class Resource implements ResourceWrapper {
 	 * @return the list of reservations for this resource
 	 */
 	public List<Reservation> getReservations() {
-		return (List<Reservation>) reservations.clone();
+		return new ArrayList<>(reservations);
 	}
 
 	/**

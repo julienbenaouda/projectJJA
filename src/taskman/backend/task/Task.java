@@ -5,6 +5,7 @@ import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
+import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 import taskman.backend.wrappers.TaskWrapper;
 
@@ -152,8 +153,7 @@ public class Task implements TaskWrapper {
      * @post a new time span is created with given attributes and the time span of the task is set to this time span
      */
     protected void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
-        TimeSpan timeSpan = new TimeSpan(startTime, endTime); // task creates the time span, because task stores time span ==> GRASP: Creator
-        this.timeSpan = timeSpan;
+        this.timeSpan = new TimeSpan(startTime, endTime);
     }
     // TODO: moet er hier geen throws IllegalArugmentException bij en moet dit ook niet bij constructor timespan?
 
@@ -204,6 +204,24 @@ public class Task implements TaskWrapper {
     @Override
 	public String getStatus(){
         return state.getStatus();
+    }
+
+    /**
+     * Returns if the task can be planned.
+     * @return if the task can be planned.
+     */
+    @Override
+    public boolean canBePlanned() {
+        return this.getState() instanceof TaskStateUnavailable;
+    }
+
+    /**
+     * Returns if the task can be updated.
+     * @return if the task can be update.
+     */
+    @Override
+    public boolean canBeUpdated() {
+        return this.getState() instanceof TaskStatePlanned || this.getState() instanceof TaskStateExecuting;
     }
 
 
@@ -277,7 +295,7 @@ public class Task implements TaskWrapper {
      * @return the dependencies of the task
      */
     public ArrayList<Task> getDependencies(){
-        return (ArrayList<Task>) dependencies.clone();
+        return new ArrayList<>(dependencies);
     }
 
     /**
@@ -413,6 +431,19 @@ public class Task implements TaskWrapper {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns if the given user has access to this task.
+     * @param user a User.
+     * @return if the given user has access to this task.
+     */
+    public boolean hasAccessTo(User user) {
+        if (user instanceof Developer) {
+            return this.getPlan().isDeveloperFromPlan(user);
+        } else {
+            return true;
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package taskman.backend.resource;
 
 import taskman.backend.constraint.ConstraintComponent;
-import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeParser;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
@@ -9,7 +8,6 @@ import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -115,11 +113,11 @@ public class ResourceManager {
      * Returns a list of available resources for the given resource type at the given startTime for the given task.
      *
      * @param plan the plan to get the available resources for
-     * @param startTime the start time on which the resources needs to be planned
      * @param duration the duration of the reservation time
+     * @param startTime the start time on which the resources needs to be planned
      * @return a list of available resources for the given resource type at the given startTime for the given task
      */
-    public List<Resource> getAvailableResources(Plan plan, LocalDateTime startTime, long duration){
+    public List<Resource> getAvailableResources(Plan plan, long duration, LocalDateTime startTime){
         Map<ResourceType, Integer> requirements = plan.getRequirements();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration)); // TODO: moet die verantwoordelijkheid voor time span creeren hier???
         List<Resource> availableResources = new ArrayList<>();
@@ -134,11 +132,11 @@ public class ResourceManager {
      * Returns a list of resources as alternatives for the given resource and the given task at the given time.
      *
      * @param resource the resource to get a list of alternatives for
-     * @param startTime the start time on which the alternative resources will be planned
      * @param duration the duration of the reservation time
+     * @param startTime the start time on which the alternative resources will be planned
      * @return a list of resources as alternatives for the given resource and the given task at the given time
      */
-    public List<Resource> getAlternativeResources(Resource resource,  LocalDateTime startTime, long duration){
+    public List<Resource> getAlternativeResources(Resource resource, long duration, LocalDateTime startTime){
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         List<Resource> r = resource.getType().getAvailableResources(timeSpan);
         Iterator<Resource> i = r.iterator();
@@ -155,57 +153,46 @@ public class ResourceManager {
      * Returns an iterator of the starting times (on or after the given time) for the given task.
      *
      * @param plan the plan to get the starting times for
-     * @param startTime the time on or before the starting times
      * @param duration the duration of the reservations
+     * @param startTime the time on or before the starting times
      * @return an iterator of starting times (on or after the given time) for the given task
      * @throws NoSuchElementException if there is no next element in the iterator
      */
-    public Iterator<LocalDateTime> getStartingTimes(Plan plan, LocalDateTime startTime, long duration) throws NoSuchElementException {
-        Iterator<LocalDateTime> startingTimes = new Iterator<LocalDateTime>() {
+    public Iterator<LocalDateTime> getStartingTimes(Plan plan, long duration, LocalDateTime startTime) throws NoSuchElementException {
+        return new Iterator<LocalDateTime>() {
             LocalDateTime startingTime = TimeParser.roundUpLocalDateTime(startTime);
 
             @Override
             public boolean hasNext() {
                 Map<ResourceType, Integer> requirements = plan.getRequirements();
-                boolean enoughResources = true;
-                for (ResourceType resourceType : requirements.keySet()){
-                    if (resourceType.getNbOfResources() < requirements.get(resourceType)){
-                        enoughResources = false;
-                    }
+                if (requirements.keySet().stream().anyMatch(t -> t.getNbOfResources() < requirements.get(t))) {
+                    return false;
                 }
 
                 boolean hasAvailablePeriod = false;
                 for (int day = 1; day <= 7; day++){
-                    AvailabilityPeriod availabilityPeriod = new AvailabilityPeriod(LocalTime.MIN, LocalTime.MAX);
+                    LocalTime startTime = LocalTime.MIN;
+                    LocalTime endTime = LocalTime.MAX;
                     for (ResourceType resourceType : requirements.keySet()){
-                        LocalTime startTime;
-                        LocalTime endTime;
-                        if (availabilityPeriod.getStartTime().isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
+                        if (startTime.isBefore(resourceType.getAvailabilityPeriod(day).getStartTime())){
                             startTime = resourceType.getAvailabilityPeriod(day).getStartTime();
                         }
-                        else{
-                            startTime = availabilityPeriod.getStartTime();
-                        }
-                        if (availabilityPeriod.getEndTime().isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
+                        if (endTime.isAfter(resourceType.getAvailabilityPeriod(day).getEndTime())){
                             endTime = resourceType.getAvailabilityPeriod(day).getEndTime();
                         }
-                        else{
-                            endTime = availabilityPeriod.getEndTime();
-                        }
-                        availabilityPeriod = new AvailabilityPeriod(startTime, endTime);
                     }
-                    if (availabilityPeriod.getStartTime().truncatedTo(ChronoUnit.HOURS).plus(duration, ChronoUnit.MINUTES).isBefore(availabilityPeriod.getEndTime())){
+                    if (TimeParser.roundUpLocalTime(startTime).plusMinutes(duration).isBefore(endTime)){
                         hasAvailablePeriod = true;
                     }
                 }
 
-                return enoughResources && hasAvailablePeriod;
+                return hasAvailablePeriod;
             }
 
             @Override
             public LocalDateTime next() {
                 if (hasNext()) {
-                    while (!isAvailableStartingTime(plan, startingTime, duration)) {
+                    while (!isAvailableStartingTime(plan, duration, startingTime)) {
                         startingTime = startingTime.plusHours(1);
                     }
                     return startingTime;
@@ -213,18 +200,17 @@ public class ResourceManager {
                 throw new NoSuchElementException("There is no starting time available.");
             }
         };
-        return startingTimes;
     }
 
     /**
      * Returns if the given time is an available starting time for the given task.
      *
      * @param plan the plan to check the starting time for
-     * @param startTime the starting time to check
      * @param duration the duration of the reservations
+     * @param startTime the starting time to check
      * @return true if the given time is available for the given task, otherwise false
      */
-    private boolean isAvailableStartingTime(Plan plan, LocalDateTime startTime, long duration){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
+    private boolean isAvailableStartingTime(Plan plan, long duration, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
         Map<ResourceType, Integer> requirements = plan.getRequirements();
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
         for (ResourceType resourceType : requirements.keySet()){

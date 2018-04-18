@@ -1,6 +1,3 @@
-/**
- * 
- */
 package test.backend.project;
 
 import org.junit.Before;
