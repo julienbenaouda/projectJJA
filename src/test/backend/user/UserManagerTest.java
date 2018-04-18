@@ -38,7 +38,7 @@ public class UserManagerTest {
 
 	@Test
 	public void testCreateProjectManager() {
-		u.createUser("test", "myPassword", "projectmanager", null, resourceManager);
+		u.createUser("test", "myPassword", "project manager", null, resourceManager);
 		u.login("test", "myPassword");
 		assertEquals("test", u.getCurrentUser().getName());
 		assertEquals("myPassword", u.getCurrentUser().getPassword());

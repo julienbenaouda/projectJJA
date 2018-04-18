@@ -131,7 +131,7 @@ public abstract class TaskState {
      * @param startTime the time to set the tasks timespan to
      * @throws IllegalStateException when the task is not in the correct state to be changed to available
      */
-    public void makeAvailable(Task task, LocalDateTime startTime) throws IllegalStateException {
+    public void makeAvailable(Task task) throws IllegalStateException {
     	throw new IllegalStateException("The task is not in the correct status and therefore can't be changed.");
     }
 

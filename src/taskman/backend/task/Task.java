@@ -377,8 +377,8 @@ public class Task implements TaskWrapper {
      * makes a task available
      * @param startTime the current system time
      */
-    public void makeAvailable(LocalDateTime startTime) {
-    	getState().makeAvailable(this, startTime);
+    public void makeAvailable() {
+    	getState().makeAvailable(this);
     }
 
 

@@ -27,13 +27,12 @@ public class TaskStatePlanned extends TaskState {
      * @post the state of the task is set to available
      */
     @Override
-    public void makeAvailable(Task task, LocalDateTime startTime) {
+    public void makeAvailable(Task task) {
     	for(Task t: task.getDependencies()) {
     		if(!t.getStatus().equals("finished")) {
     			throw new IllegalStateException("The state of the task can't be changed because one of its dependencies is not yet finished");
     		}
     	}
-    	task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
     	task.setState(new TaskStateAvailable());
     }
 

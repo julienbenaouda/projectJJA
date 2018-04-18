@@ -418,9 +418,10 @@ public class TaskTest {
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		updateStatusTask.plan(resourceManager, admin, resourceList, startTime);
+		updateStatusTask.makeAvailable();
 
 		Assert.assertEquals("The status is not available", true, updateStatusTask.getStatus().equals("available"));
-		Assert.assertEquals("The time span is not null", null, updateStatusTask.getTimeSpan());
+		updateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		updateStatusTask.updateStatus(startTime, endTime, "finished", developer);
 		Assert.assertEquals("The status is not finished", TaskStateFinished.class, updateStatusTask.getState().getClass());
 		Assert.assertEquals("The start time is not correctly set", startTime, updateStatusTask.getTimeSpan().getStartTime());
