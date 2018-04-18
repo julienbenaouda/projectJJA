@@ -5,10 +5,7 @@ import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class representing a plan.
@@ -105,8 +102,76 @@ public class Plan {
     public void createReservation(List<Resource> resources, LocalDateTime startTime) {
         LocalDateTime endTime = startTime.plusMinutes(getTask().getEstimatedDuration());
         for (Resource resource : resources){
-            Reservation reservation = new Reservation(resource, startTime, endTime);
-            reservations.add(reservation);
+            addReservation(resource, startTime, endTime);
+        }
+    }
+
+    /**
+     * Creates a reservation with the given attributes and adds its to the reservations of the plan.
+     *
+     * @param resource the resource of the reservation
+     * @param startTime the start time of the reservation
+     * @param endTime the end time of the reservation
+     * @post a reservation with the given attributes is created and added to the
+     *       reservations of the plan
+     */
+    private void addReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+        Reservation reservation = new Reservation(resource, startTime, endTime);
+        reservations.add(reservation);
+    }
+
+    /**
+     * Creates a specific reservation with the given attributes and adds it to the reservations of the plan.
+     * The reservation is also set to an user specific state.
+     *
+     * @param resource the resource of the user specific reservation
+     * @param startTime the start time of the user specific reservation
+     * @param endTime the end time of the user specific reservation
+     */
+    private void addSpecificReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+        Reservation reservation = new Reservation(resource, startTime, endTime);
+        reservation.setUserSpecific();
+        reservations.add(reservation);
+    }
+
+    /**
+     * Removes the given reservation from the plan its reservations.
+     *
+     * @param reservation the reservation to remove
+     * @post the given reservation is removed from the plan its reservations
+     */
+    private void removeReservation(Reservation reservation){
+        reservations.remove(reservation);
+    }
+
+
+    /**
+     * Changes the reservation from the old resource to the reservation of the new resource.
+     *
+     * @param oldResource
+     * @param newResource
+     * @throws IllegalArgumentException
+     * @post the reservation for the old resource is deleted (also from the plan its reservations)
+     *       and for the new resource a reservation is created and added to the reservations of the plan
+     */
+    public void changeResource(Resource oldResource, Resource newResource) throws IllegalArgumentException {
+        int index = 0;
+        boolean changed = false;
+        while (!changed && index < getReservations().size()){
+            Reservation reservation = getReservations().get(index);
+            if (reservation.getResource() == oldResource){
+                LocalDateTime startTime = reservation.getTimeSpan().getStartTime();
+                LocalDateTime endTime = reservation.getTimeSpan().getEndTime();
+                reservation.delete();
+                removeReservation(reservation);
+                // TODO: die boolean changable nog doen
+                addSpecificReservation(newResource, startTime, endTime);
+                changed = true;
+            }
+            index += 1;
+        }
+        if (!changed) {
+            throw new IllegalArgumentException("There is no reservation in the plan for the given resource.");
         }
     }
 

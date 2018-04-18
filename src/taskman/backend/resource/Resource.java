@@ -97,6 +97,16 @@ public class Resource implements ResourceWrapper {
 		reservations.add(r);
 	}
 
+	/**
+	 * Deletes the given reservation from the resource.
+	 *
+	 * @param r the reservation to delete
+	 * @post the reservation is deleted from the list of reservations
+	 */
+	public void deleteReservation(Reservation r){
+		reservations.remove(r);
+	}
+
 
 	/**
 	 * Checks if a resource is available at the given time span.

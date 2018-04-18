@@ -17,7 +17,7 @@ public class Reservation {
      * @param resource the resource of the reservation
      * @param startTime the start time of the reservation
      * @param endTime the end time of the reservation
-     * @post a new reservation is created with given attributes and added to the resource
+     * @post a new reservation is created with given attributes and added to the resource and true changeable state
      * @throws IllegalArgumentException when the resource or timespan is null
      */
     public Reservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
@@ -50,6 +50,7 @@ public class Reservation {
      *
      * @param resource the resource of the reservation
      * @post the resource of the reservation is set to the given resource
+     *       the oldResource its reservation its
      */
     private void setResource(Resource resource){
         this.resource = resource;
@@ -101,5 +102,42 @@ public class Reservation {
 
     public void finishEarlier(LocalDateTime endTime) {
     	setTimeSpan(new TimeSpan(getTimeSpan().getStartTime(), endTime));
+    }
+
+
+    /**
+     * Represents the user specific state; if the resource is specifically
+     * selected by the user.
+     */
+    private boolean userSpecific = false;
+
+    /**
+     * Returns the user specific state.
+     *
+     * @return the user specific state
+     */
+    public boolean isUserSpecific(){
+        return userSpecific;
+    }
+
+    /**
+     * Sets the use specific value to true.
+     *
+     * @post the user specific value is set to true
+     */
+    public void setUserSpecific(){
+        userSpecific = true;
+    }
+
+    /**
+     * Deconstructor for this reservation.
+     *
+     * @post the reservation is deleted from its resource its reservations
+     *       and the resource is deleted from this reservation
+     *       (the bidirectional link is deleted)
+     */
+    public void delete(){
+        getResource().deleteReservation(this);
+        setResource(null);
     }
 }
