@@ -103,10 +103,7 @@ public class ProjectTest {
 		rm.createResourceForUser(d, LocalTime.of(11, 0));
 		Resource r = rm.getResourceType("developer").getResource("test");
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
-		List<Resource> resources = new ArrayList<>();
-		resources.add(r);
-		t.plan(rm, pm, resources, startTime);
-		t.makeAvailable();
+		t.initializePlan(rm, startTime);
 		t.makeExecuting(rm, startTime, d);
 		t.updateStatus(startTime, startTime.plusMinutes(60), "finished", d);
 		Assert.assertEquals("active", p.getStatus(creation));
