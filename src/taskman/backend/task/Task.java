@@ -224,6 +224,9 @@ public class Task implements TaskWrapper {
         }
     }
 
+    public boolean isAvailable(){
+        // tODO
+    }
 
     /**
      * Return the delay between the end time and the estimated end time in minutes.
@@ -371,14 +374,6 @@ public class Task implements TaskWrapper {
         } else {
         	throw new IllegalArgumentException("The user must be a developer of the task.");
         }
-    }
-    
-    /**
-     * makes a task available
-     * @param startTime the current system time
-     */
-    public void makeAvailable(LocalDateTime startTime) {
-    	getState().makeAvailable(this, startTime);
     }
 
 
