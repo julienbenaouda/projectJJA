@@ -52,7 +52,7 @@ public class ResourceManagerTest {
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
 		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
-		for(int i = 0; i <= 6; i++) {
+		for(int i = 1; i <= 7; i++) {
 			type.addAvailability(i, always);
 		}
 		type.createResource("resource3");
@@ -69,7 +69,7 @@ public class ResourceManagerTest {
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
 		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
-		for(int i = 0; i <= 6; i++) {
+		for(int i = 1; i <= 7; i++) {
 			type.addAvailability(i, always);
 		}
 		type.createResource("resource1");
@@ -88,7 +88,7 @@ public class ResourceManagerTest {
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
 		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
-		for(int i = 0; i <= 6; i++) {
+		for(int i = 1; i <= 7; i++) {
 			type.addAvailability(i, always);
 		}
 		Resource resource = new Resource("resource4", type);
@@ -152,7 +152,7 @@ public class ResourceManagerTest {
 		type.createResource("r2");
 		type.createResource("r3");
 		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));
-		for(int j = 0; j < 7; j++) {
+		for(int j = 1; j < 8; j++) {
 			type.addAvailability(j, always);
 		}
 		ProjectManager user = new ProjectManager("test", "test");
@@ -165,7 +165,6 @@ public class ResourceManagerTest {
 		t2.addRequirement(resourceManager, type, 2);
 		List<Resource> r = resourceManager.getAvailableResources(t2.getPlan(), startTime, t2.getEstimatedDuration());
 		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), startTime, t2.getEstimatedDuration());
-		System.out.println(i.next().getYear());
 		assertEquals(1, r.size());
 	}
 }

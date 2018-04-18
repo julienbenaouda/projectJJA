@@ -1,5 +1,5 @@
 
-package test;
+package test.backend.resource;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +35,7 @@ public class ResourceTypeTest {
 
 	@Test
 	public void testAddResource() {
-		Resource r = new Resource(resourceType);
+		resourceType.createResource("test");
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 11, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 26, 17, 0);
 		TimeSpan timeSpan = new TimeSpan(start, end);
@@ -44,7 +44,7 @@ public class ResourceTypeTest {
 
 	@Test
 	public void testHasAvailableResources_false() {
-		Resource r = new Resource(resourceType);
+		Resource r = new Resource("test", resourceType);
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 11, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 26, 17, 0);
 		TimeSpan timeSpan = new TimeSpan(start, end);
@@ -53,10 +53,10 @@ public class ResourceTypeTest {
 
 	@Test
 	public void testGetAvailableResources() {
-		Resource r = new Resource(resourceType);
 		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 11, 0);
 		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 26, 17, 0);
 		TimeSpan timeSpan = new TimeSpan(start, end);
+		resourceType.createResource("test");
 		List<Resource> i = resourceType.getAvailableResources(timeSpan);
 		int number = i.size();
 		assertEquals(1, number);

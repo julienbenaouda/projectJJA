@@ -23,11 +23,19 @@ public class ResourceType implements ResourceTypeWrapper {
      * Creates a new resource type with given name.
      *
      * @param name the name of the resource type
+     * @throws IllegalArgumentException when the name is null
      */
     public ResourceType(String name){
+    	if(name == null) {
+    		throw new IllegalArgumentException("the name can't be null.");
+    	}
         setName(name);
         availability = new HashMap<>();
         resources = new ArrayList<>();
+        AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));
+        for(int i = 1; i < 8; i++) {
+        	addAvailability(i, always);
+        }
     }
 
 
@@ -245,8 +253,8 @@ public class ResourceType implements ResourceTypeWrapper {
 	 * @throws IllegalArgumentException when the weekday is less than 0 or greater than 6
 	 */
 	public void addAvailability(int weekDay, AvailabilityPeriod availabilityPeriod) throws IllegalArgumentException {
-		if(weekDay < 0 || weekDay > 6) {
-			throw new IllegalArgumentException("the number of the week day must be between 0 and 6");
+		if(weekDay < 1 || weekDay > 7) {
+			throw new IllegalArgumentException("the number of the week day must be between 1 and 7");
 		}
 		availability.put(weekDay, availabilityPeriod);
 	}
