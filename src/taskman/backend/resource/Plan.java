@@ -158,8 +158,8 @@ public class Plan {
     /**
      * Changes the reservation from the old resource to the reservation of the new resource.
      *
-     * @param oldResource
-     * @param newResource
+     * @param oldResource the old resource to replace
+     * @param newResource the new resource to add
      * @throws IllegalArgumentException
      * @post the reservation for the old resource is deleted (also from the plan its reservations)
      *       and for the new resource a reservation is created and added to the reservations of the plan
@@ -207,7 +207,8 @@ public class Plan {
     }
     
     /**
-     * 
+     * Makes the plan executing.
+     *
      * @param resourceManager the resourceManager to use to replan
      * @param startTime the start time of the task
      * @param duration the duration of the task
@@ -225,8 +226,8 @@ public class Plan {
     }
     
     /**
-     * finishes the reservations if needed
-     * @param endTime the end tiem when the reservation should be finished
+     * Finishes the reservations if needed.
+     * @param endTime the end time when the reservation should be finished
      * @post if the end time is earlier then the foreseen endtime, the resources are set to available for the remaining time
      */
     public void finish(LocalDateTime endTime) {
@@ -237,7 +238,11 @@ public class Plan {
     	}
     }
 
-    // TODO: commentaar
+    /**
+     * Returns if the plan starts earlier than planned.
+     * @param startTime the start time of the plan.
+     * @return true if the start time is earlier, otherwise false.
+     */
 	private boolean startsEarlier(LocalDateTime startTime) {
 		return startTime.isBefore(getReservations().get(0).getTimeSpan().getStartTime());
 	}
