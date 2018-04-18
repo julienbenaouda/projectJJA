@@ -1,13 +1,20 @@
 package test.backend.project;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.project.Project;
+import taskman.backend.resource.DeveloperResource;
+import taskman.backend.resource.Resource;
+import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.user.Developer;
 import taskman.backend.user.OperationNotPermittedException;
@@ -71,7 +78,7 @@ public class ProjectTest {
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 	}
 	
-	@Test (expected = IndexOutOfBoundsException.class)
+	@Test (expected = IllegalArgumentException.class)
 	public void testIllegalIndexGetTask() {
 		p.getTask("123");
 	}
@@ -90,7 +97,18 @@ public class ProjectTest {
 	{
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, "finished", null); // TODO
+		Developer d = new Developer("test", "test");
+		ProjectManager pm = new ProjectManager("test", "test");
+		ResourceManager rm = new ResourceManager();
+		rm.createResourceForUser(d, LocalTime.of(11, 0));
+		Resource r = rm.getResourceType("developer").getResource("test");
+		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
+		List<Resource> resources = new ArrayList<>();
+		resources.add(r);
+		t.plan(rm, pm, resources, startTime);
+		t.makeAvailable(startTime);
+		t.makeExecuting(rm, startTime, d);
+		t.updateStatus(startTime, startTime.plusMinutes(60), "finished", d);
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("finished", p.getStatus(due));
 	}
@@ -100,7 +118,18 @@ public class ProjectTest {
 	{
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
-		t.updateStatus(creation, due, "failed", null); // TODO
+		Developer d = new Developer("test", "test");
+		ProjectManager pm = new ProjectManager("test", "test");
+		ResourceManager rm = new ResourceManager();
+		rm.createResourceForUser(d, LocalTime.of(11, 0));
+		Resource r = rm.getResourceType("developer").getResource("test");
+		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
+		List<Resource> resources = new ArrayList<>();
+		resources.add(r);
+		t.plan(rm, pm, resources, startTime);
+		t.makeAvailable(startTime);
+		t.makeExecuting(rm, startTime, d);
+		t.updateStatus(startTime, startTime.plusMinutes(100), "failed", d);
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("failed", p.getStatus(due));
 	}

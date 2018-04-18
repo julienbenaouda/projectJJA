@@ -219,8 +219,9 @@ public class Task implements TaskWrapper {
     public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) throws IllegalStateException, IllegalArgumentException {
         if (getPlan().isDeveloperFromPlan(user)) {
             getState().updateStatus(this, startTime, endTime, status);
+        } else {
+        	throw new IllegalArgumentException("The user must be a developer of the task.");
         }
-        throw new IllegalArgumentException("The user must be a developer of the task.");
     }
 
 
@@ -367,8 +368,9 @@ public class Task implements TaskWrapper {
     public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, User user) throws IllegalArgumentException {
         if (getPlan().isDeveloperFromPlan(user)) {
             getState().execute(this, resourceManager, startTime);
+        } else {
+        	throw new IllegalArgumentException("The user must be a developer of the task.");
         }
-        throw new IllegalArgumentException("The user must be a developer of the task.");
     }
     
     /**
