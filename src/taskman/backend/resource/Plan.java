@@ -5,7 +5,11 @@ import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Class representing a plan.
@@ -37,7 +41,7 @@ public class Plan {
      *
      * @return the task of the plan
      */
-    public Task getTask(){
+    public Task getTask() {
         return  task;
     }
 
@@ -76,7 +80,6 @@ public class Plan {
     public void addRequirement(ResourceType resourceType, int amount){
         requirements.put(resourceType, amount);
     }
-
 
     /**
      * Represents the reservations of the plan.
@@ -144,6 +147,13 @@ public class Plan {
         reservations.remove(reservation);
     }
 
+    /**
+     * Get the resources of this plan.
+     * @return a list of resources.
+     */
+    public List<Resource> getPlannedResources() {
+        return this.reservations.stream().map(Reservation::getResource).collect(Collectors.toList());
+    }
 
     /**
      * Changes the reservation from the old resource to the reservation of the new resource.
@@ -164,7 +174,6 @@ public class Plan {
                 LocalDateTime endTime = reservation.getTimeSpan().getEndTime();
                 reservation.delete();
                 removeReservation(reservation);
-                // TODO: die boolean changable nog doen
                 addSpecificReservation(newResource, startTime, endTime);
                 changed = true;
             }
@@ -210,7 +219,7 @@ public class Plan {
     		if(resourceManager.getStartingTimes(this, duration, startTime).next().isAfter(startTime)) {
     			throw new IllegalArgumentException("Execution of this task can't start at the given start time because there are no resources available.");
     		} else {
-    			resourceManager.planBySystem(this, resourceManager.getAvailableResources(this, duration, startTime), startTime);
+    			resourceManager.planBySystem(this, duration, startTime);
     		}
     	}
     }
@@ -228,9 +237,17 @@ public class Plan {
     	}
     }
 
+    // TODO: commentaar
 	private boolean startsEarlier(LocalDateTime startTime) {
 		return startTime.isBefore(getReservations().get(0).getTimeSpan().getStartTime());
 	}
+
+    /**
+     * Empties the plan.
+     */
+	public void emptyPlan() {
+        this.reservations.clear();
+    }
 
 
 }

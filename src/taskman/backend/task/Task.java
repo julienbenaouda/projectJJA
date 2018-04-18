@@ -7,10 +7,13 @@ import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
+import taskman.backend.wrappers.ResourceWrapper;
 import taskman.backend.wrappers.TaskWrapper;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 
 /**
@@ -212,7 +215,7 @@ public class Task implements TaskWrapper {
      */
     @Override
     public boolean canBePlanned() {
-        return this.getState() instanceof TaskStateUnavailable;
+        return getState().canBePlanned();
     }
 
     /**
@@ -221,7 +224,7 @@ public class Task implements TaskWrapper {
      */
     @Override
     public boolean canBeUpdated() {
-        return this.getState() instanceof TaskStatePlanned || this.getState() instanceof TaskStateExecuting;
+        return getState().canBeUpdated();
     }
 
 
@@ -345,6 +348,53 @@ public class Task implements TaskWrapper {
         return plan;
     }
 
+    /**
+     * Initializes a plan for this task.
+     * @param resourceManager a resource manager.
+     * @param startTime the start time for the plan.
+     * @throws IllegalStateException if the state is not unavailable.
+     */
+    public void initializePlan(ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
+        getState().initializePlan(this, resourceManager, startTime);
+    }
+
+    /**
+     * Get the resources of the plan of a task.
+     * @return a list of resources.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public List<Resource> getPlannedResources() throws IllegalStateException {
+        return getState().getPlannedResources(this);
+    }
+
+    /**
+     * Returns a list of resources as alternatives for the given resource.
+     * @param resourceManager a resource manager.
+     * @param resource a resource wrapper to search alternatives for.
+     * @return a list of resources as alternatives for the given resource.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public List<Resource> getAlternativeResources(ResourceManager resourceManager, Resource resource) throws IllegalStateException {
+        return getState().getAlternativeResources(resourceManager,this, resource);
+    }
+
+    /**
+     * Change a resource of a plan of this task.
+     * @param oldResource the resource to change.
+     * @param newResource the resource to change to.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public void changeResource(Resource oldResource, Resource newResource) throws IllegalStateException {
+        getState().changeResource(this, oldResource, newResource);
+    }
+
+    /**
+     * Cancel the plan of this task.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public void cancelPlan() throws IllegalStateException {
+        getState().cancelPlan(this);
+    }
 
     /**
      * Adds the given requirement to the task its requirements.
@@ -356,23 +406,6 @@ public class Task implements TaskWrapper {
      */
     public void addRequirement(ResourceManager resourceManager, ResourceType resourceType, int amount) {
         getState().addRequirement(resourceManager, this, resourceType, amount);
-    }
-
-
-    /**
-     * Plans the task with the given list of resources at the given start time.
-     *
-     * @param resourceManager the resource manager of the system
-     * @param user the user that wants to plan the task
-     * @param resources the list of resources necessary to plan the task
-     * @param startTime the start time of the planning
-     * @throws IllegalArgumentException the user must be allowed to plan the task
-     */
-    public void plan(ResourceManager resourceManager, User user, List<Resource> resources, LocalDateTime startTime) throws IllegalStateException, IllegalArgumentException {
-        if (!user.getUserType().equals("project manager")){
-            throw new IllegalArgumentException("The user must be a project manager in order to plan tasks.");
-        }
-        getState().plan(resourceManager,this, resources, startTime);
     }
     
     /**

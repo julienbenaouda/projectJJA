@@ -297,7 +297,8 @@ public class UserInterface {
 		timeSelection.show();
 		LocalDateTime startTime = timeSelection.getAnswerObject();
 
-		List<ResourceWrapper> suggestion = controller.getAvailableResources(task, startTime);
+		controller.initializePlan(task, startTime);
+		List<ResourceWrapper> suggestion = controller.getPlannedResources(task);
 		ResourceWrapper resourceToChange;
 		do {
 			TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
@@ -350,7 +351,9 @@ public class UserInterface {
 		TitleSection titleSelection2 = new TitleSection("select a task status");
 		titleSelection2.show();
 		SelectionSection<String> selection2 = new SelectionSection<>(true);
-		selection2.addOptions(task.getStatusTransitions());
+		selection2.addOption("executing");
+		selection2.addOption("finished");
+		selection2.addOption("failed");
 		selection2.show();
 
 		TitleSection titleForm = new TitleSection("status details");

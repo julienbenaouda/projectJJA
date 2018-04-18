@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -223,37 +222,54 @@ public class Controller {
     }
 
     /**
-     * Returns a list of available resources for the given resource type at the given startTime for the given task.
-     * @param task the task to get the available resources for.
-     * @param startTime the start time on which the resources needs to be planned.
-     * @return a list of available resources for the given resource type at the given startTime for the given task.
+     * Initializes a plan for a task.
+     * @param task a task.
+     * @param startTime the start time for the plan.
+     * @throws IllegalStateException if the state is not unavailable.
      */
-    public List<ResourceWrapper> getAvailableResources(TaskWrapper task, LocalDateTime startTime) {
-        Task t = (Task) task;
-        return new ArrayList<>(resourceManager.getAvailableResources(t.getPlan(), t.getEstimatedDuration(), startTime)); // TODO: @Jeroen, via task?
+    public void initializePlan(TaskWrapper task, LocalDateTime startTime) throws IllegalStateException {
+        ((Task) task).initializePlan(this.resourceManager, startTime);
+    }
+
+    /**
+     * Get the resources of the plan of a task.
+     * @param task a task with a plan.
+     * @return a list of resources.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public List<ResourceWrapper> getPlannedResources(TaskWrapper task) throws IllegalStateException {
+        return new ArrayList<>(((Task) task).getPlannedResources());
     }
 
     /**
      * Returns a list of resources as alternatives for the given resource.
      * @param task the task.
      * @param resource a resource wrapper to search alternatives for.
-     * @param startTime the start time on which the resources needs to be planned.
-     * @return a list of resources as alternatives for the given resource and the given task at the given time.
+     * @return a list of resources as alternatives for the given resource and the given task.
+     * @throws IllegalStateException if the state is not planned.
      */
-    public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource, LocalDateTime startTime) {
-        Task t = (Task) task;
-        return new ArrayList<>(resourceManager.getAlternativeResources((Resource) resource, t.getEstimatedDuration(), startTime)); // TODO: @Jeroen, via task?
+    public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource) throws IllegalStateException {
+        return new ArrayList<>(((Task) task).getAlternativeResources(this.resourceManager, (Resource) resource));
     }
 
     /**
-     * Plans a task for execution.
-     * @param task the task.
-     * @param resources a list of resource types and resource names.
-     * @param startTime the planned start time.
+     * Change a resource of a plan of a task.
+     * @param task a task with a plan.
+     * @param oldResource the resource to change.
+     * @param newResource the resource to change to.
+     * @throws IllegalStateException if the state is not planned.
      */
-    public void plan(TaskWrapper task, List<ResourceWrapper> resources, LocalDateTime startTime) {
-        List<Resource> converted = resources.stream().map(r -> (Resource) r).collect(Collectors.toList());
-        ((Task) task).plan(this.resourceManager, this.userManager.getCurrentUser(), converted, startTime);
+    public void changeResource(TaskWrapper task, ResourceWrapper oldResource, ResourceWrapper newResource) throws IllegalStateException {
+        ((Task) task).changeResource((Resource) oldResource, (Resource) newResource);
+    }
+
+    /**
+     * Cancel the plan of a task.
+     * @param task a task with a plan.
+     * @throws IllegalStateException if the state is not planned.
+     */
+    public void cancelPlan(TaskWrapper task) throws IllegalStateException {
+        ((Task) task).cancelPlan();
     }
 
     /**

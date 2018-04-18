@@ -1,11 +1,9 @@
 package taskman.backend.task;
 
-import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Class representing an unavailable task state.
@@ -38,6 +36,14 @@ public class TaskStateUnavailable extends TaskState {
         task.addDependencyTask(dependency);
     }
 
+    /**
+     * Returns if the state can be planned.
+     * @return if the state can be planned.
+     */
+    @Override
+    public boolean canBePlanned() {
+        return true;
+    }
 
     /**
      * Adds the given requirement to the task its requirements.
@@ -55,19 +61,14 @@ public class TaskStateUnavailable extends TaskState {
     }
 
     /**
-     * Plan the task with given arguments.
-     *
-     * @param resourceManager the resource manager of the system
-     * @param task the task to plan
-     * @param resources the resources that are used in the plan
-     * @param startTime the start time of the plan
-     * @post the new task will be planned and the task state will be set to planned
+     * Initializes a plan for this task.
+     * @param task a task.
+     * @param resourceManager a resource manager.
+     * @param startTime the start time for the plan.
      */
-    @Override
-    public void plan(ResourceManager resourceManager, Task task, List<Resource> resources, LocalDateTime startTime) {
-        resourceManager.plan(task.getPlan(), resources, startTime);
+    public void initializePlan(Task task, ResourceManager resourceManager, LocalDateTime startTime) {
+        resourceManager.initializePlan(task.getPlan(), task.getEstimatedDuration(), startTime);
         task.setState(new TaskStatePlanned());
-        // TODO: moet task wel meegegeven worden
     }
 
 }

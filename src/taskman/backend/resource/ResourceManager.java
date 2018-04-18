@@ -9,6 +9,7 @@ import taskman.backend.user.User;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for creating, storing and retrieving resources of the system.
@@ -107,47 +108,6 @@ public class ResourceManager {
     public void createConstraint(String string) {
         addConstraint(ConstraintComponent.parseConstraint(string, this));
     }
-
-
-    /**
-     * Returns a list of available resources for the given resource type at the given startTime for the given task.
-     *
-     * @param plan the plan to get the available resources for
-     * @param duration the duration of the reservation time
-     * @param startTime the start time on which the resources needs to be planned
-     * @return a list of available resources for the given resource type at the given startTime for the given task
-     */
-    public List<Resource> getAvailableResources(Plan plan, long duration, LocalDateTime startTime){
-        Map<ResourceType, Integer> requirements = plan.getRequirements();
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration)); // TODO: moet die verantwoordelijkheid voor time span creeren hier???
-        List<Resource> availableResources = new ArrayList<>();
-        for (ResourceType resourceType : requirements.keySet()){
-            availableResources.addAll(resourceType.getAvailableResources(timeSpan));
-        }
-        return availableResources;
-    }
-
-
-    /**
-     * Returns a list of resources as alternatives for the given resource and the given task at the given time.
-     *
-     * @param resource the resource to get a list of alternatives for
-     * @param duration the duration of the reservation time
-     * @param startTime the start time on which the alternative resources will be planned
-     * @return a list of resources as alternatives for the given resource and the given task at the given time
-     */
-    public List<Resource> getAlternativeResources(Resource resource, long duration, LocalDateTime startTime){
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        List<Resource> r = resource.getType().getAvailableResources(timeSpan);
-        Iterator<Resource> i = r.iterator();
-        while(i.hasNext()) {
-        	if(i.next() == resource) {
-        		i.remove();
-        	}
-        }
-        return r;
-    }
-
 
     /**
      * Returns an iterator of the starting times (on or after the given time) for the given task.
@@ -267,19 +227,6 @@ public class ResourceManager {
     }
 
     /**
-     * Plans the given resources for the given task at the given start time.
-     *
-     * @param plan the plan of the task to make reservations for
-     * @param resources the resource to plan
-     * @param startTime the starting time to plan the resources at
-     * @post the resources are planned for the given task at the given start time
-     */
-    public void plan(Plan plan, List<Resource> resources, LocalDateTime startTime) throws IllegalArgumentException {
-        plan.createReservation(resources, startTime);
-    }
-
-
-    /**
      * Creates a new resource from the given user.
      *
      * @param user the user to use for the resource creation
@@ -310,28 +257,50 @@ public class ResourceManager {
             // TODO: is dit wel goede code
         }
     }
+
+    /**
+     * Initializes a plan.
+     * @param plan the plan to initialize.
+     * @param duration the duration of the plan.
+     * @param startTime the start time.
+     */
+    public void initializePlan(Plan plan, long duration, LocalDateTime startTime) {
+        planBySystem(plan, duration, startTime);
+    }
     
     /**
-     * lets a plan be created by the system. The system itself choses the resources it will use.
-     * @param plan the plan to create new reservations for
-     * @param availableResources the list of resources from which the system can chose
-     * @param startTime the start time of the plan
-     * @post new reservations in the plan are generated for the resources needed
+     * Lets a plan be created by the system. The system itself choses the resources it will use.
+     * @param plan the plan to create new reservations for.
+     * @param duration the duration of the plan.
+     * @param startTime the start time of the plan.
+     * @post new reservations in the plan are generated for the resources needed.
      */
-    public void planBySystem(Plan plan, List<Resource> availableResources, LocalDateTime startTime) {
+    public void planBySystem(Plan plan, long duration, LocalDateTime startTime) {
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
     	Map<ResourceType, Integer> requirements = plan.getRequirements();
     	List<Resource> resources = new ArrayList<>();
     	for(ResourceType type: requirements.keySet()) {
-    		int i = 0;
-    		Iterator<Resource> it = availableResources.iterator();
-    		while(it.hasNext() && i < requirements.get(type).intValue()) {
-    			Resource r = it.next();
-    			if(r.getType() == type) {
-    				resources.add(r);
-    				it.remove();
-    			}
-    		}
+            resources.addAll(
+                    type.getAvailableResources(timeSpan)
+                            .stream()
+                            .limit(requirements.get(type))
+                            .collect(Collectors.toList())
+            );
     	}
-    	plan(plan, resources, startTime);
+        plan.createReservation(resources, startTime);
+    }
+
+    /**
+     * Returns a list of resources as alternatives for the given resource and the given task at the given time.
+     * @param resource the resource to get a list of alternatives for
+     * @param duration the duration of the reservation time
+     * @param startTime the start time on which the alternative resources will be planned
+     * @return a list of resources as alternatives for the given resource and the given task at the given time
+     */
+    public List<Resource> getAlternativeResources(Resource resource, long duration, LocalDateTime startTime){
+        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+        List<Resource> r = resource.getType().getAvailableResources(timeSpan);
+        r.remove(resource);
+        return r;
     }
 }
