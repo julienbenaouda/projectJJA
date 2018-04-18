@@ -130,7 +130,7 @@ public abstract class TaskState {
     }
 
     /**
-     * Initializes a plan for this task.
+     * Initializes a plan for this state.
      * @param task a task.
      * @param resourceManager a resource manager.
      * @param startTime the start time for the plan.

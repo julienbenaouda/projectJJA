@@ -298,36 +298,39 @@ public class UserInterface {
 		LocalDateTime startTime = timeSelection.getAnswerObject();
 
 		controller.initializePlan(task, startTime);
-		List<ResourceWrapper> suggestion = controller.getPlannedResources(task);
-		ResourceWrapper resourceToChange;
-		do {
-			TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
-			resourceTitle.show();
-			SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
-			resourceSelection.addOption("continue", null);
-			for (ResourceWrapper resourceWrapper: suggestion) {
-				resourceSelection.addOption(resourceWrapper.getName() + " ("+ resourceWrapper.getType().getName() + ")", resourceWrapper);
-			}
-			resourceSelection.show();
-			resourceToChange = resourceSelection.getAnswerObject();
-
-			if (resourceToChange != null) {
-				TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
-				alternativeResourceTitle.show();
-				SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
-				for (ResourceWrapper alternative: controller.getAlternativeResources(task, resourceToChange, startTime)) {
-					alternativeSelection.addOption(alternative.getName() + " ("+ alternative.getType().getName() + ")", alternative);
+		try {
+			List<ResourceWrapper> suggestion = controller.getPlannedResources(task);
+			while (true) {
+				TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
+				resourceTitle.show();
+				SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
+				resourceSelection.addOption("continue", null);
+				for (ResourceWrapper resourceWrapper : suggestion) {
+					resourceSelection.addOption(resourceWrapper.getName() + " (" + resourceWrapper.getType().getName() + ")", resourceWrapper);
 				}
-				alternativeSelection.show();
-				ResourceWrapper alternative = alternativeSelection.getAnswerObject();
-				suggestion.remove(resourceToChange);
-				suggestion.add(alternative);
-			}
-		} while (resourceToChange != null);
+				resourceSelection.show();
+				ResourceWrapper resourceToChange = resourceSelection.getAnswerObject();
 
-		controller.plan(task, suggestion, startTime);
-		TextSection success = new TextSection("Task planned successfully!", false);
-		success.show();
+				if (resourceToChange != null) {
+					TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
+					alternativeResourceTitle.show();
+					SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
+					for (ResourceWrapper alternative : controller.getAlternativeResources(task, resourceToChange)) {
+						alternativeSelection.addOption(alternative.getName() + " (" + alternative.getType().getName() + ")", alternative);
+					}
+					alternativeSelection.show();
+					ResourceWrapper alternative = alternativeSelection.getAnswerObject();
+					controller.changeResource(task, resourceToChange, alternative);
+					suggestion = controller.getPlannedResources(task);
+				} else {
+					TextSection success = new TextSection("Task planned successfully!", false);
+					success.show();
+					return;
+				}
+			}
+		} catch (Cancel cancel) {
+			controller.cancelPlan(task);
+		}
 	}
 
 	/**
@@ -524,6 +527,7 @@ public class UserInterface {
 		menu.addOption("create task", this::createTask);
 		menu.addOption("plan task", this::planTask);
 		menu.addOption("execute simulation", this::executeSimulation);
+		//noinspection InfiniteLoopStatement
 		while (true) {
 			title.show();
 			try {
