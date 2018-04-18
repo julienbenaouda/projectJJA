@@ -2,6 +2,7 @@ package taskman.backend.project;
 
 
 import taskman.backend.task.Task;
+import taskman.backend.user.Developer;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
@@ -10,6 +11,7 @@ import taskman.backend.wrappers.ProjectWrapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a project.
@@ -32,6 +34,9 @@ public class Project implements ProjectWrapper {
 		if(!(user instanceof ProjectManager)) {
 			throw new OperationNotPermittedException("You don't have permission to create a project!");
 		}
+		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
+			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
+		}
 		setName(name);
 		setDescription(description);
 		setCreationTime(creationTime);
@@ -48,9 +53,17 @@ public class Project implements ProjectWrapper {
 	 * Returns a list with all tasks of a project
 	 * @return the tasks of the project.
 	 */
-	@Override
 	public List<Task> getTasks() {
 		return new ArrayList<>(taskList);
+	}
+
+	/**
+	 * Returns a list with all tasks the user has access to.
+	 * @param user the user.
+	 * @return a list with all tasks the user has access to.
+	 */
+	public List<Task> getTasks(User user) {
+		return this.taskList.stream().filter(t -> t.hasAccessTo(user)).collect(Collectors.toList());
 	}
 
 	/**
@@ -101,6 +114,19 @@ public class Project implements ProjectWrapper {
      */
     private void removeTask(Task task) {
 		taskList.remove(task);
+	}
+
+	/**
+	 * Returns if the given user has access to this project.
+	 * @param user a User.
+	 * @return if the given user has access to this project.
+	 */
+	public boolean hasAccessTo(User user) {
+		if (user instanceof Developer) {
+			return this.taskList.stream().anyMatch(t -> t.hasAccessTo(user));
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -206,10 +232,6 @@ public class Project implements ProjectWrapper {
 	private void setDueTime(LocalDateTime dueTime) {
 		if (dueTime == null){ // TODO: moet dit anders bij task dit ook
 			throw new IllegalArgumentException("The due time can't be null");
-		}
-		if(dueTime.compareTo(creationTime) <= 0) // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
-		{
-			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
 		this.dueTime = dueTime;
 	}

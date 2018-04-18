@@ -1,12 +1,12 @@
 package taskman.backend.project;
 
 import taskman.backend.user.User;
-import taskman.backend.wrappers.ProjectWrapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for creating, storing and retrieving projects of the system.
@@ -27,11 +27,20 @@ public class ProjectOrganizer {
 
     /**
      * Returns all projects.
-     * @return a List of ProjectWrappers.
+     * @return a list of Projects.
      */
-    public List<ProjectWrapper> getProjects() {
+    public List<Project> getProjects() {
         return new ArrayList<>(this.projects);
     }
+
+	/**
+	 * Returns all projects the user has access to.
+	 * @param user the user.
+	 * @return a list of projects.
+	 */
+	public List<Project> getProjects(User user) {
+		return this.projects.stream().filter(p -> p.hasAccessTo(user)).collect(Collectors.toList());
+	}
 
     /**
      * Returns the project with the given name.

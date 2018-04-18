@@ -32,4 +32,16 @@ public interface TaskWrapper {
 	 */
 	String getStatus();
 
+	/**
+	 * Returns if the task can be planned.
+	 * @return if the task can be planned.
+	 */
+	boolean canBePlanned();
+
+	/**
+	 * Returns if the task can be updated.
+	 * @return if the task can be updated.
+	 */
+	boolean canBeUpdated();
+
 }

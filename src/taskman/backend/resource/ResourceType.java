@@ -107,6 +107,7 @@ public class ResourceType implements ResourceTypeWrapper {
 	 *
 	 * @return the list of resources
 	 */
+	@Override
 	public List<Resource> getResources() {
 		return resources;
 	}

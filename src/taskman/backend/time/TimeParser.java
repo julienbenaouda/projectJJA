@@ -70,4 +70,17 @@ public final class TimeParser {
         }
     }
 
+    /**
+     * Return the given LocalTime rounded up.
+     * @param time the LocalTime to round up.
+     * @return the given LocalTime rounded up.
+     */
+    public static LocalTime roundUpLocalTime(LocalTime time) {
+        if (time.getMinute() == 0 && time.getSecond() == 0) {
+            return time;
+        } else {
+            return time.truncatedTo(ChronoUnit.HOURS).plusHours(1);
+        }
+    }
+
 }

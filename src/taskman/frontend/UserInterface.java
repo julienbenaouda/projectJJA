@@ -61,6 +61,7 @@ public class UserInterface {
 		menu.addOption("remove user", this::removeUser);
 		menu.addOption("import from file", this::importFromFile);
 		menu.addOption("export to file", this::exportToFile);
+		//noinspection InfiniteLoopStatement
 		while (true) {
 			title.show();
 			menu.show();
@@ -189,6 +190,7 @@ public class UserInterface {
 		menu.addOption("create resource", this::createResource);
 		menu.addOption("show system time", this::showTime);
 		menu.addOption("advance system time", this::advanceTime);
+		//noinspection InfiniteLoopStatement
 		while (true) {
 			title.show();
 			menu.show();
@@ -273,9 +275,9 @@ public class UserInterface {
 		TitleSection taskTitle = new TitleSection("select task to plan");
 		taskTitle.show();
 		SelectionSection<TaskWrapper> selection1 = new SelectionSection<>(true);
-		for (ProjectWrapper project: controller.getProjects()) { // TODO: controller.getTasksToPlan()
-			for (TaskWrapper task: project.getTasks()) {
-				if (task.getStatus().equals("unavailable")) {
+		for (ProjectWrapper project: controller.getProjects()) {
+			for (TaskWrapper task: controller.getTasks(project)) {
+				if (task.canBePlanned()) {
 					selection1.addOption(project.getName() + " - " + task.getName(), task);
 				}
 			}
@@ -335,8 +337,8 @@ public class UserInterface {
 		titleSelection1.show();
 		SelectionSection<TaskWrapper> selection1 = new SelectionSection<>(true);
 		for (ProjectWrapper project: controller.getProjects()) {
-			for (TaskWrapper task: project.getTasks()) { // TODO: controller.getTasksToUpdate()
-				if (task.getStatus().equals("available")) {
+			for (TaskWrapper task: controller.getTasks(project)) {
+				if (task.canBeUpdated()) {
 					selection1.addOption(project.getName() + " - " + task.getName(), task);
 				}
 			}
@@ -346,10 +348,8 @@ public class UserInterface {
 
 		TitleSection titleSelection2 = new TitleSection("select a task status");
 		titleSelection2.show();
-		SelectionSection selection2 = new SelectionSection(true); // TODO: controller.getNewStatusOptions
-		selection2.addOption("executing");
-		selection2.addOption("failed");
-		selection2.addOption("finished");
+		SelectionSection<String> selection2 = new SelectionSection<>(true);
+		selection2.addOptions(task.getStatusTransitions());
 		selection2.show();
 
 		TitleSection titleForm = new TitleSection("status details");
@@ -485,8 +485,7 @@ public class UserInterface {
 		SelectionSection<ProjectWrapper> projectSelection = new SelectionSection<>(withCancel);
 		for (ProjectWrapper project : controller.getProjects()) {
 			projectSelection.addOption(
-					project.getName() + " (status: " + controller.getProjectStatus(project) + ")"
-					, project);
+					project.getName() + " (status: " + controller.getProjectStatus(project) + ")", project);
 		}
 		projectSelection.show();
 		return projectSelection.getAnswerObject();
@@ -502,7 +501,7 @@ public class UserInterface {
 		TitleSection titleTaskSelection = new TitleSection(title);
 		titleTaskSelection.show();
 		SelectionSection<TaskWrapper> taskSelection = new SelectionSection<>(withCancel);
-		for (TaskWrapper task: project.getTasks()) taskSelection.addOption(task.getName(), task);
+		for (TaskWrapper task: controller.getTasks(project)) taskSelection.addOption(task.getName(), task);
 		taskSelection.show();
 		return taskSelection.getAnswerObject();
 	}
