@@ -1,0 +1,11 @@
+@startuml
+
+title "Use Case - Plan Task"
+
+-> ":Controller": getProjects()
+activate ":Controller"
+
+
+
+
+@enduml
