@@ -14,6 +14,7 @@ import taskman.backend.time.Clock;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceTypeWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -171,7 +173,8 @@ public class ControllerTest {
 
         assertTrue("Tasks already present!", project.getTasks().isEmpty());
         assertTrue("Tasks already present!", controller.getTasks(project).isEmpty());
-        controller.createTask(project, "tsk", "oOo", 10, 0.5);
+        HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
+        controller.createTask(project, "tsk", "oOo", 10, 0.5, empty);
         assertEquals("More or less than one task added!",1, project.getTasks().size());
         assertEquals("More or less than one task added!",1, controller.getTasks(project).size());
         Task task = project.getTask("tsk");

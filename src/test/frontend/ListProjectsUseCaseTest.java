@@ -10,6 +10,7 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.frontend.UserInterface;
 import static test.frontend.StubbedInputStream.stubInputStream;
 
@@ -54,7 +56,8 @@ public class ListProjectsUseCaseTest {
 		c.login("test", "test");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
-		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5);
+		HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
+		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, empty);
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 	}
