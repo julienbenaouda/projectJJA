@@ -18,10 +18,7 @@ import taskman.backend.wrappers.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
@@ -307,6 +304,10 @@ public class Controller {
      * @throws IllegalArgumentException when the name is null or already exists.
      */
     public void createResource(ResourceTypeWrapper type, String name) {
+    	if (type.getName().equals("developer")) {
+    		// TODO: dit een een slechte fix!!!
+    		throw new IllegalArgumentException("Cannot create a resource for a developer!");
+	    }
         ((ResourceType) type).createResource(name);
     }
 

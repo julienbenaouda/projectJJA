@@ -41,6 +41,8 @@ public class SimulationUseCaseTest {
 		c = new Controller(clock, um, po, rm, sm);
 		um.createUser("test", "test", "project manager", null, rm);
 		c.login("test", "test");
+		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
+		c.createProject("test", "test", dueTime);
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 	}
@@ -48,11 +50,9 @@ public class SimulationUseCaseTest {
 	@Test
 	public void testNormalFlow() throws IOException {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("13").then("2").then("test").then("N").then("test").then("N").then("20/07/2018 12:00").then("N").then("0").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("test").then("test").then("13").then("2").then("1").then("test").then("N").then("test").then("N").then("20").then("N").then("2.5").then("N").then("0").then("0").then("0").atSomePoint());
 		ui.start();
-		assertTrue(outputStream.toString().contains("testProject (status: active)"));
-		assertTrue(outputStream.toString().contains("2018"));
-		assertTrue(outputStream.toString().contains("testTask"));
+		assertFalse(outputStream.toString().contains("error"));
 	}
 
 

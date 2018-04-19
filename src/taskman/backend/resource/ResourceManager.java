@@ -155,9 +155,11 @@ public class ResourceManager {
             public LocalDateTime next() {
                 if (hasNext()) {
                     while (!isAvailableStartingTime(plan, duration, startingTime)) {
-                        startingTime = startingTime.plusHours(1);
+                        startingTime = TimeParser.roundUpLocalDateTime(startingTime.plusHours(1));
                     }
-                    return startingTime;
+                    LocalDateTime prevStartingTime = startingTime;
+                    startingTime = TimeParser.roundUpLocalDateTime(startingTime.plusHours(1));
+                    return prevStartingTime;
                 }
                 throw new NoSuchElementException("There is no starting time available.");
             }

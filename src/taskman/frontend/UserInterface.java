@@ -258,6 +258,7 @@ public class UserInterface {
 		);
 		title.show();
 		form.show();
+
 		controller.createTask(
 				project,
 				form.getAnswer(0),
@@ -267,6 +268,7 @@ public class UserInterface {
 		);
 		Section success = new TextSection("Task created successfully!", false);
 		success.show();
+
 	}
 
 	/**
@@ -286,6 +288,24 @@ public class UserInterface {
 		}
 		selection1.show();
 		TaskWrapper task = selection1.getAnswerObject();
+
+		while (true) {
+			TitleSection requirementsTitle = new TitleSection("continue or add requirements to task");
+			requirementsTitle.show();
+			SelectionSection<ResourceTypeWrapper> requirementSelection = new SelectionSection<>(true);
+			requirementSelection.addOption("continue", null);
+			for (ResourceTypeWrapper resourceType : controller.getResourceTypes()) {
+				requirementSelection.addOption(resourceType.getName(), resourceType);
+			}
+			requirementSelection.show();
+			if (requirementSelection.getAnswerObject() == null) {
+				break;
+			} else {
+				FormSection numberForm = new FormSection(false, "Number required:");
+				numberForm.show();
+				controller.addRequirementToTask(task, requirementSelection.getAnswerObject(), Integer.parseInt(numberForm.getAnswer(0)));
+			}
+		}
 
 		TitleSection timeTitle = new TitleSection("select start time");
 		timeTitle.show();
@@ -312,7 +332,11 @@ public class UserInterface {
 				resourceSelection.show();
 				ResourceWrapper resourceToChange = resourceSelection.getAnswerObject();
 
-				if (resourceToChange != null) {
+				if (resourceToChange == null) {
+					TextSection success = new TextSection("Task planned successfully!", false);
+					success.show();
+					return;
+				} else {
 					TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
 					alternativeResourceTitle.show();
 					SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
@@ -323,14 +347,11 @@ public class UserInterface {
 					ResourceWrapper alternative = alternativeSelection.getAnswerObject();
 					controller.changeResource(task, resourceToChange, alternative);
 					suggestion = controller.getPlannedResources(task);
-				} else {
-					TextSection success = new TextSection("Task planned successfully!", false);
-					success.show();
-					return;
 				}
 			}
-		} catch (Cancel cancel) {
+		} catch (Exception e) {
 			controller.cancelPlan(task);
+			throw e;
 		}
 	}
 
@@ -560,7 +581,8 @@ public class UserInterface {
 	 */
 	private void executeSimulation() throws Cancel {
 		controller.executeSimulation();
-		loggedInMenu();
+		Section success = new TextSection("Simulated actions are executed in system!", false);
+		success.show();
 	}
 
 }
