@@ -527,7 +527,7 @@ title __TASKMAN's Class Diagram__\n
       package taskman.backend.user {
         class Developer {
             + Developer(String, String)
-            + getUserType()
+            + String getUserType()
         }
 
         class OperationNotPermittedException {
@@ -536,36 +536,36 @@ title __TASKMAN's Class Diagram__\n
 
         class ProjectManager {
             + ProjectManager(String, String)
-            + getUserType()
+            + String getUserType()
         }
 
         abstract class User {
             - name : String
             - password : String
             + User(String, String)
-            + getName()
-            - setName(String)
-            + getPassword()
-            - setPassword(String)
-            {abstract} + getUserType()
+            + String getName()
+            - void setName(String)
+            + String getPassword()
+            - void setPassword(String)
+            {abstract} + String getUserType()
         }
 
         class UserManager {
             - users : List<User>
             + UserManager()
-            + getUsers()
-            + getUser(String)
-            + hasUser(String)
-            + createUser(String, String, String, LocalTime, ResourceManager)
-            - createDeveloper(String, String)
-            - createProjectManager(String, String)
-            + removeUser(User, String, ResourceManager, )
-            + getUserTypes()
-            + getCurrentUser()
-            - setCurrentUser(User)
-            + hasCurrentUser()
-            + login(String, String)
-            + logout()
+            + List<User> getUsers()
+            + User getUser(String)
+            + boolean hasUser(String)
+            + void createUser(String, String, String, LocalTime, ResourceManager)
+            - void createDeveloper(String, String)
+            - void createProjectManager(String, String)
+            + void removeUser(User, String, ResourceManager, )
+            + Collection<String> getUserTypes()
+            + User getCurrentUser()
+            - void setCurrentUser(User)
+            + boolean hasCurrentUser()
+            + void login(String, String)
+            + void logout()
         }
       }
     }
