@@ -118,7 +118,7 @@ public class UserInterface {
 			startBreak = TimeParser.convertStringToLocalTime(breakForm.getAnswer(0));
 		}
 		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), startBreak);
-		Section success = new TextSection("user created successfully!", false);
+		Section success = new TextSection("User created successfully!", false);
 		success.show();
 	}
 
@@ -211,8 +211,8 @@ public class UserInterface {
 		TextSection projectInfo = new TextSection("", true);
 		projectInfo.addLine("Name: " + project.getName());
 		projectInfo.addLine("Description: " + project.getDescription());
-		projectInfo.addLine("Creation time: " + project.getCreationTime());
-		projectInfo.addLine("Due time: " + project.getDueTime());
+		projectInfo.addLine("Creation time: " + TimeParser.convertLocalDateTimeToString(project.getCreationTime()));
+		projectInfo.addLine("Due time: " + TimeParser.convertLocalDateTimeToString(project.getDueTime()));
 		projectInfo.show();
 
 		TaskWrapper task = selectTask(true, "overview of tasks in " + project.getName(), project);
@@ -224,7 +224,7 @@ public class UserInterface {
 		taskInfo.addLine("Description: " + task.getDescription());
 		taskInfo.addLine("Status: " + task.getStatus());
 		taskInfo.addLine("Acceptable deviation: " + task.getAcceptableDeviation());
-		taskInfo.addLine("Estimated duration: " + task.getEstimatedDuration());
+		taskInfo.addLine("Estimated duration: " + task.getEstimatedDuration() + " minutes");
 		taskInfo.show();
 	}
 
@@ -238,7 +238,7 @@ public class UserInterface {
 		FormSection form = new FormSection(true, "Name:", "Description:", "Due time (dd/mm/yyyy hh:mm):");
 		form.show();
 		controller.createProject(form.getAnswer(0), form.getAnswer(1), TimeParser.convertStringToLocalDateTime(form.getAnswer(2)));
-		Section success = new TextSection("project created successfully!", false);
+		Section success = new TextSection("Project created successfully!", false);
 		success.show();
 	}
 
@@ -264,7 +264,7 @@ public class UserInterface {
 				Long.parseLong(form.getAnswer(2)),
 				Double.parseDouble(form.getAnswer(3))
 		);
-		Section success = new TextSection("task created successfully!", false);
+		Section success = new TextSection("Task created successfully!", false);
 		success.show();
 	}
 
@@ -473,7 +473,7 @@ public class UserInterface {
 	private void advanceTime() throws Cancel {
 		TitleSection titleForm = new TitleSection("advance system time");
 		titleForm.show();
-		FormSection form = new FormSection(true, "New system time:");
+		FormSection form = new FormSection(false, "New time (dd/mm/uuuu hh:mm):");
 		form.show();
 		if (!form.hasAnswers()) return; // Cancelled
 		controller.updateTime(TimeParser.convertStringToLocalDateTime(form.getAnswer(0)));

@@ -67,7 +67,7 @@ public abstract class User implements UserWrapper {
 	 */
 	private void setPassword(String password) throws IllegalArgumentException {
 		if(password == null || password.equals("")) {
-			throw new IllegalArgumentException("The password can't be empty. Please chose another password.");
+			throw new IllegalArgumentException("The password can't be empty. Please choose another password.");
 		}
 		this.password = password;
 	}

@@ -20,6 +20,12 @@ public final class TimeParser {
             DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
 
     /**
+     * The notation used for the time.
+     */
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("HH:mm").withResolverStyle(ResolverStyle.STRICT);
+
+    /**
      * Convert a LocalDateTime to a String.
      * @param time a LocalDateTime.
      * @return a String.
@@ -44,7 +50,7 @@ public final class TimeParser {
      * @return a String.
      */
     public static String convertLocalTimeToString(LocalTime time) {
-        return time.format(DATE_TIME_FORMATTER);
+        return time.format(DATE_FORMATTER);
     }
 
     /**
@@ -54,7 +60,7 @@ public final class TimeParser {
      * @throws DateTimeParseException if the text cannot be parsed.
      */
     public static LocalTime convertStringToLocalTime(String time) throws DateTimeParseException {
-        return LocalTime.parse(time, DATE_TIME_FORMATTER);
+        return LocalTime.parse(time, DATE_FORMATTER);
     }
 
     /**
