@@ -153,7 +153,7 @@ public class XmlObject {
 	 */
 	public static XmlObject restoreFromFile(String path) throws ImportExportException {
 		try(BufferedReader r = new BufferedReader(new FileReader(path))) {
-			String line = null;
+			String line;
 			StringBuilder sb = new StringBuilder();
 			while((line = r.readLine()) != null) {
 				sb.append(line);
