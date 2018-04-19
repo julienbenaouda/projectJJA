@@ -1,38 +1,28 @@
 package test.frontend;
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
-import java.time.LocalDateTime;
-import java.time.Month;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.Controller;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
-import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 import taskman.frontend.UserInterface;
-import static test.frontend.StubbedInputStream.stubInputStream;
 
-/**
- * 
- */
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.time.LocalDateTime;
+import java.time.Month;
+
+import static org.junit.Assert.assertTrue;
+import static test.frontend.StubbedInputStream.stubInputStream;
 
 /**
  * @author Julien Benaouda
  *
  */
-public class ListProjectsUseCaseTest {
+public class ShowProjectsUseCaseTest {
 	private ProjectOrganizer po;
 	private UserManager um;
 	private ResourceManager rm;
