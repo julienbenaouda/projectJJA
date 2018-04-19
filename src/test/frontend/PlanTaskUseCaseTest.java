@@ -66,8 +66,7 @@ public class PlanTaskUseCaseTest {
 		assertNotNull(time);
 		c.initializePlan(task, time);
 		List<ResourceWrapper> suggestion = c.getPlannedResources(task);
-		c.getAlternativeResources(task, resourceToChange)) {
+		c.getAlternativeResources(task, resourceToChange);
 	}
-
 
 }

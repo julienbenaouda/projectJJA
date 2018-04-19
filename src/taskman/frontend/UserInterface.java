@@ -8,10 +8,8 @@ import taskman.frontend.sections.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is responsible for the user interface of the taskman application.
@@ -579,7 +577,8 @@ public class UserInterface {
 	 */
 	private void executeSimulation() throws Cancel {
 		controller.executeSimulation();
-		loggedInMenu();
+		Section success = new TextSection("Simulated actions are executed in system!", false);
+		success.show();
 	}
 
 }
