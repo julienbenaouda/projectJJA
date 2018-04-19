@@ -8,8 +8,10 @@ import taskman.frontend.sections.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is responsible for the user interface of the taskman application.
@@ -258,15 +260,37 @@ public class UserInterface {
 		);
 		title.show();
 		form.show();
+
+		Map<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
+		while (true) {
+			TitleSection requirementsTitle = new TitleSection("continue or add requirements to task");
+			requirementsTitle.show();
+			SelectionSection<ResourceTypeWrapper> requirementSelection = new SelectionSection<>(true);
+			requirementSelection.addOption("continue", null);
+			for (ResourceTypeWrapper resourceType : controller.getResourceTypes()) {
+				requirementSelection.addOption(resourceType.getName(), resourceType);
+			}
+			requirementSelection.show();
+			if (requirementSelection.getAnswerObject() == null) {
+				break;
+			} else {
+				FormSection numberForm = new FormSection(false, "Number required:");
+				numberForm.show();
+				requirements.put(requirementSelection.getAnswerObject(), Integer.parseInt(numberForm.getAnswer(0)));
+			}
+		}
+
 		controller.createTask(
 				project,
 				form.getAnswer(0),
 				form.getAnswer(1),
 				Long.parseLong(form.getAnswer(2)),
-				Double.parseDouble(form.getAnswer(3))
+				Double.parseDouble(form.getAnswer(3)),
+				requirements
 		);
 		Section success = new TextSection("Task created successfully!", false);
 		success.show();
+
 	}
 
 	/**
@@ -312,7 +336,11 @@ public class UserInterface {
 				resourceSelection.show();
 				ResourceWrapper resourceToChange = resourceSelection.getAnswerObject();
 
-				if (resourceToChange != null) {
+				if (resourceToChange == null) {
+					TextSection success = new TextSection("Task planned successfully!", false);
+					success.show();
+					return;
+				} else {
 					TitleSection alternativeResourceTitle = new TitleSection("select alternative resource" + task.getName());
 					alternativeResourceTitle.show();
 					SelectionSection<ResourceWrapper> alternativeSelection = new SelectionSection<>(true);
@@ -323,14 +351,11 @@ public class UserInterface {
 					ResourceWrapper alternative = alternativeSelection.getAnswerObject();
 					controller.changeResource(task, resourceToChange, alternative);
 					suggestion = controller.getPlannedResources(task);
-				} else {
-					TextSection success = new TextSection("Task planned successfully!", false);
-					success.show();
-					return;
 				}
 			}
-		} catch (Cancel cancel) {
+		} catch (Exception e) {
 			controller.cancelPlan(task);
+			throw e;
 		}
 	}
 

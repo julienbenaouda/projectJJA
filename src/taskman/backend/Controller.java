@@ -307,6 +307,10 @@ public class Controller {
      * @throws IllegalArgumentException when the name is null or already exists.
      */
     public void createResource(ResourceTypeWrapper type, String name) {
+    	if (type.getName().equals("developer")) {
+    		// TODO: dit een een slechte fix!!!
+    		throw new IllegalArgumentException("Cannot create a resource for a developer!");
+	    }
         ((ResourceType) type).createResource(name);
     }
 
