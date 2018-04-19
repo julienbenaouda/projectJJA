@@ -1,4 +1,10 @@
 package test.frontend;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.backend.Controller;
@@ -7,13 +13,8 @@ import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.frontend.UserInterface;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.time.LocalDateTime;
-import java.time.Month;
 
 import static org.junit.Assert.assertTrue;
 import static test.frontend.StubbedInputStream.stubInputStream;
@@ -44,7 +45,8 @@ public class ShowProjectsUseCaseTest {
 		c.login("test", "test");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
-		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5);
+		HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
+		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, empty);
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 	}

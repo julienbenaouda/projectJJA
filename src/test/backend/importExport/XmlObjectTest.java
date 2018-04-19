@@ -12,12 +12,14 @@ import taskman.backend.simulation.SimulationManager;
 import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.backend.wrappers.ResourceWrapper;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
@@ -55,7 +57,8 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		Project project = po.getProject("test");
-		controller.createTask(project, "test", "test", 60L, 5.0);
+		HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
+		controller.createTask(project, "test", "test", 60L, 5.0, empty);
 		Task task = project.getTask("test");
 		rm.createResourceType("type1");
 		ResourceType resourceType = rm.getResourceType("type1");
@@ -87,7 +90,8 @@ public class XmlObjectTest {
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
 		Project project = po.getProject("test");
-		controller.createTask(project, "test", "test", 60L, 5.0);
+		HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
+		controller.createTask(project, "test", "test", 60L, 5.0, empty);
 		Task task = project.getTask("test");
 		rm.createResourceType("type1");
 		ResourceType resourceType = rm.getResourceType("type1");
