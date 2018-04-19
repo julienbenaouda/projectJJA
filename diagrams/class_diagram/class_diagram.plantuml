@@ -1,0 +1,617 @@
+@startuml
+
+title __TASKMAN's Class Diagram__\n
+
+  package taskman {
+    class Initiator {
+        {static} + main()
+    }
+
+    package taskman.frontend {
+      interface MethodCall {
+          {abstract} + call()
+      }
+      
+      class UserInterface {
+          + UserInterface()
+          + start()
+          - startMenu()
+          - login()
+          - showUsers()
+          - createUser()
+          - removeUser()
+          - importFromFile()
+          - exportToFile()
+          - loggedInMenu()
+          - showProjectsAndTasks()
+          - createProject()
+          - createTask()
+          - planTask()
+          - updateTaskStatus()
+          - addAlternativeToTask()
+          - addDependencyToTask()
+          - createResourceType()
+          - createConstraint()
+          - createResource()
+          - showTime()
+          - advanceTime()
+          - selectProject()
+          - selectTask()
+          - simulationMenu()
+          - cancelSimulation()
+          - executeSimulation()
+      }
+
+      package taskman.frontend.sections {
+        class Cancel {
+        }
+
+        class FormSection {
+            - withCancel : Boolean
+            - questions : List<String>
+            - answers : List<String>
+            + FormSection()
+            + show()
+            + hasAnswers()
+            + getAnswer()
+            - resetAnswers()
+        }
+
+        class MenuSection {
+            - selectionSection : SelectionSection<MethodCall>
+            + MenuSection()
+            + MenuSection()
+            + addOption()
+            + show()
+            + executeChoice()
+        }
+
+        abstract class Section {
+            {abstract} + show()
+            ~ print()
+            ~ println()
+            ~ inputString()
+            ~ inputAnswer()
+            ~ inputValidAnswer()
+        }
+
+        class SelectionSection {
+            - withCancel : Boolean
+            - cancelText : String
+            - optionNames : List<String>
+            - optionObjects : List<Type>
+            - answer : Integer
+            + SelectionSection()
+            + SelectionSection()
+            + addOption()
+            + addOption()
+            + addOptions()
+            + addOptions()
+            + addOptions()
+            + show()
+            + hasAnswer()
+            + getAnswer()
+            + getAnswerObject()
+            + resetAnswer()
+        }
+
+        class TextSection {
+            - text : String
+            - isBlocking : boolean
+            + TextSection()
+            + addLine()
+            + show()
+        }
+
+        class TitleSection {
+            + TitleSection()
+            - repeat()
+            + show()
+        }
+      }
+    }
+
+    package taskman.backend {
+      class Controller {
+          + Controller()
+          + getTime()
+          + updateTime()
+          + getCurrentUser()
+          + getUsers()
+          + getUserTypes()
+          + createUser()
+          + removeUser()
+          + login()
+          + logout()
+          + getProjects()
+          + getProjectStatus()
+          + createProject()
+          + getTasks()
+          + createTask()
+          + getStartingsTimes()
+          + initializePlan()
+          + getPlannedResources()
+          + getAlternativeResources()
+          + changeResource()
+          + cancelPlan()
+          + getResourceTypes()
+          + createResourceType()
+          + createConstraint()
+          + createResource()
+          + addAlternativeToTask()
+          + addDependencyToTask()
+          + addRequirementToTask()
+          + endTaskExecution()
+          + makeExecuting()
+          + exportSystem()
+          + importSystem()
+          + startSimulation()
+          + cancelSimulation()
+          + executeSimulation()
+          - setClock()
+          - setUserManager()
+          - setProjectOrganizer()
+          - setResourceManager()
+      }
+
+      package taskman.backend.wrappers {
+        interface AvailabilityPeriodWrapper {
+            {abstract} + getStartTime()
+            {abstract} + getEndTime()
+        }
+
+        interface ProjectWrapper {
+            {abstract} + getName()
+            {abstract} + getDescription()
+            {abstract} + getCreationTime()
+            {abstract} + getDueTime()
+        }
+
+        interface ResourceTypeWrapper {
+            {abstract} + getName()
+            {abstract} + getResources()
+        }
+
+        interface ResourceWrapper {
+            {abstract} + getName()
+            {abstract} + getType()
+        }
+
+        interface TaskWrapper {
+            {abstract} + getName()
+            {abstract} + getDescription()
+            {abstract} + getEstimatedDuration()
+            {abstract} + getAcceptableDeviation()
+            {abstract} + getStatus()
+            {abstract} + canBePlanned()
+            {abstract} + canBeUpdated()
+            {abstract} + getDelay()
+            {abstract} + getAlternative()
+            {abstract} + getDependencies()
+        }
+
+        interface TimeSpanWrapper {
+            {abstract} + getStartTime()
+            {abstract} + getEndTime()
+        }
+
+        interface UserWrapper {
+            {abstract} + getName()
+            {abstract} + getUserType()
+        }
+      }
+
+      package taskman.backend.importexport {
+        class ImportExportException {
+            + ImportExportException()
+        }
+
+        class XmlObject {
+            - xstream : XStream
+            + XmlObject()
+            + getResourceManager()
+            + getUserManager()
+            + getProjectOrganizer()
+            + getClock()
+            {static} - createXstream()
+            + toXMLString()
+            {static} + fromXMLString()
+            + saveToFile()
+            {static} + restoreFromFile()
+        }
+      }
+
+      package taskman.backend.project {
+        class Project {
+            - taskList : ArrayList<Task>
+            - name : String
+            - description : String
+            - creationTime : LocalDateTime
+            - dueTime : LocalDateTime
+            + Project()
+            + getTasks()
+            + getTasks()
+            + getTask()
+            + createTask()
+            - addTask()
+            - removeTask()
+            + hasAccessTo()
+            + getName()
+            - setName()
+            + getDescription()
+            - setDescription()
+            + getCreationTime()
+            - setCreationTime()
+            + getDueTime()
+            - setDueTime()
+            + getStatus()
+        }
+
+        class ProjectOrganizer {
+            - projects : Collection<Project>
+            + ProjectOrganizer()
+            + getProjects()
+            + getProjects()
+            + getProject()
+            + createProject()
+            - projectExists()
+        }
+      }
+
+      package taskman.backend.resource {
+        class DeveloperResource {
+            + DeveloperResource()
+            + getBreakTime()
+            - setBreakTime()
+            + addBreakTime()
+            + isAvailable()
+            - overlapsWithBreak()
+            - setDeveloper()
+            + getDeveloper()
+        }
+
+        class Plan {
+            - requirements : Map<ResourceType, Integer>
+            - reservations : List<Reservation>
+            + Plan()
+            + getTask()
+            - setTask()
+            + getRequirements()
+            + addRequirement()
+            + getReservations()
+            + createReservations()
+            + createReservation()
+            + createSpecificReservation()
+            + removeReservation()
+            + getPlannedResources()
+            + changeResource()
+            + isDeveloperFromPlan()
+            + finish()
+            + emptyPlan()
+        }
+
+        class Reservation {
+            - userSpecific : boolean
+            + Reservation()
+            + getResource()
+            - setResource()
+            + getTimeSpan()
+            - setTimeSpan()
+            + overlaps()
+            + finishEarlier()
+            + isUserSpecific()
+            + setUserSpecific()
+            + delete()
+        }
+
+        class Resource {
+            - name : String
+            - reservations : ArrayList<Reservation>
+            + Resource()
+            + getName()
+            + getType()
+            + setType()
+            + getReservations()
+            + addReservation()
+            + deleteReservation()
+            + isAvailable()
+            + canRemove()
+        }
+
+        class ResourceManager {
+            - resourceTypes : Set<ResourceType>
+            - constraints : List<ConstraintComponent>
+            + ResourceManager()
+            + getResourceType()
+            + getResourceTypes()
+            + createResourceType()
+            - getConstraint()
+            - addConstraint()
+            + createConstraint()
+            + getStartingTimes()
+            - isAvailableStartingTime()
+            + testRequirements()
+            - checkRequirements()
+            + addRequirement()
+            + createResourceForUser()
+            + removeResourceForUser()
+            + initializePlan()
+            + reschedulePlan()
+            + canBeRescheduled()
+            + getAlternativeResources()
+        }
+
+        class ResourceType {
+            - name : String
+            - availability : HashMap<Integer, AvailabilityPeriod>
+            - resources : ArrayList<Resource>
+            + ResourceType()
+            + getName()
+            - setName()
+            + hashCode()
+            - getAvailability()
+            + getAvailabilityPeriod()
+            + getResources()
+            + getNbOfResources()
+            + hasResource()
+            + getResource()
+            - addResource()
+            + createResource()
+            + createResourceFromUser()
+            + removeResource()
+            + hasAvailableResources()
+            + getAvailableResources()
+            + addAvailability()
+        }
+      }
+
+      package taskman.backend.simulation {
+        class SimulationManager {
+            - previousState : String
+            + SimulationManager()
+            - getPreviousState()
+            - setPreviousState()
+            + startSimulation()
+            + cancelSimulation()
+            + executeSimulation()
+        }
+      }
+
+      package taskman.backend.task {
+        class Task {
+            - name : String
+            - description : String
+            - estimatedDuration : long
+            - acceptableDeviation : double
+            - dependencies : ArrayList<Task>
+            + Task()
+            + getName()
+            - setName()
+            + getDescription()
+            - setDescription()
+            + getEstimatedDuration()
+            - setEstimatedDuration()
+            + getAcceptableDeviation()
+            - setAcceptableDeviation()
+            + getTimeSpan()
+            # setTimeSpan()
+            - setTimeSpan()
+            + getState()
+            # setState()
+            + getStatus()
+            + canBePlanned()
+            + canBeUpdated()
+            + endExecution()
+            + makeExecuting()
+            + isAvailable()
+            + isFinished()
+            + getDelay()
+            + getAlternative()
+            # setAlternativeTask()
+            + setAlternative()
+            + getDependencies()
+            # addDependencyTask()
+            + addDependency()
+            + removeDependency()
+            + getPlan()
+            + initializePlan()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
+            + addRequirement()
+            {static} # containsLoop()
+            + hasAccessTo()
+        }
+
+        abstract class TaskState {
+            - status : String
+            + getStatus()
+            # setStatus()
+            + canBePlanned()
+            + canBeUpdated()
+            + getDelay()
+            + execute()
+            + endExecution()
+            + setAlternative()
+            + addDependency()
+            + addRequirement()
+            + isAvailable()
+            + isFinished()
+            + initializePlan()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
+        }
+
+        class TaskStateExecuting {
+            + TaskStateExecuting()
+            + endExecution()
+        }
+
+        class TaskStateFailed {
+            + TaskStateFailed()
+            + setAlternative()
+        }
+
+        class TaskStateFinished {
+            + TaskStateFinished()
+            + isFinished()
+            + getDelay()
+        }
+
+        class TaskStatePlanned {
+            + TaskStatePlanned()
+            + canBeUpdated()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
+            + execute()
+            + isAvailable()
+        }
+
+        class TaskStateUnavailable {
+            + TaskStateUnavailable()
+            + addDependency()
+            + canBePlanned()
+            + addRequirement()
+            + initializePlan()
+        }
+      }
+
+      package taskman.backend.time {
+        class AvailabilityPeriod {
+            - startTime : LocalTime
+            - endTime : LocalTime
+            + AvailabilityPeriod()
+            + getStartTime()
+            - setStartTime()
+            + getEndTime()
+            - setEndTime()
+            + canHaveAsEndTime()
+            + overlaps()
+        }
+
+        class Clock {
+            - time : LocalDateTime
+            + getTime()
+            + updateTime()
+        }
+
+        class TimeParser {
+            {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+            {static} - DATE_FORMATTER : DateTimeFormatter
+            {static} + convertLocalDateTimeToString()
+            {static} + convertStringToLocalDateTime()
+            {static} + convertLocalTimeToString()
+            {static} + convertStringToLocalTime()
+            {static} + roundUpLocalDateTime()
+            {static} + roundUpLocalTime()
+        }
+
+        class TimeSpan {
+            - startTime : LocalDateTime
+            - endTime : LocalDateTime
+            + TimeSpan()
+            + getStartTime()
+            - setStartTime()
+            + getEndTime()
+            - setEndTime()
+            + canHaveAsEndTime()
+            + equals()
+        }
+      }
+
+      package taskman.backend.user {
+        class Developer {
+            + Developer()
+            + getUserType()
+        }
+
+        class OperationNotPermittedException {
+            + OperationNotPermittedException()
+        }
+
+        class ProjectManager {
+            + ProjectManager()
+            + getUserType()
+        }
+
+        abstract class User {
+            - name : String
+            - password : String
+            + User()
+            + getName()
+            - setName()
+            + getPassword()
+            - setPassword()
+            {abstract} + getUserType()
+        }
+
+        class UserManager {
+            - users : List<User>
+            + UserManager()
+            + getUsers()
+            + getUser()
+            + hasUser()
+            + createUser()
+            - createDeveloper()
+            - createProjectManager()
+            + removeUser()
+            + getUserTypes()
+            + getCurrentUser()
+            - setCurrentUser()
+            + hasCurrentUser()
+            + login()
+            + logout()
+        }
+      }
+    }
+  }
+
+  UserInterface o-- Controller : controller
+  FormSection -up-|> Section
+  MenuSection -up-|> Section
+  SelectionSection -up-|> Section
+  TextSection -up-|> Section
+  TitleSection -up-|> Section
+  TitleSection o-- TextSection : textSection
+  Controller o-- Clock : clock
+  Controller o-- UserManager : userManager
+  Controller o-- ProjectOrganizer : projectOrganizer
+  Controller o-- ResourceManager : resourceManager
+  Controller o-- SimulationManager : simulationManager
+  XmlObject o-- ResourceManager : resourceManager
+  XmlObject o-- UserManager : userManager
+  XmlObject o-- ProjectOrganizer : projectOrganizer
+  XmlObject o-- Clock : clock
+  Project -up-|> ProjectWrapper
+  DeveloperResource -up-|> Resource
+  DeveloperResource o-- AvailabilityPeriod : breakTime
+  DeveloperResource o-- Developer : developer
+  Plan o-- Task : task
+  Reservation o-- Resource : resource
+  Reservation o-- TimeSpan : timeSpan
+  Resource -up-|> ResourceWrapper
+  Resource o-- ResourceType : type
+  ResourceType -up-|> ResourceTypeWrapper
+  Task -up-|> TaskWrapper
+  Task o-- TimeSpan : timeSpan
+  Task o-- TaskState : state
+  Task o-- Task : alternative
+  Task o-- Plan : plan
+  TaskStateExecuting -up-|> TaskState
+  TaskStateFailed -up-|> TaskState
+  TaskStateFinished -up-|> TaskState
+  TaskStatePlanned -up-|> TaskState
+  TaskStateUnavailable -up-|> TaskState
+  AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
+  TimeSpan -up-|> TimeSpanWrapper
+  Developer -up-|> User
+  ProjectManager -up-|> User
+  User -up-|> UserWrapper
+  UserManager o-- User : currentUser
+
+@enduml
