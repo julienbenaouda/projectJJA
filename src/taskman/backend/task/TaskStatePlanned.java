@@ -30,6 +30,7 @@ public class TaskStatePlanned extends TaskState {
 	public boolean canBeUpdated() {
 		return true;
 	}
+	// TODO: klopt dit wel?
 
 	/**
 	 * Get the resources of the plan of a task.

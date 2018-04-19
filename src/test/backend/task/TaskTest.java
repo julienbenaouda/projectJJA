@@ -1,6 +1,7 @@
 package test.backend.task;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,8 +13,10 @@ import taskman.backend.user.Developer;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +38,13 @@ public class TaskTest {
 	private static ResourceManager resourceManager;
 	private static ProjectManager admin;
 
+	@Before
+	public void init(){
+		resourceManager = new ResourceManager();
+	}
 
 	@BeforeClass
 	public static void setUp(){
-		resourceManager = new ResourceManager();
 		admin = new ProjectManager("admin", "admin");
 
 		long duration = 22;
@@ -245,126 +251,458 @@ public class TaskTest {
 		Assert.assertEquals("The acceptable deviations are not equal", 0.15, task.getAcceptableDeviation(), 0);
 		Assert.assertEquals("There is no time span added", null, task.getTimeSpan());
 		Assert.assertEquals("The status is not available", true, task.getStatus().equals("unavailable"));
+		Assert.assertEquals("The state is not unavailable", TaskStateUnavailable.class, task.getState().getClass());
+	}
+
+	@Test
+	public void testCanBePlanned(){
+		Task canBePlannedTask = new Task("canBePlannedTask", "a descri", 123, 0.003){
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status){
+					case "finished" : state = new TaskStateFinished();
+						break;
+					case "failed" : state = new TaskStateFailed();
+						break;
+					case "unavailable" : state = new TaskStateUnavailable();
+						break;
+					case "planned" : state = new TaskStatePlanned();
+						break;
+					case "executing" : state = new TaskStateExecuting();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState(){
+				return state;
+			}
+		};
+		canBePlannedTask.endExecution(null, null, "unavailable", null);
+		Assert.assertEquals(true, canBePlannedTask.canBePlanned());
+		canBePlannedTask.endExecution(null, null, "planned", null);
+		Assert.assertEquals(false, canBePlannedTask.canBePlanned());
+		canBePlannedTask.endExecution(null, null, "executing", null);
+		Assert.assertEquals(false, canBePlannedTask.canBePlanned());
+		canBePlannedTask.endExecution(null, null, "finished", null);
+		Assert.assertEquals(false, canBePlannedTask.canBePlanned());
+		canBePlannedTask.endExecution(null, null, "failed", null);
+		Assert.assertEquals(false, canBePlannedTask.canBePlanned());
+	}
+
+	@Test
+	public void testCanBeUpdated(){
+		Task canBeUpdated = new Task("canBeUpdated", "a descri", 123, 0.003){
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status){
+					case "finished" : state = new TaskStateFinished();
+						break;
+					case "failed" : state = new TaskStateFailed();
+						break;
+					case "unavailable" : state = new TaskStateUnavailable();
+						break;
+					case "planned" : state = new TaskStatePlanned();
+						break;
+					case "executing" : state = new TaskStateExecuting();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState(){
+				return state;
+			}
+		};
+		canBeUpdated.endExecution(null, null, "unavailable", null);
+		Assert.assertEquals(false,canBeUpdated.canBeUpdated());
+		canBeUpdated.endExecution(null, null, "planned", null);
+		Assert.assertEquals(true, canBeUpdated.canBeUpdated());
+		canBeUpdated.endExecution(null, null, "executing", null);
+		Assert.assertEquals(false, canBeUpdated.canBeUpdated());
+		canBeUpdated.endExecution(null, null, "finished", null);
+		Assert.assertEquals(false, canBeUpdated.canBeUpdated());
+		canBeUpdated.endExecution(null, null, "failed", null);
+		Assert.assertEquals(false, canBeUpdated.canBeUpdated());
+	}
+
+	@Test
+	public void testIsFinished(){
+		Task isFinished = new Task("canBeUpdated", "a descri", 123, 0.003){
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status){
+					case "finished" : state = new TaskStateFinished();
+						break;
+					case "failed" : state = new TaskStateFailed();
+						break;
+					case "unavailable" : state = new TaskStateUnavailable();
+						break;
+					case "planned" : state = new TaskStatePlanned();
+						break;
+					case "executing" : state = new TaskStateExecuting();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState(){
+				return state;
+			}
+		};
+		isFinished.endExecution(null, null, "unavailable", null);
+		Assert.assertEquals(false, isFinished.isFinished());
+		isFinished.endExecution(null, null, "planned", null);
+		Assert.assertEquals(false, isFinished.isFinished());
+		isFinished.endExecution(null, null, "executing", null);
+		Assert.assertEquals(false, isFinished.isFinished());
+		isFinished.endExecution(null, null, "finished", null);
+		Assert.assertEquals(true, isFinished.isFinished());
+		isFinished.endExecution(null, null, "failed", null);
+		Assert.assertEquals(false, isFinished.isFinished());
 	}
 
 
-	// TODO: hiervoor uitgebreide test schrijven
-	/*
+
+
 	@Test
-	public void testIsAvailable(){
-		Task availableTask = new Task("available task", 23, 2);
-		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
-		Task dependencyFinished = new Task("dependency finished", 23, 1.45){
+	public void testIsAvailable1() {
+		Task availableTask = new Task("available task", "descr", 23, 2);
+		LocalDateTime startTime = LocalDateTime.now();
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+		availableTask.initializePlan(resourceManager, startTime);
+		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(resourceManager, startTime));
+	}
+
+	@Test
+	public void testIsAvailable2() {
+		Task availableTask = new Task("available task", "descr", 23, 2);
+		LocalDateTime startTime = LocalDateTime.now();
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+
+		Task dependencyFinished = new Task("dependency finished", "descript", 23, 1.45) {
 			private TaskState state;
 
 			@Override
-			public void endTaskExecution(LocalDateTime startTime, LocalDateTime endTime, String status) {
-				switch (status){
-					case "finished" : state = new TaskStateFinished();
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
 						break;
-					case "failed" : state = new TaskStateFailed();
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned" :
+						state = new TaskStatePlanned();
 						break;
 				}
 			}
 
 			@Override
-			public TaskState getState(){
+			public TaskState getState() {
 				return state;
 			}
 		};
+		dependencyFinished.endExecution(null, null,"planned", null);
 		availableTask.addDependency(dependencyFinished);
+		availableTask.initializePlan(resourceManager, startTime);
+		Assert.assertEquals("The task is not available", false, availableTask.isAvailable(resourceManager, startTime));
 
-		dependencyFinished.endTaskExecution(null, null, "finished");
-		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
-		Task dependencyFailed =  new Task("dependency failed", 23, 1.45){
+
+		dependencyFinished.endExecution(null, null, "finished", null);
+		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(resourceManager, startTime));
+	}
+
+	@Test
+	public void testIsAvailable3() {
+		Task availableTask = new Task("available task", "descr", 23, 2);
+		LocalDateTime startTime = LocalDateTime.now();
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+
+		Task dependencyFinished = new Task("dependency finished", "descript", 23, 1.45) {
 			private TaskState state;
 
 			@Override
-			public void endTaskExecution(LocalDateTime startTime, LocalDateTime endTime, String status) {
-				switch (status){
-					case "finished" : state = new TaskStateFinished();
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
 						break;
-					case "failed" : state = new TaskStateFailed();
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
 						break;
 				}
 			}
 
 			@Override
-			public TaskState getState(){
+			public TaskState getState() {
 				return state;
 			}
 		};
-		dependencyFinished.endTaskExecution(null, null, "inactive");
-		dependencyFinished.addDependency(dependencyFailed);
-		dependencyFinished.endTaskExecution(null, null , "finished");
-		Task alternativeFinished = new Task("alternative finished", 25, 5.6){
+		dependencyFinished.endExecution(null, null, "unavailable", null);
+
+		Task dependencyFailed = new Task("dependency failed", "description", 23, 1.45) {
 			private TaskState state;
 
 			@Override
-			public void endTaskExecution(LocalDateTime startTime, LocalDateTime endTime, String status) {
-				switch (status){
-					case "finished" : state = new TaskStateFinished();
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
 						break;
-					case "failed" : state = new TaskStateFailed();
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
 						break;
 				}
 			}
 
 			@Override
-			public TaskState getState(){
+			public TaskState getState() {
 				return state;
 			}
 		};
-		dependencyFailed.endTaskExecution(null, null, "failed");
+		dependencyFinished.endExecution(null, null, "unavailable", null);
+		dependencyFailed.endExecution(null, null, "unavailable", null);
+		dependencyFailed.addDependency(dependencyFinished);
+		availableTask.addDependency(dependencyFinished);
+		dependencyFinished.endExecution(null, null, "finished", null);
+		dependencyFailed.endExecution(null, null, "failed", null);
+		Assert.assertEquals("the task is available", false, availableTask.isAvailable(resourceManager, startTime));
+	}
+
+	@Test
+    public void testIsAvailable4() {
+		Task availableTask = new Task("available task", "descr", 23, 2);
+		LocalDateTime startTime = LocalDateTime.now();
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+
+		Task dependencyFinished = new Task("dependency finished", "descript", 23, 1.45) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+		dependencyFinished.endExecution(null, null, "unavailable", null);
+
+		Task dependencyFailed = new Task("dependency failed", "description", 23, 1.45) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+
+		Task alternativeFinished = new Task("alternative finished", "descri", 25, 5.6) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+		dependencyFinished.endExecution(null, null, "unavailable", null);
+		dependencyFailed.endExecution(null, null, "unavailable", null);
+		dependencyFailed.addDependency(dependencyFinished);
+		availableTask.addDependency(dependencyFinished);
+		dependencyFinished.endExecution(null, null, "finished", null);
+		dependencyFailed.endExecution(null, null, "failed", null);
 		dependencyFailed.setAlternative(alternativeFinished);
-		alternativeFinished.endTaskExecution(null, null, "finished");
-		Assert.assertEquals("The task is not available", true, availableTask.getStatus().equals("available"));
+		alternativeFinished.endExecution(null, null, "finished", null);
+		availableTask.initializePlan(resourceManager, startTime);
+		Assert.assertEquals("the task is available", true, availableTask.isAvailable(resourceManager, startTime));
+	}
 
-		Task unavailableTask = new Task("unavailable task", 789, 1.25);
-		Task unavialableTask2 = new Task("unavailable task 2", 4, 0.003);
+	@Test
+    public void testIsAvailable5(){
+		Task availableTask = new Task("available task", "descr", 23, 2);
+		LocalDateTime startTime = LocalDateTime.now();
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+
+		Task dependencyFinished = new Task("dependency finished", "descript", 23, 1.45) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+		dependencyFinished.endExecution(null, null, "unavailable", null);
+
+		Task dependencyFailed = new Task("dependency failed", "description", 23, 1.45) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+					case "planned":
+						state = new TaskStatePlanned();
+						break;
+					case "unavailable":
+						state = new TaskStateUnavailable();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+
+		Task alternativeFinished = new Task("alternative finished", "descri", 25, 5.6) {
+			private TaskState state;
+
+			@Override
+			public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) {
+				switch (status) {
+					case "finished":
+						state = new TaskStateFinished();
+						break;
+					case "failed":
+						state = new TaskStateFailed();
+						break;
+				}
+			}
+
+			@Override
+			public TaskState getState() {
+				return state;
+			}
+		};
+
+
+		Task unavailableTask = new Task("unavailable task", "d",789, 1.25);
+		Task unavialableTask2 = new Task("unavailable task 2", "d", 4, 0.003);
 		unavailableTask.addDependency(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
 		unavailableTask.removeDependency(unavialableTask2);
-		dependencyFinished.endTaskExecution(null, null, "inactive");
+		dependencyFinished.endExecution(null, null, "unavailable", null);
 		unavailableTask.addDependency(dependencyFinished);
 		//dependencyFinished.removeDependency(dependencyFailed);
-		dependencyFailed.endTaskExecution(null, null, "inactive");
+		dependencyFailed.endExecution(null, null, "unavailable", null);
 		dependencyFailed.addDependency(unavialableTask2);
-		dependencyFinished.endTaskExecution(null, null, "finished");
-		dependencyFailed.endTaskExecution(null, null, "failed");
-		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
-		dependencyFailed.endTaskExecution(null, null, "inactive");
+		dependencyFinished.endExecution(null, null, "finished", null);
+		dependencyFailed.endExecution(null, null, "failed", null);
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
+		dependencyFailed.endExecution(null, null, "inactive", null);
 		dependencyFailed.removeDependency(unavialableTask2);
-		dependencyFailed.endTaskExecution(null, null, "failed");
+		dependencyFailed.endExecution(null, null, "failed", null);
 		dependencyFailed.setAlternative(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.getStatus().equals("available"));
-
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
 	}
-
-	@Test (expected = IllegalStateException.class)
-	public void testIllegalStateIsAvailable(){
-		Task failedTask = new Task("failed task", 1, 0.03){
-			private TaskState state;
-
-			@Override
-			public void endTaskExecution(LocalDateTime startTime, LocalDateTime endTime, String status) {
-				switch (status){
-					case "finished" : state = new TaskStateFinished();
-						break;
-					case "failed" : state = new TaskStateFailed();
-						break;
-				}
-			}
-
-			@Override
-			public TaskState getState(){
-				return state;
-			}
-		};
-		failedTask.endTaskExecution(null, null, "failed");
-		failedTask.getStatus().equals("available");
-	}
-	*/
 
 	@Test
 	public void testDelay(){
@@ -407,13 +745,13 @@ public class TaskTest {
 		task.getDelay();
 	}
 
-
-
 	@Test
-	public void testUpdateStatus(){
+	public void testEndExecution(){
 		Task updateStatusTask = new Task("task", "Very inspiring description.", 33, 1.0589);
-		LocalDateTime startTime = LocalDateTime.now();
-		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
+		String str = "2018-04-08 09:30";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime startTime = LocalDateTime.parse(str, formatter);
+		LocalDateTime endTime = startTime.plus(50, ChronoUnit.MINUTES);
 
 		Developer developer = new Developer("jeroen", "1234");
 		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
@@ -441,6 +779,7 @@ public class TaskTest {
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
 
+		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		invalidUpdateStatusTask.endExecution(startTime, endTime,  "failed", developer);
 	}
 
@@ -455,7 +794,54 @@ public class TaskTest {
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
 
+		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		invalidUpdateStatusTask.endExecution(startTime, endTime, "inactive", developer);
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void testNoDeveloperAssigned(){
+		Task invalidUpdateStatusTask = new Task("task", "description 1234", 15, 0.13);
+		LocalDateTime startTime = LocalDateTime.now();
+		LocalDateTime endTime = LocalDateTime.now().plus(456, ChronoUnit.SECONDS);
+
+		Developer developer = new Developer("jeroen", "1234");
+		List<Resource> resourceList = new ArrayList<>();
+		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
+		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
+		Developer developer2 = new Developer("jeroen2", "1233");
+
+		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
+		invalidUpdateStatusTask.endExecution(startTime, endTime, "inactive", developer2);
+	}
+
+	@Test
+	public void testMakeExecuting(){
+		Task makeExecutingTask = new Task("task", "Very inspiring description.", 33, 1.0589);
+		String str = "2018-04-08 09:30";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime startTime = LocalDateTime.parse(str, formatter);
+		LocalDateTime executingStartTime = startTime.plusMinutes(4);
+
+		Developer developer = new Developer("jeroen", "1234");
+		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
+		makeExecutingTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+		makeExecutingTask.initializePlan(resourceManager, startTime);
+
+		Assert.assertEquals("The status is not planned", true, makeExecutingTask.getStatus().equals("planned"));
+		makeExecutingTask.makeExecuting(resourceManager, executingStartTime, developer);
+		Assert.assertEquals("The status is not executing", TaskStateExecuting.class, makeExecutingTask.getState().getClass());
+		Assert.assertEquals("The start time is not correctly set", executingStartTime, makeExecutingTask.getTimeSpan().getStartTime());
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void testMakeExecutingUnassignedDeveloper(){
+		Task makeExecutingTask = new Task("task", "Very inspiring description.", 33, 1.0589);
+		LocalDateTime startTime = LocalDateTime.now();
+		LocalDateTime executingStartTime = startTime.plusMinutes(4);
+
+		Developer developer = new Developer("jeroen", "1234");
+
+		makeExecutingTask.makeExecuting(resourceManager, executingStartTime, developer);
 	}
 
 	@Test
