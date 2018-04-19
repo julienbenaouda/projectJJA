@@ -89,7 +89,7 @@ loop over resource types
     activate ":ResourceType"
     ":ResourceType" --> ":ResourceManager" : int
     deactivate ":ResourceType"
-    
+
 end
 
 loop over resource types
@@ -188,7 +188,7 @@ loop over resources
     ":Task" --> ":Controller" : List<Resource>
     deactivate ":Task"
 end
-<-- ":Controller" List<ResourceWrapper>
+<-- ":Controller": List<ResourceWrapper>
 
 -> ":Controller" : changeResource(TaskWrapper, ResourceWrapper, ResourceWrapper)
 ":Controller" -> ":Task" : changeResource(Resource, Resource)
@@ -200,7 +200,7 @@ activate ":Task"
 ":Task" --> ":TaskState" : Plan
 deactivate ":Task"
 ":TaskState" -> ":Plan" : changeResource(Resource, Resource)
-activate ":Plan
+activate ":Plan"
 
 loop over reservations
     ":Plan" -> ":Plan" : removeReservation(Reservation)
