@@ -69,7 +69,7 @@ public class XmlObjectTest {
 		resources.add(rm.getResourceType("developer").getResource("testDeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
-		controller.plan(po.getProject("test").getTask("test"), resources, startTime);
+		controller.initializePlan(po.getProject("test").getTask("test"), startTime);
 		rm.createConstraint("== type1 1");
 		try {
 			assertNotNull(o.toXMLString());
@@ -101,7 +101,7 @@ public class XmlObjectTest {
 		resources.add(rm.getResourceType("developer").getResource("testdeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
-		controller.plan(po.getProject("test").getTask("test"), resources, startTime);
+		controller.initializePlan(po.getProject("test").getTask("test"), startTime);
 		rm.createConstraint("== type1 1");
 		String xml = "";
 		try {

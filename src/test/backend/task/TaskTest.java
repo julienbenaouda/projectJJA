@@ -417,10 +417,10 @@ public class TaskTest {
 		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		updateStatusTask.plan(resourceManager, admin, resourceList, startTime);
-		updateStatusTask.makeAvailable();
+		updateStatusTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
+		updateStatusTask.initializePlan(resourceManager, startTime);
 
-		Assert.assertEquals("The status is not available", true, updateStatusTask.getStatus().equals("available"));
+		Assert.assertEquals("The status is not planned", true, updateStatusTask.getStatus().equals("planned"));
 		updateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		updateStatusTask.updateStatus(startTime, endTime, "finished", developer);
 		Assert.assertEquals("The status is not finished", TaskStateFinished.class, updateStatusTask.getState().getClass());
@@ -437,7 +437,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		invalidUpdateStatusTask.plan(resourceManager, admin, resourceList, startTime);
+		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
 
 		invalidUpdateStatusTask.updateStatus(startTime, endTime,  "failed", developer);
 	}
@@ -451,7 +451,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		invalidUpdateStatusTask.plan(resourceManager, admin, resourceList, startTime);
+		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
 
 		invalidUpdateStatusTask.updateStatus(startTime, endTime, "inactive", developer);
 	}

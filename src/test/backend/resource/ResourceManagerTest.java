@@ -81,7 +81,7 @@ public class ResourceManagerTest {
 		Resource alternative = type.getResource("resource5");
 		task.addRequirement(resourceManager, type, 2);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		resourceManager.initializePlan(task.getPlan(), task.getEstimatedDuration(), startTime);
+		task.initializePlan(resourceManager, startTime);
 		List<Resource> list = task.getPlannedResources();
 		assertEquals(2, list.size());
 	}
