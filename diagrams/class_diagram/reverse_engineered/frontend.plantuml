@@ -4,27 +4,43 @@ title __FRONTEND's Class Diagram__\n
 
   package taskman {
     package taskman.frontend {
+      interface MethodCall {
+          {abstract} + call()
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.frontend {
       class UserInterface {
           + UserInterface()
           + start()
           - startMenu()
           - login()
-          - userCreation()
+          - showUsers()
+          - createUser()
+          - removeUser()
           - importFromFile()
           - exportToFile()
           - loggedInMenu()
-          - showProjects()
+          - showProjectsAndTasks()
           - createProject()
           - createTask()
           - planTask()
           - updateTaskStatus()
           - addAlternativeToTask()
           - addDependencyToTask()
-          - showSystemTime()
-          - advanceSystemTime()
+          - createResourceType()
+          - createConstraint()
+          - createResource()
+          - showTime()
+          - advanceTime()
           - selectProject()
-          - selectTaskNr()
-          - mapToString()
+          - selectTask()
+          - simulationMenu()
+          - cancelSimulation()
+          - executeSimulation()
       }
     }
   }

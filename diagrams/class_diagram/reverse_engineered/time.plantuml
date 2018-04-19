@@ -5,11 +5,29 @@ title __TIME's Class Diagram__\n
   package taskman {
     package taskman.backend {
       package taskman.backend.time {
+        class AvailabilityPeriod {
+            - startTime : LocalTime
+            - endTime : LocalTime
+            + AvailabilityPeriod()
+            + getStartTime()
+            - setStartTime()
+            + getEndTime()
+            - setEndTime()
+            + canHaveAsEndTime()
+            + overlaps()
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.time {
         class Clock {
             - time : LocalDateTime
             + getTime()
-            + updateSystemTime()
-            + accept()
+            + updateTime()
         }
       }
     }
@@ -21,8 +39,13 @@ title __TIME's Class Diagram__\n
       package taskman.backend.time {
         class TimeParser {
             {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+            {static} - DATE_FORMATTER : DateTimeFormatter
             {static} + convertLocalDateTimeToString()
             {static} + convertStringToLocalDateTime()
+            {static} + convertLocalTimeToString()
+            {static} + convertStringToLocalTime()
+            {static} + roundUpLocalDateTime()
+            {static} + roundUpLocalTime()
         }
       }
     }
@@ -41,15 +64,15 @@ title __TIME's Class Diagram__\n
             + getEndTime()
             - setEndTime()
             + canHaveAsEndTime()
-            + accept()
+            + equals()
         }
       }
     }
   }
   
 
-  Clock -up-|> Entity
-  TimeSpan -up-|> Entity
+  AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
+  TimeSpan -up-|> TimeSpanWrapper
 
 
 right footer

@@ -5,26 +5,20 @@ import org.junit.Test;
 import taskman.backend.Controller;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
-import taskman.backend.resource.ResourceType;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
-import taskman.backend.wrappers.ProjectWrapper;
 import taskman.backend.wrappers.ResourceTypeWrapper;
-import taskman.backend.wrappers.ResourceWrapper;
-import taskman.backend.wrappers.TaskWrapper;
 import taskman.frontend.UserInterface;
 
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static test.frontend.StubbedInputStream.stubInputStream;
 
 public class PlanTaskUseCaseTest {
 
@@ -57,26 +51,22 @@ public class PlanTaskUseCaseTest {
 		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, requirements);
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
+		c.logout();
 	}
 
 	@Test
 	public void testPlan() {
-		ProjectWrapper project = c.getProjects().get(0);
-		TaskWrapper task = c.getTasks(project).get(0);
-		assertTrue(task.canBePlanned());
-		Iterator<LocalDateTime> iterator = c.getStartingsTimes(task);
-		assertTrue(iterator.hasNext());
-		LocalDateTime time = iterator.next();
-		assertNotNull(time);
-		assertTrue(iterator.hasNext());
-		time = iterator.next();
-		assertNotNull(time);
-		assertTrue(iterator.hasNext());
-		time = iterator.next();
-		assertNotNull(time);
-		c.initializePlan(task, time);
-		List<ResourceWrapper> suggestion = c.getPlannedResources(task);
-		c.getAlternativeResources(task, resourceToChange);
+		System.setOut(new PrintStream(outputStream));
+		System.setIn(
+				stubInputStream()
+						.then("1")
+						.then("test")
+						.then("test")
+						.then("4")
+						// TODO
+						.atSomePoint()
+		);
+		ui.start();
 	}
 
 }

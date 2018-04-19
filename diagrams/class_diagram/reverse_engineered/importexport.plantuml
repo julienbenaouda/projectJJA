@@ -47,20 +47,17 @@ title __IMPORTEXPORT's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.importexport {
         class XmlObject {
-            - doc : Document
-            - element : Element
+            - xstream : XStream
             + XmlObject()
-            - XmlObject()
-            + exportTo()
-            {static} + importFrom()
-            + createChild()
-            + getXmlObject()
-            + getXmlObjects()
-            + addAttribute()
-            + getAttribute()
-            + addText()
-            + getText()
-            + getTexts()
+            + getResourceManager()
+            + getUserManager()
+            + getProjectOrganizer()
+            + getClock()
+            {static} - createXstream()
+            + toXMLString()
+            {static} + fromXMLString()
+            + saveToFile()
+            {static} + restoreFromFile()
         }
       }
     }
@@ -71,6 +68,10 @@ title __IMPORTEXPORT's Class Diagram__\n
   ImportExportException +-down- WrappedPrintStream
   ImportExportException +-down- PrintStreamOrWriter
   ImportExportException +-down- SentinelHolder
+  XmlObject o-- ResourceManager : resourceManager
+  XmlObject o-- UserManager : userManager
+  XmlObject o-- ProjectOrganizer : projectOrganizer
+  XmlObject o-- Clock : clock
 
 
 right footer

@@ -4,8 +4,38 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
+      package taskman.backend.constraint {
+        enum AmountComparator {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.constraint {
+        class AndConstraint {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
       package taskman.backend.time {
         class AvailabilityPeriod {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.wrappers {
+        interface AvailabilityPeriodWrapper {
         }
       }
     }
@@ -34,7 +64,9 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      class Controller {
+      package taskman.backend.constraint {
+        class Constraint {
+        }
       }
     }
   }
@@ -42,9 +74,17 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.visitor {
-        class DetailVisitor {
+      package taskman.backend.constraint {
+        interface ConstraintComponent {
         }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      class Controller {
       }
     }
   }
@@ -62,18 +102,8 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.visitor {
-        interface Entity {
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.backend {
-      package taskman.backend.visitor {
-        class ExportVisitor {
+      package taskman.backend.resource {
+        class DeveloperResource {
         }
       }
     }
@@ -92,8 +122,8 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.importexport {
-        class ImportExportException {
+      package taskman.backend.constraint {
+        class IfThenConstraint {
         }
       }
     }
@@ -101,9 +131,9 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
-    package taskman.frontend {
-      package taskman.frontend.sections {
-        class InfoSection {
+    package taskman.backend {
+      package taskman.backend.importexport {
+        class ImportExportException {
         }
       }
     }
@@ -128,8 +158,16 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.frontend {
-      package taskman.frontend.sections {
-        interface MethodCall {
+      interface MethodCall {
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.constraint {
+        class NotConstraint {
         }
       }
     }
@@ -140,6 +178,32 @@ title __PROJECTJJA's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.user {
         class OperationNotPermittedException {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.constraint {
+        class OrConstraint {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    class Pair {
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.resource {
+        class Plan {
         }
       }
     }
@@ -178,6 +242,16 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
+      package taskman.backend.wrappers {
+        interface ProjectWrapper {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
       package taskman.backend.resource {
         class Reservation {
         }
@@ -189,17 +263,7 @@ title __PROJECTJJA's Class Diagram__\n
   package taskman {
     package taskman.backend {
       package taskman.backend.resource {
-        interface Resource {
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.backend {
-      package taskman.backend.resource {
-        class ResourceItem {
+        class Resource {
         }
       }
     }
@@ -220,6 +284,26 @@ title __PROJECTJJA's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.resource {
         class ResourceType {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.wrappers {
+        interface ResourceTypeWrapper {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.wrappers {
+        interface ResourceWrapper {
         }
       }
     }
@@ -248,6 +332,16 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
+      package taskman.backend.simulation {
+        class SimulationManager {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
       package taskman.backend.task {
         class Task {
         }
@@ -260,16 +354,6 @@ title __PROJECTJJA's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.task {
         abstract class TaskState {
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.backend {
-      package taskman.backend.task {
-        class TaskStateAvailable {
         }
       }
     }
@@ -328,6 +412,26 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
+      package taskman.backend.wrappers {
+        interface TaskWrapper {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.frontend {
+      package taskman.frontend.sections {
+        class TextSection {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.backend {
       package taskman.backend.time {
         class TimeParser {
         }
@@ -347,9 +451,19 @@ title __PROJECTJJA's Class Diagram__\n
   
 
   package taskman {
+    package taskman.backend {
+      package taskman.backend.wrappers {
+        interface TimeSpanWrapper {
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
     package taskman.frontend {
       package taskman.frontend.sections {
-        class TitleDecoratorSection {
+        class TitleSection {
         }
       }
     }
@@ -386,8 +500,8 @@ title __PROJECTJJA's Class Diagram__\n
 
   package taskman {
     package taskman.backend {
-      package taskman.backend.visitor {
-        interface Visitor {
+      package taskman.backend.wrappers {
+        interface UserWrapper {
         }
       }
     }
@@ -404,47 +518,64 @@ title __PROJECTJJA's Class Diagram__\n
   }
   
 
-  AvailabilityPeriod -up-|> Entity
-  Clock -up-|> Entity
+  AndConstraint -up-|> ConstraintComponent
+  AndConstraint o-- ConstraintComponent : constraint1
+  AndConstraint o-- ConstraintComponent : constraint2
+  AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
+  Constraint -up-|> ConstraintComponent
+  Constraint o-- ResourceType : resourceType
+  Constraint o-- AmountComparator : amountComparator
   Controller o-- Clock : clock
   Controller o-- UserManager : userManager
   Controller o-- ProjectOrganizer : projectOrganizer
-  DetailVisitor -up-|> Visitor
-  Developer -up-|> Resource
+  Controller o-- ResourceManager : resourceManager
+  Controller o-- SimulationManager : simulationManager
   Developer -up-|> User
-  Developer o-- AvailabilityPeriod : breakTime
-  Developer o-- ResourceType : type
-  ExportVisitor -up-|> Visitor
-  ExportVisitor o-- XmlObject : root
+  DeveloperResource -up-|> Resource
+  DeveloperResource o-- AvailabilityPeriod : breakTime
+  DeveloperResource o-- Developer : developer
   FormSection -up-|> Section
-  InfoSection -up-|> Section
+  IfThenConstraint -up-|> ConstraintComponent
+  IfThenConstraint o-- ConstraintComponent : ifConstraint
+  IfThenConstraint o-- ConstraintComponent : thenConstraint
   MenuSection -up-|> Section
-  MenuSection o-- SelectionSection : selectionSection
-  Project -up-|> Entity
+  NotConstraint -up-|> ConstraintComponent
+  NotConstraint o-- ConstraintComponent : constraint
+  OrConstraint -up-|> ConstraintComponent
+  OrConstraint o-- ConstraintComponent : constraint1
+  OrConstraint o-- ConstraintComponent : constraint2
+  Pair o-- First : first
+  Pair o-- Second : second
+  Plan o-- Task : task
+  Project -up-|> ProjectWrapper
   ProjectManager -up-|> User
-  ProjectOrganizer -up-|> Entity
-  Reservation o-- Task : task
   Reservation o-- Resource : resource
   Reservation o-- TimeSpan : timeSpan
-  ResourceItem -up-|> Resource
-  ResourceItem o-- ResourceType : type
+  Resource -up-|> ResourceWrapper
+  Resource o-- ResourceType : type
+  ResourceType -up-|> ResourceTypeWrapper
   SelectionSection -up-|> Section
-  Task -up-|> Entity
+  Task -up-|> TaskWrapper
   Task o-- TimeSpan : timeSpan
   Task o-- TaskState : state
   Task o-- Task : alternative
-  TaskStateAvailable -up-|> TaskState
+  Task o-- Plan : plan
   TaskStateExecuting -up-|> TaskState
   TaskStateFailed -up-|> TaskState
   TaskStateFinished -up-|> TaskState
   TaskStatePlanned -up-|> TaskState
   TaskStateUnavailable -up-|> TaskState
-  TimeSpan -up-|> Entity
-  TitleDecoratorSection -up-|> Section
-  TitleDecoratorSection o-- Section : section
-  User -up-|> Entity
+  TextSection -up-|> Section
+  TimeSpan -up-|> TimeSpanWrapper
+  TitleSection -up-|> Section
+  TitleSection o-- TextSection : textSection
+  User -up-|> UserWrapper
   UserInterface o-- Controller : controller
   UserManager o-- User : currentUser
+  XmlObject o-- ResourceManager : resourceManager
+  XmlObject o-- UserManager : userManager
+  XmlObject o-- ProjectOrganizer : projectOrganizer
+  XmlObject o-- Clock : clock
 
 
 right footer

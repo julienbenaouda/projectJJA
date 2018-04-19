@@ -9,6 +9,17 @@ title __TASKMAN's Class Diagram__\n
   }
   
 
+  package taskman {
+    class Pair {
+        + Pair()
+        + getFirst()
+        + getSecond()
+    }
+  }
+  
+
+  Pair o-- First : first
+  Pair o-- Second : second
 
 
 right footer
