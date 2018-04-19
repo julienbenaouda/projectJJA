@@ -138,11 +138,8 @@ public class XmlObject {
 	 * @throws ImportExportException 
 	 */
 	public void saveToFile(String path) throws ImportExportException {
-		try {
-			FileWriter f = new FileWriter(path);
-			BufferedWriter w = new BufferedWriter(f);
+		try (BufferedWriter w = new BufferedWriter(new FileWriter(path))) {
 			w.write(toXMLString());
-			w.close();
 		} catch(Exception e) {
 			throw new ImportExportException("Something went wrong writing the string to file: " +e.getMessage());
 		}
@@ -155,9 +152,7 @@ public class XmlObject {
 	 * @throws ImportExportException when something goes wrong during the parsing of the file
 	 */
 	public static XmlObject restoreFromFile(String path) throws ImportExportException {
-		try {
-			FileReader f = new FileReader(path);
-			BufferedReader r = new BufferedReader(f);
+		try(BufferedReader r = new BufferedReader(new FileReader(path))) {
 			String line = null;
 			StringBuilder sb = new StringBuilder();
 			while((line = r.readLine()) != null) {
@@ -165,7 +160,7 @@ public class XmlObject {
 			}
 			return fromXMLString(sb.toString());
 		} catch (Exception e) {
-			throw new ImportExportException("Something went wrong druing parsing of the file: " +e.getMessage());
+			throw new ImportExportException("Something went wrong druing parsing of the file: " + e.getMessage());
 		}
 	}
 

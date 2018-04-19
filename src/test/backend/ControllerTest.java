@@ -16,7 +16,11 @@ import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -204,11 +208,10 @@ public class ControllerTest {
     }
 
     private void deleteFile(String path) throws AccessDeniedException {
-        File file = new File(path);
-        if (file.exists()) {
-            if (!file.delete()) {
-                throw new AccessDeniedException("Cannot write file to '" + path + "'!");
-            }
+        try {
+            Files.deleteIfExists(Paths.get(path));
+        } catch (IOException e) {
+            throw new AccessDeniedException("Has no access to the file");
         }
     }
 

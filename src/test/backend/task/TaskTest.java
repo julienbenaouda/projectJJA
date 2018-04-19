@@ -407,6 +407,8 @@ public class TaskTest {
 		task.getDelay();
 	}
 
+
+
 	@Test
 	public void testUpdateStatus(){
 		Task updateStatusTask = new Task("task", "Very inspiring description.", 33, 1.0589);

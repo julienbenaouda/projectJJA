@@ -73,7 +73,7 @@ public class XmlObjectTest {
 		rm.createConstraint("== type1 1");
 		try {
 			assertNotNull(o.toXMLString());
-			System.out.println(o.toXMLString());
+			//System.out.println(o.toXMLString());
 		} catch(Exception e) {
 			fail("test failed " +e.getMessage());
 		}
