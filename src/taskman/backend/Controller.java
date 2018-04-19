@@ -200,13 +200,19 @@ public class Controller {
      * @param description the description of the task.
      * @param estimatedDuration the estimated duration of the task as Long.
      * @param acceptableDeviation the acceptable deviation of the task as Double.
+     * @param requirements the requirements of the task.
      * @throws OperationNotPermittedException if no user is logged in.
      * @throws OperationNotPermittedException when the user is not allowed to create tasks
      * @throws NumberFormatException if estimatedDuration is not a Long or acceptableDeviation is not a Double.
      * @post a new task is created and added to the project in the system.
      */
-    public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
+    public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation, Map<ResourceTypeWrapper, Integer> requirements) throws IllegalArgumentException, OperationNotPermittedException, NumberFormatException {
+        HashMap<ResourceType, Integer> requirementsResourceType = new HashMap<>();
         ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, this.userManager.getCurrentUser());
+        Task task = ((Project) project).getTask(taskName);
+        for (ResourceTypeWrapper rtw : requirements.keySet()){
+            addRequirementToTask(task, (ResourceType) rtw, requirements.get(rtw));
+        }
     }
 
     /**

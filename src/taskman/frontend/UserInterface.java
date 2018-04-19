@@ -259,12 +259,32 @@ public class UserInterface {
 		title.show();
 		form.show();
 
+		Map<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
+		while (true) {
+			TitleSection requirementsTitle = new TitleSection("continue or add requirements to task");
+			requirementsTitle.show();
+			SelectionSection<ResourceTypeWrapper> requirementSelection = new SelectionSection<>(true);
+			requirementSelection.addOption("continue", null);
+			for (ResourceTypeWrapper resourceType : controller.getResourceTypes()) {
+				requirementSelection.addOption(resourceType.getName(), resourceType);
+			}
+			requirementSelection.show();
+			if (requirementSelection.getAnswerObject() == null) {
+				break;
+			} else {
+				FormSection numberForm = new FormSection(false, "Number required:");
+				numberForm.show();
+				requirements.put(requirementSelection.getAnswerObject(), Integer.parseInt(numberForm.getAnswer(0)));
+			}
+		}
+
 		controller.createTask(
 				project,
 				form.getAnswer(0),
 				form.getAnswer(1),
 				Long.parseLong(form.getAnswer(2)),
-				Double.parseDouble(form.getAnswer(3))
+				Double.parseDouble(form.getAnswer(3)),
+				requirements
 		);
 		Section success = new TextSection("Task created successfully!", false);
 		success.show();
@@ -288,24 +308,6 @@ public class UserInterface {
 		}
 		selection1.show();
 		TaskWrapper task = selection1.getAnswerObject();
-
-		while (true) {
-			TitleSection requirementsTitle = new TitleSection("continue or add requirements to task");
-			requirementsTitle.show();
-			SelectionSection<ResourceTypeWrapper> requirementSelection = new SelectionSection<>(true);
-			requirementSelection.addOption("continue", null);
-			for (ResourceTypeWrapper resourceType : controller.getResourceTypes()) {
-				requirementSelection.addOption(resourceType.getName(), resourceType);
-			}
-			requirementSelection.show();
-			if (requirementSelection.getAnswerObject() == null) {
-				break;
-			} else {
-				FormSection numberForm = new FormSection(false, "Number required:");
-				numberForm.show();
-				controller.addRequirementToTask(task, requirementSelection.getAnswerObject(), Integer.parseInt(numberForm.getAnswer(0)));
-			}
-		}
 
 		TitleSection timeTitle = new TitleSection("select start time");
 		timeTitle.show();
