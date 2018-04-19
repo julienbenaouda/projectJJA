@@ -46,6 +46,7 @@ public class UserInterface {
 		} catch (Cancel ignored) {}
 		TitleSection exit = new TitleSection("Bye!");
 		exit.show();
+		// System.exit(0);
 	}
 
 	/**
