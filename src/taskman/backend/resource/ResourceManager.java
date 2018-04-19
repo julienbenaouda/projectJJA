@@ -284,26 +284,23 @@ public class ResourceManager {
     /**
      * Reschedule a plan to a given time span.
      * @param plan the plan.
-     * @param originalTimeSpan the original time span.
      * @param newTimeSpan the new time span.
      * @throws IllegalArgumentException if the plan cannot be rescheduled.
      */
-    public void reschedulePlan(Plan plan, TimeSpan originalTimeSpan, TimeSpan newTimeSpan) throws IllegalArgumentException {
+    public void reschedulePlan(Plan plan, TimeSpan newTimeSpan) throws IllegalArgumentException {
         if (!canBeRescheduled(plan, newTimeSpan)) throw new IllegalArgumentException("Plan cannot be rescheduled!");
-        if (!newTimeSpan.equals(originalTimeSpan)) {
-            for (Reservation reservation: plan.getReservations()) {
-                if (reservation.isUserSpecific()) {
-                    Resource resource = reservation.getResource();
-                    plan.removeReservation(reservation);
-                    plan.createSpecificReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
-                } else {
-                    Resource resource = reservation.getResource();
-                    plan.removeReservation(reservation);
-                    if (!resource.isAvailable(newTimeSpan)) {
-                        resource = getAlternativeResources(resource, newTimeSpan).get(0);
-                    }
-                    plan.createReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
+        for (Reservation reservation : plan.getReservations()) {
+            if (reservation.isUserSpecific()) {
+                Resource resource = reservation.getResource();
+                plan.removeReservation(reservation);
+                plan.createSpecificReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
+            } else {
+                Resource resource = reservation.getResource();
+                plan.removeReservation(reservation);
+                if (!resource.isAvailable(newTimeSpan)) {
+                    resource = getAlternativeResources(resource, newTimeSpan).get(0);
                 }
+                plan.createReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
             }
         }
     }

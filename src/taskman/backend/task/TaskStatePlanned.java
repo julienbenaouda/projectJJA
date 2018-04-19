@@ -85,7 +85,7 @@ public class TaskStatePlanned extends TaskState {
 		    throw new IllegalStateException("The task must be available in order to start its execution.");
 	    }
 	    TimeSpan newTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
-	    resourceManager.reschedulePlan(task.getPlan(), task.getTimeSpan(), newTimeSpan);
+	    resourceManager.reschedulePlan(task.getPlan(), newTimeSpan);
         task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
         task.setState(new TaskStateExecuting());
     }
