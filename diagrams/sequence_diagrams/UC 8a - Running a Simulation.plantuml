@@ -1,0 +1,54 @@
+@startuml
+
+title "Use Case - Running a Simulation - Execute"
+
+-> ":Controller": startSimulation()
+activate ":Controller"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":SimulationManager": startSimulation(ProjectOrganizer, UserManager, ResourceManager, Clock, User)
+activate ":SimulationManager"
+
+":SimulationManager" -> ":User": getUserType()
+activate ":User"
+":SimulationManager" <-- ":User": String
+deactivate ":User"
+
+":SimulationManager" -> ":XmlObject": XmlObject(ProjectOrganizer, UserManager, ResourceManager, Clock)
+activate ":XmlObject"
+":SimulationManager" <-- ":XmlObject": XmlObject
+deactivate ":XmlObject"
+
+":SimulationManager" -> ":XmlObject": toXMLString()
+activate ":XmlObject"
+":SimulationManager" <-- ":XmlObject": String
+deactivate ":XmlObject"
+
+":SimulationManager" -> ":SimulationManager": setPreviousState(String)
+activate ":SimulationManager"
+deactivate ":SimulationManager"
+
+deactivate ":SimulationManager"
+
+deactivate ":Controller"
+
+
+-> ":Controller": executeSimulation()
+activate ":Controller"
+
+":Controller" -> ":SimulationManager": executeSimulation()
+activate ":SimulationManager"
+
+":SimulationManager" -> ":SimulationManager": setPreviousState(null)
+activate ":SimulationManager"
+deactivate ":SimulationManager"
+
+deactivate ":SimulationManager"
+
+deactivate ":Controller"
+
+@enduml

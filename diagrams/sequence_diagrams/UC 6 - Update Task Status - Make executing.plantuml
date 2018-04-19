@@ -1,0 +1,206 @@
+@startuml
+
+title "Use Case - Update Task Status - Make executing"
+
+-> ":Controller": makeExecuting(TaskWrapper)
+activate ":Controller"
+
+":Controller" -> ":Clock": getTime()
+activate ":Clock"
+":Controller" <-- ":Clock": LocalDateTime
+deactivate ":Clock"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":Task": makeExecuting(ResourceManager, LocalDateTime, User)
+activate ":Task"
+
+":Task" -> ":Task": getPlan()
+activate ":Task"
+":Task" <-- ":Task": Plan
+deactivate ":Task"
+
+":Task" -> ":Plan": isDeveloperFromPlan(User)
+activate ":Plan"
+":Task" <-- ":Plan": boolean
+deactivate ":Plan"
+
+":Task" -> ":Task": getState()
+activate ":Task"
+":Task" <-- ":Task": TaskState
+deactivate ":Task"
+
+":Task" -> ":TaskStatePlanned": execute(Task, ResourceManager, LocalDateTime)
+activate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":TaskStatePlanned": isAvailable(ResourceManager, Task, LocalDateTime)
+activate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":Task": getDependencies()
+activate ":Task"
+":TaskStatePlanned" <-- ":Task": List<Task>
+deactivate ":Task"
+
+loop over dependencies
+    ":TaskStatePlanned" -> ":Task": isFinished()
+    activate ":Task"
+    ":TaskStatePlanned" <-- ":Task": boolean
+    deactivate ":Task"
+end loop
+
+":TaskStatePlanned" -> ":Task": getPlan()
+activate ":Task"
+":TaskStatePlanned" <-- ":Task": Plan
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":Task": getEstimatedDuration()
+activate ":Task"
+":TaskStatePlanned" <-- ":Task": long
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":TimeSpan": TimeSpan(LocalDateTime, LocalDateTime)
+activate ":TimeSpan"
+":TaskStatePlanned" <-- ":TimeSpan": TimeSpan
+deactivate ":TimeSpan"
+
+":TaskStatePlanned" -> ":ResourceManager": canBeRescheduled(Plan, TimeSpan)
+activate ":ResourceManager"
+
+":ResourceManager" -> ":Plan": getReservations()
+activate ":Plan"
+":ResourceManager" <-- ":Plan": List<Reservation>
+deactivate ":Plan"
+
+loop over reservations
+    ":ResourceManager" -> ":Reservation": isUserSpecific()
+    activate ":Reservation"
+    ":ResourceManager" <-- ":Reservation": boolean
+    deactivate ":Reservation"
+
+    ":ResourceManager" -> ":Reservation": getResource()
+    activate ":Reservation"
+    ":ResourceManager" <-- ":Reservation": Resource
+    deactivate ":Reservation"
+
+    ":ResourceManager" -> ":Plan": removeReservation()
+    activate ":Plan"
+    deactivate ":Plan"
+
+    ":ResourceManager" -> ":Resource": isAvailable(TimeSpan)
+    activate ":Resource"
+    ":ResourceManager" <-- ":Resource": boolean
+    deactivate ":Resource"
+
+    ":ResourceManager" -> ":ResourceManager": getAlternativeResources(Resource, TimeSpan)
+    activate ":ResourceManager"
+
+    ":ResourceManager" -> ":Resource": getType()
+    activate ":Resource"
+    ":ResourceManager" <-- ":Resource": ResourceType
+    deactivate ":Resource"
+
+    ":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
+    activate ":ResourceType"
+    ":ResourceManager" <-- ":ResourceType": List<Resource>
+    deactivate ":ResourceType"
+
+    ":ResourceManager" <-- ":ResourceManager": List<Resource>
+    deactivate ":ResourceManager"
+
+    ":ResourceManager" -> ":Plan": createReservation()
+    activate ":Plan"
+    deactivate ":Plan"
+
+end loop
+
+":TaskStatePlanned" <-- ":ResourceManager": boolean
+deactivate ":ResourceManager"
+
+":TaskStatePlanned" <-- ":TaskStatePlanned": boolean
+deactivate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":Task": getPlan()
+activate ":Task"
+":TaskStatePlanned" <-- ":Task": Plan
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":Task": getEstimatedDuration()
+activate ":Task"
+":TaskStatePlanned" <-- ":Task": long
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":TimeSpan": TimeSpan(LocalDateTime, LocalDateTime)
+activate ":TimeSpan"
+":TaskStatePlanned" <-- ":TimeSpan": TimeSpan
+deactivate ":TimeSpan"
+
+":TaskStatePlanned" -> ":ResourceManager": reschedulePlan(Plan, TimeSpan)
+activate ":ResourceManager"
+
+":ResourceManager" -> ":Plan": getReservations()
+activate ":Plan"
+":ResourceManager" <-- ":Plan": List<Reservation>
+deactivate ":Plan"
+
+loop over reservations
+    ":ResourceManager" -> ":Reservation": isUserSpecific()
+    activate ":Reservation"
+    ":ResourceManager" <-- ":Reservation": boolean
+    deactivate ":Reservation"
+
+    ":ResourceManager" -> ":Reservation": getResource()
+    activate ":Reservation"
+    ":ResourceManager" <-- ":Reservation": Resource
+    deactivate ":Reservation"
+
+    ":ResourceManager" -> ":Plan": removeReservation()
+    activate ":Plan"
+    deactivate ":Plan"
+
+    ":ResourceManager" -> ":Resource": isAvailable(TimeSpan)
+    activate ":Resource"
+    ":ResourceManager" <-- ":Resource": boolean
+    deactivate ":Resource"
+
+    ":ResourceManager" -> ":ResourceManager": getAlternativeResources(Resource, TimeSpan)
+    activate ":ResourceManager"
+
+    ":ResourceManager" -> ":Resource": getType()
+    activate ":Resource"
+    ":ResourceManager" <-- ":Resource": ResourceType
+    deactivate ":Resource"
+
+    ":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
+    activate ":ResourceType"
+    ":ResourceManager" <-- ":ResourceType": List<Resource>
+    deactivate ":ResourceType"
+
+    ":ResourceManager" <-- ":ResourceManager": List<Resource>
+    deactivate ":ResourceManager"
+
+    ":ResourceManager" -> ":Plan": createReservation()
+    activate ":Plan"
+    deactivate ":Plan"
+
+end loop
+
+deactivate ":ResourceManager"
+
+":TaskStatePlanned" -> ":Task": setTimeSpan(TimeSpan)
+activate ":Task"
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":Task": setState(TaskStateExecuting)
+activate ":Task"
+deactivate ":Task"
+
+deactivate ":TaskStatePlanned"
+
+deactivate ":Task"
+
+deactivate ":Controller"
+
+@enduml

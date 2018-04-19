@@ -1,0 +1,58 @@
+@startuml
+
+title "Use Case - Update Task Status - End execution"
+
+-> ":Controller": endTaskExecution(TaskWrapper, LocalDateTime, LocalDateTime, String)
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":Task": endExecution(LocalDateTime, LocalDateTime, String, User)
+activate ":Task"
+
+":Task" -> ":Task": getPlan()
+activate ":Task"
+":Task" <-- ":Task": Plan
+deactivate ":Task"
+
+":Task" -> ":Plan": isDeveloperFromPlan(User)
+activate ":Plan"
+":Task" <-- ":Plan": boolean
+deactivate ":Plan"
+
+":Task" -> ":Task": getState()
+activate ":Task"
+":Task" <-- ":Task": TaskState
+deactivate ":Task"
+
+":Task" -> ":TaskStateExecuting": endExecution(Task, ResourceManager, LocalDateTime)
+activate ":TaskStateExecuting"
+
+":TaskStatePlanned" -> ":Task": setTimeSpan(TimeSpan)
+activate ":Task"
+deactivate ":Task"
+
+":Task" -> ":Task": getPlan()
+activate ":Task"
+":Task" <-- ":Task": Plan
+deactivate ":Task"
+
+":TaskStatePlanned" -> ":Plan": finish(TimeSpan)
+activate ":Task"
+deactivate ":Task"
+
+":TaskStateExecuting" -> ":Task": setState(TaskState)
+activate ":Task"
+deactivate ":Task"
+
+deactivate ":TaskStateExecuting"
+
+deactivate ":Task"
+
+activate ":Controller"
+
+deactivate ":Controller"
+
+@enduml

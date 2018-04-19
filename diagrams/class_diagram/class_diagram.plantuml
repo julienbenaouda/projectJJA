@@ -11,7 +11,7 @@ title __TASKMAN's Class Diagram__\n
       interface MethodCall {
           {abstract} + call()
       }
-      
+
       class UserInterface {
           + UserInterface()
           + start()

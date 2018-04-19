@@ -392,13 +392,16 @@ public class UserInterface {
 				"End time (dd/mm/yyyy hh:mm):"
 		);
 		form.show();
-
-		controller.endTaskExecution(
-				task,
-				TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),
-				TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),
-				selection2.getAnswer()
-		);
+		if (selection2.getAnswer().equals("executing")) {
+			controller.makeExecuting(task);
+		} else {
+			controller.endTaskExecution(
+					task,
+					TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),
+					TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),
+					selection2.getAnswer()
+			);
+		}
 	}
 
 	/**
