@@ -63,36 +63,13 @@ title __SECTIONS's Class Diagram__\n
   package taskman {
     package taskman.frontend {
       package taskman.frontend.sections {
-        class InfoSection {
-            - text : String
-            - isBlocking : boolean
-            + InfoSection()
-            + show()
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.frontend {
-      package taskman.frontend.sections {
         class MenuSection {
-            - actions : Map<String, MethodCall>
+            - selectionSection : SelectionSection<MethodCall>
+            + MenuSection()
             + MenuSection()
             + addOption()
             + show()
-        }
-      }
-    }
-  }
-  
-
-  package taskman {
-    package taskman.frontend {
-      package taskman.frontend.sections {
-        interface MethodCall {
-            {abstract} + call()
+            + executeChoice()
         }
       }
     }
@@ -121,17 +98,21 @@ title __SECTIONS's Class Diagram__\n
         class SelectionSection {
             - withCancel : Boolean
             - cancelText : String
-            - options : List<String>
+            - optionNames : List<String>
+            - optionObjects : List<Type>
             - answer : Integer
             + SelectionSection()
             + SelectionSection()
             + addOption()
+            + addOption()
+            + addOptions()
+            + addOptions()
             + addOptions()
             + show()
             + hasAnswer()
             + getAnswer()
-            + getAnswerNumber()
-            - resetAnswer()
+            + getAnswerObject()
+            + resetAnswer()
         }
       }
     }
@@ -141,13 +122,25 @@ title __SECTIONS's Class Diagram__\n
   package taskman {
     package taskman.frontend {
       package taskman.frontend.sections {
-        class TitleDecoratorSection {
-            - title : String
-            {static} - decoration : char
-            {static} - length : int
-            + TitleDecoratorSection()
+        class TextSection {
+            - text : String
+            - isBlocking : boolean
+            + TextSection()
+            + addLine()
             + show()
+        }
+      }
+    }
+  }
+  
+
+  package taskman {
+    package taskman.frontend {
+      package taskman.frontend.sections {
+        class TitleSection {
+            + TitleSection()
             - repeat()
+            + show()
         }
       }
     }
@@ -159,12 +152,11 @@ title __SECTIONS's Class Diagram__\n
   Cancel +-down- PrintStreamOrWriter
   Cancel +-down- SentinelHolder
   FormSection -up-|> Section
-  InfoSection -up-|> Section
   MenuSection -up-|> Section
-  MenuSection o-- SelectionSection : selectionSection
   SelectionSection -up-|> Section
-  TitleDecoratorSection -up-|> Section
-  TitleDecoratorSection o-- Section : section
+  TextSection -up-|> Section
+  TitleSection -up-|> Section
+  TitleSection o-- TextSection : textSection
 
 
 right footer

@@ -7,6 +7,7 @@ title __USER's Class Diagram__\n
       package taskman.backend.user {
         class Developer {
             + Developer()
+            + getUserType()
         }
       }
     }
@@ -59,6 +60,7 @@ title __USER's Class Diagram__\n
       package taskman.backend.user {
         class ProjectManager {
             + ProjectManager()
+            + getUserType()
         }
       }
     }
@@ -76,7 +78,7 @@ title __USER's Class Diagram__\n
             - setName()
             + getPassword()
             - setPassword()
-            + accept()
+            {abstract} + getUserType()
         }
       }
     }
@@ -87,16 +89,19 @@ title __USER's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.user {
         class UserManager {
-            - users : HashMap<String, User>
+            - users : List<User>
             + UserManager()
-            - getUser()
-            + getCurrentUser()
-            + hasCurrentUser()
-            - setCurrentUser()
+            + getUsers()
+            + getUser()
+            + hasUser()
             + createUser()
-            + getUserTypes()
             - createDeveloper()
             - createProjectManager()
+            + removeUser()
+            + getUserTypes()
+            + getCurrentUser()
+            - setCurrentUser()
+            + hasCurrentUser()
             + login()
             + logout()
         }
@@ -111,7 +116,7 @@ title __USER's Class Diagram__\n
   OperationNotPermittedException +-down- PrintStreamOrWriter
   OperationNotPermittedException +-down- SentinelHolder
   ProjectManager -up-|> User
-  User -up-|> Entity
+  User -up-|> UserWrapper
   UserManager o-- User : currentUser
 
 

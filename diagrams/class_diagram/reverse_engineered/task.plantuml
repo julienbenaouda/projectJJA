@@ -6,12 +6,14 @@ title __TASK's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.task {
         class Task {
+            - name : String
             - description : String
             - estimatedDuration : long
             - acceptableDeviation : double
             - dependencies : ArrayList<Task>
             + Task()
-            - Task()
+            + getName()
+            - setName()
             + getDescription()
             - setDescription()
             + getEstimatedDuration()
@@ -23,23 +25,30 @@ title __TASK's Class Diagram__\n
             - setTimeSpan()
             + getState()
             # setState()
-            + isAvailable()
-            + isUnavailable()
-            + isExecuting()
-            + isFailed()
-            + isFinished()
+            + getStatus()
+            + canBePlanned()
+            + canBeUpdated()
             + endExecution()
+            + makeExecuting()
+            + isAvailable()
+            + isFinished()
             + getDelay()
             + getAlternative()
             # setAlternativeTask()
             + setAlternative()
             + getDependencies()
-            - setDependencies()
             # addDependencyTask()
             + addDependency()
             + removeDependency()
+            + getPlan()
+            + initializePlan()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
+            + addRequirement()
             {static} # containsLoop()
-            + accept()
+            + hasAccessTo()
         }
       }
     }
@@ -50,15 +59,24 @@ title __TASK's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.task {
         abstract class TaskState {
-            + isAvailable()
-            + isUnavailable()
-            + isExecuting()
-            + isFinished()
-            + isFailed()
+            - status : String
+            + getStatus()
+            # setStatus()
+            + canBePlanned()
+            + canBeUpdated()
             + getDelay()
+            + execute()
             + endExecution()
             + setAlternative()
             + addDependency()
+            + addRequirement()
+            + isAvailable()
+            + isFinished()
+            + initializePlan()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
         }
       }
     }
@@ -70,7 +88,6 @@ title __TASK's Class Diagram__\n
       package taskman.backend.task {
         class TaskStateExecuting {
             + TaskStateExecuting()
-            + isExecuting()
             + endExecution()
         }
       }
@@ -83,7 +100,6 @@ title __TASK's Class Diagram__\n
       package taskman.backend.task {
         class TaskStateFailed {
             + TaskStateFailed()
-            + isFailed()
             + setAlternative()
         }
       }
@@ -107,25 +123,46 @@ title __TASK's Class Diagram__\n
   package taskman {
     package taskman.backend {
       package taskman.backend.task {
-        class TaskStateInactive {
-            + TaskStateInactive()
+        class TaskStatePlanned {
+            + TaskStatePlanned()
+            + canBeUpdated()
+            + getPlannedResources()
+            + getAlternativeResources()
+            + changeResource()
+            + cancelPlan()
+            + execute()
             + isAvailable()
-            + isUnavailable()
-            + addDependency()
         }
       }
     }
   }
   
 
-  Task -up-|> Entity
+  package taskman {
+    package taskman.backend {
+      package taskman.backend.task {
+        class TaskStateUnavailable {
+            + TaskStateUnavailable()
+            + addDependency()
+            + canBePlanned()
+            + addRequirement()
+            + initializePlan()
+        }
+      }
+    }
+  }
+  
+
+  Task -up-|> TaskWrapper
   Task o-- TimeSpan : timeSpan
   Task o-- TaskState : state
   Task o-- Task : alternative
+  Task o-- Plan : plan
   TaskStateExecuting -up-|> TaskState
   TaskStateFailed -up-|> TaskState
   TaskStateFinished -up-|> TaskState
-  TaskStateInactive -up-|> TaskState
+  TaskStatePlanned -up-|> TaskState
+  TaskStateUnavailable -up-|> TaskState
 
 
 right footer

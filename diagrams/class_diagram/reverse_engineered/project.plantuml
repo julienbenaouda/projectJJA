@@ -6,16 +6,19 @@ title __PROJECT's Class Diagram__\n
     package taskman.backend {
       package taskman.backend.project {
         class Project {
+            - taskList : ArrayList<Task>
             - name : String
             - description : String
             - creationTime : LocalDateTime
             - dueTime : LocalDateTime
-            - taskList : ArrayList<Task>
             + Project()
+            + getTasks()
+            + getTasks()
+            + getTask()
             + createTask()
-            - addTaskToList()
-            + getStatus()
-            + removeTask()
+            - addTask()
+            - removeTask()
+            + hasAccessTo()
             + getName()
             - setName()
             + getDescription()
@@ -24,10 +27,7 @@ title __PROJECT's Class Diagram__\n
             - setCreationTime()
             + getDueTime()
             - setDueTime()
-            + getTask()
-            + getTasks()
-            + getNumberOfTasks()
-            + accept()
+            + getStatus()
         }
       }
     }
@@ -40,17 +40,18 @@ title __PROJECT's Class Diagram__\n
         class ProjectOrganizer {
             - projects : Collection<Project>
             + ProjectOrganizer()
-            + getProjectNames()
-            + projectExists()
+            + getProjects()
+            + getProjects()
             + getProject()
             + createProject()
+            - projectExists()
         }
       }
     }
   }
   
 
-  Project -up-|> Entity
+  Project -up-|> ProjectWrapper
 
 
 right footer
