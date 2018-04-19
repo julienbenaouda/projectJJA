@@ -129,7 +129,7 @@ public class ControllerTest {
         assertTrue("User not created!", userManager.hasUser("alexander"));
         User alexander = userManager.getUser("alexander");
         assertFalse("User already created!", userManager.hasUser("julien"));
-        controller.createUser("julien", "blablabla", "developer", LocalTime.of(3, 3));
+        controller.createUser("julien", "blablabla", "developer", LocalTime.of(12, 0));
         assertTrue("User not created!", userManager.hasUser("julien"));
         User julien = userManager.getUser("julien");
 

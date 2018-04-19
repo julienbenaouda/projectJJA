@@ -3,11 +3,11 @@
  */
 package taskman.backend.resource;
 
-import java.time.LocalTime;
-
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
+
+import java.time.LocalTime;
 
 /**
  * @author Julien Benaouda
@@ -68,7 +68,7 @@ public class DeveloperResource extends Resource {
 		LocalTime endBreak = LocalTime.of(13, 0);
 		LocalTime endTime = startTime.plusHours(1);
 		if(startTime.isBefore(startBreak) || endTime.isAfter(endBreak)) {
-			throw new IllegalArgumentException("The break time must be tetween 11:00 end 13:00");
+			throw new IllegalArgumentException("The break time must be between 11:00 end 13:00");
 		}
 		setBreakTime(new AvailabilityPeriod(startTime, endTime));
 	}

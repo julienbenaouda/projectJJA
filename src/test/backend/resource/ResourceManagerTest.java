@@ -7,6 +7,7 @@ import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
+import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.ProjectManager;
 
@@ -59,7 +60,8 @@ public class ResourceManagerTest {
 		type.createResource("resource2");
 		task.addRequirement(resourceManager, type, 1);
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		List<Resource> list = resourceManager.getAlternativeResources(type.getResource("resource1"), task.getEstimatedDuration(), startTime);
+		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
+		List<Resource> list = resourceManager.getAlternativeResources(type.getResource("resource1"), ts);
 		assertTrue(list.size() == 1);
 		assertEquals(type.getResource("resource2"), list.get(0));
 	}
@@ -147,7 +149,8 @@ public class ResourceManagerTest {
 		Resource test = t.getPlannedResources().get(0);
 		Task t2 = new Task("test", "test2", 60l, 5.5);
 		t2.addRequirement(resourceManager, type, 2);
-		List<Resource> r = resourceManager.getAlternativeResources(test, t2.getEstimatedDuration(), startTime);
+		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(t2.getEstimatedDuration()));
+		List<Resource> r = resourceManager.getAlternativeResources(test, ts);
 		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), t2.getEstimatedDuration(), startTime);
 		assertEquals(1, r.size());
 	}

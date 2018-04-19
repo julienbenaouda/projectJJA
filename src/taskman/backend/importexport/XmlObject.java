@@ -1,7 +1,7 @@
 package taskman.backend.importexport;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
@@ -91,8 +91,8 @@ public class XmlObject {
 	 * @throws ImportExportException when something goes wrong during the parsing of the objects
 	 */
 	public String toXMLString() throws ImportExportException {
-		XStream stream = new XStream(new StaxDriver());
-		String XMLString = "";
+		XStream stream = new XStream(new DomDriver());
+		String XMLString;
 		try {
 			XMLString = stream.toXML(this);
 		} catch (Exception e) {
@@ -107,7 +107,7 @@ public class XmlObject {
 	 * @throws ImportExportException when something goes wrong during the parsing of the string 
 	 */
 	public static XmlObject fromXMLString(String string) throws ImportExportException {
-		XStream stream = new XStream(new StaxDriver());
+		XStream stream = new XStream(new DomDriver());
 		XmlObject obj;
 		try {
 			obj = (XmlObject)stream.fromXML(string);
