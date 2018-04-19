@@ -18,6 +18,8 @@ import java.io.FileWriter;
  */
 public class XmlObject {
 
+	private XStream xstream;
+
 	/**
 	 * creates a new xml object with given user manager, project organizer and resource manager
 	 * @param projectOrganizer the projectOrganizer to add to the xml file
@@ -84,6 +86,19 @@ public class XmlObject {
 	public Clock getClock() {
 		return clock;
 	}
+
+	/**
+	 * Creates an XStream object.
+	 * @return an XStream object.
+	 */
+	private static XStream createXstream() {
+		XStream stream = new XStream(new DomDriver());
+		XStream.setupDefaultSecurity(stream); // to be removed after 1.5
+		stream.allowTypesByWildcard(new String[] {
+				"taskman.**"
+		});
+		return stream;
+	}
 	
 	/**
 	 * converts the system to an xml string
@@ -91,28 +106,28 @@ public class XmlObject {
 	 * @throws ImportExportException when something goes wrong during the parsing of the objects
 	 */
 	public String toXMLString() throws ImportExportException {
-		XStream stream = new XStream(new DomDriver());
+		XStream stream = createXstream();
 		String XMLString;
 		try {
 			XMLString = stream.toXML(this);
 		} catch (Exception e) {
-			throw new ImportExportException("Something went wrong during the conversion to XML: " +e.getMessage());
+			throw new ImportExportException("Something went wrong during the conversion to XML: " + e.getMessage());
 		}
 		return XMLString;
 	}
 	
 	/**
-	 * converts an xml sstring to an XMLObject that can be used to reconstruct the system
+	 * converts an xml string to an XMLObject that can be used to reconstruct the system
 	 * @param string the xml string to convert
 	 * @throws ImportExportException when something goes wrong during the parsing of the string 
 	 */
 	public static XmlObject fromXMLString(String string) throws ImportExportException {
-		XStream stream = new XStream(new DomDriver());
+		XStream stream = createXstream();
 		XmlObject obj;
 		try {
-			obj = (XmlObject)stream.fromXML(string);
+			obj = (XmlObject) stream.fromXML(string);
 		} catch (Exception e) {
-			throw new ImportExportException("Something went wrong during the parsing of the string: " +e.getMessage());
+			throw new ImportExportException("Something went wrong during the parsing of the string: " + e.getMessage());
 		}
 		return obj;
 	}

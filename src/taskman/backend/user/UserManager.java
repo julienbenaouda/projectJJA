@@ -80,7 +80,12 @@ public class UserManager {
 			default:
 				throw new IllegalArgumentException("'" + type + "' is not a valid user type!");
 		}
-		resourceManager.createResourceForUser(getUser(name), startBreak);
+		try {
+			resourceManager.createResourceForUser(getUser(name), startBreak);
+		} catch (IllegalArgumentException e) {
+			users.remove(getUser(name));
+			throw e;
+		}
 	}
 
 	/**
