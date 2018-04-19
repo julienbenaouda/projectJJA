@@ -86,7 +86,7 @@ public abstract class TaskState {
      * @throws IllegalStateException the task state must be finished
      * @post the state of the task is set to the given state and the time span of the task is set to a new time span created with given start and end time
      */
-    public void updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus) throws IllegalStateException, IllegalArgumentException {
+    public void endExecution(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("Cannot update status of task if not executing!");
     }
 
@@ -130,10 +130,20 @@ public abstract class TaskState {
 
     /**
      * Returns if the planned task is available.
-     *
+     * @param resourceManager a resource manager.
+     * @param task a task.
+     * @param startTime a start time.
      * @return true if the planned task is available, otherwise false
      */
-    public boolean isAvailable(Task task, LocalDateTime startTime){
+    public boolean isAvailable(ResourceManager resourceManager, Task task, LocalDateTime startTime){
+        return false;
+    }
+
+    /**
+     * Returns if this task is finished.
+     * @return if this task is finished.
+     */
+    public boolean isFinished() {
         return false;
     }
 

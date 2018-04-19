@@ -28,7 +28,7 @@ title __TASK's Class Diagram__\n
             + isExecuting()
             + isFailed()
             + isFinished()
-            + updateStatus()
+            + endExecution()
             + getDelay()
             + getAlternative()
             # setAlternativeTask()
@@ -56,7 +56,7 @@ title __TASK's Class Diagram__\n
             + isFinished()
             + isFailed()
             + getDelay()
-            + updateStatus()
+            + endExecution()
             + setAlternative()
             + addDependency()
         }
@@ -71,7 +71,7 @@ title __TASK's Class Diagram__\n
         class TaskStateExecuting {
             + TaskStateExecuting()
             + isExecuting()
-            + updateStatus()
+            + endExecution()
         }
       }
     }

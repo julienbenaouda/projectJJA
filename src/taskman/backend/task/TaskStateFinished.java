@@ -18,6 +18,15 @@ public class TaskStateFinished extends TaskState {
     }
 
     /**
+     * Returns if this task is finished.
+     * @return if this task is finished.
+     */
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+    /**
      * Returns the delay of the task.
      *
      * @param task the task calculate the delay from

@@ -303,7 +303,7 @@
             + isExecuting(): boolean
             + isFailed(): boolean
             + isFinished(): boolean
-            + updateStatus(LocalDateTime, LocalDateTime, String): void
+            + endExecution(LocalDateTime, LocalDateTime, String): void
             + getDelay(): long
             + getAlternative(): Task
             # setAlternativeTask(Task): void
@@ -324,7 +324,7 @@
             + isFinished(): boolean
             + isFailed(): boolean
             + getDelay(Task): long
-            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+            + endExecution(Task, LocalDateTime, LocalDateTime, String): void
             + setAlternative(Task, Task): void
             + addDependency(Task, Task): void
         }
@@ -332,7 +332,7 @@
         class TaskStateExecuting {
             + TaskStateExecuting()
             + isExecuting(): boolean
-            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+            + endExecution(Task, LocalDateTime, LocalDateTime, String): void
         }
 
         class TaskStateFailed {

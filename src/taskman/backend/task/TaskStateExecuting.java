@@ -18,7 +18,7 @@ public class TaskStateExecuting extends TaskState{
     }
 
     /**
-     * Update the state of the given task to the given state
+     * Ends the execution of the given task.
      *
      * @param task the task to update the state from
      * @param startTime the start time of the task
@@ -28,7 +28,7 @@ public class TaskStateExecuting extends TaskState{
      * @post the state of the task is set to the given state and the time span of the task is set to a new time span created with given start and end time. If needed, the resources are freed for the remaining time.
      */
     @Override
-    public void updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus) throws IllegalArgumentException{
+    public void endExecution(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus) throws IllegalArgumentException{
         if (!taskStatus.equals("finished") && !taskStatus.equals("failed")){
             throw new IllegalArgumentException("The new status must be either failed or finished");
         }

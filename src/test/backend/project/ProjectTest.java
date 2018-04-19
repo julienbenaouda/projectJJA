@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.project.Project;
-import taskman.backend.resource.DeveloperResource;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
@@ -106,7 +105,7 @@ public class ProjectTest {
 		t.initializePlan(rm, startTime);
 		t.makeExecuting(rm, startTime, d);
 		t.addRequirement(rm, rm.getResourceType("developer"), 1);
-		t.updateStatus(startTime, startTime.plusMinutes(60), "finished", d);
+		t.endExecution(startTime, startTime.plusMinutes(60), "finished", d);
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("finished", p.getStatus(due));
 	}
@@ -127,7 +126,7 @@ public class ProjectTest {
 		t.addRequirement(rm, rm.getResourceType("developer"), 1);
 		t.initializePlan(rm, startTime);
 		t.makeExecuting(rm, startTime, d);
-		t.updateStatus(startTime, startTime.plusMinutes(100), "failed", d);
+		t.endExecution(startTime, startTime.plusMinutes(100), "failed", d);
 		Assert.assertEquals("active", p.getStatus(creation));
 		Assert.assertEquals("failed", p.getStatus(due));
 	}

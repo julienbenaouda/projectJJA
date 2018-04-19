@@ -300,7 +300,7 @@
             + getState(): TaskState
             # changeState(TaskState): void
             + getStatus(): String
-            + updateStatus(LocalDateTime, LocalDateTime, String): void
+            + endExecution(LocalDateTime, LocalDateTime, String): void
             + getDelay(): long
             + getAlternative(): Task
             # setAlternativeTask(Task): void
@@ -324,7 +324,7 @@
             + getStatus(): String
             # setStatus(String): void
             + getDelay(Task): long
-            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+            + endExecution(Task, LocalDateTime, LocalDateTime, String): void
             + setAlternative(Task, Task): void
             + addDependency(Task, Task): void
             + plan(Task, List<Resource>, LocalDateTime): void
@@ -346,7 +346,7 @@
 
         class TaskStateExecuting {
             + TaskStateExecuting()
-            + updateStatus(Task, LocalDateTime, LocalDateTime, String): void
+            + endExecution(Task, LocalDateTime, LocalDateTime, String): void
         }
 
         class TaskStateFailed {

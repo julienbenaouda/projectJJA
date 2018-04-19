@@ -229,7 +229,7 @@ title TASKMAN\n
         - void setTimeSpan(TimeSpan timeSpan)
         + getStatus()
         - setStatus(TaskStatus status)
-        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status)
+        + void endExecution(LocalDateTime startTime, LocalDateTime endTime, TaskStatus status)
         + boolean isAvailable()
         + isFinished()
         + long getDelay()

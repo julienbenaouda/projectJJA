@@ -1,5 +1,7 @@
 package taskman.backend.wrappers;
 
+import java.util.List;
+
 public interface TaskWrapper {
 
 	/**
@@ -43,5 +45,23 @@ public interface TaskWrapper {
 	 * @return if the task can be updated.
 	 */
 	boolean canBeUpdated();
+
+	/**
+	 * Return the delay between the end time and the estimated end time in minutes.
+	 * @return the time between the end time and the estimated end time in minutes.
+	 */
+	long getDelay() throws IllegalStateException;
+
+	/**
+	 * Returns the alternative task of the task.
+	 * @return the alternative task.
+	 */
+	TaskWrapper getAlternative();
+
+	/**
+	 * Returns a list with all dependencies of the task.
+	 * @return the dependencies of the task
+	 */
+	List<? extends TaskWrapper> getDependencies();
 
 }

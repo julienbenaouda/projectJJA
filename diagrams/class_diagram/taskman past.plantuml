@@ -247,7 +247,7 @@ title TASKMAN\n
         # setTimeSpan(LocalDateTime startTime, LocalDateTime endTime)
         + TaskState getState()
         # void setState()
-        + void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status)
+        + void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status)
         + boolean isAvailable()
         + boolean getUnavailable()
         + boolean isExecuting()
@@ -277,7 +277,7 @@ title TASKMAN\n
             + boolean isFinished(Task task)
             + boolean isFailed(Task task)
             + long getDelay(Task task)
-            + boolean updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus)
+            + boolean endExecution(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus)
             + void setAlternative(Task task, Task alternative)
             + void addDependency(Task task, Task dependency)
         }
@@ -292,7 +292,7 @@ title TASKMAN\n
         class TaskStateExecuting {
             + TaskStateExecuting()
             + boolean isExecuting()
-            + void updateStatus(Task task, LocalDateTime startTime, LocalDateTime endTime)
+            + void endExecution(Task task, LocalDateTime startTime, LocalDateTime endTime)
         }
       }
     }

@@ -102,10 +102,10 @@ public class Plan {
      * @param startTime the start time for the reservations
      * @post for each resource a reservation is created and added to the reservations of the plan
      */
-    public void createReservation(List<Resource> resources, LocalDateTime startTime) {
+    public void createReservations(List<Resource> resources, LocalDateTime startTime) {
         LocalDateTime endTime = startTime.plusMinutes(getTask().getEstimatedDuration());
         for (Resource resource : resources){
-            addReservation(resource, startTime, endTime);
+            createReservation(resource, startTime, endTime);
         }
     }
 
@@ -118,7 +118,7 @@ public class Plan {
      * @post a reservation with the given attributes is created and added to the
      *       reservations of the plan
      */
-    private void addReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+    public void createReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
         Reservation reservation = new Reservation(resource, startTime, endTime);
         reservations.add(reservation);
     }
@@ -131,7 +131,7 @@ public class Plan {
      * @param startTime the start time of the user specific reservation
      * @param endTime the end time of the user specific reservation
      */
-    private void addSpecificReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
+    public void createSpecificReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime){
         Reservation reservation = new Reservation(resource, startTime, endTime);
         reservation.setUserSpecific();
         reservations.add(reservation);
@@ -143,7 +143,8 @@ public class Plan {
      * @param reservation the reservation to remove
      * @post the given reservation is removed from the plan its reservations
      */
-    private void removeReservation(Reservation reservation){
+    public void removeReservation(Reservation reservation){
+        reservation.delete();
         reservations.remove(reservation);
     }
 
@@ -172,9 +173,8 @@ public class Plan {
             if (reservation.getResource() == oldResource){
                 LocalDateTime startTime = reservation.getTimeSpan().getStartTime();
                 LocalDateTime endTime = reservation.getTimeSpan().getEndTime();
-                reservation.delete();
                 removeReservation(reservation);
-                addSpecificReservation(newResource, startTime, endTime);
+                createSpecificReservation(newResource, startTime, endTime);
                 changed = true;
             }
             index += 1;
@@ -207,25 +207,6 @@ public class Plan {
     }
     
     /**
-     * Makes the plan executing.
-     *
-     * @param resourceManager the resourceManager to use to replan
-     * @param startTime the start time of the task
-     * @param duration the duration of the task
-     * @post if the start time is before the foreseen start time, a new plan is generated for the task
-     * @throws IllegalArgumentException when not enough resources are available to make a new plan for the given time
-     */
-    public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, Long duration) {
-    	if(startsEarlier(startTime)) {
-    		if(resourceManager.getStartingTimes(this, duration, startTime).next().isAfter(startTime)) {
-    			throw new IllegalArgumentException("Execution of this task can't start at the given start time because there are no resources available.");
-    		} else {
-    			resourceManager.planBySystem(this, duration, startTime);
-    		}
-    	}
-    }
-    
-    /**
      * Finishes the reservations if needed.
      * @param endTime the end time when the reservation should be finished
      * @post if the end time is earlier then the foreseen endtime, the resources are set to available for the remaining time
@@ -237,15 +218,6 @@ public class Plan {
     		}
     	}
     }
-
-    /**
-     * Returns if the plan starts earlier than planned.
-     * @param startTime the start time of the plan.
-     * @return true if the start time is earlier, otherwise false.
-     */
-	private boolean startsEarlier(LocalDateTime startTime) {
-		return startTime.isBefore(getReservations().get(0).getTimeSpan().getStartTime());
-	}
 
     /**
      * Empties the plan.
