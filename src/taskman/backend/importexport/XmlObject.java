@@ -93,7 +93,7 @@ public class XmlObject {
 	 */
 	private static XStream createXstream() {
 		XStream stream = new XStream(new DomDriver());
-		XStream.setupDefaultSecurity(stream); // to be removed after 1.5
+		XStream.setupDefaultSecurity(stream);
 		stream.allowTypesByWildcard(new String[] {
 				"taskman.**"
 		});
