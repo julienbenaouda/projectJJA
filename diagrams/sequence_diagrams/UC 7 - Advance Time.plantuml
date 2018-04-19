@@ -1,0 +1,20 @@
+@startuml
+
+title "Use Case - Advance Time"
+
+-> ":Controller": updateTime(LocalDateTime)
+activate ":Controller"
+
+":Controller" -> ":Clock":  updateTime(LocalDateTime)
+activate ":Clock"
+
+":Clock" -> ":LocalDateTime": isAfter(LocalDateTime)
+activate ":LocalDateTime"
+":Clock" <-- ":LocalDateTime": boolean
+deactivate ":LocalDateTime"
+
+deactivate ":Clock"
+
+deactivate ":Controller"
+
+@enduml

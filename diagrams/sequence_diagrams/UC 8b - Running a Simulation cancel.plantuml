@@ -1,0 +1,97 @@
+@startuml
+
+title "Use Case - Running a Simulation - Cancel"
+
+-> ":Controller": startSimulation()
+activate ":Controller"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":SimulationManager": startSimulation(ProjectOrganizer, UserManager, ResourceManager, Clock, User)
+activate ":SimulationManager"
+
+":SimulationManager" -> ":User": getUserType()
+activate ":User"
+":SimulationManager" <-- ":User": String
+deactivate ":User"
+
+":SimulationManager" -> ":XmlObject": XmlObject(ProjectOrganizer, UserManager, ResourceManager, Clock)
+activate ":XmlObject"
+":SimulationManager" <-- ":XmlObject": XmlObject
+deactivate ":XmlObject"
+
+":SimulationManager" -> ":XmlObject": toXMLString()
+activate ":XmlObject"
+":SimulationManager" <-- ":XmlObject": String
+deactivate ":XmlObject"
+
+":SimulationManager" -> ":SimulationManager": setPreviousState(String)
+activate ":SimulationManager"
+deactivate ":SimulationManager"
+
+deactivate ":SimulationManager"
+
+deactivate ":Controller"
+
+
+-> ":Controller": cancelSimulation()
+activate ":Controller"
+
+":Controller" -> ":SimulationManager": cancelSimulation()
+activate ":SimulationManager"
+
+":SimulationManager" -> ":SimulationManager": getPreviousState()
+activate ":SimulationManager"
+":SimulationManager" <-- ":SimulationManager": String
+deactivate ":SimulationManager"
+
+":SimulationManager" -> "XmlObject": fromXMLString(String)
+activate "XmlObject"
+":SimulationManager" <-- "XmlObject": XmlObject
+deactivate "XmlObject"
+
+":Controller" <-- ":SimulationManager": XmlObject
+deactivate ":SimulationManager"
+
+":Controller" -> ":XmlObject": getResourceManager()
+activate ":XmlObject"
+":Controller" <-- ":XmlObject": ResourceManager
+deactivate ":XmlObject"
+
+":Controller" -> ":Controller": setResourceManager(ResourceManager)
+activate ":Controller"
+deactivate ":Controller"
+
+":Controller" -> ":XmlObject": getProjectOrganizer()
+activate ":XmlObject"
+":Controller" <-- ":XmlObject": ProjectOrganizer
+deactivate ":XmlObject"
+
+":Controller" -> ":Controller": setProjectOrganizer(ProjectOrganizer)
+activate ":Controller"
+deactivate ":Controller"
+
+":Controller" -> ":XmlObject": getUserManager()
+activate ":XmlObject"
+":Controller" <-- ":XmlObject": UserManager
+deactivate ":XmlObject"
+
+":Controller" -> ":Controller": setUserManager(UserManager)
+activate ":Controller"
+deactivate ":Controller"
+
+":Controller" -> ":XmlObject": getClock()
+activate ":XmlObject"
+":Controller" <-- ":XmlObject": Clock
+deactivate ":XmlObject"
+
+":Controller" -> ":Controller": setClock(Clock)
+activate ":Controller"
+deactivate ":Controller"
+
+deactivate ":Controller"
+
+@enduml
