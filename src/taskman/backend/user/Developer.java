@@ -1,7 +1,5 @@
 package taskman.backend.user;
 
-import taskman.backend.resource.DeveloperResource;
-
 /**
  * This class represents a developer in the taskman system.
  * @author Julien Benaouda

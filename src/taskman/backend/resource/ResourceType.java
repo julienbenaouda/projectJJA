@@ -4,7 +4,6 @@ import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.wrappers.ResourceTypeWrapper;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
