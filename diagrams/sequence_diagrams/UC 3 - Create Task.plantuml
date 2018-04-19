@@ -1,0 +1,19 @@
+@startuml
+
+title "Use Case - Create Project"
+
+-> ":Controller": createTask(ProjectWrapper, String, String, long, double, Map<ResourceTypeWrapper, Integer>)
+activate ":Controller"
+
+":Controller" -> ":Project" : createTask(String, String, long, double, User)
+activate ":Project"
+
+":Project" -> ":Task" : new Task(String, String, long, double, User)
+activate ":Task"
+":Task" -> ":Project" : Task
+deactivate ":Task"
+deactivate ":Project"
+
+deactivate ":Controller"
+
+@enduml

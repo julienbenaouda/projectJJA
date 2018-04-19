@@ -1,0 +1,59 @@
+@startuml
+
+title "Use Case - Show Projects"
+
+-> ":Controller": getProjects()
+activate ":Controller"
+
+":Controller" -> ":ProjectOrganizer" : getProjects(User)
+activate ":ProjectOrganizer"
+
+loop over projects
+    ":ProjectOrganizer" -> ":Project" : hasAccessTo(User)
+    activate ":Project"
+
+    loop over tasks
+        ":Project" -> ":Task" : hasAccessTo(User)
+        activate ":Task"
+
+        ":Task" -> ":Plan" : isDeveloperFromPlan(User)
+        activate ":Plan"
+
+        ":Plan" --> ":Task" : boolean
+        deactivate ":Plan"
+
+        ":Task" --> ":Project" : boolean
+        deactivate ":Task"
+
+    end
+
+    ":Project" --> ":ProjectOrganizer" : boolean
+    deactivate ":Project"
+end
+
+
+":ProjectOrganizer" --> ":Controller" : List<Project>
+deactivate ":ProjectOrganizer"
+
+":Controller" -> ":Project" : getTasks(User)
+activate ":Project"
+loop over tasks
+    ":Project" -> ":Task" : hasAccessTo(User)
+    activate ":Task"
+
+
+    ":Task" --> ":Project" : boolean
+    deactivate ":Task"
+
+end
+
+":Project" --> ":Controller" : List<Task>
+deactivate ":Project"
+
+
+<-- ":Controller" : List<ProjectWrapper>
+deactivate ":Controller"
+
+
+
+@enduml

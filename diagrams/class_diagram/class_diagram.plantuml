@@ -526,27 +526,27 @@ title __TASKMAN's Class Diagram__\n
 
       package taskman.backend.user {
         class Developer {
-            + Developer()
+            + Developer(String, String)
             + getUserType()
         }
 
         class OperationNotPermittedException {
-            + OperationNotPermittedException()
+            + OperationNotPermittedException(String)
         }
 
         class ProjectManager {
-            + ProjectManager()
+            + ProjectManager(String, String)
             + getUserType()
         }
 
         abstract class User {
             - name : String
             - password : String
-            + User()
+            + User(String, String)
             + getName()
-            - setName()
+            - setName(String)
             + getPassword()
-            - setPassword()
+            - setPassword(String)
             {abstract} + getUserType()
         }
 
@@ -554,17 +554,17 @@ title __TASKMAN's Class Diagram__\n
             - users : List<User>
             + UserManager()
             + getUsers()
-            + getUser()
-            + hasUser()
-            + createUser()
-            - createDeveloper()
-            - createProjectManager()
-            + removeUser()
+            + getUser(String)
+            + hasUser(String)
+            + createUser(String, String, String, LocalTime, ResourceManager)
+            - createDeveloper(String, String)
+            - createProjectManager(String, String)
+            + removeUser(User, String, ResourceManager, )
             + getUserTypes()
             + getCurrentUser()
-            - setCurrentUser()
+            - setCurrentUser(User)
             + hasCurrentUser()
-            + login()
+            + login(String, String)
             + logout()
         }
       }
