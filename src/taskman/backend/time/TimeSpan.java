@@ -3,9 +3,9 @@
  */
 package taskman.backend.time;
 
-import java.time.LocalDateTime;
-
 import taskman.backend.wrappers.TimeSpanWrapper;
+
+import java.time.LocalDateTime;
 
 /**
  * This class represents a time span containing a start time, end time and status
@@ -86,5 +86,14 @@ public class TimeSpan implements TimeSpanWrapper {
 	 * represents the end time of the timespan
 	 */
 	private LocalDateTime endTime;
+
+	/**
+	 * Returns if the timespan is equal to this timespan.
+	 * @param t a timespan.
+	 * @return if the timespan is equal to this timespan.
+	 */
+	public boolean equals(TimeSpan t) {
+		return getStartTime().equals(t.getStartTime()) && getEndTime().equals(t.getEndTime());
+	}
 
 }

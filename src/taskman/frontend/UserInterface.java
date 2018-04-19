@@ -367,7 +367,7 @@ public class UserInterface {
 		);
 		form.show();
 
-		controller.updateTaskStatus(
+		controller.endTaskExecution(
 				task,
 				TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),
 				TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),

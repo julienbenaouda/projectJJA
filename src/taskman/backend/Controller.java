@@ -347,7 +347,7 @@ public class Controller {
     }
 
     /**
-     * Updates the status of the given task.
+     * Ends the execution of the task.
      * @param task the task to update.
      * @param startTime the start time of the task.
      * @param endTime the end time of the task.
@@ -357,9 +357,19 @@ public class Controller {
      * @throws IllegalArgumentException if the status is not FINISHED and not FAILED or if the start or end time is invalid.
      * @post the start time, end time and status of the task will be updated.
      */
-    public void updateTaskStatus(TaskWrapper task, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
-        ((Task) task).updateStatus(startTime, endTime, status, this.userManager.getCurrentUser());
+    public void endTaskExecution(TaskWrapper task, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
+        ((Task) task).endExecution(startTime, endTime, status, this.userManager.getCurrentUser());
     }
+
+	/**
+	 * Makes a task executing.
+	 * @post the status of the task is changed to executing
+	 * @throws IllegalArgumentException when the user is not assigned to the task.
+	 * @throws IllegalArgumentException if the plan cannot be rescheduled to this time.
+	 */
+	public void makeExecuting(TaskWrapper task) throws IllegalArgumentException {
+		((Task) task).makeExecuting(this.resourceManager, this.clock.getTime(), this.userManager.getCurrentUser());
+	}
 
     /**
      * Save the status of the system to a file.

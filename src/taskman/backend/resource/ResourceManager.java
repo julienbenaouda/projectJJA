@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
  */
 public class ResourceManager {
 
+    // TODO: duration en starttime samenvoegen in timespan!!!
+
     /**
      * Construct an empty resource manager.
      *
@@ -265,40 +267,81 @@ public class ResourceManager {
      * @param startTime the start time.
      */
     public void initializePlan(Plan plan, long duration, LocalDateTime startTime) {
-        planBySystem(plan, duration, startTime);
-    }
-    
-    /**
-     * Lets a plan be created by the system. The system itself choses the resources it will use.
-     * @param plan the plan to create new reservations for.
-     * @param duration the duration of the plan.
-     * @param startTime the start time of the plan.
-     * @post new reservations in the plan are generated for the resources needed.
-     */
-    public void planBySystem(Plan plan, long duration, LocalDateTime startTime) {
         TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-    	Map<ResourceType, Integer> requirements = plan.getRequirements();
-    	List<Resource> resources = new ArrayList<>();
-    	for(ResourceType type: requirements.keySet()) {
+        Map<ResourceType, Integer> requirements = plan.getRequirements();
+        List<Resource> resources = new ArrayList<>();
+        for(ResourceType type: requirements.keySet()) {
             resources.addAll(
                     type.getAvailableResources(timeSpan)
                             .stream()
                             .limit(requirements.get(type))
                             .collect(Collectors.toList())
             );
-    	}
-        plan.createReservation(resources, startTime);
+        }
+        plan.createReservations(resources, startTime);
+    }
+
+    /**
+     * Reschedule a plan to a given time span.
+     * @param plan the plan.
+     * @param originalTimeSpan the original time span.
+     * @param newTimeSpan the new time span.
+     * @throws IllegalArgumentException if the plan cannot be rescheduled.
+     */
+    public void reschedulePlan(Plan plan, TimeSpan originalTimeSpan, TimeSpan newTimeSpan) throws IllegalArgumentException {
+        if (!canBeRescheduled(plan, newTimeSpan)) throw new IllegalArgumentException("Plan cannot be rescheduled!");
+        if (!newTimeSpan.equals(originalTimeSpan)) {
+            for (Reservation reservation: plan.getReservations()) {
+                if (reservation.isUserSpecific()) {
+                    Resource resource = reservation.getResource();
+                    plan.removeReservation(reservation);
+                    plan.createSpecificReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
+                } else {
+                    Resource resource = reservation.getResource();
+                    plan.removeReservation(reservation);
+                    if (!resource.isAvailable(newTimeSpan)) {
+                        resource = getAlternativeResources(resource, newTimeSpan).get(0);
+                    }
+                    plan.createReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns if the planned task can be rescheduled.
+     * @param plan a plan.
+     * @param newTimeSpan the time span to check.
+     * @return true if the plan can be rescheduled, otherwise false.
+     */
+    public boolean canBeRescheduled(Plan plan, TimeSpan newTimeSpan){
+        for (Reservation reservation: plan.getReservations()) {
+            if (reservation.isUserSpecific()) {
+                Resource resource = reservation.getResource();
+                plan.removeReservation(reservation);
+                if (!resource.isAvailable(newTimeSpan)) {
+                    return false;
+                }
+                plan.createSpecificReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
+            } else {
+                Resource resource = reservation.getResource();
+                plan.removeReservation(reservation);
+                if (!resource.isAvailable(newTimeSpan) && getAlternativeResources(resource, newTimeSpan).isEmpty()) {
+                    return false;
+                }
+                plan.createReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
+            }
+        }
+        return true;
     }
 
     /**
      * Returns a list of resources as alternatives for the given resource and the given task at the given time.
      * @param resource the resource to get a list of alternatives for
-     * @param duration the duration of the reservation time
-     * @param startTime the start time on which the alternative resources will be planned
+     * @param timeSpan the time span of the reservation time
      * @return a list of resources as alternatives for the given resource and the given task at the given time
      */
-    public List<Resource> getAlternativeResources(Resource resource, long duration, LocalDateTime startTime){
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
+    public List<Resource> getAlternativeResources(Resource resource, TimeSpan timeSpan){
         List<Resource> r = resource.getType().getAvailableResources(timeSpan);
         r.remove(resource);
         return r;

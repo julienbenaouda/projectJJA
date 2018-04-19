@@ -1,11 +1,11 @@
 package taskman.backend.task;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.TimeSpan;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Class representing a planned task state.
@@ -49,7 +49,7 @@ public class TaskStatePlanned extends TaskState {
 	 * @return a list of resources as alternatives for the given resource.
 	 */
 	public List<Resource> getAlternativeResources(ResourceManager resourceManager, Task task, Resource resource) {
-		return resourceManager.getAlternativeResources(resource, task.getEstimatedDuration(), task.getTimeSpan().getStartTime());
+		return resourceManager.getAlternativeResources(resource, task.getTimeSpan());
 	}
 
 	/**
@@ -72,20 +72,35 @@ public class TaskStatePlanned extends TaskState {
 	}
 
     /**
-     * makes a task available
-     * @param task the task to make available
-     * @param startTime the start time to set the tasks time span to
-     * @throws IllegalStateException when one of the tasks dependencies is not yet finished
-     * @post the state of the task is set to available
+     * sets the status of a task to executing and tries to update the plan
+     * @param task the task to make executing
+     * @param resourceManager the resourceManager to pass to the plan
+     * @param startTime the time when the task starts executing
+     * @post the task is set to executing and if needed, a new plan is created.
+     * @throws IllegalArgumentException if the plan cannot be rescheduled.
      */
     @Override
-    public void makeAvailable(Task task) {
-    	for(Task t: task.getDependencies()) {
-    		if(!t.getStatus().equals("finished")) {
-    			throw new IllegalStateException("The state of the task can't be changed because one of its dependencies is not yet finished");
-    		}
-    	}
-    	task.setState(new TaskStateAvailable());
+    public void execute(Task task, ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
+    	if (!isAvailable(resourceManager, task, startTime)) {
+		    throw new IllegalStateException("The task must be available in order to start its execution.");
+	    }
+	    TimeSpan newTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
+	    resourceManager.reschedulePlan(task.getPlan(), task.getTimeSpan(), newTimeSpan);
+        task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
+        task.setState(new TaskStateExecuting());
     }
+
+	/**
+	 * Returns if the planned task is available.
+	 * @param resourceManager a resource manager.
+	 * @param task a task.
+	 * @param startTime a start time.
+	 * @return true if the planned task is available, otherwise false
+	 */
+	@Override
+	public boolean isAvailable(ResourceManager resourceManager, Task task, LocalDateTime startTime){
+		if (!task.getDependencies().stream().allMatch(Task::isFinished)) return false;
+		return resourceManager.canBeRescheduled(task.getPlan(), new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration())));
+	}
 
 }

@@ -7,7 +7,6 @@ import taskman.backend.resource.ResourceType;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
-import taskman.backend.wrappers.ResourceWrapper;
 import taskman.backend.wrappers.TaskWrapper;
 
 import java.time.LocalDateTime;
@@ -229,7 +228,7 @@ public class Task implements TaskWrapper {
 
 
     /**
-     * Updates the status of the task.
+     * End the execution of the task.
      *
      * @param startTime the start time of the task
      * @param endTime the end time of the task
@@ -237,20 +236,55 @@ public class Task implements TaskWrapper {
      * @param user the user to update the task status for
      * @post the time span and status of the task will be updated
      */
-    public void updateStatus(LocalDateTime startTime, LocalDateTime endTime, String status, User user) throws IllegalStateException, IllegalArgumentException {
+    public void endExecution(LocalDateTime startTime, LocalDateTime endTime, String status, User user) throws IllegalStateException, IllegalArgumentException {
         if (getPlan().isDeveloperFromPlan(user)) {
-            getState().updateStatus(this, startTime, endTime, status);
+            getState().endExecution(this, startTime, endTime, status);
         } else {
         	throw new IllegalArgumentException("The user must be a developer of the task.");
         }
     }
 
+    /**
+     * makes a task executing
+     * @param resourceManager the resource manager to pass to the state
+     * @param startTime the time when the task starts executing
+     * @param user the user to check the assignment for
+     * @post the status of the task is changed to executing
+     * @throws IllegalArgumentException when the user is not assigned to the task
+     * @throws IllegalArgumentException if the plan cannot be rescheduled.
+     */
+    public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, User user) throws IllegalArgumentException {
+        if (getPlan().isDeveloperFromPlan(user)) {
+            getState().execute(this, resourceManager, startTime);
+        } else {
+            throw new IllegalArgumentException("The user must be a developer of the task.");
+        }
+    }
+
+    /**
+     * Returns if this task is available.
+     * @param resourceManager a resource manager.
+     * @param startTime a start time.
+     * @return true if this task is available, otherwise false.
+     */
+    public boolean isAvailable(ResourceManager resourceManager, LocalDateTime startTime){
+        return getState().isAvailable(resourceManager, this, startTime);
+    }
+
+    /**
+     * Returns if this task is finished.
+     * @return if this task is finished.
+     */
+    public boolean isFinished() {
+        return getState().isFinished();
+    }
 
     /**
      * Return the delay between the end time and the estimated end time in minutes.
      *
      * @return the time between the end time and the estimated end time in minutes
      */
+    @Override
     public long getDelay() throws IllegalStateException {
         return getState().getDelay(this);
     }
@@ -264,6 +298,7 @@ public class Task implements TaskWrapper {
      * Returns the alternative task of the task.
      * @return the alternative task
      */
+    @Override
     public Task getAlternative(){
         return alternative;
     }
@@ -297,7 +332,8 @@ public class Task implements TaskWrapper {
      * Returns a list with all dependencies of the task.
      * @return the dependencies of the task
      */
-    public ArrayList<Task> getDependencies(){
+    @Override
+    public List<Task> getDependencies(){
         return new ArrayList<>(dependencies);
     }
 
@@ -406,30 +442,6 @@ public class Task implements TaskWrapper {
      */
     public void addRequirement(ResourceManager resourceManager, ResourceType resourceType, int amount) {
         getState().addRequirement(resourceManager, this, resourceType, amount);
-    }
-    
-    /**
-     * makes a task executing
-     * @param resourceManager the resource manager to pass to the state
-     * @param startTime the time when the task starts executing
-     * @param user the user to check the assignment for
-     * @post the status of the task is changed to executing
-     * @throws IllegalArgumentException when the user is not assigned to the task
-     */
-    public void makeExecuting(ResourceManager resourceManager, LocalDateTime startTime, User user) throws IllegalArgumentException {
-        if (getPlan().isDeveloperFromPlan(user)) {
-            getState().execute(this, resourceManager, startTime);
-        } else {
-        	throw new IllegalArgumentException("The user must be a developer of the task.");
-        }
-    }
-    
-    /**
-     * makes a task available
-     * @param startTime the current system time
-     */
-    public void makeAvailable() {
-    	getState().makeAvailable(this);
     }
 
 
