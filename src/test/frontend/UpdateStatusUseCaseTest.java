@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class UpdateStatusUseCaseTest {
 		c.login("admin2", "admin");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
-		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5);
+		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, new HashMap<>());
 		rm.createResourceType("testType");
 		rm.getResourceType("testType").createResource("r1");
 		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));
