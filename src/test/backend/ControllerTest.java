@@ -189,7 +189,7 @@ public class ControllerTest {
         controller.logout();
         userManager.login("pm", "pmpass");
 
-        // TODO
+
     }
 
     @Test
