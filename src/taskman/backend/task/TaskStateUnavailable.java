@@ -44,6 +44,7 @@ public class TaskStateUnavailable extends TaskState {
     public boolean canBePlanned() {
         return true;
     }
+    // TODO: moet isAvailable niet gechecked worden
 
     /**
      * Adds the given requirement to the task its requirements.

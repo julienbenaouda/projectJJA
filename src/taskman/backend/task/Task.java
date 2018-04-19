@@ -157,7 +157,6 @@ public class Task implements TaskWrapper {
     protected void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
         this.timeSpan = new TimeSpan(startTime, endTime);
     }
-    // TODO: moet er hier geen throws IllegalArugmentException bij en moet dit ook niet bij constructor timespan?
 
     /**
      * Sets the time span of the task to the given time span.
