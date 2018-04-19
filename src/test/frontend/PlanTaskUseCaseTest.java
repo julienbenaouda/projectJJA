@@ -5,10 +5,12 @@ import org.junit.Test;
 import taskman.backend.Controller;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.ProjectWrapper;
+import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.backend.wrappers.ResourceWrapper;
 import taskman.backend.wrappers.TaskWrapper;
 import taskman.frontend.UserInterface;
@@ -19,8 +21,10 @@ import java.time.Month;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class PlanTaskUseCaseTest {
 
@@ -43,9 +47,14 @@ public class PlanTaskUseCaseTest {
 		c = new Controller(clock, um, po, rm, sm);
 		um.createUser("test", "test", "project manager", null, rm);
 		c.login("test", "test");
+		c.createResourceType("car");
+		c.createResource(c.getResourceTypes().get(0), "bmw");
+		c.createResource(c.getResourceTypes().get(0), "mercedes");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
-		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, new HashMap<>());
+		Map<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
+		requirements.put(c.getResourceTypes().get(0), 2);
+		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, requirements);
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 	}
