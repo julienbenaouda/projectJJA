@@ -266,57 +266,58 @@ title __TASKMAN's Class Diagram__\n
           GREATER_THAN_OR_EQUALS
           SMALLER_THAN
           SMALLER_THAN_OR_EQUALS
+          + boolean evaluate(int, int)
         }
 
         class AndConstraint {
-            + AndConstraint()
-            + getConstraint1()
-            - setConstraint1()
-            + getConstraint2()
-            - setConstraint2()
-            + solution()
+            + AndConstraint(ConstraintComponent, ConstraintComponent)
+            + ConstraintComponent getConstraint1()
+            - setConstraint1(ConstraintComponent)
+            + ConstraintComponent getConstraint2()
+            - setConstraint2(ConstraintComponent)
+            + boolean solution(Map<ResourceType, Integer>)
         }
 
         class Constraint {
             - amount : int
-            + Constraint()
-            + getResourceType()
-            - setResourceType()
-            + getAmountComparator()
-            - setAmountComparator()
-            + getAmount()
-            - setAmount()
-            + solution()
+            + Constraint(ResourceType, AmountComparator, Integer)
+            + ResourceType getResourceType()
+            - setResourceType(ResourceType)
+            + AmountComparator getAmountComparator()
+            - setAmountComparator(AmountComparator)
+            + int getAmount()
+            - setAmount(int)
+            + boolen solution(Map<ResourceType, Integer>)
         }
 
         interface ConstraintComponent {
-            {abstract} + solution()
-            {static} + parseConstraint()
+            {abstract} + boolean solution(Map<ResourceType, Integer>)
+            {static} + ConstraintComponent parseConstraint(String, ResourceManager)
         }
 
         class IfThenConstraint {
-            + IfThenConstraint()
-            + getIfConstraint()
-            - setIfConstraint()
-            + getThenConstraint()
-            - setThenConstraint()
-            + solution()
+            + IfThenConstraint(ConstraintComponent, ConstraintComponent)
+            + ConstraintComponent getIfConstraint()
+            - setIfConstraint(ConstraintComponent)
+            + ConstraintComponent getThenConstraint()
+            - setThenConstraint(ConstraintComponent)
+            + boolean solution(Map<ResourceType, Integer>)
         }
 
         class NotConstraint {
-            + NotConstraint()
-            + getConstraint()
-            - setConstraint()
-            + solution()
+            + NotConstraint(ConstraintComponent)
+            + ConstraintComponent getConstraint()
+            - setConstraint(ConstraintComponent)
+            + boolean solution(Map<ResourceType, Integer>)
         }
 
         class OrConstraint {
-            + OrConstraint()
-            + getConstraint1()
-            - setConstraint1()
-            + getConstraint2()
-            - setConstraint2()
-            + solution()
+            + OrConstraint(ConstraintComponent, ConstraintComponent)
+            + ConstraintComponent getConstraint1()
+            - setConstraint1(ConstraintComponent)
+            + ConstraintComponent getConstraint2()
+            - setConstraint2(ConstraintComponent)
+            + boolean solution(Map<ResourceType, Integer>)
         }
       }
 
@@ -394,8 +395,8 @@ title __TASKMAN's Class Diagram__\n
             + Iterator<LocalDAteTIme> getStartingTimes(plan, long, LocalDateTIme)
             - boolean isAvailableStartingTime(plan, long, LocalDateTIme)
             + void testRequirements(Map<ResourceType, Integer>)
-            - boolean checkRequirements(Map<REsourceType, Integer)
-            + void addRequirement(plan, ResourceTYpe, int)
+            - boolean checkRequirements(Map<ResourceType, Integer)
+            + void addRequirement(plan, ResourceType, int)
             + void createResourceForUser(User, LocalTime)
             + void removeResourceForUser(User)
             + void initializePlan(Plan, long, LocalDateTime)
@@ -539,7 +540,7 @@ title __TASKMAN's Class Diagram__\n
             + TaskStateUnavailable()
             + addDependency(TAsk, TAsk)
             + boolean canBePlanned()
-            + void addRequirement(ResourceManager, Task, ResourceTyme, int)
+            + void addRequirement(ResourceManager, Task, ResourceType, int)
             + void initializePlan(Task, REsourceManager, LocalDateTime)
         }
       }
