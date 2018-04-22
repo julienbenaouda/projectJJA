@@ -1,0 +1,136 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TimespanTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.time</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TimespanTest (test.backend.time)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TimespanTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (15/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.backend.time;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Before;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import taskman.backend.time.TimeSpan;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.time.LocalDateTime;
+<i>8</i>&nbsp;import java.time.Month;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import static org.junit.Assert.*;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * This is a test class for the TimeSpan class.
+<i>14</i>&nbsp; * @author Julien Benaouda
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; */
+<b class="fc"><i>17</i>&nbsp;public class TimespanTest {</b>
+<i>18</i>&nbsp;	TimeSpan timespan;
+<i>19</i>&nbsp;	LocalDateTime start;
+<i>20</i>&nbsp;	LocalDateTime end;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;	@Before
+<i>23</i>&nbsp;	public void setUp() {
+<b class="fc"><i>24</i>&nbsp;		start = LocalDateTime.of(2003, Month.FEBRUARY, 20, 15, 0);</b>
+<b class="fc"><i>25</i>&nbsp;		end = LocalDateTime.of(2005, Month.MARCH, 22, 10, 0);</b>
+<b class="fc"><i>26</i>&nbsp;		timespan = new TimeSpan(start, end);</b>
+<b class="fc"><i>27</i>&nbsp;	}</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;	@Test
+<i>30</i>&nbsp;	public void testTimeSpan_legalCase() {
+<b class="fc"><i>31</i>&nbsp;		assertEquals(start, timespan.getStartTime());</b>
+<b class="fc"><i>32</i>&nbsp;		assertEquals(end, timespan.getEndTime());</b>
+<b class="fc"><i>33</i>&nbsp;	}</b>
+<i>34</i>&nbsp;	
+<i>35</i>&nbsp;	@Test(expected=IllegalArgumentException.class)
+<i>36</i>&nbsp;	public void testTimeSpan_illegalCase() {
+<b class="fc"><i>37</i>&nbsp;		end = LocalDateTime.of(1999, Month.DECEMBER, 1, 11, 0);</b>
+<b class="fc"><i>38</i>&nbsp;		timespan = new TimeSpan(start, end);</b>
+<b class="nc"><i>39</i>&nbsp;	}</b>
+<i>40</i>&nbsp;	
+<i>41</i>&nbsp;	@Test
+<i>42</i>&nbsp;	public void testCanHaveAsEndTime_legalCase()
+<i>43</i>&nbsp;	{
+<b class="fc"><i>44</i>&nbsp;		assertTrue(timespan.canHaveAsEndTime(end));</b>
+<b class="fc"><i>45</i>&nbsp;	}</b>
+<i>46</i>&nbsp;	
+<i>47</i>&nbsp;	@Test
+<i>48</i>&nbsp;	public void testCanHaveAsEndTime_illegalCase()
+<i>49</i>&nbsp;	{
+<b class="fc"><i>50</i>&nbsp;		end = start;</b>
+<b class="fc"><i>51</i>&nbsp;		assertFalse(timespan.canHaveAsEndTime(end));</b>
+<b class="fc"><i>52</i>&nbsp;	}</b>
+<i>53</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

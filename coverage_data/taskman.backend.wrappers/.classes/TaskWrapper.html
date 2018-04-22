@@ -1,0 +1,114 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskWrapper</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.wrappers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskWrapper (taskman.backend.wrappers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">TaskWrapper</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.wrappers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.List;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public interface TaskWrapper {
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;	/**
+<i>8</i>&nbsp;	 * Return the name of the task.
+<i>9</i>&nbsp;	 * @return the name of the task
+<i>10</i>&nbsp;	 */
+<i>11</i>&nbsp;	String getName();
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;	/**
+<i>14</i>&nbsp;	 * Returns the task description.
+<i>15</i>&nbsp;	 * @return the task description
+<i>16</i>&nbsp;	 */
+<i>17</i>&nbsp;	String getDescription();
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;	/**
+<i>20</i>&nbsp;	 * Returns the estimated duration of the task in minutes.
+<i>21</i>&nbsp;	 * @return the estimated duration of the task in minutes
+<i>22</i>&nbsp;	 */
+<i>23</i>&nbsp;	long getEstimatedDuration();
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;	/**
+<i>26</i>&nbsp;	 * Returns the acceptable deviation of the task.
+<i>27</i>&nbsp;	 * @return the acceptable deviation of the task
+<i>28</i>&nbsp;	 */
+<i>29</i>&nbsp;	double getAcceptableDeviation();
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;	/**
+<i>32</i>&nbsp;	 * Returns the status of the task.
+<i>33</i>&nbsp;	 * @return the status of the task
+<i>34</i>&nbsp;	 */
+<i>35</i>&nbsp;	String getStatus();
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;	/**
+<i>38</i>&nbsp;	 * Returns if the task can be planned.
+<i>39</i>&nbsp;	 * @return if the task can be planned.
+<i>40</i>&nbsp;	 */
+<i>41</i>&nbsp;	boolean canBePlanned();
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;	/**
+<i>44</i>&nbsp;	 * Returns if the task can be updated.
+<i>45</i>&nbsp;	 * @return if the task can be updated.
+<i>46</i>&nbsp;	 */
+<i>47</i>&nbsp;	boolean canBeUpdated();
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;	/**
+<i>50</i>&nbsp;	 * Return the delay between the end time and the estimated end time in minutes.
+<i>51</i>&nbsp;	 * @return the time between the end time and the estimated end time in minutes.
+<i>52</i>&nbsp;	 */
+<i>53</i>&nbsp;	long getDelay() throws IllegalStateException;
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;	/**
+<i>56</i>&nbsp;	 * Returns the alternative task of the task.
+<i>57</i>&nbsp;	 * @return the alternative task.
+<i>58</i>&nbsp;	 */
+<i>59</i>&nbsp;	TaskWrapper getAlternative();
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;	/**
+<i>62</i>&nbsp;	 * Returns a list with all dependencies of the task.
+<i>63</i>&nbsp;	 * @return the dependencies of the task
+<i>64</i>&nbsp;	 */
+<i>65</i>&nbsp;	List&lt;? extends TaskWrapper&gt; getDependencies();
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

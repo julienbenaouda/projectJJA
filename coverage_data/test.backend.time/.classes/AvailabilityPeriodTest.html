@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AvailabilityPeriodTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.time</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AvailabilityPeriodTest (test.backend.time)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AvailabilityPeriodTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96%
+  </span>
+  <span class="absValue">
+    (24/ 25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.backend.time;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Before;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import taskman.backend.time.AvailabilityPeriod;
+<i>6</i>&nbsp;import taskman.backend.time.TimeSpan;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.time.LocalDateTime;
+<i>9</i>&nbsp;import java.time.LocalTime;
+<i>10</i>&nbsp;import java.time.Month;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import static org.junit.Assert.*;
+<i>13</i>&nbsp;
+<b class="fc"><i>14</i>&nbsp;public class AvailabilityPeriodTest {</b>
+<i>15</i>&nbsp;	private AvailabilityPeriod availabilityPeriod;
+<i>16</i>&nbsp;	private LocalTime start;
+<i>17</i>&nbsp;	private LocalTime end;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;	@Before
+<i>20</i>&nbsp;	public void setUp() throws Exception {
+<b class="fc"><i>21</i>&nbsp;		start = LocalTime.of(12, 0);</b>
+<b class="fc"><i>22</i>&nbsp;		end = LocalTime.of(17, 0);</b>
+<b class="fc"><i>23</i>&nbsp;		availabilityPeriod = new AvailabilityPeriod(start, end);</b>
+<b class="fc"><i>24</i>&nbsp;	}</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;	@Test
+<i>27</i>&nbsp;	public void testAvailabilityPeriod_legal() {
+<b class="fc"><i>28</i>&nbsp;		assertEquals(start, availabilityPeriod.getStartTime());</b>
+<b class="fc"><i>29</i>&nbsp;		assertEquals(end, availabilityPeriod.getEndTime());</b>
+<b class="fc"><i>30</i>&nbsp;	}</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;	@Test(expected=IllegalArgumentException.class)
+<i>34</i>&nbsp;	public void testAvailabilityPeriod_illegal() {
+<b class="fc"><i>35</i>&nbsp;		availabilityPeriod = new AvailabilityPeriod(null, null);</b>
+<b class="nc"><i>36</i>&nbsp;	}</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;	@Test
+<i>39</i>&nbsp;	public void testCanHaveAsEndTime_true() {
+<b class="fc"><i>40</i>&nbsp;		assertTrue(availabilityPeriod.canHaveAsEndTime(end));</b>
+<b class="fc"><i>41</i>&nbsp;	}</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;	@Test
+<i>44</i>&nbsp;	public void testCanHaveAsEndTime_false() {
+<b class="fc"><i>45</i>&nbsp;		end = start.minusHours(2);</b>
+<b class="fc"><i>46</i>&nbsp;		assertFalse(availabilityPeriod.canHaveAsEndTime(end));</b>
+<b class="fc"><i>47</i>&nbsp;	}</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;	@Test
+<i>50</i>&nbsp;	public void testOverlaps_true() {
+<b class="fc"><i>51</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 10, 0); </b>
+<b class="fc"><i>52</i>&nbsp;		LocalDateTime endTime = LocalDateTime.of(2018, Month.JULY, 26, 18, 0);</b>
+<b class="fc"><i>53</i>&nbsp;		TimeSpan t = new TimeSpan(startTime, endTime);</b>
+<b class="fc"><i>54</i>&nbsp;		assertTrue(availabilityPeriod.overlaps(t));</b>
+<b class="fc"><i>55</i>&nbsp;	}</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;	@Test
+<i>58</i>&nbsp;	public void testOverlaps_false() {
+<b class="fc"><i>59</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 17, 1); </b>
+<b class="fc"><i>60</i>&nbsp;		LocalDateTime endTime = LocalDateTime.of(2018, Month.JULY, 26, 18, 0);</b>
+<b class="fc"><i>61</i>&nbsp;		TimeSpan t = new TimeSpan(startTime, endTime);</b>
+<b class="fc"><i>62</i>&nbsp;		assertFalse(availabilityPeriod.overlaps(t));</b>
+<b class="fc"><i>63</i>&nbsp;	}</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

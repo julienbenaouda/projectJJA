@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FormSection</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.frontend.sections</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FormSection (taskman.frontend.sections)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FormSection</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,5%
+  </span>
+  <span class="absValue">
+    (19/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.frontend.sections;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;import java.util.Arrays;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * This class is responsible for presenting a form to the user and storing the answers.
+<i>9</i>&nbsp; * @author Alexander Braekevelt
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;public class FormSection extends Section {
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    /**
+<i>14</i>&nbsp;     * Represents the option to cancel between each answer.
+<i>15</i>&nbsp;     */
+<i>16</i>&nbsp;    private final Boolean withCancel;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Represents the questions the user must answer.
+<i>20</i>&nbsp;     */
+<i>21</i>&nbsp;    private final List&lt;String&gt; questions;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Represents the answers of the user.
+<i>25</i>&nbsp;     * @invar if this list is not null, it&#39;s size is equal to the number of questions.
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    private List&lt;String&gt; answers;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Constructs a form.
+<i>31</i>&nbsp;     * @param withCancel if the user can cancel between each answer.
+<i>32</i>&nbsp;     * @param questions the questions of the form.
+<i>33</i>&nbsp;     * @throws NullPointerException if the argument is null.
+<i>34</i>&nbsp;     */
+<b class="fc"><i>35</i>&nbsp;    public FormSection(Boolean withCancel, String... questions) throws NullPointerException {</b>
+<b class="fc"><i>36</i>&nbsp;        if (withCancel == null || questions == null) {</b>
+<b class="nc"><i>37</i>&nbsp;            throw new NullPointerException(&quot;Arguments of form constructor cannot be null!&quot;);</b>
+<i>38</i>&nbsp;        }
+<b class="fc"><i>39</i>&nbsp;        this.withCancel = withCancel;</b>
+<b class="fc"><i>40</i>&nbsp;        this.questions = Arrays.asList(questions);</b>
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Shows the form.
+<i>45</i>&nbsp;     * @throws Cancel if the user cancels the section.
+<i>46</i>&nbsp;     */
+<i>47</i>&nbsp;    @Override
+<i>48</i>&nbsp;    public void show() throws Cancel {
+<b class="fc"><i>49</i>&nbsp;        resetAnswers();</b>
+<b class="fc"><i>50</i>&nbsp;        List&lt;String&gt; answers = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>51</i>&nbsp;        for (String question: questions) {</b>
+<b class="fc"><i>52</i>&nbsp;            answers.add(inputAnswer(question));</b>
+<b class="fc"><i>53</i>&nbsp;            if (this.withCancel &amp;&amp; inputValidAnswer(&quot;Cancel? [Y/N]&quot;, Arrays.asList(&quot;Y&quot;, &quot;N&quot;)).equals(&quot;Y&quot;)) {</b>
+<b class="fc"><i>54</i>&nbsp;                throw new Cancel();</b>
+<i>55</i>&nbsp;            }
+<b class="fc"><i>56</i>&nbsp;        }</b>
+<b class="fc"><i>57</i>&nbsp;        this.answers = answers;</b>
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Returns if the form contains the answers (only true if form is shown and not cancelled).
+<i>62</i>&nbsp;     * @return a Boolean.
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    public Boolean hasAnswers() {
+<b class="fc"><i>65</i>&nbsp;        return this.answers != null;</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Returns an answer of the user.
+<i>70</i>&nbsp;     * @param nr the number of the answer.
+<i>71</i>&nbsp;     * @return a String.
+<i>72</i>&nbsp;     * @throws IllegalStateException if the form does not contain answers.
+<i>73</i>&nbsp;     * @throws IndexOutOfBoundsException if no answer corresponds to this number.
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public String getAnswer(int nr) throws IllegalStateException, IndexOutOfBoundsException {
+<b class="fc"><i>76</i>&nbsp;        if (!hasAnswers()) {</b>
+<b class="nc"><i>77</i>&nbsp;            throw new IllegalStateException(&quot;Form does not contain answers.&quot;);</b>
+<i>78</i>&nbsp;        }
+<b class="fc"><i>79</i>&nbsp;        return this.answers.get(nr);</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * Resets the answers of the form.
+<i>84</i>&nbsp;     */
+<i>85</i>&nbsp;    private void resetAnswers() {
+<b class="fc"><i>86</i>&nbsp;        this.answers = null;</b>
+<b class="fc"><i>87</i>&nbsp;    }</b>
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

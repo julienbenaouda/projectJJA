@@ -1,0 +1,674 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UserInterface</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.frontend</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UserInterface (taskman.frontend)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserInterface</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    48,1%
+  </span>
+  <span class="absValue">
+    (13/ 27)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47,4%
+  </span>
+  <span class="absValue">
+    (156/ 329)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.frontend;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import taskman.backend.Controller;
+<i>4</i>&nbsp;import taskman.backend.importexport.ImportExportException;
+<i>5</i>&nbsp;import taskman.backend.time.TimeParser;
+<i>6</i>&nbsp;import taskman.backend.wrappers.*;
+<i>7</i>&nbsp;import taskman.frontend.sections.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.time.LocalDateTime;
+<i>10</i>&nbsp;import java.time.LocalTime;
+<i>11</i>&nbsp;import java.util.HashMap;
+<i>12</i>&nbsp;import java.util.Iterator;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;import java.util.Map;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * This class is responsible for the user interface of the taskman application.
+<i>18</i>&nbsp; * @author Julien Benaouda, Jeroen Van Der Donckt, Alexander Braekevelt
+<i>19</i>&nbsp; */
+<i>20</i>&nbsp;public class UserInterface {
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;	/**
+<i>23</i>&nbsp;	 * Represents the controller of the backend.
+<i>24</i>&nbsp;	 */
+<i>25</i>&nbsp;	private Controller controller;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;	/**
+<i>28</i>&nbsp;	 * Creates a new UserInterface object.
+<i>29</i>&nbsp;	 * @param controller the controller that the UserInterface will use.
+<i>30</i>&nbsp;	 * @throws NullPointerException if the controller is null.
+<i>31</i>&nbsp;	 */
+<b class="fc"><i>32</i>&nbsp;	public UserInterface(Controller controller) throws NullPointerException {</b>
+<b class="fc"><i>33</i>&nbsp;		if (controller == null) throw new NullPointerException(&quot;Controller cannot be null!&quot;);</b>
+<b class="fc"><i>34</i>&nbsp;		this.controller = controller;</b>
+<b class="fc"><i>35</i>&nbsp;	}</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;	/**
+<i>38</i>&nbsp;	 * Starts the user interface.
+<i>39</i>&nbsp;	 */
+<i>40</i>&nbsp;	public void start() {
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;		// Create default user
+<b class="fc"><i>43</i>&nbsp;		controller.createUser(&quot;admin&quot;, &quot;admin&quot;, &quot;project manager&quot;, null);</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;		// Show start menu
+<i>46</i>&nbsp;		try {
+<b class="fc"><i>47</i>&nbsp;			startMenu();</b>
+<b class="nc"><i>48</i>&nbsp;		} catch (Cancel ignored) {}</b>
+<b class="fc"><i>49</i>&nbsp;		TitleSection exit = new TitleSection(&quot;Bye!&quot;);</b>
+<b class="fc"><i>50</i>&nbsp;		exit.show();</b>
+<i>51</i>&nbsp;		// System.exit(0);
+<b class="fc"><i>52</i>&nbsp;	}</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;	/**
+<i>55</i>&nbsp;	 * Shows a start menu.
+<i>56</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>57</i>&nbsp;	 */
+<i>58</i>&nbsp;	private void startMenu() throws Cancel {
+<b class="fc"><i>59</i>&nbsp;		TitleSection title = new TitleSection(&quot;start menu&quot;);</b>
+<b class="fc"><i>60</i>&nbsp;		MenuSection menu = new MenuSection(&quot;quit&quot;);</b>
+<b class="fc"><i>61</i>&nbsp;		menu.addOption(&quot;login&quot;, this::login);</b>
+<b class="fc"><i>62</i>&nbsp;		menu.addOption(&quot;show users&quot;, this::showUsers);</b>
+<b class="fc"><i>63</i>&nbsp;		menu.addOption(&quot;create user&quot;, this::createUser);</b>
+<b class="fc"><i>64</i>&nbsp;		menu.addOption(&quot;remove user&quot;, this::removeUser);</b>
+<b class="fc"><i>65</i>&nbsp;		menu.addOption(&quot;import from file&quot;, this::importFromFile);</b>
+<b class="fc"><i>66</i>&nbsp;		menu.addOption(&quot;export to file&quot;, this::exportToFile);</b>
+<i>67</i>&nbsp;		//noinspection InfiniteLoopStatement
+<i>68</i>&nbsp;		while (true) {
+<b class="fc"><i>69</i>&nbsp;			title.show();</b>
+<b class="fc"><i>70</i>&nbsp;			menu.show();</b>
+<b class="fc"><i>71</i>&nbsp;			menu.executeChoice();</b>
+<i>72</i>&nbsp;		}
+<i>73</i>&nbsp;	}
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;	/**
+<i>76</i>&nbsp;	 * Shows login, menu and logout.
+<i>77</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>78</i>&nbsp;	 */
+<i>79</i>&nbsp;	private void login() throws Cancel {
+<b class="fc"><i>80</i>&nbsp;		TitleSection title = new TitleSection(&quot;login&quot;);</b>
+<b class="fc"><i>81</i>&nbsp;		title.show();</b>
+<b class="fc"><i>82</i>&nbsp;		FormSection form = new FormSection(false, &quot;Username:&quot;, &quot;Password:&quot;);</b>
+<b class="fc"><i>83</i>&nbsp;		form.show();</b>
+<b class="fc"><i>84</i>&nbsp;		controller.login(form.getAnswer(0), form.getAnswer(1));</b>
+<i>85</i>&nbsp;		try {
+<b class="fc"><i>86</i>&nbsp;			loggedInMenu();</b>
+<i>87</i>&nbsp;		} finally {
+<b class="fc"><i>88</i>&nbsp;			Section info = new TextSection(&quot;Logging out...&quot;, false);</b>
+<b class="fc"><i>89</i>&nbsp;			info.show();</b>
+<b class="fc"><i>90</i>&nbsp;			controller.logout();</b>
+<b class="fc"><i>91</i>&nbsp;		}</b>
+<b class="nc"><i>92</i>&nbsp;	}</b>
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;	/**
+<i>95</i>&nbsp;	 * Shows the users in the system.
+<i>96</i>&nbsp;	 */
+<i>97</i>&nbsp;	private void showUsers() {
+<b class="nc"><i>98</i>&nbsp;		TitleSection title = new TitleSection(&quot;overview of users&quot;);</b>
+<b class="nc"><i>99</i>&nbsp;		title.show();</b>
+<b class="nc"><i>100</i>&nbsp;		TextSection info = new TextSection(&quot;&quot;, true);</b>
+<b class="nc"><i>101</i>&nbsp;		for (UserWrapper user: controller.getUsers()) info.addLine(user.getName() + &quot; (&quot; + user.getUserType() + &quot;)&quot;);</b>
+<b class="nc"><i>102</i>&nbsp;		info.show();</b>
+<b class="nc"><i>103</i>&nbsp;	}</b>
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;	/**
+<i>106</i>&nbsp;	 * Shows user creation form.
+<i>107</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>108</i>&nbsp;	 */
+<i>109</i>&nbsp;	private void createUser() throws Cancel {
+<b class="nc"><i>110</i>&nbsp;		TitleSection title = new TitleSection(&quot;create user&quot;);</b>
+<b class="nc"><i>111</i>&nbsp;		title.show();</b>
+<b class="nc"><i>112</i>&nbsp;		FormSection form = new FormSection(false, &quot;Username:&quot;, &quot;Password:&quot;);</b>
+<b class="nc"><i>113</i>&nbsp;		form.show();</b>
+<b class="nc"><i>114</i>&nbsp;		SelectionSection&lt;String&gt; selection = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>115</i>&nbsp;		selection.addOptions(this.controller.getUserTypes());</b>
+<b class="nc"><i>116</i>&nbsp;		selection.show();</b>
+<b class="nc"><i>117</i>&nbsp;		LocalTime startBreak = null;</b>
+<b class="nc"><i>118</i>&nbsp;		if (selection.getAnswer().equals(&quot;developer&quot;)) {</b>
+<b class="nc"><i>119</i>&nbsp;			FormSection breakForm = new FormSection(false, &quot;Start of break time (hh:mm):&quot;);</b>
+<b class="nc"><i>120</i>&nbsp;			breakForm.show();</b>
+<b class="nc"><i>121</i>&nbsp;			startBreak = TimeParser.convertStringToLocalTime(breakForm.getAnswer(0));</b>
+<i>122</i>&nbsp;		}
+<b class="nc"><i>123</i>&nbsp;		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), startBreak);</b>
+<b class="nc"><i>124</i>&nbsp;		Section success = new TextSection(&quot;User created successfully!&quot;, false);</b>
+<b class="nc"><i>125</i>&nbsp;		success.show();</b>
+<b class="nc"><i>126</i>&nbsp;	}</b>
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;	/**
+<i>129</i>&nbsp;	 * Shows the option to remove the user.
+<i>130</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>131</i>&nbsp;	 * @throws IllegalArgumentException if the removal fails.
+<i>132</i>&nbsp;	 * @throws IllegalStateException if the removal fails.
+<i>133</i>&nbsp;	 */
+<i>134</i>&nbsp;	private void removeUser() throws Cancel {
+<b class="nc"><i>135</i>&nbsp;		TitleSection title = new TitleSection(&quot;remove user&quot;);</b>
+<b class="nc"><i>136</i>&nbsp;		title.show();</b>
+<b class="nc"><i>137</i>&nbsp;		SelectionSection&lt;UserWrapper&gt; selection = new SelectionSection&lt;&gt;(false);</b>
+<b class="nc"><i>138</i>&nbsp;		for (UserWrapper user: controller.getUsers()) selection.addOption(user.getName(), user);</b>
+<b class="nc"><i>139</i>&nbsp;		selection.show();</b>
+<b class="nc"><i>140</i>&nbsp;		FormSection form = new FormSection(false, &quot;Password:&quot;);</b>
+<b class="nc"><i>141</i>&nbsp;		form.show();</b>
+<b class="nc"><i>142</i>&nbsp;		controller.removeUser(selection.getAnswerObject(), form.getAnswer(0));</b>
+<b class="nc"><i>143</i>&nbsp;		TextSection success = new TextSection(&quot;User removed successfully!&quot;, false);</b>
+<b class="nc"><i>144</i>&nbsp;		success.show();</b>
+<b class="nc"><i>145</i>&nbsp;	}</b>
+<i>146</i>&nbsp;
+<i>147</i>&nbsp;	/**
+<i>148</i>&nbsp;	 * Shows import form.
+<i>149</i>&nbsp;	 * @throws ImportExportException if import fails.
+<i>150</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>151</i>&nbsp;	 */
+<i>152</i>&nbsp;	private void importFromFile() throws ImportExportException, Cancel {
+<b class="nc"><i>153</i>&nbsp;		TitleSection title = new TitleSection(&quot;import from file&quot;);</b>
+<b class="nc"><i>154</i>&nbsp;		title.show();</b>
+<b class="nc"><i>155</i>&nbsp;		FormSection form = new FormSection(false, &quot;Path to file:&quot;);</b>
+<b class="nc"><i>156</i>&nbsp;		form.show();</b>
+<b class="nc"><i>157</i>&nbsp;		this.controller.importSystem(form.getAnswer(0));</b>
+<b class="nc"><i>158</i>&nbsp;		Section success = new TextSection(&quot;Imported successfully!&quot;, false);</b>
+<b class="nc"><i>159</i>&nbsp;		success.show();</b>
+<b class="nc"><i>160</i>&nbsp;	}</b>
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;	/**
+<i>163</i>&nbsp;	 * Shows export form.
+<i>164</i>&nbsp;	 * @throws ImportExportException if export fails.
+<i>165</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>166</i>&nbsp;	 */
+<i>167</i>&nbsp;	private void exportToFile() throws ImportExportException, Cancel {
+<b class="nc"><i>168</i>&nbsp;		TitleSection title = new TitleSection(&quot;export to file&quot;);</b>
+<b class="nc"><i>169</i>&nbsp;		title.show();</b>
+<b class="nc"><i>170</i>&nbsp;		FormSection form = new FormSection(false, &quot;Path to file:&quot;);</b>
+<b class="nc"><i>171</i>&nbsp;		form.show();</b>
+<b class="nc"><i>172</i>&nbsp;		controller.exportSystem(form.getAnswer(0));</b>
+<b class="nc"><i>173</i>&nbsp;		Section success = new TextSection(&quot;Exported successfully!&quot;, false);</b>
+<b class="nc"><i>174</i>&nbsp;		success.show();</b>
+<b class="nc"><i>175</i>&nbsp;	}</b>
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;	/**
+<i>178</i>&nbsp;	 * Shows logged in menu.
+<i>179</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>180</i>&nbsp;	 */
+<i>181</i>&nbsp;	private void loggedInMenu() throws Cancel {
+<b class="fc"><i>182</i>&nbsp;		TitleSection title = new TitleSection(&quot;Welcome &quot; + controller.getCurrentUser().getName() + &quot;!&quot;);</b>
+<b class="fc"><i>183</i>&nbsp;		MenuSection menu = new MenuSection(&quot;logout&quot;);</b>
+<b class="fc"><i>184</i>&nbsp;		menu.addOption(&quot;show projects and tasks&quot;, this::showProjectsAndTasks);</b>
+<b class="fc"><i>185</i>&nbsp;		menu.addOption(&quot;create project&quot;, this::createProject);</b>
+<b class="fc"><i>186</i>&nbsp;		menu.addOption(&quot;create task&quot;, this::createTask);</b>
+<b class="fc"><i>187</i>&nbsp;		menu.addOption(&quot;plan task&quot;, this::planTask);</b>
+<b class="fc"><i>188</i>&nbsp;		menu.addOption(&quot;update task status&quot;, this::updateTaskStatus);</b>
+<b class="fc"><i>189</i>&nbsp;		menu.addOption(&quot;add alternative to task&quot;, this::addAlternativeToTask);</b>
+<b class="fc"><i>190</i>&nbsp;		menu.addOption(&quot;add dependency to task&quot;, this::addDependencyToTask);</b>
+<b class="fc"><i>191</i>&nbsp;		menu.addOption(&quot;create resource type&quot;, this::createResourceType);</b>
+<b class="fc"><i>192</i>&nbsp;		menu.addOption(&quot;create resource type constraint&quot;, this::createConstraint);</b>
+<b class="fc"><i>193</i>&nbsp;		menu.addOption(&quot;create resource&quot;, this::createResource);</b>
+<b class="fc"><i>194</i>&nbsp;		menu.addOption(&quot;show system time&quot;, this::showTime);</b>
+<b class="fc"><i>195</i>&nbsp;		menu.addOption(&quot;advance system time&quot;, this::advanceTime);</b>
+<b class="fc"><i>196</i>&nbsp;		menu.addOption(&quot;start simulation&quot;, this::simulationMenu);</b>
+<i>197</i>&nbsp;		//noinspection InfiniteLoopStatement
+<i>198</i>&nbsp;		while (true) {
+<b class="fc"><i>199</i>&nbsp;			title.show();</b>
+<b class="fc"><i>200</i>&nbsp;			menu.show();</b>
+<b class="fc"><i>201</i>&nbsp;			menu.executeChoice();</b>
+<i>202</i>&nbsp;		}
+<i>203</i>&nbsp;	}
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;	/**
+<i>206</i>&nbsp;	 * Shows the list of projects.
+<i>207</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>208</i>&nbsp;	 */
+<i>209</i>&nbsp;	private void showProjectsAndTasks() throws Cancel {
+<b class="fc"><i>210</i>&nbsp;		ProjectWrapper project = selectProject(true, &quot;overview of projects&quot;);</b>
+<i>211</i>&nbsp;
+<b class="fc"><i>212</i>&nbsp;		TitleSection titleProjectInfo = new TitleSection(&quot;details of &quot; + project.getName());</b>
+<b class="fc"><i>213</i>&nbsp;		titleProjectInfo.show();</b>
+<b class="fc"><i>214</i>&nbsp;		TextSection projectInfo = new TextSection(&quot;&quot;, true);</b>
+<b class="fc"><i>215</i>&nbsp;		projectInfo.addLine(&quot;Name: &quot; + project.getName());</b>
+<b class="fc"><i>216</i>&nbsp;		projectInfo.addLine(&quot;Description: &quot; + project.getDescription());</b>
+<b class="fc"><i>217</i>&nbsp;		projectInfo.addLine(&quot;Creation time: &quot; + TimeParser.convertLocalDateTimeToString(project.getCreationTime()));</b>
+<b class="fc"><i>218</i>&nbsp;		projectInfo.addLine(&quot;Due time: &quot; + TimeParser.convertLocalDateTimeToString(project.getDueTime()));</b>
+<b class="fc"><i>219</i>&nbsp;		projectInfo.show();</b>
+<i>220</i>&nbsp;
+<b class="fc"><i>221</i>&nbsp;		TaskWrapper task = selectTask(true, &quot;overview of tasks in &quot; + project.getName(), project);</b>
+<i>222</i>&nbsp;
+<b class="fc"><i>223</i>&nbsp;		TitleSection titleTaskInfo = new TitleSection(&quot;details of &quot; + task.getName());</b>
+<b class="fc"><i>224</i>&nbsp;		titleTaskInfo.show();</b>
+<b class="fc"><i>225</i>&nbsp;		TextSection taskInfo = new TextSection(&quot;&quot;, true);</b>
+<b class="fc"><i>226</i>&nbsp;		taskInfo.addLine(&quot;Name: &quot; + task.getName());</b>
+<b class="fc"><i>227</i>&nbsp;		taskInfo.addLine(&quot;Description: &quot; + task.getDescription());</b>
+<b class="fc"><i>228</i>&nbsp;		taskInfo.addLine(&quot;Status: &quot; + task.getStatus());</b>
+<b class="fc"><i>229</i>&nbsp;		taskInfo.addLine(&quot;Acceptable deviation: &quot; + task.getAcceptableDeviation());</b>
+<b class="fc"><i>230</i>&nbsp;		taskInfo.addLine(&quot;Estimated duration: &quot; + task.getEstimatedDuration() + &quot; minutes&quot;);</b>
+<b class="fc"><i>231</i>&nbsp;		taskInfo.show();</b>
+<b class="fc"><i>232</i>&nbsp;	}</b>
+<i>233</i>&nbsp;
+<i>234</i>&nbsp;	/**
+<i>235</i>&nbsp;	 * Shows project creation form.
+<i>236</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>237</i>&nbsp;	 */
+<i>238</i>&nbsp;	private void createProject() throws Cancel {
+<b class="fc"><i>239</i>&nbsp;		TitleSection title = new TitleSection(&quot;create project&quot;);</b>
+<b class="fc"><i>240</i>&nbsp;		title.show();</b>
+<b class="fc"><i>241</i>&nbsp;		FormSection form = new FormSection(true, &quot;Name:&quot;, &quot;Description:&quot;, &quot;Due time (dd/mm/yyyy hh:mm):&quot;);</b>
+<b class="fc"><i>242</i>&nbsp;		form.show();</b>
+<b class="fc"><i>243</i>&nbsp;		controller.createProject(form.getAnswer(0), form.getAnswer(1), TimeParser.convertStringToLocalDateTime(form.getAnswer(2)));</b>
+<b class="fc"><i>244</i>&nbsp;		Section success = new TextSection(&quot;Project created successfully!&quot;, false);</b>
+<b class="fc"><i>245</i>&nbsp;		success.show();</b>
+<b class="fc"><i>246</i>&nbsp;	}</b>
+<i>247</i>&nbsp;
+<i>248</i>&nbsp;	/**
+<i>249</i>&nbsp;	 * Shows task creation form.
+<i>250</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>251</i>&nbsp;	 */
+<i>252</i>&nbsp;	private void createTask() throws Cancel {
+<b class="fc"><i>253</i>&nbsp;		ProjectWrapper project = selectProject(true, &quot;select project for task&quot;);</b>
+<b class="fc"><i>254</i>&nbsp;		TitleSection title = new TitleSection(&quot;create task&quot;);</b>
+<b class="fc"><i>255</i>&nbsp;		FormSection form = new FormSection(true,</b>
+<i>256</i>&nbsp;				&quot;Name:&quot;,
+<i>257</i>&nbsp;				&quot;Description:&quot;,
+<i>258</i>&nbsp;				&quot;Estimated duration (in minutes):&quot;,
+<i>259</i>&nbsp;				&quot;Acceptable deviation (as floating point number):&quot;
+<i>260</i>&nbsp;		);
+<b class="fc"><i>261</i>&nbsp;		title.show();</b>
+<b class="fc"><i>262</i>&nbsp;		form.show();</b>
+<i>263</i>&nbsp;
+<b class="fc"><i>264</i>&nbsp;		Map&lt;ResourceTypeWrapper, Integer&gt; requirements = new HashMap&lt;&gt;();</b>
+<i>265</i>&nbsp;		while (true) {
+<b class="fc"><i>266</i>&nbsp;			TitleSection requirementsTitle = new TitleSection(&quot;continue or add requirements to task&quot;);</b>
+<b class="fc"><i>267</i>&nbsp;			requirementsTitle.show();</b>
+<b class="fc"><i>268</i>&nbsp;			SelectionSection&lt;ResourceTypeWrapper&gt; requirementSelection = new SelectionSection&lt;&gt;(true);</b>
+<b class="fc"><i>269</i>&nbsp;			requirementSelection.addOption(&quot;continue&quot;, null);</b>
+<b class="fc"><i>270</i>&nbsp;			for (ResourceTypeWrapper resourceType : controller.getResourceTypes()) {</b>
+<b class="fc"><i>271</i>&nbsp;				requirementSelection.addOption(resourceType.getName(), resourceType);</b>
+<b class="fc"><i>272</i>&nbsp;			}</b>
+<b class="fc"><i>273</i>&nbsp;			requirementSelection.show();</b>
+<b class="fc"><i>274</i>&nbsp;			if (requirementSelection.getAnswerObject() == null) {</b>
+<b class="fc"><i>275</i>&nbsp;				break;</b>
+<i>276</i>&nbsp;			} else {
+<b class="nc"><i>277</i>&nbsp;				FormSection numberForm = new FormSection(false, &quot;Number required:&quot;);</b>
+<b class="nc"><i>278</i>&nbsp;				numberForm.show();</b>
+<b class="nc"><i>279</i>&nbsp;				requirements.put(requirementSelection.getAnswerObject(), Integer.parseInt(numberForm.getAnswer(0)));</b>
+<i>280</i>&nbsp;			}
+<b class="nc"><i>281</i>&nbsp;		}</b>
+<i>282</i>&nbsp;
+<b class="fc"><i>283</i>&nbsp;		controller.createTask(</b>
+<i>284</i>&nbsp;				project,
+<b class="fc"><i>285</i>&nbsp;				form.getAnswer(0),</b>
+<b class="fc"><i>286</i>&nbsp;				form.getAnswer(1),</b>
+<b class="fc"><i>287</i>&nbsp;				Long.parseLong(form.getAnswer(2)),</b>
+<b class="fc"><i>288</i>&nbsp;				Double.parseDouble(form.getAnswer(3)),</b>
+<i>289</i>&nbsp;				requirements
+<i>290</i>&nbsp;		);
+<b class="fc"><i>291</i>&nbsp;		Section success = new TextSection(&quot;Task created successfully!&quot;, false);</b>
+<b class="fc"><i>292</i>&nbsp;		success.show();</b>
+<i>293</i>&nbsp;
+<b class="fc"><i>294</i>&nbsp;	}</b>
+<i>295</i>&nbsp;
+<i>296</i>&nbsp;	/**
+<i>297</i>&nbsp;	 * Shows plan task form.
+<i>298</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>299</i>&nbsp;	 */
+<i>300</i>&nbsp;	private void planTask() throws Cancel {
+<b class="nc"><i>301</i>&nbsp;		TitleSection taskTitle = new TitleSection(&quot;select task to plan&quot;);</b>
+<b class="nc"><i>302</i>&nbsp;		taskTitle.show();</b>
+<b class="nc"><i>303</i>&nbsp;		SelectionSection&lt;TaskWrapper&gt; selection1 = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>304</i>&nbsp;		for (ProjectWrapper project: controller.getProjects()) {</b>
+<b class="nc"><i>305</i>&nbsp;			for (TaskWrapper task: controller.getTasks(project)) {</b>
+<b class="nc"><i>306</i>&nbsp;				if (task.canBePlanned()) {</b>
+<b class="nc"><i>307</i>&nbsp;					selection1.addOption(project.getName() + &quot; - &quot; + task.getName(), task);</b>
+<i>308</i>&nbsp;				}
+<b class="nc"><i>309</i>&nbsp;			}</b>
+<b class="nc"><i>310</i>&nbsp;		}</b>
+<b class="nc"><i>311</i>&nbsp;		selection1.show();</b>
+<b class="nc"><i>312</i>&nbsp;		TaskWrapper task = selection1.getAnswerObject();</b>
+<i>313</i>&nbsp;
+<b class="nc"><i>314</i>&nbsp;		TitleSection timeTitle = new TitleSection(&quot;select start time&quot;);</b>
+<b class="nc"><i>315</i>&nbsp;		timeTitle.show();</b>
+<b class="nc"><i>316</i>&nbsp;		SelectionSection&lt;LocalDateTime&gt; timeSelection = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>317</i>&nbsp;		Iterator&lt;LocalDateTime&gt; times = controller.getStartingsTimes(task);</b>
+<b class="nc"><i>318</i>&nbsp;		for (int i = 1; i &lt;= 3 &amp;&amp; times.hasNext(); i++) {</b>
+<b class="nc"><i>319</i>&nbsp;			LocalDateTime nextTime = times.next();</b>
+<b class="nc"><i>320</i>&nbsp;			timeSelection.addOption(TimeParser.convertLocalDateTimeToString(nextTime), nextTime);</b>
+<i>321</i>&nbsp;		}
+<b class="nc"><i>322</i>&nbsp;		timeSelection.show();</b>
+<b class="nc"><i>323</i>&nbsp;		LocalDateTime startTime = timeSelection.getAnswerObject();</b>
+<i>324</i>&nbsp;
+<b class="nc"><i>325</i>&nbsp;		controller.initializePlan(task, startTime);</b>
+<i>326</i>&nbsp;		try {
+<b class="nc"><i>327</i>&nbsp;			List&lt;ResourceWrapper&gt; suggestion = controller.getPlannedResources(task);</b>
+<i>328</i>&nbsp;			while (true) {
+<b class="nc"><i>329</i>&nbsp;				TitleSection resourceTitle = new TitleSection(&quot;continue or select resource to change &quot; + task.getName());</b>
+<b class="nc"><i>330</i>&nbsp;				resourceTitle.show();</b>
+<b class="nc"><i>331</i>&nbsp;				SelectionSection&lt;ResourceWrapper&gt; resourceSelection = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>332</i>&nbsp;				resourceSelection.addOption(&quot;continue&quot;, null);</b>
+<b class="nc"><i>333</i>&nbsp;				for (ResourceWrapper resourceWrapper : suggestion) {</b>
+<b class="nc"><i>334</i>&nbsp;					resourceSelection.addOption(resourceWrapper.getName() + &quot; (&quot; + resourceWrapper.getType().getName() + &quot;)&quot;, resourceWrapper);</b>
+<b class="nc"><i>335</i>&nbsp;				}</b>
+<b class="nc"><i>336</i>&nbsp;				resourceSelection.show();</b>
+<b class="nc"><i>337</i>&nbsp;				ResourceWrapper resourceToChange = resourceSelection.getAnswerObject();</b>
+<i>338</i>&nbsp;
+<b class="nc"><i>339</i>&nbsp;				if (resourceToChange == null) {</b>
+<b class="nc"><i>340</i>&nbsp;					TextSection success = new TextSection(&quot;Task planned successfully!&quot;, false);</b>
+<b class="nc"><i>341</i>&nbsp;					success.show();</b>
+<b class="nc"><i>342</i>&nbsp;					return;</b>
+<i>343</i>&nbsp;				} else {
+<b class="nc"><i>344</i>&nbsp;					TitleSection alternativeResourceTitle = new TitleSection(&quot;select alternative resource&quot; + task.getName());</b>
+<b class="nc"><i>345</i>&nbsp;					alternativeResourceTitle.show();</b>
+<b class="nc"><i>346</i>&nbsp;					SelectionSection&lt;ResourceWrapper&gt; alternativeSelection = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>347</i>&nbsp;					for (ResourceWrapper alternative : controller.getAlternativeResources(task, resourceToChange)) {</b>
+<b class="nc"><i>348</i>&nbsp;						alternativeSelection.addOption(alternative.getName() + &quot; (&quot; + alternative.getType().getName() + &quot;)&quot;, alternative);</b>
+<b class="nc"><i>349</i>&nbsp;					}</b>
+<b class="nc"><i>350</i>&nbsp;					alternativeSelection.show();</b>
+<b class="nc"><i>351</i>&nbsp;					ResourceWrapper alternative = alternativeSelection.getAnswerObject();</b>
+<b class="nc"><i>352</i>&nbsp;					controller.changeResource(task, resourceToChange, alternative);</b>
+<b class="nc"><i>353</i>&nbsp;					suggestion = controller.getPlannedResources(task);</b>
+<i>354</i>&nbsp;				}
+<b class="nc"><i>355</i>&nbsp;			}</b>
+<b class="nc"><i>356</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>357</i>&nbsp;			controller.cancelPlan(task);</b>
+<b class="nc"><i>358</i>&nbsp;			throw e;</b>
+<i>359</i>&nbsp;		}
+<i>360</i>&nbsp;	}
+<i>361</i>&nbsp;
+<i>362</i>&nbsp;	/**
+<i>363</i>&nbsp;	 * Shows task update form.
+<i>364</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>365</i>&nbsp;	 */
+<i>366</i>&nbsp;	private void updateTaskStatus() throws Cancel {
+<b class="fc"><i>367</i>&nbsp;		TitleSection titleSelection1 = new TitleSection(&quot;select an available task&quot;);</b>
+<b class="fc"><i>368</i>&nbsp;		titleSelection1.show();</b>
+<b class="fc"><i>369</i>&nbsp;		SelectionSection&lt;TaskWrapper&gt; selection1 = new SelectionSection&lt;&gt;(true);</b>
+<b class="fc"><i>370</i>&nbsp;		for (ProjectWrapper project: controller.getProjects()) {</b>
+<b class="fc"><i>371</i>&nbsp;			for (TaskWrapper task: controller.getTasks(project)) {</b>
+<b class="fc"><i>372</i>&nbsp;				if (task.canBeUpdated()) {</b>
+<b class="fc"><i>373</i>&nbsp;					selection1.addOption(project.getName() + &quot; - &quot; + task.getName(), task);</b>
+<i>374</i>&nbsp;				}
+<b class="fc"><i>375</i>&nbsp;			}</b>
+<b class="fc"><i>376</i>&nbsp;		}</b>
+<b class="fc"><i>377</i>&nbsp;		selection1.show();</b>
+<b class="fc"><i>378</i>&nbsp;		TaskWrapper task = selection1.getAnswerObject();</b>
+<i>379</i>&nbsp;
+<b class="fc"><i>380</i>&nbsp;		TitleSection titleSelection2 = new TitleSection(&quot;select a task status&quot;);</b>
+<b class="fc"><i>381</i>&nbsp;		titleSelection2.show();</b>
+<b class="fc"><i>382</i>&nbsp;		SelectionSection&lt;String&gt; selection2 = new SelectionSection&lt;&gt;(true);</b>
+<b class="fc"><i>383</i>&nbsp;		selection2.addOption(&quot;executing&quot;);</b>
+<b class="fc"><i>384</i>&nbsp;		selection2.addOption(&quot;finished&quot;);</b>
+<b class="fc"><i>385</i>&nbsp;		selection2.addOption(&quot;failed&quot;);</b>
+<b class="fc"><i>386</i>&nbsp;		selection2.show();</b>
+<i>387</i>&nbsp;
+<b class="fc"><i>388</i>&nbsp;		TitleSection titleForm = new TitleSection(&quot;status details&quot;);</b>
+<b class="fc"><i>389</i>&nbsp;		titleForm.show();</b>
+<b class="fc"><i>390</i>&nbsp;		FormSection form = new FormSection(true,</b>
+<i>391</i>&nbsp;				&quot;Start time (dd/mm/yyyy hh:mm):&quot;,
+<i>392</i>&nbsp;				&quot;End time (dd/mm/yyyy hh:mm):&quot;
+<i>393</i>&nbsp;		);
+<b class="fc"><i>394</i>&nbsp;		form.show();</b>
+<b class="fc"><i>395</i>&nbsp;		if (selection2.getAnswer().equals(&quot;executing&quot;)) {</b>
+<b class="fc"><i>396</i>&nbsp;			controller.makeExecuting(task);</b>
+<i>397</i>&nbsp;		} else {
+<b class="nc"><i>398</i>&nbsp;			controller.endTaskExecution(</b>
+<i>399</i>&nbsp;					task,
+<b class="nc"><i>400</i>&nbsp;					TimeParser.convertStringToLocalDateTime(form.getAnswer(0)),</b>
+<b class="nc"><i>401</i>&nbsp;					TimeParser.convertStringToLocalDateTime(form.getAnswer(1)),</b>
+<b class="nc"><i>402</i>&nbsp;					selection2.getAnswer()</b>
+<i>403</i>&nbsp;			);
+<i>404</i>&nbsp;		}
+<b class="fc"><i>405</i>&nbsp;	}</b>
+<i>406</i>&nbsp;
+<i>407</i>&nbsp;	/**
+<i>408</i>&nbsp;	 * Shows task update form.
+<i>409</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>410</i>&nbsp;	 */
+<i>411</i>&nbsp;	private void addAlternativeToTask() throws Cancel {
+<b class="nc"><i>412</i>&nbsp;		ProjectWrapper project = selectProject(true, &quot;select project of task&quot;);</b>
+<b class="nc"><i>413</i>&nbsp;		TaskWrapper task = selectTask(true, &quot;select task&quot;, project);</b>
+<b class="nc"><i>414</i>&nbsp;		TaskWrapper alternative = selectTask(true, &quot;select alternative task&quot;, project);</b>
+<b class="nc"><i>415</i>&nbsp;		controller.addAlternativeToTask(task, alternative);</b>
+<b class="nc"><i>416</i>&nbsp;		Section success = new TextSection(&quot;Alternative added successfully!&quot;, false);</b>
+<b class="nc"><i>417</i>&nbsp;		success.show();</b>
+<b class="nc"><i>418</i>&nbsp;	}</b>
+<i>419</i>&nbsp;
+<i>420</i>&nbsp;	/**
+<i>421</i>&nbsp;	 * Shows add task dependency form.
+<i>422</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>423</i>&nbsp;	 */
+<i>424</i>&nbsp;	private void addDependencyToTask() throws Cancel {
+<b class="nc"><i>425</i>&nbsp;		ProjectWrapper project = selectProject(true, &quot;select project of task&quot;);</b>
+<b class="nc"><i>426</i>&nbsp;		TaskWrapper task = selectTask(true, &quot;select task&quot;, project);</b>
+<b class="nc"><i>427</i>&nbsp;		TaskWrapper dependency = selectTask(true, &quot;select dependent task&quot;, project);</b>
+<b class="nc"><i>428</i>&nbsp;		controller.addDependencyToTask(task, dependency);</b>
+<b class="nc"><i>429</i>&nbsp;		Section success = new TextSection(&quot;Dependency added successfully!&quot;, false);</b>
+<b class="nc"><i>430</i>&nbsp;		success.show();</b>
+<b class="nc"><i>431</i>&nbsp;	}</b>
+<i>432</i>&nbsp;
+<i>433</i>&nbsp;	/**
+<i>434</i>&nbsp;	 * Shows the resource type creation form.
+<i>435</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>436</i>&nbsp;	 */
+<i>437</i>&nbsp;	private void createResourceType() throws Cancel {
+<b class="nc"><i>438</i>&nbsp;		TitleSection title = new TitleSection(&quot;create resource type&quot;);</b>
+<b class="nc"><i>439</i>&nbsp;		title.show();</b>
+<b class="nc"><i>440</i>&nbsp;		FormSection form = new FormSection(false, &quot;Name:&quot;);</b>
+<b class="nc"><i>441</i>&nbsp;		form.show();</b>
+<b class="nc"><i>442</i>&nbsp;		controller.createResourceType(form.getAnswer(0));</b>
+<b class="nc"><i>443</i>&nbsp;		Section success = new TextSection(&quot;Resource type created successfully!&quot;, false);</b>
+<b class="nc"><i>444</i>&nbsp;		success.show();</b>
+<b class="nc"><i>445</i>&nbsp;	}</b>
+<i>446</i>&nbsp;
+<i>447</i>&nbsp;	/**
+<i>448</i>&nbsp;	 * Shows the constraint creation form.
+<i>449</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>450</i>&nbsp;	 */
+<i>451</i>&nbsp;	private void createConstraint() throws Cancel {
+<b class="nc"><i>452</i>&nbsp;		TitleSection title = new TitleSection(&quot;create constraint&quot;);</b>
+<b class="nc"><i>453</i>&nbsp;		title.show();</b>
+<b class="nc"><i>454</i>&nbsp;		FormSection form = new FormSection(false, &quot;Constraint:&quot;);</b>
+<b class="nc"><i>455</i>&nbsp;		form.show();</b>
+<b class="nc"><i>456</i>&nbsp;		controller.createConstraint(form.getAnswer(0));</b>
+<b class="nc"><i>457</i>&nbsp;		Section success = new TextSection(&quot;Constraint created successfully!&quot;, false);</b>
+<b class="nc"><i>458</i>&nbsp;		success.show();</b>
+<b class="nc"><i>459</i>&nbsp;	}</b>
+<i>460</i>&nbsp;
+<i>461</i>&nbsp;	/**
+<i>462</i>&nbsp;	 * Shows the resource creation form.
+<i>463</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>464</i>&nbsp;	 */
+<i>465</i>&nbsp;	private void createResource() throws Cancel {
+<b class="nc"><i>466</i>&nbsp;		TitleSection title1 = new TitleSection(&quot;select resource type&quot;);</b>
+<b class="nc"><i>467</i>&nbsp;		title1.show();</b>
+<b class="nc"><i>468</i>&nbsp;		SelectionSection&lt;ResourceTypeWrapper&gt; selection = new SelectionSection&lt;&gt;(true);</b>
+<b class="nc"><i>469</i>&nbsp;		for (ResourceTypeWrapper type: this.controller.getResourceTypes()) {</b>
+<b class="nc"><i>470</i>&nbsp;			selection.addOption(type.getName(), type);</b>
+<b class="nc"><i>471</i>&nbsp;		}</b>
+<b class="nc"><i>472</i>&nbsp;		selection.show();</b>
+<b class="nc"><i>473</i>&nbsp;		ResourceTypeWrapper type = selection.getAnswerObject();</b>
+<i>474</i>&nbsp;
+<b class="nc"><i>475</i>&nbsp;		TitleSection title2 = new TitleSection(&quot;create resource&quot;);</b>
+<b class="nc"><i>476</i>&nbsp;		title2.show();</b>
+<b class="nc"><i>477</i>&nbsp;		FormSection form = new FormSection(false, &quot;Name:&quot;);</b>
+<b class="nc"><i>478</i>&nbsp;		form.show();</b>
+<i>479</i>&nbsp;
+<b class="nc"><i>480</i>&nbsp;		controller.createResource(type, form.getAnswer(0));</b>
+<b class="nc"><i>481</i>&nbsp;		Section success = new TextSection(&quot;Resource created successfully!&quot;, false);</b>
+<b class="nc"><i>482</i>&nbsp;		success.show();</b>
+<b class="nc"><i>483</i>&nbsp;	}</b>
+<i>484</i>&nbsp;
+<i>485</i>&nbsp;	/**
+<i>486</i>&nbsp;	 * Shows time.
+<i>487</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>488</i>&nbsp;	 */
+<i>489</i>&nbsp;	private void showTime() throws Cancel {
+<b class="nc"><i>490</i>&nbsp;		TitleSection titleInfo = new TitleSection(&quot;system time&quot;);</b>
+<b class="nc"><i>491</i>&nbsp;		titleInfo.show();</b>
+<b class="nc"><i>492</i>&nbsp;		Section info = new TextSection(</b>
+<b class="nc"><i>493</i>&nbsp;				&quot;The system time is: &quot; + TimeParser.convertLocalDateTimeToString(controller.getTime()</b>
+<i>494</i>&nbsp;				), true);
+<b class="nc"><i>495</i>&nbsp;		info.show();</b>
+<b class="nc"><i>496</i>&nbsp;	}</b>
+<i>497</i>&nbsp;
+<i>498</i>&nbsp;	/**
+<i>499</i>&nbsp;	 * Shows advance the time form.
+<i>500</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>501</i>&nbsp;	 */
+<i>502</i>&nbsp;	private void advanceTime() throws Cancel {
+<b class="nc"><i>503</i>&nbsp;		TitleSection titleForm = new TitleSection(&quot;advance system time&quot;);</b>
+<b class="nc"><i>504</i>&nbsp;		titleForm.show();</b>
+<b class="nc"><i>505</i>&nbsp;		FormSection form = new FormSection(false, &quot;New time (dd/mm/uuuu hh:mm):&quot;);</b>
+<b class="nc"><i>506</i>&nbsp;		form.show();</b>
+<b class="nc"><i>507</i>&nbsp;		if (!form.hasAnswers()) return; // Cancelled</b>
+<b class="nc"><i>508</i>&nbsp;		controller.updateTime(TimeParser.convertStringToLocalDateTime(form.getAnswer(0)));</b>
+<b class="nc"><i>509</i>&nbsp;		Section success = new TextSection(&quot;System time updated successfully!&quot;, false);</b>
+<b class="nc"><i>510</i>&nbsp;		success.show();</b>
+<b class="nc"><i>511</i>&nbsp;	}</b>
+<i>512</i>&nbsp;
+<i>513</i>&nbsp;	/**
+<i>514</i>&nbsp;	 * Shows project selection form.
+<i>515</i>&nbsp;	 * @return a projectWrapper.
+<i>516</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>517</i>&nbsp;	 */
+<i>518</i>&nbsp;	private ProjectWrapper selectProject(boolean withCancel, String title) throws Cancel {
+<b class="fc"><i>519</i>&nbsp;		TitleSection titleProjectSelection = new TitleSection(title);</b>
+<b class="fc"><i>520</i>&nbsp;		titleProjectSelection.show();</b>
+<b class="fc"><i>521</i>&nbsp;		SelectionSection&lt;ProjectWrapper&gt; projectSelection = new SelectionSection&lt;&gt;(withCancel);</b>
+<b class="fc"><i>522</i>&nbsp;		for (ProjectWrapper project : controller.getProjects()) {</b>
+<b class="fc"><i>523</i>&nbsp;			projectSelection.addOption(</b>
+<b class="fc"><i>524</i>&nbsp;					project.getName() + &quot; (status: &quot; + controller.getProjectStatus(project) + &quot;)&quot;, project);</b>
+<b class="fc"><i>525</i>&nbsp;		}</b>
+<b class="fc"><i>526</i>&nbsp;		projectSelection.show();</b>
+<b class="fc"><i>527</i>&nbsp;		return projectSelection.getAnswerObject();</b>
+<i>528</i>&nbsp;	}
+<i>529</i>&nbsp;
+<i>530</i>&nbsp;	/**
+<i>531</i>&nbsp;	 * Shows task selection form for a given project.
+<i>532</i>&nbsp;	 * @param project a ProjectWrapper.
+<i>533</i>&nbsp;	 * @return a TaskWrapper.
+<i>534</i>&nbsp;	 * @throws Cancel when the user cancels the section.
+<i>535</i>&nbsp;	 */
+<i>536</i>&nbsp;	private TaskWrapper selectTask(boolean withCancel, String title, ProjectWrapper project) throws Cancel {
+<b class="fc"><i>537</i>&nbsp;		TitleSection titleTaskSelection = new TitleSection(title);</b>
+<b class="fc"><i>538</i>&nbsp;		titleTaskSelection.show();</b>
+<b class="fc"><i>539</i>&nbsp;		SelectionSection&lt;TaskWrapper&gt; taskSelection = new SelectionSection&lt;&gt;(withCancel);</b>
+<b class="fc"><i>540</i>&nbsp;		for (TaskWrapper task: controller.getTasks(project)) taskSelection.addOption(task.getName(), task);</b>
+<b class="fc"><i>541</i>&nbsp;		taskSelection.show();</b>
+<b class="fc"><i>542</i>&nbsp;		return taskSelection.getAnswerObject();</b>
+<i>543</i>&nbsp;	}
+<i>544</i>&nbsp;	
+<i>545</i>&nbsp;	/**
+<i>546</i>&nbsp;	 * show the simulation menu
+<i>547</i>&nbsp;	 * @throws Cancel when the simulation is cancelled
+<i>548</i>&nbsp;	 * @throws ImportExportException 
+<i>549</i>&nbsp;	 * @throws IllegalStateException 
+<i>550</i>&nbsp;	 */
+<i>551</i>&nbsp;	private void simulationMenu() throws Cancel, IllegalStateException, ImportExportException {
+<b class="fc"><i>552</i>&nbsp;		controller.startSimulation();</b>
+<b class="fc"><i>553</i>&nbsp;		TitleSection title = new TitleSection(&quot;Simulation&quot;);</b>
+<b class="fc"><i>554</i>&nbsp;		MenuSection menu = new MenuSection(&quot;cancel simulation&quot;);</b>
+<b class="fc"><i>555</i>&nbsp;		menu.addOption(&quot;show projects and tasks&quot;, this::showProjectsAndTasks);</b>
+<b class="fc"><i>556</i>&nbsp;		menu.addOption(&quot;create task&quot;, this::createTask);</b>
+<b class="fc"><i>557</i>&nbsp;		menu.addOption(&quot;plan task&quot;, this::planTask);</b>
+<b class="fc"><i>558</i>&nbsp;		menu.addOption(&quot;execute simulation&quot;, this::executeSimulation);</b>
+<i>559</i>&nbsp;		//noinspection InfiniteLoopStatement
+<i>560</i>&nbsp;		while (true) {
+<b class="fc"><i>561</i>&nbsp;			title.show();</b>
+<i>562</i>&nbsp;			try {
+<b class="fc"><i>563</i>&nbsp;				menu.show();</b>
+<b class="fc"><i>564</i>&nbsp;			} catch(Cancel c) {</b>
+<b class="fc"><i>565</i>&nbsp;				cancelSimulation();</b>
+<b class="fc"><i>566</i>&nbsp;				throw c;</b>
+<b class="fc"><i>567</i>&nbsp;			}</b>
+<b class="fc"><i>568</i>&nbsp;			menu.executeChoice();</b>
+<i>569</i>&nbsp;		}
+<i>570</i>&nbsp;	}
+<i>571</i>&nbsp;	
+<i>572</i>&nbsp;	/**
+<i>573</i>&nbsp;	 * cancels the simulation
+<i>574</i>&nbsp;	 * @throws ImportExportException 
+<i>575</i>&nbsp;	 * @throws IllegalStateException 
+<i>576</i>&nbsp;	 */
+<i>577</i>&nbsp;	private void cancelSimulation() throws IllegalStateException, ImportExportException {
+<b class="fc"><i>578</i>&nbsp;		controller.cancelSimulation();</b>
+<b class="fc"><i>579</i>&nbsp;	}</b>
+<i>580</i>&nbsp;
+<i>581</i>&nbsp;	/**
+<i>582</i>&nbsp;	 * executes the simulation
+<i>583</i>&nbsp;	 * @throws Cancel when the action is cancelled 
+<i>584</i>&nbsp;	 */
+<i>585</i>&nbsp;	private void executeSimulation() throws Cancel {
+<b class="nc"><i>586</i>&nbsp;		controller.executeSimulation();</b>
+<b class="nc"><i>587</i>&nbsp;		Section success = new TextSection(&quot;Simulated actions are executed in system!&quot;, false);</b>
+<b class="nc"><i>588</i>&nbsp;		success.show();</b>
+<b class="nc"><i>589</i>&nbsp;	}</b>
+<i>590</i>&nbsp;
+<i>591</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

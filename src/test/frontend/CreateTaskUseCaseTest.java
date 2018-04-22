@@ -1,17 +1,7 @@
 package test.frontend;
 
-import static org.junit.Assert.*;
-import static test.frontend.StubbedInputStream.stubInputStream;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.time.LocalDateTime;
-import java.time.Month;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.Controller;
 import taskman.backend.project.ProjectOrganizer;
 import taskman.backend.resource.ResourceManager;
@@ -19,6 +9,15 @@ import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
 import taskman.frontend.UserInterface;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.time.LocalDateTime;
+import java.time.Month;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static test.frontend.StubbedInputStream.stubInputStream;
 
 public class CreateTaskUseCaseTest {
 
@@ -48,17 +47,17 @@ public class CreateTaskUseCaseTest {
 	}
 
 	@Test
-	public void testNormalFlow() throws IOException {
+	public void testNormalFlow() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("N").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
-		assertTrue(outputStream.toString().contains("successful"));
+		assertTrue(outputStream.toString().contains("Task created successfully!"));
 	}
 	
 	@Test
 	public void testCreateTaskCancel() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("Y").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("Y").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertFalse(outputStream.toString().contains("successful"));
 	}
@@ -66,7 +65,7 @@ public class CreateTaskUseCaseTest {
 	@Test
 	public void testCreateTaskIllegalData() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5,5").then("N").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5,5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("error"));
 	}

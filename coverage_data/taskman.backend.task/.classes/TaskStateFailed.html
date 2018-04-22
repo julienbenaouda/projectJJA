@@ -1,0 +1,115 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskStateFailed</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.task</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskStateFailed (taskman.backend.task)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskStateFailed</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.task;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Class representing a failed task state.
+<i>5</i>&nbsp; * Note: We apply here the State Pattern
+<i>6</i>&nbsp; *
+<i>7</i>&nbsp; * @author Jeroen Van Der Donckt
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;public class TaskStateFailed extends TaskState {
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;    /**
+<i>12</i>&nbsp;     * Creates a new Failed Task State.
+<i>13</i>&nbsp;     */
+<b class="fc"><i>14</i>&nbsp;    public TaskStateFailed(){</b>
+<b class="fc"><i>15</i>&nbsp;        setStatus(&quot;failed&quot;);</b>
+<b class="fc"><i>16</i>&nbsp;    }</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Sets the alternative of the task to the given task.
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @param task the task to set the alternative from
+<i>22</i>&nbsp;     * @param alternative the alternative of the task
+<i>23</i>&nbsp;     * @throws IllegalArgumentException the alternative may not occur in the dependency graph.
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    @Override
+<i>26</i>&nbsp;    public void setAlternative(Task task, Task alternative) throws IllegalArgumentException{
+<b class="fc"><i>27</i>&nbsp;        if (Task.containsLoop(task, alternative)){</b>
+<b class="fc"><i>28</i>&nbsp;            throw new IllegalArgumentException(&quot;The alternative may not be one of the dependecies or the alternative of this or of its dependendecies recursivley.&quot;);</b>
+<i>29</i>&nbsp;        }
+<b class="fc"><i>30</i>&nbsp;        task.setAlternativeTask(alternative);</b>
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

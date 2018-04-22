@@ -1,0 +1,128 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TaskStateExecuting</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.task</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TaskStateExecuting (taskman.backend.task)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TaskStateExecuting</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,7%
+  </span>
+  <span class="absValue">
+    (11/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.task;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.time.LocalDateTime;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Class representing an executing task state.
+<i>7</i>&nbsp; * Note: We apply here the State Pattern
+<i>8</i>&nbsp; *
+<i>9</i>&nbsp; * @author Jeroen Van Der Donckt
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;public class TaskStateExecuting extends TaskState{
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    /**
+<i>14</i>&nbsp;     * Creates a new Executing Task State.
+<i>15</i>&nbsp;     */
+<b class="fc"><i>16</i>&nbsp;    public TaskStateExecuting(){</b>
+<b class="fc"><i>17</i>&nbsp;        setStatus(&quot;executing&quot;);</b>
+<b class="fc"><i>18</i>&nbsp;    }</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Ends the execution of the given task.
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param task the task to update the state from
+<i>24</i>&nbsp;     * @param startTime the start time of the task
+<i>25</i>&nbsp;     * @param endTime the end time of the task
+<i>26</i>&nbsp;     * @param taskStatus the new state of the task
+<i>27</i>&nbsp;     * @throws IllegalArgumentException the given state must be failed or finished
+<i>28</i>&nbsp;     * @post the state of the task is set to the given state and the time span of the task is set to a new time span created with given start and end time. If needed, the resources are freed for the remaining time.
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    @Override
+<i>31</i>&nbsp;    public void endExecution(Task task, LocalDateTime startTime, LocalDateTime endTime, String taskStatus) throws IllegalArgumentException{
+<b class="fc"><i>32</i>&nbsp;        if (!taskStatus.equals(&quot;finished&quot;) &amp;&amp; !taskStatus.equals(&quot;failed&quot;)){</b>
+<b class="nc"><i>33</i>&nbsp;            throw new IllegalArgumentException(&quot;The new status must be either failed or finished&quot;);</b>
+<i>34</i>&nbsp;        }
+<b class="fc"><i>35</i>&nbsp;        task.setTimeSpan(startTime, endTime);</b>
+<b class="fc"><i>36</i>&nbsp;        task.getPlan().finish(endTime);</b>
+<b class="fc"><i>37</i>&nbsp;        switch (taskStatus){</b>
+<b class="fc"><i>38</i>&nbsp;            case &quot;finished&quot; : task.setState(new TaskStateFinished());</b>
+<b class="fc"><i>39</i>&nbsp;                break;</b>
+<b class="fc"><i>40</i>&nbsp;            case &quot;failed&quot; : task.setState(new TaskStateFailed());</b>
+<i>41</i>&nbsp;                break;
+<i>42</i>&nbsp;        }
+<b class="fc"><i>43</i>&nbsp;    }</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

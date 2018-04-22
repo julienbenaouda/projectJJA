@@ -1,0 +1,216 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Resource</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.resource</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Resource (taskman.backend.resource)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Resource</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (22/ 22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.resource;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import taskman.backend.time.TimeSpan;
+<i>4</i>&nbsp;import taskman.backend.wrappers.ResourceWrapper;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.ArrayList;
+<i>7</i>&nbsp;import java.util.List;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * Class representing a resource item.
+<i>11</i>&nbsp; *
+<i>12</i>&nbsp; * @author Jeroen Van Der Donckt, Julien Benaouda, Alexander Braekevelt
+<i>13</i>&nbsp; */
+<i>14</i>&nbsp;public class Resource implements ResourceWrapper {
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * Creates a new resource item with the given name and resource type.
+<i>18</i>&nbsp;     *
+<i>19</i>&nbsp;	 * @param name the name of the resource item
+<i>20</i>&nbsp;     * @param type the resource type of the resource item
+<i>21</i>&nbsp;     * @post a new resource item is created with given resource type and reservations is initialized to an empty ArrayList
+<i>22</i>&nbsp;     */
+<b class="fc"><i>23</i>&nbsp;    public Resource(String name, ResourceType type){</b>
+<b class="fc"><i>24</i>&nbsp;    	this.name = name;</b>
+<b class="fc"><i>25</i>&nbsp;        setType(type);</b>
+<b class="fc"><i>26</i>&nbsp;        reservations = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;	/**
+<i>31</i>&nbsp;	 * Represents the name of he resource.
+<i>32</i>&nbsp;	 */
+<i>33</i>&nbsp;	private final String name;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;	/**
+<i>36</i>&nbsp;	 * Returns the name of the resource.
+<i>37</i>&nbsp;	 *
+<i>38</i>&nbsp;	 * @return the name of the resource.
+<i>39</i>&nbsp;	 */
+<i>40</i>&nbsp;	@Override
+<i>41</i>&nbsp;	public String getName() {
+<b class="fc"><i>42</i>&nbsp;    	return this.name;</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * Represents the resource type of the resource item.
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    private ResourceType type;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;	 * Returns the type of the resource.
+<i>53</i>&nbsp;	 *
+<i>54</i>&nbsp;     * @return the type of the resource
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    public ResourceType getType() {
+<b class="fc"><i>57</i>&nbsp;        return type;</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Sets the resource type of the resource item to the given type.
+<i>62</i>&nbsp;     *
+<i>63</i>&nbsp;     * @param type the resource type of the resource type
+<i>64</i>&nbsp;     * @post the resource type of the resource item is set to the given type
+<i>65</i>&nbsp;     * @throws IllegalArgumentException when the type is null
+<i>66</i>&nbsp;     */
+<i>67</i>&nbsp;	public void setType(ResourceType type) {
+<b class="fc"><i>68</i>&nbsp;		if(type == null) {</b>
+<b class="fc"><i>69</i>&nbsp;			throw new IllegalArgumentException(&quot;A resource must have a type!&quot;);</b>
+<i>70</i>&nbsp;		}
+<b class="fc"><i>71</i>&nbsp;	    this.type = type;</b>
+<b class="fc"><i>72</i>&nbsp;    }</b>
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;	/**
+<i>76</i>&nbsp;	 * Represents the list of reservations.
+<i>77</i>&nbsp;	 */
+<i>78</i>&nbsp;	private ArrayList&lt;Reservation&gt; reservations;
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;	/**
+<i>81</i>&nbsp;	 * Returns the list of reservations for this resource.
+<i>82</i>&nbsp;	 *
+<i>83</i>&nbsp;	 * @return the list of reservations for this resource
+<i>84</i>&nbsp;	 */
+<i>85</i>&nbsp;	public List&lt;Reservation&gt; getReservations() {
+<b class="fc"><i>86</i>&nbsp;		return new ArrayList&lt;&gt;(reservations);</b>
+<i>87</i>&nbsp;	}
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;	/**
+<i>90</i>&nbsp;	 * Adds a reservation to the list of reservations.
+<i>91</i>&nbsp;	 *
+<i>92</i>&nbsp;	 * @param r the reservation to add
+<i>93</i>&nbsp;	 * @post the given reservation is added to this resource
+<i>94</i>&nbsp;	 */
+<i>95</i>&nbsp;	public void addReservation(Reservation r)
+<i>96</i>&nbsp;	{
+<b class="fc"><i>97</i>&nbsp;		reservations.add(r);</b>
+<b class="fc"><i>98</i>&nbsp;	}</b>
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;	/**
+<i>101</i>&nbsp;	 * Deletes the given reservation from the resource.
+<i>102</i>&nbsp;	 *
+<i>103</i>&nbsp;	 * @param r the reservation to delete
+<i>104</i>&nbsp;	 * @post the reservation is deleted from the list of reservations
+<i>105</i>&nbsp;	 */
+<i>106</i>&nbsp;	public void deleteReservation(Reservation r){
+<b class="fc"><i>107</i>&nbsp;		reservations.remove(r);</b>
+<b class="fc"><i>108</i>&nbsp;	}</b>
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;	/**
+<i>112</i>&nbsp;	 * Checks if a resource is available at the given time span.
+<i>113</i>&nbsp;	 *
+<i>114</i>&nbsp;	 * @param timeSpan the time span to check with
+<i>115</i>&nbsp;	 * @return true if there is no overlapping reservation for the time span
+<i>116</i>&nbsp;	 */
+<i>117</i>&nbsp;	public boolean isAvailable(TimeSpan timeSpan) {
+<b class="fc"><i>118</i>&nbsp;		for (Reservation r: getReservations()) {</b>
+<b class="fc"><i>119</i>&nbsp;			if (r.overlaps(timeSpan)) {</b>
+<b class="fc"><i>120</i>&nbsp;				return false;</b>
+<i>121</i>&nbsp;			}
+<b class="fc"><i>122</i>&nbsp;		}</b>
+<b class="fc"><i>123</i>&nbsp;		return true;</b>
+<i>124</i>&nbsp;	}
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;	/**
+<i>127</i>&nbsp;	 * Returns if the resource can be safely removed.
+<i>128</i>&nbsp;	 * @return if the resource can be safely removed.
+<i>129</i>&nbsp;	 */
+<i>130</i>&nbsp;	public boolean canRemove() {
+<b class="fc"><i>131</i>&nbsp;		return this.reservations.isEmpty();</b>
+<i>132</i>&nbsp;	}
+<i>133</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

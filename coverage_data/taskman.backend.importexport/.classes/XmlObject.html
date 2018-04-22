@@ -1,0 +1,250 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: XmlObject</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.importexport</a> ]
+</div>
+
+<h1>Coverage Summary for Class: XmlObject (taskman.backend.importexport)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">XmlObject</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82,9%
+  </span>
+  <span class="absValue">
+    (34/ 41)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.importexport;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.thoughtworks.xstream.XStream;
+<i>4</i>&nbsp;import com.thoughtworks.xstream.io.xml.DomDriver;
+<i>5</i>&nbsp;import taskman.backend.project.ProjectOrganizer;
+<i>6</i>&nbsp;import taskman.backend.resource.ResourceManager;
+<i>7</i>&nbsp;import taskman.backend.time.Clock;
+<i>8</i>&nbsp;import taskman.backend.user.UserManager;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.io.BufferedReader;
+<i>11</i>&nbsp;import java.io.BufferedWriter;
+<i>12</i>&nbsp;import java.io.FileReader;
+<i>13</i>&nbsp;import java.io.FileWriter;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * @author Julien Benaouda, Alexander Braekevelt
+<i>17</i>&nbsp; *
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;public class XmlObject {
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;	private XStream xstream;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;	/**
+<i>24</i>&nbsp;	 * creates a new xml object with given user manager, project organizer and resource manager
+<i>25</i>&nbsp;	 * @param projectOrganizer the projectOrganizer to add to the xml file
+<i>26</i>&nbsp;	 * @param userManager the user manager to add to the file
+<i>27</i>&nbsp;	 * @param resourceManager the resource manager to add to the file
+<i>28</i>&nbsp;	 * @param clock the clock to add to the file
+<i>29</i>&nbsp;	 * @throws IllegalArgumentException when one of the parameters is null
+<i>30</i>&nbsp;	 * @post a new XMLObject is created with the given parameters
+<i>31</i>&nbsp;	 */
+<b class="fc"><i>32</i>&nbsp;	public XmlObject(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock) {</b>
+<b class="fc"><i>33</i>&nbsp;		if(projectOrganizer == null || userManager == null || resourceManager == null || clock == null) {</b>
+<b class="nc"><i>34</i>&nbsp;			throw new IllegalArgumentException(&quot;No parameter can&#39;t be null!&quot;);</b>
+<i>35</i>&nbsp;		}
+<b class="fc"><i>36</i>&nbsp;		this.projectOrganizer = projectOrganizer;</b>
+<b class="fc"><i>37</i>&nbsp;		this.userManager = userManager;</b>
+<b class="fc"><i>38</i>&nbsp;		this.resourceManager = resourceManager;</b>
+<b class="fc"><i>39</i>&nbsp;		this.clock = clock;</b>
+<b class="fc"><i>40</i>&nbsp;	}</b>
+<i>41</i>&nbsp;	
+<i>42</i>&nbsp;	/**
+<i>43</i>&nbsp;	 * represents the resource manager
+<i>44</i>&nbsp;	 */
+<i>45</i>&nbsp;	private final ResourceManager resourceManager;
+<i>46</i>&nbsp;	
+<i>47</i>&nbsp;	/**
+<i>48</i>&nbsp;	 * @return the resourceManager
+<i>49</i>&nbsp;	 */
+<i>50</i>&nbsp;	public ResourceManager getResourceManager() {
+<b class="fc"><i>51</i>&nbsp;		return resourceManager;</b>
+<i>52</i>&nbsp;	}
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;	/**
+<i>55</i>&nbsp;	 * represents the user manager
+<i>56</i>&nbsp;	 */
+<i>57</i>&nbsp;	private final UserManager userManager;
+<i>58</i>&nbsp;	
+<i>59</i>&nbsp;	/**
+<i>60</i>&nbsp;	 * @return the userManager
+<i>61</i>&nbsp;	 */
+<i>62</i>&nbsp;	public UserManager getUserManager() {
+<b class="fc"><i>63</i>&nbsp;		return userManager;</b>
+<i>64</i>&nbsp;	}
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;	/**
+<i>67</i>&nbsp;	 * represents the project organizer
+<i>68</i>&nbsp;	 */
+<i>69</i>&nbsp;	private final ProjectOrganizer projectOrganizer;
+<i>70</i>&nbsp;	
+<i>71</i>&nbsp;	/**
+<i>72</i>&nbsp;	 * @return the projectOrganizer
+<i>73</i>&nbsp;	 */
+<i>74</i>&nbsp;	public ProjectOrganizer getProjectOrganizer() {
+<b class="fc"><i>75</i>&nbsp;		return projectOrganizer;</b>
+<i>76</i>&nbsp;	}
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;	/**
+<i>79</i>&nbsp;	 * represents the system clock
+<i>80</i>&nbsp;	 */
+<i>81</i>&nbsp;	private final Clock clock;
+<i>82</i>&nbsp;
+<i>83</i>&nbsp;	/**
+<i>84</i>&nbsp;	 * @return the clock
+<i>85</i>&nbsp;	 */
+<i>86</i>&nbsp;	public Clock getClock() {
+<b class="fc"><i>87</i>&nbsp;		return clock;</b>
+<i>88</i>&nbsp;	}
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;	/**
+<i>91</i>&nbsp;	 * Creates an XStream object.
+<i>92</i>&nbsp;	 * @return an XStream object.
+<i>93</i>&nbsp;	 */
+<i>94</i>&nbsp;	private static XStream createXstream() {
+<b class="fc"><i>95</i>&nbsp;		XStream stream = new XStream(new DomDriver());</b>
+<b class="fc"><i>96</i>&nbsp;		XStream.setupDefaultSecurity(stream);</b>
+<b class="fc"><i>97</i>&nbsp;		stream.allowTypesByWildcard(new String[] {</b>
+<i>98</i>&nbsp;				&quot;taskman.**&quot;
+<i>99</i>&nbsp;		});
+<b class="fc"><i>100</i>&nbsp;		return stream;</b>
+<i>101</i>&nbsp;	}
+<i>102</i>&nbsp;	
+<i>103</i>&nbsp;	/**
+<i>104</i>&nbsp;	 * converts the system to an xml string
+<i>105</i>&nbsp;	 * @return an xml string containing all data from the system
+<i>106</i>&nbsp;	 * @throws ImportExportException when something goes wrong during the parsing of the objects
+<i>107</i>&nbsp;	 */
+<i>108</i>&nbsp;	public String toXMLString() throws ImportExportException {
+<b class="fc"><i>109</i>&nbsp;		XStream stream = createXstream();</b>
+<i>110</i>&nbsp;		String XMLString;
+<i>111</i>&nbsp;		try {
+<b class="fc"><i>112</i>&nbsp;			XMLString = stream.toXML(this);</b>
+<b class="nc"><i>113</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>114</i>&nbsp;			throw new ImportExportException(&quot;Something went wrong during the conversion to XML: &quot; + e.getMessage());</b>
+<b class="fc"><i>115</i>&nbsp;		}</b>
+<b class="fc"><i>116</i>&nbsp;		return XMLString;</b>
+<i>117</i>&nbsp;	}
+<i>118</i>&nbsp;	
+<i>119</i>&nbsp;	/**
+<i>120</i>&nbsp;	 * converts an xml string to an XMLObject that can be used to reconstruct the system
+<i>121</i>&nbsp;	 * @param string the xml string to convert
+<i>122</i>&nbsp;	 * @throws ImportExportException when something goes wrong during the parsing of the string 
+<i>123</i>&nbsp;	 */
+<i>124</i>&nbsp;	public static XmlObject fromXMLString(String string) throws ImportExportException {
+<b class="fc"><i>125</i>&nbsp;		XStream stream = createXstream();</b>
+<i>126</i>&nbsp;		XmlObject obj;
+<i>127</i>&nbsp;		try {
+<b class="fc"><i>128</i>&nbsp;			obj = (XmlObject) stream.fromXML(string);</b>
+<b class="nc"><i>129</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>130</i>&nbsp;			throw new ImportExportException(&quot;Something went wrong during the parsing of the string: &quot; + e.getMessage());</b>
+<b class="fc"><i>131</i>&nbsp;		}</b>
+<b class="fc"><i>132</i>&nbsp;		return obj;</b>
+<i>133</i>&nbsp;	}
+<i>134</i>&nbsp;	
+<i>135</i>&nbsp;	/**
+<i>136</i>&nbsp;	 * saves the system to an XML file
+<i>137</i>&nbsp;	 * @param path the path of the file
+<i>138</i>&nbsp;	 * @throws ImportExportException 
+<i>139</i>&nbsp;	 */
+<i>140</i>&nbsp;	public void saveToFile(String path) throws ImportExportException {
+<b class="fc"><i>141</i>&nbsp;		try (BufferedWriter w = new BufferedWriter(new FileWriter(path))) {</b>
+<b class="fc"><i>142</i>&nbsp;			w.write(toXMLString());</b>
+<b class="fc"><i>143</i>&nbsp;		} catch(Exception e) {</b>
+<b class="nc"><i>144</i>&nbsp;			throw new ImportExportException(&quot;Something went wrong writing the string to file: &quot; +e.getMessage());</b>
+<b class="fc"><i>145</i>&nbsp;		}</b>
+<b class="fc"><i>146</i>&nbsp;	}</b>
+<i>147</i>&nbsp;	
+<i>148</i>&nbsp;	/**
+<i>149</i>&nbsp;	 * restores a string from a file and parses it
+<i>150</i>&nbsp;	 * @param path the path to the file
+<i>151</i>&nbsp;	 * @return an xml object containing all system data
+<i>152</i>&nbsp;	 * @throws ImportExportException when something goes wrong during the parsing of the file
+<i>153</i>&nbsp;	 */
+<i>154</i>&nbsp;	public static XmlObject restoreFromFile(String path) throws ImportExportException {
+<b class="fc"><i>155</i>&nbsp;		try(BufferedReader r = new BufferedReader(new FileReader(path))) {</b>
+<i>156</i>&nbsp;			String line;
+<b class="fc"><i>157</i>&nbsp;			StringBuilder sb = new StringBuilder();</b>
+<b class="fc"><i>158</i>&nbsp;			while((line = r.readLine()) != null) {</b>
+<b class="fc"><i>159</i>&nbsp;				sb.append(line);</b>
+<i>160</i>&nbsp;			}
+<b class="fc"><i>161</i>&nbsp;			return fromXMLString(sb.toString());</b>
+<b class="fc"><i>162</i>&nbsp;		} catch (Exception e) {</b>
+<b class="nc"><i>163</i>&nbsp;			throw new ImportExportException(&quot;Something went wrong druing parsing of the file: &quot; + e.getMessage());</b>
+<i>164</i>&nbsp;		}
+<i>165</i>&nbsp;	}
+<i>166</i>&nbsp;
+<i>167</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

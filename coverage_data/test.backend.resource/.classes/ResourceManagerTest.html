@@ -1,0 +1,240 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ResourceManagerTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.resource</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ResourceManagerTest (test.backend.resource)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ResourceManagerTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99%
+  </span>
+  <span class="absValue">
+    (97/ 98)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.backend.resource;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Before;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import taskman.backend.resource.Resource;
+<i>6</i>&nbsp;import taskman.backend.resource.ResourceManager;
+<i>7</i>&nbsp;import taskman.backend.resource.ResourceType;
+<i>8</i>&nbsp;import taskman.backend.task.Task;
+<i>9</i>&nbsp;import taskman.backend.time.AvailabilityPeriod;
+<i>10</i>&nbsp;import taskman.backend.time.TimeSpan;
+<i>11</i>&nbsp;import taskman.backend.user.Developer;
+<i>12</i>&nbsp;import taskman.backend.user.ProjectManager;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.time.LocalDateTime;
+<i>15</i>&nbsp;import java.time.LocalTime;
+<i>16</i>&nbsp;import java.time.Month;
+<i>17</i>&nbsp;import java.util.ArrayList;
+<i>18</i>&nbsp;import java.util.Iterator;
+<i>19</i>&nbsp;import java.util.List;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;import static org.junit.Assert.*;
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;public class ResourceManagerTest {</b>
+<i>24</i>&nbsp;	private ResourceManager resourceManager;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;	@Before
+<i>27</i>&nbsp;	public void setUp() {
+<b class="fc"><i>28</i>&nbsp;		resourceManager = new ResourceManager();</b>
+<b class="fc"><i>29</i>&nbsp;	}</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;	@Test
+<i>32</i>&nbsp;	public void testAddResourceType() {
+<b class="fc"><i>33</i>&nbsp;		resourceManager.createResourceType(&quot;test&quot;);</b>
+<b class="fc"><i>34</i>&nbsp;		assertNotNull(resourceManager.getResourceType(&quot;test&quot;));</b>
+<b class="fc"><i>35</i>&nbsp;	}</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;	@Test
+<i>38</i>&nbsp;	public void testGetStartingTimes() {
+<b class="fc"><i>39</i>&nbsp;		Task t = new Task(&quot;task&quot;, &quot;test&quot;, 30l, 5.5);</b>
+<b class="fc"><i>40</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);</b>
+<b class="fc"><i>41</i>&nbsp;		Iterator&lt;LocalDateTime&gt; it = resourceManager.getStartingTimes(t.getPlan(), t.getEstimatedDuration(), startTime);</b>
+<b class="fc"><i>42</i>&nbsp;		for(int i = 0; i &lt; 3; i++) {</b>
+<b class="fc"><i>43</i>&nbsp;			LocalDateTime next = it.next();</b>
+<b class="fc"><i>44</i>&nbsp;			assertFalse(next.isBefore(startTime));</b>
+<b class="fc"><i>45</i>&nbsp;			startTime = next;</b>
+<i>46</i>&nbsp;		}
+<b class="fc"><i>47</i>&nbsp;	}</b>
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;	@Test
+<i>50</i>&nbsp;	public void testGetAlternativeResources() {
+<b class="fc"><i>51</i>&nbsp;		Task task = new Task(&quot;task&quot;, &quot;test&quot;, 25l, 5.5);</b>
+<b class="fc"><i>52</i>&nbsp;		ResourceType type = new ResourceType(&quot;test&quot;);</b>
+<b class="fc"><i>53</i>&nbsp;		LocalTime start = LocalTime.of(0, 0);</b>
+<b class="fc"><i>54</i>&nbsp;		LocalTime end = LocalTime.of(23, 59);</b>
+<b class="fc"><i>55</i>&nbsp;		AvailabilityPeriod always = new AvailabilityPeriod(start, end);</b>
+<b class="fc"><i>56</i>&nbsp;		for(int i = 1; i &lt;= 7; i++) {</b>
+<b class="fc"><i>57</i>&nbsp;			type.addAvailability(i, always);</b>
+<i>58</i>&nbsp;		}
+<b class="fc"><i>59</i>&nbsp;		type.createResource(&quot;resource1&quot;);</b>
+<b class="fc"><i>60</i>&nbsp;		type.createResource(&quot;resource2&quot;);</b>
+<b class="fc"><i>61</i>&nbsp;		task.addRequirement(resourceManager, type, 1);</b>
+<b class="fc"><i>62</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);</b>
+<b class="fc"><i>63</i>&nbsp;		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));</b>
+<b class="fc"><i>64</i>&nbsp;		List&lt;Resource&gt; list = resourceManager.getAlternativeResources(type.getResource(&quot;resource1&quot;), ts);</b>
+<b class="fc"><i>65</i>&nbsp;		assertTrue(list.size() == 1);</b>
+<b class="fc"><i>66</i>&nbsp;		assertEquals(type.getResource(&quot;resource2&quot;), list.get(0));</b>
+<b class="fc"><i>67</i>&nbsp;	}</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;	@Test
+<i>70</i>&nbsp;	public void testInitializePlan() {
+<b class="fc"><i>71</i>&nbsp;		Task task = new Task(&quot;task&quot;, &quot;test&quot;, 25l, 5.5);</b>
+<b class="fc"><i>72</i>&nbsp;		resourceManager.createResourceType(&quot;test&quot;);</b>
+<b class="fc"><i>73</i>&nbsp;		ResourceType type = resourceManager.getResourceType(&quot;test&quot;);</b>
+<b class="fc"><i>74</i>&nbsp;		LocalTime start = LocalTime.of(0, 0);</b>
+<b class="fc"><i>75</i>&nbsp;		LocalTime end = LocalTime.of(23, 59);</b>
+<b class="fc"><i>76</i>&nbsp;		AvailabilityPeriod always = new AvailabilityPeriod(start, end);</b>
+<b class="fc"><i>77</i>&nbsp;		for(int i = 1; i &lt;= 7; i++) {</b>
+<b class="fc"><i>78</i>&nbsp;			type.addAvailability(i, always);</b>
+<i>79</i>&nbsp;		}
+<b class="fc"><i>80</i>&nbsp;		type.createResource(&quot;resource4&quot;);</b>
+<b class="fc"><i>81</i>&nbsp;		type.createResource(&quot;resource5&quot;);</b>
+<b class="fc"><i>82</i>&nbsp;		Resource resource = type.getResource(&quot;resource4&quot;);</b>
+<b class="fc"><i>83</i>&nbsp;		Resource alternative = type.getResource(&quot;resource5&quot;);</b>
+<b class="fc"><i>84</i>&nbsp;		task.addRequirement(resourceManager, type, 2);</b>
+<b class="fc"><i>85</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);</b>
+<b class="fc"><i>86</i>&nbsp;		task.initializePlan(resourceManager, startTime);</b>
+<b class="fc"><i>87</i>&nbsp;		List&lt;Resource&gt; list = task.getPlannedResources();</b>
+<b class="fc"><i>88</i>&nbsp;		assertEquals(2, list.size());</b>
+<b class="fc"><i>89</i>&nbsp;	}</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;	@Test
+<i>92</i>&nbsp;	public void testCreateResourceForUser_legal() {
+<b class="fc"><i>93</i>&nbsp;		Developer d = new Developer(&quot;test&quot;, &quot;test&quot;);</b>
+<b class="fc"><i>94</i>&nbsp;		LocalTime startBreak = LocalTime.of(12, 0);</b>
+<b class="fc"><i>95</i>&nbsp;		resourceManager.createResourceForUser(d, startBreak);</b>
+<b class="fc"><i>96</i>&nbsp;		ResourceType user = resourceManager.getResourceType(&quot;developer&quot;);</b>
+<b class="fc"><i>97</i>&nbsp;		assertEquals(1, user.getNbOfResources());</b>
+<b class="fc"><i>98</i>&nbsp;	}</b>
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;	@Test
+<i>101</i>&nbsp;	public void testCreateResourceForUser_illegal() {
+<b class="fc"><i>102</i>&nbsp;		ProjectManager d = new ProjectManager(&quot;test&quot;, &quot;test&quot;);</b>
+<b class="fc"><i>103</i>&nbsp;		LocalTime startBreak = LocalTime.of(12, 0);</b>
+<b class="fc"><i>104</i>&nbsp;		resourceManager.createResourceForUser(d, startBreak);</b>
+<b class="fc"><i>105</i>&nbsp;		assertEquals(0, resourceManager.getResourceType(&quot;developer&quot;).getNbOfResources());</b>
+<b class="fc"><i>106</i>&nbsp;	}</b>
+<i>107</i>&nbsp;	
+<i>108</i>&nbsp;	@Test
+<i>109</i>&nbsp;	public void testCheckRequirements_true() {
+<b class="fc"><i>110</i>&nbsp;		resourceManager.createResourceType(&quot;type1&quot;);</b>
+<b class="fc"><i>111</i>&nbsp;		ResourceType type1 = resourceManager.getResourceType(&quot;type1&quot;);</b>
+<b class="fc"><i>112</i>&nbsp;		String string = &quot;== type1 5&quot;;</b>
+<b class="fc"><i>113</i>&nbsp;		resourceManager.createConstraint(string);</b>
+<b class="fc"><i>114</i>&nbsp;		Task task = new Task(&quot;task&quot;, &quot;test&quot;, 30l, 5.5);</b>
+<b class="fc"><i>115</i>&nbsp;		task.addRequirement(resourceManager, type1, 5);</b>
+<b class="fc"><i>116</i>&nbsp;		assertEquals(1, task.getPlan().getRequirements().size());</b>
+<b class="fc"><i>117</i>&nbsp;	}</b>
+<i>118</i>&nbsp;	
+<i>119</i>&nbsp;	@Test(expected=IllegalArgumentException.class)
+<i>120</i>&nbsp;	public void testCheckRequirements_false() {
+<b class="fc"><i>121</i>&nbsp;		resourceManager.createResourceType(&quot;type1&quot;);</b>
+<b class="fc"><i>122</i>&nbsp;		ResourceType type1 = resourceManager.getResourceType(&quot;type1&quot;);</b>
+<b class="fc"><i>123</i>&nbsp;		String string = &quot;== type1 5&quot;;</b>
+<b class="fc"><i>124</i>&nbsp;		resourceManager.createConstraint(string);</b>
+<b class="fc"><i>125</i>&nbsp;		Task task = new Task(&quot;task&quot;, &quot;test&quot;, 30l, 5.5);</b>
+<b class="fc"><i>126</i>&nbsp;		task.addRequirement(resourceManager, type1, 4);</b>
+<b class="nc"><i>127</i>&nbsp;	}</b>
+<i>128</i>&nbsp;	
+<i>129</i>&nbsp;	// TODO @Jeroen deze test werkt nog niet
+<i>130</i>&nbsp;	@Test
+<i>131</i>&nbsp;	public void testMultipleResources() {
+<b class="fc"><i>132</i>&nbsp;		Task t = new Task(&quot;test&quot;, &quot;test&quot;, 20l, 5.5);</b>
+<b class="fc"><i>133</i>&nbsp;		resourceManager.createResourceType(&quot;type&quot;);</b>
+<b class="fc"><i>134</i>&nbsp;		ResourceType type = resourceManager.getResourceType(&quot;type&quot;);</b>
+<b class="fc"><i>135</i>&nbsp;		t.addRequirement(resourceManager, type, 2);</b>
+<b class="fc"><i>136</i>&nbsp;		type.createResource(&quot;r1&quot;);</b>
+<b class="fc"><i>137</i>&nbsp;		type.createResource(&quot;r2&quot;);</b>
+<b class="fc"><i>138</i>&nbsp;		type.createResource(&quot;r3&quot;);</b>
+<b class="fc"><i>139</i>&nbsp;		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));</b>
+<b class="fc"><i>140</i>&nbsp;		for(int j = 1; j &lt; 8; j++) {</b>
+<b class="fc"><i>141</i>&nbsp;			type.addAvailability(j, always);</b>
+<i>142</i>&nbsp;		}
+<b class="fc"><i>143</i>&nbsp;		ProjectManager user = new ProjectManager(&quot;test&quot;, &quot;test&quot;);</b>
+<b class="fc"><i>144</i>&nbsp;		ArrayList&lt;Resource&gt; resources = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>145</i>&nbsp;		resources.add(type.getResource(&quot;r1&quot;));</b>
+<b class="fc"><i>146</i>&nbsp;		resources.add(type.getResource(&quot;r2&quot;));</b>
+<b class="fc"><i>147</i>&nbsp;		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);</b>
+<b class="fc"><i>148</i>&nbsp;		t.initializePlan(resourceManager, startTime);</b>
+<b class="fc"><i>149</i>&nbsp;		Resource test = t.getPlannedResources().get(0);</b>
+<b class="fc"><i>150</i>&nbsp;		Task t2 = new Task(&quot;test&quot;, &quot;test2&quot;, 60l, 5.5);</b>
+<b class="fc"><i>151</i>&nbsp;		t2.addRequirement(resourceManager, type, 2);</b>
+<b class="fc"><i>152</i>&nbsp;		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(t2.getEstimatedDuration()));</b>
+<b class="fc"><i>153</i>&nbsp;		List&lt;Resource&gt; r = resourceManager.getAlternativeResources(test, ts);</b>
+<b class="fc"><i>154</i>&nbsp;		Iterator&lt;LocalDateTime&gt; i = resourceManager.getStartingTimes(t2.getPlan(), t2.getEstimatedDuration(), startTime);</b>
+<b class="fc"><i>155</i>&nbsp;		assertEquals(1, r.size());</b>
+<b class="fc"><i>156</i>&nbsp;	}</b>
+<i>157</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

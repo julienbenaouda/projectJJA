@@ -1,0 +1,294 @@
+@startuml
+
+  package taskman {
+    class Initiator {
+    }
+
+    package taskman.frontend {
+      interface MethodCall {
+      }
+
+      class UserInterface {
+      }
+
+      package taskman.frontend.sections {
+        class Cancel {
+        }
+
+        class FormSection {
+            - withCancel : Boolean
+            - questions : List<String>
+            - answers : List<String>
+        }
+
+        class MenuSection {
+            - selectionSection : SelectionSection<MethodCall>
+        }
+
+        abstract class Section {
+        }
+
+        class SelectionSection {
+            - withCancel : Boolean
+            - cancelText : String
+            - optionNames : List<String>
+            - optionObjects : List<Type>
+            - answer : Integer
+        }
+
+        class TextSection {
+            - text : String
+            - isBlocking : boolean
+        }
+
+        class TitleSection {
+        }
+      }
+    }
+
+    package taskman.backend {
+      class Controller {
+      }
+
+      package taskman.backend.wrappers {
+        interface AvailabilityPeriodWrapper {
+        }
+
+        interface ProjectWrapper {
+        }
+
+        interface ResourceTypeWrapper {
+        }
+
+        interface ResourceWrapper {
+        }
+
+        interface TaskWrapper {
+        }
+
+        interface TimeSpanWrapper {
+        }
+
+        interface UserWrapper {
+        }
+      }
+
+      package taskman.backend.importexport {
+        class ImportExportException {
+        }
+
+        class XmlObject {
+            - xstream : XStream
+        }
+      }
+
+      package taskman.backend.project {
+        class Project {
+            - taskList : ArrayList<Task>
+            - name : String
+            - description : String
+            - creationTime : LocalDateTime
+            - dueTime : LocalDateTime
+        }
+
+        class ProjectOrganizer {
+            - projects : Collection<Project>
+        }
+      }
+
+      package taskman.backend.constraint {
+        enum AmountComparator {
+          EQUALS
+          NOT_EQUALS
+          GREATER_THAN
+          GREATER_THAN_OR_EQUALS
+          SMALLER_THAN
+          SMALLER_THAN_OR_EQUALS
+        }
+
+        class AndConstraint {
+        }
+
+        class Constraint {
+            - amount : int
+        }
+
+        interface ConstraintComponent {
+        }
+
+        class IfThenConstraint {
+        }
+
+        class NotConstraint {
+        }
+
+        class OrConstraint {
+        }
+      }
+
+      package taskman.backend.resource {
+        class DeveloperResource {
+        }
+
+        class Plan {
+            - requirements : Map<ResourceType, Integer>
+            - reservations : List<Reservation>
+        }
+
+        class Reservation {
+            - userSpecific : boolean
+        }
+
+        class Resource {
+            - name : String
+            - reservations : ArrayList<Reservation>
+        }
+
+        class ResourceManager {
+            - resourceTypes : Set<ResourceType>
+            - constraints : List<ConstraintComponent>
+        }
+
+        class ResourceType {
+            - name : String
+            - availability : HashMap<Integer, AvailabilityPeriod>
+            - resources : ArrayList<Resource>
+        }
+      }
+
+      package taskman.backend.simulation {
+        class SimulationManager {
+            - previousState : String
+        }
+      }
+
+      package taskman.backend.task {
+        class Task {
+            - name : String
+            - description : String
+            - estimatedDuration : long
+            - acceptableDeviation : double
+            - dependencies : ArrayList<Task>
+        }
+
+        abstract class TaskState {
+            - status : String
+        }
+
+        class TaskStateExecuting {
+        }
+
+        class TaskStateFailed {
+        }
+
+        class TaskStateFinished {
+        }
+
+        class TaskStatePlanned {
+        }
+
+        class TaskStateUnavailable {
+        }
+      }
+
+      package taskman.backend.time {
+        class AvailabilityPeriod {
+            - startTime : LocalTime
+            - endTime : LocalTime
+        }
+
+        class Clock {
+            - time : LocalDateTime
+        }
+
+        class TimeParser {
+            {static} - DATE_TIME_FORMATTER : DateTimeFormatter
+            {static} - DATE_FORMATTER : DateTimeFormatter
+        }
+
+        class TimeSpan {
+            - startTime : LocalDateTime
+            - endTime : LocalDateTime
+        }
+      }
+
+      package taskman.backend.user {
+        class Developer {
+        }
+
+        class OperationNotPermittedException {
+        }
+
+        class ProjectManager {
+        }
+
+        abstract class User {
+            - name : String
+            - password : String
+        }
+
+        class UserManager {
+            - users : List<User>
+        }
+      }
+    }
+  }
+
+  AndConstraint -up-|> ConstraintComponent
+  AndConstraint o-- ConstraintComponent : constraint1
+  AndConstraint o-- ConstraintComponent : constraint2
+  Constraint -up-|> ConstraintComponent
+  Constraint o-- ResourceType : resourceType
+  Constraint o-- AmountComparator : amountComparator
+  IfThenConstraint -up-|> ConstraintComponent
+  IfThenConstraint o-- ConstraintComponent : ifConstraint
+  IfThenConstraint o-- ConstraintComponent : thenConstraint
+  NotConstraint -up-|> ConstraintComponent
+  NotConstraint o-- ConstraintComponent : constraint
+  OrConstraint -up-|> ConstraintComponent
+  OrConstraint o-- ConstraintComponent : constraint1
+  OrConstraint o-- ConstraintComponent : constraint2
+  UserInterface o-- Controller : controller
+  FormSection -up-|> Section
+  MenuSection -up-|> Section
+  SelectionSection -up-|> Section
+  TextSection -up-|> Section
+  TitleSection -up-|> Section
+  TitleSection o-- TextSection : textSection
+  Controller o-- Clock : clock
+  Controller o-- UserManager : userManager
+  Controller o-- ProjectOrganizer : projectOrganizer
+  Controller o-- ResourceManager : resourceManager
+  Controller o-- SimulationManager : simulationManager
+  XmlObject o-- ResourceManager : resourceManager
+  XmlObject o-- UserManager : userManager
+  XmlObject o-- ProjectOrganizer : projectOrganizer
+  XmlObject o-- Clock : clock
+  Project -up-|> ProjectWrapper
+  DeveloperResource -up-|> Resource
+  DeveloperResource o-- AvailabilityPeriod : breakTime
+  DeveloperResource o-- Developer : developer
+  Plan o-- Task : task
+  Reservation o-- Resource : resource
+  Reservation o-- TimeSpan : timeSpan
+  Resource -up-|> ResourceWrapper
+  Resource o-- ResourceType : type
+  ResourceType -up-|> ResourceTypeWrapper
+  Task -up-|> TaskWrapper
+  Task o-- TimeSpan : timeSpan
+  Task o-- TaskState : state
+  Task o-- Task : alternative
+  Task o-- Plan : plan
+  TaskStateExecuting -up-|> TaskState
+  TaskStateFailed -up-|> TaskState
+  TaskStateFinished -up-|> TaskState
+  TaskStatePlanned -up-|> TaskState
+  TaskStateUnavailable -up-|> TaskState
+  AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
+  TimeSpan -up-|> TimeSpanWrapper
+  Developer -up-|> User
+  ProjectManager -up-|> User
+  User -up-|> UserWrapper
+  UserManager o-- User : currentUser
+
+@enduml

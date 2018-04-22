@@ -1,0 +1,174 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: UpdateStatusUseCaseTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.frontend</a> ]
+</div>
+
+<h1>Coverage Summary for Class: UpdateStatusUseCaseTest (test.frontend)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UpdateStatusUseCaseTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (34/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.frontend;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Before;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import taskman.backend.Controller;
+<i>6</i>&nbsp;import taskman.backend.project.ProjectOrganizer;
+<i>7</i>&nbsp;import taskman.backend.resource.ResourceManager;
+<i>8</i>&nbsp;import taskman.backend.simulation.SimulationManager;
+<i>9</i>&nbsp;import taskman.backend.time.AvailabilityPeriod;
+<i>10</i>&nbsp;import taskman.backend.time.Clock;
+<i>11</i>&nbsp;import taskman.backend.user.UserManager;
+<i>12</i>&nbsp;import taskman.frontend.UserInterface;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.io.ByteArrayOutputStream;
+<i>15</i>&nbsp;import java.io.PrintStream;
+<i>16</i>&nbsp;import java.time.LocalDateTime;
+<i>17</i>&nbsp;import java.time.LocalTime;
+<i>18</i>&nbsp;import java.time.Month;
+<i>19</i>&nbsp;import java.util.HashMap;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;import static org.junit.Assert.assertFalse;
+<i>22</i>&nbsp;import static test.frontend.StubbedInputStream.stubInputStream;
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;public class UpdateStatusUseCaseTest {</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;	private ProjectOrganizer po;
+<i>27</i>&nbsp;	private UserManager um;
+<i>28</i>&nbsp;	private ResourceManager rm;
+<i>29</i>&nbsp;	private Clock clock;
+<i>30</i>&nbsp;	private SimulationManager sm;
+<i>31</i>&nbsp;	private Controller c;
+<i>32</i>&nbsp;	private UserInterface ui;
+<i>33</i>&nbsp;	private ByteArrayOutputStream outputStream;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;	@Before
+<i>36</i>&nbsp;	public void setUp() {
+<b class="fc"><i>37</i>&nbsp;		po = new ProjectOrganizer();</b>
+<b class="fc"><i>38</i>&nbsp;		um = new UserManager();</b>
+<b class="fc"><i>39</i>&nbsp;		rm = new ResourceManager();</b>
+<b class="fc"><i>40</i>&nbsp;		sm = new SimulationManager();</b>
+<b class="fc"><i>41</i>&nbsp;		clock = new Clock();</b>
+<b class="fc"><i>42</i>&nbsp;		c = new Controller(clock, um, po, rm, sm);</b>
+<b class="fc"><i>43</i>&nbsp;		um.createUser(&quot;test&quot;, &quot;test&quot;, &quot;developer&quot;, LocalTime.of(12, 0), rm);</b>
+<b class="fc"><i>44</i>&nbsp;		um.createUser(&quot;admin2&quot;, &quot;admin&quot;, &quot;project manager&quot;, null, rm);</b>
+<b class="fc"><i>45</i>&nbsp;		c.login(&quot;admin2&quot;, &quot;admin&quot;);</b>
+<b class="fc"><i>46</i>&nbsp;		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);</b>
+<b class="fc"><i>47</i>&nbsp;		c.createProject(&quot;testProject&quot;, &quot;testDescription&quot;, creationTime);</b>
+<b class="fc"><i>48</i>&nbsp;		c.createTask(c.getProjects().get(0), &quot;testTask&quot;, &quot;test description&quot;, 1l, 4.5, new HashMap&lt;&gt;());</b>
+<b class="fc"><i>49</i>&nbsp;		rm.createResourceType(&quot;testType&quot;);</b>
+<b class="fc"><i>50</i>&nbsp;		rm.getResourceType(&quot;testType&quot;).createResource(&quot;r1&quot;);</b>
+<b class="fc"><i>51</i>&nbsp;		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));</b>
+<b class="fc"><i>52</i>&nbsp;		for(int i = 1; i &lt; 8; i++) {</b>
+<b class="fc"><i>53</i>&nbsp;			rm.getResourceType(&quot;testType&quot;).addAvailability(i, always);</b>
+<b class="fc"><i>54</i>&nbsp;			rm.getResourceType(&quot;developer&quot;).addAvailability(i, always);</b>
+<i>55</i>&nbsp;		}
+<b class="fc"><i>56</i>&nbsp;		c.addRequirementToTask(po.getProject(&quot;testProject&quot;).getTask(&quot;testTask&quot;), rm.getResourceType(&quot;testType&quot;), 1);</b>
+<b class="fc"><i>57</i>&nbsp;		c.addRequirementToTask(po.getProject(&quot;testProject&quot;).getTask(&quot;testTask&quot;), rm.getResourceType(&quot;developer&quot;), 1);</b>
+<b class="fc"><i>58</i>&nbsp;		c.initializePlan(po.getProject(&quot;testProject&quot;).getTask(&quot;testTask&quot;), creationTime);</b>
+<b class="fc"><i>59</i>&nbsp;		c.login(&quot;test&quot;, &quot;test&quot;);</b>
+<b class="fc"><i>60</i>&nbsp;		ui = new UserInterface(c);</b>
+<b class="fc"><i>61</i>&nbsp;		outputStream = new ByteArrayOutputStream();</b>
+<b class="fc"><i>62</i>&nbsp;		c.logout();</b>
+<b class="fc"><i>63</i>&nbsp;	}</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;	@Test
+<i>66</i>&nbsp;	public void testUpdateTaskStatusNormalFlow() {
+<b class="fc"><i>67</i>&nbsp;		System.setOut(new PrintStream(outputStream));</b>
+<b class="fc"><i>68</i>&nbsp;		System.setIn(stubInputStream().then(&quot;1&quot;).then(&quot;test&quot;).then(&quot;test&quot;).then(&quot;5&quot;).then(&quot;1&quot;).then(&quot;1&quot;).then(&quot;26/07/2018 08:00&quot;).then(&quot;N&quot;).then(&quot;27/07/2018 10:00&quot;).then(&quot;N&quot;).then(&quot;0&quot;).then(&quot;0&quot;).atSomePoint());</b>
+<b class="fc"><i>69</i>&nbsp;		ui.start();</b>
+<b class="fc"><i>70</i>&nbsp;		assertFalse(outputStream.toString().contains(&quot;error&quot;));</b>
+<b class="fc"><i>71</i>&nbsp;	}</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;	@Test
+<i>74</i>&nbsp;	public void testUpdateTaskStatusIllegalData() {
+<i>75</i>&nbsp;		// TODO
+<i>76</i>&nbsp;		/*System.setOut(new PrintStream(outputStream));
+<i>77</i>&nbsp;		System.setIn(stubInputStream().then(&quot;1&quot;).then(&quot;test&quot;).then(&quot;test&quot;).then(&quot;5&quot;).then(&quot;1&quot;).then(&quot;1&quot;).then(&quot;26/07/2018 08:00&quot;).then(&quot;N&quot;).then(&quot;27/12/2018 10:00&quot;).then(&quot;N&quot;).then(&quot;5&quot;).then(&quot;1&quot;).then(&quot;2&quot;).then(&quot;26/07/2018 08:00&quot;).then(&quot;N&quot;).then(&quot;27/12/2018 10:00aa&quot;).then(&quot;N&quot;).then(&quot;0&quot;).then(&quot;0&quot;).atSomePoint());
+<i>78</i>&nbsp;		ui.start();
+<i>79</i>&nbsp;		assertTrue(outputStream.toString().contains(&quot;error&quot;));*/
+<b class="fc"><i>80</i>&nbsp;	}</b>
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;	@Test
+<i>83</i>&nbsp;	public void testUpdateTaskStatusCancel() {
+<i>84</i>&nbsp;		// TODO
+<i>85</i>&nbsp;		/*System.setOut(new PrintStream(outputStream));
+<i>86</i>&nbsp;		System.setIn(stubInputStream().then(&quot;1&quot;).then(&quot;test&quot;).then(&quot;test&quot;).then(&quot;5&quot;).then(&quot;1&quot;).then(&quot;1&quot;).then(&quot;26/07/2018 08:00&quot;).then(&quot;N&quot;).then(&quot;27/12/2018 10:00&quot;).then(&quot;N&quot;).then(&quot;5&quot;).then(&quot;1&quot;).then(&quot;2&quot;).then(&quot;26/07/2018 08:00&quot;).then(&quot;N&quot;).then(&quot;27/12/2018 10:00aa&quot;).then(&quot;Y&quot;).then(&quot;0&quot;).then(&quot;0&quot;).atSomePoint());
+<i>87</i>&nbsp;		ui.start();
+<i>88</i>&nbsp;		assertFalse(outputStream.toString().contains(&quot;error&quot;));*/
+<b class="fc"><i>89</i>&nbsp;	}</b>
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

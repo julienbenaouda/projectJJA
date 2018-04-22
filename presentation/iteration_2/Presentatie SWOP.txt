@@ -1,0 +1,42 @@
+SWOP Taskman Iteratie 2
+Jeroen Van Der Donckt
+Julien Benaouda
+Alexander Braekevelt
+
+DEMO
+
+High level design
+High level design
+
+High level design
+
+High level design
+
+State pattern (Jeroen)
+Composite pattern (Jeroen)
+Wrappers (Alexander)
+Simulation, user, project & resource manager (Julien)
+Controller (Alexander)
+
+Important design decisions: state pattern
+
+Important design decisions: composite pattern
+
+Important design decisions: wrappers
+
+Important design decisions: managers
+
+Extensibility of the system
+resource type constraint in reservation
+new task states
+new wrappers
+decorators of sections
+
+Testing approach
+Tests while and after code
+Update tests for new implementations
+Overall test coverage:
+
+Detailed test coverage
+
+Overview of the project management

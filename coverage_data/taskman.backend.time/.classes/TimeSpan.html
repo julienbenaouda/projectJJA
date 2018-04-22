@@ -1,0 +1,182 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TimeSpan</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.time</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TimeSpan (taskman.backend.time)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TimeSpan</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,7%
+  </span>
+  <span class="absValue">
+    (6/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93,8%
+  </span>
+  <span class="absValue">
+    (15/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;/**
+<i>2</i>&nbsp; * 
+<i>3</i>&nbsp; */
+<i>4</i>&nbsp;package taskman.backend.time;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import taskman.backend.wrappers.TimeSpanWrapper;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.time.LocalDateTime;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * This class represents a time span containing a start time, end time and status
+<i>12</i>&nbsp; * @author Julien Benaouda, Jeroen Van Der Donckt
+<i>13</i>&nbsp; *
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class TimeSpan implements TimeSpanWrapper {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;	/**
+<i>18</i>&nbsp;	 * Creates a new timespan object with given starttime and endtime
+<i>19</i>&nbsp;	 *
+<i>20</i>&nbsp;	 * @param startTime the start time of the timespan
+<i>21</i>&nbsp;	 * @param endTime the end time of the timespan
+<i>22</i>&nbsp;	 * @post a new timespan is created with given parameters
+<i>23</i>&nbsp;	 */
+<b class="fc"><i>24</i>&nbsp;	public TimeSpan(LocalDateTime startTime, LocalDateTime endTime) {</b>
+<b class="fc"><i>25</i>&nbsp;		setStartTime(startTime);</b>
+<b class="fc"><i>26</i>&nbsp;		setEndTime(endTime);</b>
+<b class="fc"><i>27</i>&nbsp;	}</b>
+<i>28</i>&nbsp;	
+<i>29</i>&nbsp;	/* (non-Javadoc)
+<i>30</i>&nbsp;	 * @see taskman.backend.time.TimeSpanWrapper#getStartTime()
+<i>31</i>&nbsp;	 */
+<i>32</i>&nbsp;	@Override
+<i>33</i>&nbsp;	public LocalDateTime getStartTime() {
+<b class="fc"><i>34</i>&nbsp;		return startTime;</b>
+<i>35</i>&nbsp;	}
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;	/**
+<i>38</i>&nbsp;	 * Sets the start time to the given starttime
+<i>39</i>&nbsp;	 * @param startTime the startTime of the timeSpan
+<i>40</i>&nbsp;	 * @post The startTime is set to the given start time 
+<i>41</i>&nbsp;	 */
+<i>42</i>&nbsp;	private void setStartTime(LocalDateTime startTime) {
+<b class="fc"><i>43</i>&nbsp;		this.startTime = startTime;</b>
+<b class="fc"><i>44</i>&nbsp;	}</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;	/**
+<i>47</i>&nbsp;	 * Represents the start time
+<i>48</i>&nbsp;	 */
+<i>49</i>&nbsp;	private LocalDateTime startTime;
+<i>50</i>&nbsp;	
+<i>51</i>&nbsp;	/* (non-Javadoc)
+<i>52</i>&nbsp;	 * @see taskman.backend.time.TimeSpanWrapper#getEndTime()
+<i>53</i>&nbsp;	 */
+<i>54</i>&nbsp;	@Override
+<i>55</i>&nbsp;	public LocalDateTime getEndTime() {
+<b class="fc"><i>56</i>&nbsp;		return endTime;</b>
+<i>57</i>&nbsp;	}
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;	/**
+<i>60</i>&nbsp;	 * sets the end time of the timespan to the given end time. 
+<i>61</i>&nbsp;	 * @param endTime the endTime of the timespan7@post the end time of the time span is set to the given end time.
+<i>62</i>&nbsp;	 * @throws IllegalArgumentException if the end time comes before the start time
+<i>63</i>&nbsp;	 */
+<i>64</i>&nbsp;	private void setEndTime(LocalDateTime endTime) throws IllegalArgumentException {
+<b class="fc"><i>65</i>&nbsp;		if(canHaveAsEndTime(endTime)) {</b>
+<b class="fc"><i>66</i>&nbsp;			this.endTime = endTime;</b>
+<i>67</i>&nbsp;		} else {
+<b class="fc"><i>68</i>&nbsp;			throw new IllegalArgumentException(&quot;The end time can&#39;t be earlier than the start time&quot;);</b>
+<i>69</i>&nbsp;		}
+<b class="fc"><i>70</i>&nbsp;	}</b>
+<i>71</i>&nbsp;	
+<i>72</i>&nbsp;	/**
+<i>73</i>&nbsp;	 * Checks if the given end time is valid for the given time span
+<i>74</i>&nbsp;	 * @param endTime the end time to check
+<i>75</i>&nbsp;	 * @return true if the end time comes after the start time, else false
+<i>76</i>&nbsp;	 */
+<i>77</i>&nbsp;	public boolean canHaveAsEndTime(LocalDateTime endTime)
+<i>78</i>&nbsp;	{
+<b class="fc"><i>79</i>&nbsp;		if(endTime == null || endTime.isAfter(startTime)) {</b>
+<b class="fc"><i>80</i>&nbsp;			return true;</b>
+<i>81</i>&nbsp;		}
+<b class="fc"><i>82</i>&nbsp;		return false;</b>
+<i>83</i>&nbsp;	}
+<i>84</i>&nbsp;	
+<i>85</i>&nbsp;	/**
+<i>86</i>&nbsp;	 * represents the end time of the timespan
+<i>87</i>&nbsp;	 */
+<i>88</i>&nbsp;	private LocalDateTime endTime;
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;	/**
+<i>91</i>&nbsp;	 * Returns if the timespan is equal to this timespan.
+<i>92</i>&nbsp;	 * @param t a timespan.
+<i>93</i>&nbsp;	 * @return if the timespan is equal to this timespan.
+<i>94</i>&nbsp;	 */
+<i>95</i>&nbsp;	public boolean equals(TimeSpan t) {
+<b class="nc"><i>96</i>&nbsp;		return getStartTime().equals(t.getStartTime()) &amp;&amp; getEndTime().equals(t.getEndTime());</b>
+<i>97</i>&nbsp;	}
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

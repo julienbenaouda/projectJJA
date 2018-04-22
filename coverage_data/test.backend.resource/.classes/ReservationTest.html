@@ -1,0 +1,153 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ReservationTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.resource</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ReservationTest (test.backend.resource)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ReservationTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,7%
+  </span>
+  <span class="absValue">
+    (6/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,5%
+  </span>
+  <span class="absValue">
+    (22/ 27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package test.backend.resource;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import static org.junit.Assert.*;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.time.LocalDateTime;
+<i>7</i>&nbsp;import java.time.Month;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import org.junit.Before;
+<i>10</i>&nbsp;import org.junit.Test;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import taskman.backend.resource.Reservation;
+<i>13</i>&nbsp;import taskman.backend.resource.Resource;
+<i>14</i>&nbsp;import taskman.backend.resource.ResourceType;
+<i>15</i>&nbsp;import taskman.backend.task.Task;
+<i>16</i>&nbsp;import taskman.backend.time.TimeSpan;
+<i>17</i>&nbsp;
+<b class="fc"><i>18</i>&nbsp;public class ReservationTest {</b>
+<i>19</i>&nbsp;	private Reservation reservation;
+<i>20</i>&nbsp;	private Resource resource;
+<i>21</i>&nbsp;	private Task task;
+<i>22</i>&nbsp;	private LocalDateTime start;
+<i>23</i>&nbsp;	private LocalDateTime end;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;	
+<i>26</i>&nbsp;	@Before
+<i>27</i>&nbsp;	public void setUp() {
+<b class="fc"><i>28</i>&nbsp;		task = new Task(&quot;test&quot;, &quot;test&quot;, 25l, 5.5);</b>
+<b class="fc"><i>29</i>&nbsp;		resource = new Resource(&quot;test&quot;, new ResourceType(&quot;test&quot;));</b>
+<b class="fc"><i>30</i>&nbsp;		start = LocalDateTime.of(2018, Month.JULY, 26, 11, 0);</b>
+<b class="fc"><i>31</i>&nbsp;		end = LocalDateTime.of(2018, Month.JULY, 26, 12, 25);</b>
+<b class="fc"><i>32</i>&nbsp;		reservation = new Reservation(resource, start, end);</b>
+<b class="fc"><i>33</i>&nbsp;	}</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;	@Test
+<i>36</i>&nbsp;	public void testReservation_legal() {
+<b class="fc"><i>37</i>&nbsp;		assertEquals(resource, reservation.getResource());</b>
+<b class="fc"><i>38</i>&nbsp;		assertEquals(start, reservation.getTimeSpan().getStartTime());</b>
+<b class="fc"><i>39</i>&nbsp;		assertEquals(end, reservation.getTimeSpan().getEndTime());</b>
+<b class="fc"><i>40</i>&nbsp;	}</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;	@Test(expected=IllegalArgumentException.class)
+<i>43</i>&nbsp;	public void testReservation_illegal() {
+<b class="fc"><i>44</i>&nbsp;		reservation = new Reservation(null, null, null);</b>
+<b class="nc"><i>45</i>&nbsp;	}</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;	@Test
+<i>48</i>&nbsp;	public void testOverlaps_true() {
+<b class="fc"><i>49</i>&nbsp;		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 26, 12, 10);</b>
+<b class="fc"><i>50</i>&nbsp;		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 29, 12, 25);</b>
+<b class="fc"><i>51</i>&nbsp;		TimeSpan overlappingTimeSpan = new TimeSpan(start, end);</b>
+<b class="fc"><i>52</i>&nbsp;		assertTrue(reservation.overlaps(overlappingTimeSpan));</b>
+<b class="fc"><i>53</i>&nbsp;	}</b>
+<i>54</i>&nbsp;	
+<i>55</i>&nbsp;	@Test
+<i>56</i>&nbsp;	public void testOverlaps_false() {
+<b class="fc"><i>57</i>&nbsp;		LocalDateTime start = LocalDateTime.of(2018, Month.JULY, 20, 14, 0);</b>
+<b class="fc"><i>58</i>&nbsp;		LocalDateTime end = LocalDateTime.of(2018, Month.JULY, 23, 12, 25);</b>
+<b class="fc"><i>59</i>&nbsp;		TimeSpan overlappingTimeSpan = new TimeSpan(start, end);</b>
+<b class="fc"><i>60</i>&nbsp;		assertFalse(reservation.overlaps(overlappingTimeSpan));</b>
+<b class="fc"><i>61</i>&nbsp;	}</b>
+<i>62</i>&nbsp;	
+<i>63</i>&nbsp;	public void testFinishEarlier() {
+<b class="nc"><i>64</i>&nbsp;		end = end.minusHours(1);</b>
+<b class="nc"><i>65</i>&nbsp;		reservation.finishEarlier(end);</b>
+<b class="nc"><i>66</i>&nbsp;		assertEquals(end, reservation.getTimeSpan().getEndTime());</b>
+<b class="nc"><i>67</i>&nbsp;	}</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;}
+<i>70</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

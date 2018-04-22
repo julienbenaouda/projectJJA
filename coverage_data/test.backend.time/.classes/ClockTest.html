@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClockTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.time</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClockTest (test.backend.time)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClockTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    86,2%
+  </span>
+  <span class="absValue">
+    (25/ 29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.backend.time;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.After;
+<i>4</i>&nbsp;import org.junit.Assert;
+<i>5</i>&nbsp;import org.junit.Before;
+<i>6</i>&nbsp;import org.junit.Test;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import taskman.backend.time.Clock;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.time.LocalDateTime;
+<i>11</i>&nbsp;
+<b class="fc"><i>12</i>&nbsp;public class ClockTest {</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    private Clock clock;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    @Before
+<i>17</i>&nbsp;    public void beforeTest(){
+<b class="fc"><i>18</i>&nbsp;        clock = new Clock();</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    @After
+<i>22</i>&nbsp;    public void afterTest(){
+<b class="fc"><i>23</i>&nbsp;        clock = null;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Test
+<i>27</i>&nbsp;    public void getSystemTime() {
+<b class="fc"><i>28</i>&nbsp;        Assert.assertEquals(&quot;Initial SystemTime must be minimal!&quot;, LocalDateTime.MIN, clock.getTime());</b>
+<b class="fc"><i>29</i>&nbsp;        LocalDateTime newTime = LocalDateTime.of(2000, 1, 1, 0, 0);</b>
+<b class="fc"><i>30</i>&nbsp;        clock.updateTime(newTime);</b>
+<b class="fc"><i>31</i>&nbsp;        Assert.assertEquals(&quot;Wrong result of getSystemTime!&quot;, newTime, clock.getTime());</b>
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    @Test
+<i>35</i>&nbsp;    public void getSystemTimeExternalAdjustment() {
+<b class="fc"><i>36</i>&nbsp;        LocalDateTime time = clock.getTime();</b>
+<b class="fc"><i>37</i>&nbsp;        LocalDateTime forceTime = LocalDateTime.of(0, 1, 1, 0, 0);</b>
+<b class="fc"><i>38</i>&nbsp;        time.adjustInto(forceTime);</b>
+<b class="fc"><i>39</i>&nbsp;        Assert.assertNotEquals(&quot;SystemTime can be adjusted outside clock!&quot;, forceTime, clock.getTime());</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    @Test
+<i>43</i>&nbsp;    public void updateSystemTime() {
+<b class="fc"><i>44</i>&nbsp;        LocalDateTime firstTime = LocalDateTime.of(2000, 1, 1, 0, 0);</b>
+<b class="fc"><i>45</i>&nbsp;        clock.updateTime(firstTime);</b>
+<b class="fc"><i>46</i>&nbsp;        Assert.assertEquals(&quot;SystemTime is not updated!&quot;, firstTime, clock.getTime());</b>
+<b class="fc"><i>47</i>&nbsp;        LocalDateTime secondTime = LocalDateTime.of(54321, 12, 31, 23, 59);</b>
+<b class="fc"><i>48</i>&nbsp;        clock.updateTime(secondTime);</b>
+<b class="fc"><i>49</i>&nbsp;        Assert.assertEquals(&quot;SystemTime is not updated!&quot;, secondTime, clock.getTime());</b>
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Test(expected = IllegalArgumentException.class)
+<i>53</i>&nbsp;    public void updateSystemTimeToMinimal() {
+<b class="fc"><i>54</i>&nbsp;        clock.updateTime(LocalDateTime.MIN);</b>
+<b class="nc"><i>55</i>&nbsp;        Assert.fail(&quot;The clock can be updated to the minimal time!&quot;);</b>
+<b class="nc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    @Test(expected = IllegalArgumentException.class)
+<i>59</i>&nbsp;    public void updateSystemTimeToPast() {
+<b class="fc"><i>60</i>&nbsp;        clock.updateTime(LocalDateTime.of(2000, 1, 1, 0, 0));</b>
+<b class="fc"><i>61</i>&nbsp;        clock.updateTime(LocalDateTime.of(1999, 12, 31,23, 59));</b>
+<b class="nc"><i>62</i>&nbsp;        Assert.fail(&quot;The clock can be updated to the past!&quot;);</b>
+<b class="nc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ConstraintTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">test.backend.resource</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ConstraintTest (test.backend.resource)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConstraintTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/ 18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package test.backend.resource;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.junit.Before;
+<i>4</i>&nbsp;import org.junit.Test;
+<i>5</i>&nbsp;import taskman.backend.constraint.AmountComparator;
+<i>6</i>&nbsp;import taskman.backend.constraint.Constraint;
+<i>7</i>&nbsp;import taskman.backend.resource.ResourceType;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import java.util.HashMap;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import static org.junit.Assert.*;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * @author Julien
+<i>15</i>&nbsp; *
+<i>16</i>&nbsp; */
+<b class="fc"><i>17</i>&nbsp;public class ConstraintTest {</b>
+<i>18</i>&nbsp;	private Constraint constraint;
+<i>19</i>&nbsp;	private ResourceType type;
+<i>20</i>&nbsp;	private AmountComparator comparator;
+<i>21</i>&nbsp;	private int amount;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;	@Before
+<i>24</i>&nbsp;	public void setUp() throws Exception {
+<b class="fc"><i>25</i>&nbsp;		type = new ResourceType(&quot;test&quot;);</b>
+<b class="fc"><i>26</i>&nbsp;		comparator = AmountComparator.EQUALS;</b>
+<b class="fc"><i>27</i>&nbsp;		amount = 2;</b>
+<b class="fc"><i>28</i>&nbsp;		constraint = new Constraint(type, comparator, amount);</b>
+<b class="fc"><i>29</i>&nbsp;	}</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;	@Test
+<i>32</i>&nbsp;	public void testConstraint() {
+<b class="fc"><i>33</i>&nbsp;		assertEquals(type, constraint.getResourceType());</b>
+<b class="fc"><i>34</i>&nbsp;		assertEquals(comparator, constraint.getAmountComparator());</b>
+<b class="fc"><i>35</i>&nbsp;		assertEquals(amount, constraint.getAmount());</b>
+<b class="fc"><i>36</i>&nbsp;	}</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;	@Test
+<i>39</i>&nbsp;	public void testSolution_true() {
+<b class="fc"><i>40</i>&nbsp;		HashMap&lt;ResourceType, Integer&gt; requirements = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>41</i>&nbsp;		requirements.put(type, 2);</b>
+<b class="fc"><i>42</i>&nbsp;		assertTrue(constraint.solution(requirements));</b>
+<b class="fc"><i>43</i>&nbsp;	}</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;	@Test
+<i>46</i>&nbsp;	public void testSolution_false() {
+<b class="fc"><i>47</i>&nbsp;		HashMap&lt;ResourceType, Integer&gt; requirements = new HashMap&lt;&gt;();</b>
+<b class="fc"><i>48</i>&nbsp;		requirements.put(type, 87);</b>
+<b class="fc"><i>49</i>&nbsp;		assertFalse(constraint.solution(requirements));</b>
+<b class="fc"><i>50</i>&nbsp;	}</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>

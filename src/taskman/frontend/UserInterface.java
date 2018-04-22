@@ -326,7 +326,7 @@ public class UserInterface {
 		try {
 			List<ResourceWrapper> suggestion = controller.getPlannedResources(task);
 			while (true) {
-				TitleSection resourceTitle = new TitleSection("continue or select resource to change" + task.getName());
+				TitleSection resourceTitle = new TitleSection("continue or select resource to change " + task.getName());
 				resourceTitle.show();
 				SelectionSection<ResourceWrapper> resourceSelection = new SelectionSection<>(true);
 				resourceSelection.addOption("continue", null);
@@ -550,7 +550,7 @@ public class UserInterface {
 	 */
 	private void simulationMenu() throws Cancel, IllegalStateException, ImportExportException {
 		controller.startSimulation();
-		TitleSection title = new TitleSection("Simulation!");
+		TitleSection title = new TitleSection("Simulation");
 		MenuSection menu = new MenuSection("cancel simulation");
 		menu.addOption("show projects and tasks", this::showProjectsAndTasks);
 		menu.addOption("create task", this::createTask);

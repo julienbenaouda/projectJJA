@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Clock</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">taskman.backend.time</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Clock (taskman.backend.time)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Clock</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package taskman.backend.time;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.time.LocalDateTime;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * This class is responsible for storing a consistent time for the system.
+<i>7</i>&nbsp; */
+<b class="fc"><i>8</i>&nbsp;public class Clock {</b>
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * Represents the time of the clock.
+<i>12</i>&nbsp;     */
+<b class="fc"><i>13</i>&nbsp;    private LocalDateTime time = LocalDateTime.MIN;</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Returns the time of the clock.
+<i>17</i>&nbsp;     * @return a LocalDateTime.
+<i>18</i>&nbsp;     */
+<i>19</i>&nbsp;	public LocalDateTime getTime() {
+<b class="fc"><i>20</i>&nbsp;        return time; // LocalDateTime is immutable!</b>
+<i>21</i>&nbsp;    }
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Updates the time of the clock to a later time.
+<i>25</i>&nbsp;     * @param newTime a LocalDateTime with the new time of the clock.
+<i>26</i>&nbsp;     * @throws IllegalArgumentException if the new time if before the old time.
+<i>27</i>&nbsp;     * @post the time of the clock will be set to the given time.
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    public void updateTime(LocalDateTime newTime) throws IllegalArgumentException {
+<b class="fc"><i>30</i>&nbsp;        if (newTime.isAfter(time)) {</b>
+<b class="fc"><i>31</i>&nbsp;            this.time = newTime;</b>
+<i>32</i>&nbsp;        }
+<i>33</i>&nbsp;        else {
+<b class="fc"><i>34</i>&nbsp;            throw new IllegalArgumentException(&quot;New system time must be after the current system time!&quot;);</b>
+<i>35</i>&nbsp;        }
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-04-22 17:08</div>
+</div>
+</body>
+</html>
