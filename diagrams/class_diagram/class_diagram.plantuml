@@ -258,7 +258,70 @@ title __TASKMAN's Class Diagram__\n
         }
       }
 
+      package taskman.backend.constraint {
+        enum AmountComparator {
+          EQUALS
+          NOT_EQUALS
+          GREATER_THAN
+          GREATER_THAN_OR_EQUALS
+          SMALLER_THAN
+          SMALLER_THAN_OR_EQUALS
+        }
+
+        class AndConstraint {
+            + AndConstraint()
+            + getConstraint1()
+            - setConstraint1()
+            + getConstraint2()
+            - setConstraint2()
+            + solution()
+        }
+
+        class Constraint {
+            - amount : int
+            + Constraint()
+            + getResourceType()
+            - setResourceType()
+            + getAmountComparator()
+            - setAmountComparator()
+            + getAmount()
+            - setAmount()
+            + solution()
+        }
+
+        interface ConstraintComponent {
+            {abstract} + solution()
+            {static} + parseConstraint()
+        }
+
+        class IfThenConstraint {
+            + IfThenConstraint()
+            + getIfConstraint()
+            - setIfConstraint()
+            + getThenConstraint()
+            - setThenConstraint()
+            + solution()
+        }
+
+        class NotConstraint {
+            + NotConstraint()
+            + getConstraint()
+            - setConstraint()
+            + solution()
+        }
+
+        class OrConstraint {
+            + OrConstraint()
+            + getConstraint1()
+            - setConstraint1()
+            + getConstraint2()
+            - setConstraint2()
+            + solution()
+        }
+      }
+
       package taskman.backend.resource {
+
         class DeveloperResource {
             + DeveloperResource(String, ResourceType, LocalTime, Developer)
             + LocalTime getBreakTime()
@@ -571,6 +634,20 @@ title __TASKMAN's Class Diagram__\n
     }
   }
 
+  AndConstraint -up-|> ConstraintComponent
+  AndConstraint o-- ConstraintComponent : constraint1
+  AndConstraint o-- ConstraintComponent : constraint2
+  Constraint -up-|> ConstraintComponent
+  Constraint o-- ResourceType : resourceType
+  Constraint o-- AmountComparator : amountComparator
+  IfThenConstraint -up-|> ConstraintComponent
+  IfThenConstraint o-- ConstraintComponent : ifConstraint
+  IfThenConstraint o-- ConstraintComponent : thenConstraint
+  NotConstraint -up-|> ConstraintComponent
+  NotConstraint o-- ConstraintComponent : constraint
+  OrConstraint -up-|> ConstraintComponent
+  OrConstraint o-- ConstraintComponent : constraint1
+  OrConstraint o-- ConstraintComponent : constraint2
   UserInterface o-- Controller : controller
   FormSection -up-|> Section
   MenuSection -up-|> Section
