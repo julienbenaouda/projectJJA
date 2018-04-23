@@ -3,6 +3,7 @@
 title "Use Case - Update Task Status - End execution"
 
 -> ":Controller": endTaskExecution(TaskWrapper, LocalDateTime, LocalDateTime, String)
+activate ":Controller"
 
 ":Controller" -> ":UserManager": getCurrentUser()
 activate ":UserManager"
@@ -30,18 +31,18 @@ deactivate ":Task"
 ":Task" -> ":TaskStateExecuting": endExecution(Task, ResourceManager, LocalDateTime)
 activate ":TaskStateExecuting"
 
-":TaskStatePlanned" -> ":Task": setTimeSpan(TimeSpan)
+":TaskStateExecuting" -> ":Task": setTimeSpan(TimeSpan)
 activate ":Task"
 deactivate ":Task"
 
-":Task" -> ":Task": getPlan()
+":TaskStateExecuting" -> ":Task": getPlan()
 activate ":Task"
 ":Task" <-- ":Task": Plan
 deactivate ":Task"
 
-":TaskStatePlanned" -> ":Plan": finish(TimeSpan)
-activate ":Task"
-deactivate ":Task"
+":TaskStateExecuting" -> ":Plan": finish(TimeSpan)
+activate ":Plan"
+deactivate ":Plan"
 
 ":TaskStateExecuting" -> ":Task": setState(TaskState)
 activate ":Task"
@@ -50,8 +51,6 @@ deactivate ":Task"
 deactivate ":TaskStateExecuting"
 
 deactivate ":Task"
-
-activate ":Controller"
 
 deactivate ":Controller"
 
