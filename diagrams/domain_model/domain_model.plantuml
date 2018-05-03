@@ -1,0 +1,61 @@
+@startuml
+
+title Domain model - Iteration 3
+
+object Project {
+    name
+    description
+    creationTime
+    dueTime
+}
+
+object Task {
+    description
+    plannedStartTime
+    estimatedDuration
+    acceptableDeviation
+}
+
+object User {
+    name
+}
+
+object Developer
+
+object ProjectManager
+
+object Status
+
+object TimeSpan {
+    startTime
+    endTime
+}
+
+object Reservation
+
+object Resource
+
+object Requirement {
+    quantity
+}
+
+object ResourceType
+
+Project "1" -- "*" Task: consists of >
+Task "*" -left- "1" ProjectManager: < plans
+Task "*" -left- "*" Developer: < is assigned to/performs
+User <|-up- Developer
+User <|-up- ProjectManager
+Task "1" -down- "0..1" TimeSpan: was performed during >
+Task "*" o-down- "1" Status: has a >
+Task "*" -- "*" Task: depends on >
+Task "0..1" -- "0..1" Task: is alternative for >
+Task "1" -down- "*" Reservation: < owned by
+Reservation "*" -right- "1" TimeSpan: valid during >
+Resource "1" -up- "*" Reservation: < reserves
+ResourceType "1" -right- "*" Resource: < is type of
+ResourceType "*" -- "*" ResourceType: requires/conflicts with >
+Task "*" -down- "*" ResourceType: requires resource of >
+(Task, ResourceType) .. Requirement
+
+@enduml
