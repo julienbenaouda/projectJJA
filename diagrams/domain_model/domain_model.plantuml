@@ -2,6 +2,17 @@
 
 title Domain model - Iteration 3
 
+'New domain objects
+
+object Company
+
+object BranchOffice {
+    location
+}
+
+
+'Old domain objects
+
 object Project {
     name
     description
@@ -40,6 +51,17 @@ object Requirement {
 }
 
 object ResourceType
+
+
+'New relations
+
+Company "1" -right- "*" BranchOffice: consists of >
+BranchOffice "1" -up- "*" Project: hosts >
+BranchOffice "1" -up- "*" User: employs >
+BranchOffice "1" -up- "*" Resource: manages >
+
+
+'Old relations
 
 Project "1" -- "*" Task: consists of >
 Task "*" -left- "1" ProjectManager: < plans
