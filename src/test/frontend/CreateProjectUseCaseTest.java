@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.Controller;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
@@ -18,7 +18,7 @@ import taskman.frontend.UserInterface;
 
 public class CreateProjectUseCaseTest {
 
-	private ProjectOrganizer po;
+	private ProjectManager po;
 	private UserManager um;
 	private ResourceManager rm;
 	private Clock clock;
@@ -29,7 +29,7 @@ public class CreateProjectUseCaseTest {
 
 	@Before
 	public void setUp() {
-		po = new ProjectOrganizer();
+		po = new ProjectManager();
 		um = new UserManager();
 		rm = new ResourceManager();
 		sm = new SimulationManager();

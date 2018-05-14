@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 
 /**
  * This class is responsible for creating, storing and retrieving resources of the system.
- *
+ * The resource manager keeps a list of all resource types and constraints. 
+ * A resource manager can check if a plans requirements can be satisfied, create an initial plan for a task, check if a planned task can be rescheduled, collect the earliest starting times for a plan
  * @author Jeroen Van Der Donckt, Julien Benaouda
  */
 public class ResourceManager {

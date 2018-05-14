@@ -6,7 +6,7 @@ import org.junit.Test;
 import taskman.backend.Controller;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.task.Task;
@@ -31,7 +31,7 @@ public class ControllerTest {
 
     private static Controller controller;
     private Clock clock;
-    private ProjectOrganizer projectOrganizer;
+    private ProjectManager projectOrganizer;
     private UserManager userManager;
     private ResourceManager resourceManager;
     private LocalTime startBreak;
@@ -41,7 +41,7 @@ public class ControllerTest {
     public void runBeforeMethod() {
         clock = new Clock();
         userManager = new UserManager();
-        projectOrganizer = new ProjectOrganizer();
+        projectOrganizer = new ProjectManager();
         resourceManager = new ResourceManager();
         controller = new Controller(clock, userManager, projectOrganizer, resourceManager, new SimulationManager());
         startBreak = LocalTime.of(12, 0);

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class represents a project.
+ * It keeps the project name, description, creation time, due time and a list of all tasks. It can create tasks, return tasks, add tasks to its list and remove them from its list. 
  * @author Julien Benaouda, Jeroen Van Der Donckt
  */
 public class Project implements ProjectWrapper {

@@ -3,7 +3,7 @@ package taskman.backend;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
@@ -21,7 +21,8 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
- * This class is responsible for redirecting calls of the user interface to the responsible objects of the backend.
+ * This class represents the façade controller. It is responsible for redirecting calls of the user interface to the responsible objects of the backend. 
+ * It also contains references to the user manager, project manager, resource manager, the system clock and  the simulation manager.  
  * @author Alexander Braekevelt
  */
 public class Controller {
@@ -39,7 +40,7 @@ public class Controller {
     /**
      * Represents the project management system.
      */
-    private ProjectOrganizer projectOrganizer;
+    private ProjectManager projectOrganizer;
     
     /**
      * represents the resource manager
@@ -58,7 +59,7 @@ public class Controller {
      * @param projectOrganizer a project management system.
      * @throws NullPointerException if an argument is null.
      */
-    public Controller(Clock clock, UserManager userManager, ProjectOrganizer projectOrganizer, ResourceManager resourceManager, SimulationManager simulationManager) throws NullPointerException{
+    public Controller(Clock clock, UserManager userManager, ProjectManager projectOrganizer, ResourceManager resourceManager, SimulationManager simulationManager) throws NullPointerException{
         if (clock == null || userManager == null || projectOrganizer == null || resourceManager == null || simulationManager == null) {
             throw new NullPointerException("Arguments cannot be null!");
         }
@@ -452,7 +453,7 @@ public class Controller {
 	 * sets the project organizer to the given organizer
 	 * @param projectOrganizer the projectOrganizer of the controller
 	 */
-	private void setProjectOrganizer(ProjectOrganizer projectOrganizer) {
+	private void setProjectOrganizer(ProjectManager projectOrganizer) {
 		this.projectOrganizer = projectOrganizer;
 	}
 

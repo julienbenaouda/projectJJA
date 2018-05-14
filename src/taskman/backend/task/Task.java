@@ -17,6 +17,8 @@ import java.util.Stack;
 
 /**
  * This class represents a task.
+ * A task contains a name, description, estimated duration, acceptable deviation and time span. 
+ * Furthermore, it contains a list of the task on which it depends, and an alternative task. The alternative task can only be filled in when the task is failed. 
  * @author Jeroen Van Der Donckt
  */
 public class Task implements TaskWrapper {

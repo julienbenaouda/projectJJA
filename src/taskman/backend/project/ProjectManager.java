@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class is responsible for creating, storing and retrieving projects of the system.
+ * This class represents the project manager.
+ * This class is responsible for creating, storing and retrieving projects of the system. Therefore it stores a list of all projects. While creating a project, it is not possible to create two projects with the same name.  
  */
-public class ProjectOrganizer {
+public class ProjectManager {
 
     /**
      * Represents the projects in the system.
@@ -21,7 +22,7 @@ public class ProjectOrganizer {
     /**
      * Construct an empty ProjectOrganizer.
      */
-    public ProjectOrganizer() {
+    public ProjectManager() {
         this.projects = new ArrayList<>();
     }
 

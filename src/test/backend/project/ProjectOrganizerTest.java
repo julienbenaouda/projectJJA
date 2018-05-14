@@ -9,15 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.project.Project;
-import taskman.backend.project.ProjectOrganizer;
-import taskman.backend.user.ProjectManager;
+import taskman.backend.project.ProjectManager;
 
 public class ProjectOrganizerTest {
-	private ProjectOrganizer organizer;
+	private ProjectManager organizer;
 
 	@Before
 	public void setUp() {
-		organizer = new ProjectOrganizer();
+		organizer = new ProjectManager();
 	}
 	
 	@Test
@@ -29,7 +28,7 @@ public class ProjectOrganizerTest {
 	public void testCreateProject_alreadyExists() {
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 19, 0);
-		ProjectManager user = new ProjectManager("test", "test");
+		taskman.backend.user.ProjectManager user = new taskman.backend.user.ProjectManager("test", "test");
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 	}
@@ -40,7 +39,7 @@ public class ProjectOrganizerTest {
 	public void testCreateProject() {
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 19, 0);
-		ProjectManager user = new ProjectManager("test", "test");
+		taskman.backend.user.ProjectManager user = new taskman.backend.user.ProjectManager("test", "test");
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 		Project p = organizer.getProject("test");
 		assertEquals("test", p.getName());

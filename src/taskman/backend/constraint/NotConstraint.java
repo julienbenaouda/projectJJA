@@ -6,6 +6,7 @@ import java.util.Map;
 
 /**
  * Class representing a not constraint.
+ * It is responsible for keeping a reference to the clause of a not constraint. It is also responsible for checking if a map of requirements matches this constraint.
  * Note: We apply here the Composite Pattern
  *
  * @author Jeroen Van Der Donckt

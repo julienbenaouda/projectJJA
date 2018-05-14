@@ -6,6 +6,7 @@ import java.util.Map;
 
 /**
  * Class representing an or constraint.
+ * It is responsible for keeping references to the two parts of an or literal. It is also responsible for checking if a map of requirements matches this constraint.
  * Note: We apply here the Composite Pattern
  *
  * @author Jeroen Van Der Donckt

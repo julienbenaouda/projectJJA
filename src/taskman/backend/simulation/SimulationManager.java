@@ -2,7 +2,7 @@ package taskman.backend.simulation;
 
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.User;
@@ -10,6 +10,7 @@ import taskman.backend.user.UserManager;
 
 /**
  * Class representing a simulation.
+ * If the user is running a simulation, this class holds a copy of the old system. It also contains methods for starting, cancelling and keeping a simulation. 
  *
  * @author Jeroen Van Der Donckt, Alexander Braekevelt, Julien Benaouda
  */
@@ -55,7 +56,7 @@ public class SimulationManager {
      * @throws ImportExportException if there occurs an error while creating the xml string
      * @throws IllegalArgumentException if the user is not a project manager
      */
-    public void startSimulation(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock, User user) throws ImportExportException {
+    public void startSimulation(ProjectManager projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock, User user) throws ImportExportException {
     	if(!user.getUserType().equals("project manager")) {
     		throw new IllegalArgumentException("The user is not allowed to perform this action");
     	}

@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * This class is responsible for storing and retrieving resource types of the system.
- *
+ * It has a name and list of resources. It also holds the information regarding the availability of its resources
  * @author Jeroen Van Der Donckt, Julien Benaouda
  */
 public class ResourceType implements ResourceTypeWrapper {

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class representing a plan.
+ * When a task is created, an empty plan is created automatically. A plan contains the requirements for the linked task, and when the task is planned, reservations for the resources are added. It is also responsible for creating them and changing them when needed.  
  *
  * @author Jeroen Van Der Donckt
  */

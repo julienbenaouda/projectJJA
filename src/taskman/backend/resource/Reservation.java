@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 /**
  * This class represents a reservation.
- *
+ * It has a link to the reserved resource and it holds the time span of the reservation. Furthermore, it is responsible for freeing the linked resource when a task is finished earlier than planned. It also knows if the linked resource is chosen by the system or the user.
  * @author Jeroen Van Der Donckt
  */
 public class Reservation {

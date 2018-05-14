@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Class representing a resource item.
+ * A resource has a name, type, and it keeps a list of reservations. It can also provide its availability at a specific time span, considering its reservations. 
  *
  * @author Jeroen Van Der Donckt, Julien Benaouda, Alexander Braekevelt
  */

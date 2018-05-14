@@ -5,7 +5,7 @@ import org.junit.Test;
 import taskman.backend.Controller;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.simulation.SimulationManager;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 
 public class XmlObjectTest {
-	private ProjectOrganizer po;
+	private ProjectManager po;
 	private ResourceManager rm;
 	private UserManager um;
 	private Clock c;
@@ -33,7 +33,7 @@ public class XmlObjectTest {
 
 	@Before
 	public void setUp() {
-		po = new ProjectOrganizer();
+		po = new ProjectManager();
 		um = new UserManager();
 		rm = new ResourceManager();
 		c = new Clock();

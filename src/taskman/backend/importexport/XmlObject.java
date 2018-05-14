@@ -2,7 +2,7 @@ package taskman.backend.importexport;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import taskman.backend.project.ProjectOrganizer;
+import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 /**
+ * This class represents the XmlObject of the System.
+ * It is responsible for exporting the system to an xml string and saving this string to a file, and importing an xml string and converting it to system objects. Therefore it keeps a reference to the project manager, resource manager, clock and user manager.
  * @author Julien Benaouda, Alexander Braekevelt
  *
  */
@@ -29,7 +31,7 @@ public class XmlObject {
 	 * @throws IllegalArgumentException when one of the parameters is null
 	 * @post a new XMLObject is created with the given parameters
 	 */
-	public XmlObject(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock) {
+	public XmlObject(ProjectManager projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock) {
 		if(projectOrganizer == null || userManager == null || resourceManager == null || clock == null) {
 			throw new IllegalArgumentException("No parameter can't be null!");
 		}
@@ -66,12 +68,12 @@ public class XmlObject {
 	/**
 	 * represents the project organizer
 	 */
-	private final ProjectOrganizer projectOrganizer;
+	private final ProjectManager projectOrganizer;
 	
 	/**
 	 * @return the projectOrganizer
 	 */
-	public ProjectOrganizer getProjectOrganizer() {
+	public ProjectManager getProjectOrganizer() {
 		return projectOrganizer;
 	}
 

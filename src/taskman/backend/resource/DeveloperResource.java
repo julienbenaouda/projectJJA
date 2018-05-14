@@ -10,6 +10,8 @@ import taskman.backend.user.Developer;
 import java.time.LocalTime;
 
 /**
+ * This class represents a resource for a developer.
+ * It contains the break time for the developer, and a link to the developer. When a developer is created, an instance of this class with the link to the developer is created automatically and it is added to the "developer" resource type. 
  * @author Julien Benaouda
  *
  */

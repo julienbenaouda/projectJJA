@@ -2,7 +2,8 @@ package taskman.backend.constraint;
 
 /**
  * This enum represents a comparator for a constraint.
- *
+ * It is responsible for comparing to values from a constraint. 
+ * Therefore, the class contains 6 states each representing a way of comparing the two values.
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
