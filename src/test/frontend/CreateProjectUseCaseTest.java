@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import taskman.backend.Controller;
+import taskman.backend.branchOffice.BranchOffice;
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
@@ -34,13 +36,19 @@ public class CreateProjectUseCaseTest {
 		rm = new ResourceManager();
 		sm = new SimulationManager();
 		clock = new Clock();
-		c = new Controller(clock, um, po, rm, sm);
+		BranchOfficeManager branchOfficeManager = new BranchOfficeManager();
+		branchOfficeManager.createBranchOffice("test");
+		BranchOffice b = (BranchOffice)branchOfficeManager.getBranchOffices().get(0);
+		um = b.getUserManager();
+		po = b.getProjectManager();
+		rm = b.getResourceManager();
+		c = new Controller(clock, branchOfficeManager, new SimulationManager());
 		um.createUser("test", "test", "project manager", null, rm);
 		c.login("test", "test");
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 	}
-	
+
 	@Test
 	public void testCreateProjectNormalFlow() {
 		System.setOut(new PrintStream(outputStream));
@@ -48,7 +56,7 @@ public class CreateProjectUseCaseTest {
 		ui.start();
 		assertTrue(outputStream.toString().contains("successful"));
 	}
-	
+
 	@Test
 	public void testCreateProjectCancel() {
 		System.setOut(new PrintStream(outputStream));
@@ -56,7 +64,7 @@ public class CreateProjectUseCaseTest {
 		ui.start();
 		assertFalse(outputStream.toString().contains("successful"));
 	}
-	
+
 	@Test
 	public void testCreateProjectIllegalCase() {
 		System.setOut(new PrintStream(outputStream));

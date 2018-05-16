@@ -13,7 +13,6 @@ import taskman.backend.user.Developer;
 import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

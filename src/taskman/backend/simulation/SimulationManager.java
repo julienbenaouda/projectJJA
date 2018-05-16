@@ -3,11 +3,8 @@ package taskman.backend.simulation;
 import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
-import taskman.backend.project.ProjectManager;
-import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
 import taskman.backend.user.User;
-import taskman.backend.user.UserManager;
 
 /**
  * Class representing a simulation.

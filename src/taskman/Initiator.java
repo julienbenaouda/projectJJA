@@ -2,11 +2,8 @@ package taskman;
 
 import taskman.backend.Controller;
 import taskman.backend.branchOffice.BranchOfficeManager;
-import taskman.backend.project.ProjectManager;
-import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
 import taskman.backend.time.Clock;
-import taskman.backend.user.UserManager;
 import taskman.frontend.UserInterface;
 
 /**

@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.backend.Controller;
+import taskman.backend.branchOffice.BranchOffice;
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
@@ -36,14 +38,18 @@ public class ControllerTest {
     private ResourceManager resourceManager;
     private LocalTime startBreak;
     private LocalDateTime randomTime = LocalDateTime.of(1298, 12, 30, 9, 2);
+	private BranchOfficeManager branchOfficeManager;
 
     @Before
     public void runBeforeMethod() {
         clock = new Clock();
-        userManager = new UserManager();
-        projectOrganizer = new ProjectManager();
-        resourceManager = new ResourceManager();
-        controller = new Controller(clock, userManager, projectOrganizer, resourceManager, new SimulationManager());
+        branchOfficeManager = new BranchOfficeManager();
+        branchOfficeManager.createBranchOffice("test");
+        BranchOffice b = (BranchOffice)branchOfficeManager.getBranchOffices().get(0);
+        userManager = b.getUserManager();
+        projectOrganizer = b.getProjectManager();
+        resourceManager = b.getResourceManager();
+        controller = new Controller(clock, branchOfficeManager, new SimulationManager());
         startBreak = LocalTime.of(12, 0);
     }
 

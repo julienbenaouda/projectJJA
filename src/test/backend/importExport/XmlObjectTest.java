@@ -3,6 +3,8 @@ package test.backend.importExport;
 import org.junit.Before;
 import org.junit.Test;
 import taskman.backend.Controller;
+import taskman.backend.branchOffice.BranchOffice;
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
@@ -30,6 +32,7 @@ public class XmlObjectTest {
 	private Clock c;
 	private Controller controller;
 	private XmlObject o;
+	private BranchOfficeManager branchOfficeManager;
 
 	@Before
 	public void setUp() {
@@ -37,15 +40,19 @@ public class XmlObjectTest {
 		um = new UserManager();
 		rm = new ResourceManager();
 		c = new Clock();
-		controller = new Controller(c, um, po, rm, new SimulationManager());
-		o = new XmlObject(po, um, rm, c);
+		branchOfficeManager = new BranchOfficeManager();
+		branchOfficeManager.createBranchOffice("test");
+		BranchOffice b = (BranchOffice)branchOfficeManager.getBranchOffices().get(0);
+		um = b.getUserManager();
+		po = b.getProjectManager();
+		rm = b.getResourceManager();
+		controller = new Controller(c, branchOfficeManager, new SimulationManager());
+		o = new XmlObject(branchOfficeManager, c);
 	}
 
 	@Test
 	public void testXmlObject() {
-		assertEquals(po, o.getProjectOrganizer());
-		assertEquals(rm, o.getResourceManager());
-		assertEquals(um, o.getUserManager());
+		assertEquals(branchOfficeManager, o.getBranchOfficeManager());
 		assertEquals(c, o.getClock());
 	}
 
@@ -119,9 +126,11 @@ public class XmlObjectTest {
 		} catch (Exception e) {
 			fail("test failed: " +e.getMessage());
 		}
-		po = obj.getProjectOrganizer();
-		um = obj.getUserManager();
-		rm = obj.getResourceManager();
+		BranchOfficeManager bm = obj.getBranchOfficeManager();
+		BranchOffice b = (BranchOffice)bm.getBranchOffices().get(0);
+		po = b.getProjectManager();
+		um = b.getUserManager();
+		rm = b.getResourceManager();
 		c = obj.getClock();
 		assertNotNull(po.getProject("test"));
 		assertNotNull(po.getProject("test").getTask("test"));

@@ -4,11 +4,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import taskman.backend.branchOffice.BranchOfficeManager;
-import taskman.backend.project.ProjectManager;
-import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
-import taskman.backend.user.UserManager;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
