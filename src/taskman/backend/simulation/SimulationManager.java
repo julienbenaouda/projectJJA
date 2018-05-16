@@ -1,5 +1,6 @@
 package taskman.backend.simulation;
 
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.ProjectManager;
@@ -56,11 +57,11 @@ public class SimulationManager {
      * @throws ImportExportException if there occurs an error while creating the xml string
      * @throws IllegalArgumentException if the user is not a project manager
      */
-    public void startSimulation(ProjectManager projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock, User user) throws ImportExportException {
+    public void startSimulation(BranchOfficeManager branchOfficeManager, Clock clock, User user) throws ImportExportException {
     	if(!user.getUserType().equals("project manager")) {
     		throw new IllegalArgumentException("The user is not allowed to perform this action");
     	}
-        XmlObject xmlObject = new XmlObject(projectOrganizer, userManager, resourceManager, clock);
+        XmlObject xmlObject = new XmlObject(branchOfficeManager, clock);
         setPreviousState(xmlObject.toXMLString());
     }
 

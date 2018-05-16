@@ -1,6 +1,7 @@
 package taskman;
 
 import taskman.backend.Controller;
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
@@ -19,7 +20,7 @@ public class Initiator {
 	 * @param args ignored arguments.
 	 */
 	public static void main(String[] args) {
-		Controller controller = new Controller(new Clock(), new UserManager(), new ProjectManager(), new ResourceManager(), new SimulationManager());
+		Controller controller = new Controller(new Clock(), new BranchOfficeManager(), new SimulationManager());
 		UserInterface ui = new UserInterface(controller);
 		ui.start();
 	}

@@ -3,6 +3,7 @@ package taskman.backend.branchOffice;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.BranchOfficeWrapper;
 
 /**
  * This class represents a branch office.
@@ -10,7 +11,7 @@ import taskman.backend.user.UserManager;
  * @author Julien Benaouda
  *
  */
-public class BranchOffice {
+public class BranchOffice implements BranchOfficeWrapper {
 
 	/**
 	 * creates a new branch office manager with the given name

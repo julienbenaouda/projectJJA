@@ -2,6 +2,8 @@ package taskman.backend.importexport;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.time.Clock;
@@ -24,59 +26,19 @@ public class XmlObject {
 
 	/**
 	 * creates a new xml object with given user manager, project organizer and resource manager
-	 * @param projectOrganizer the projectOrganizer to add to the xml file
-	 * @param userManager the user manager to add to the file
-	 * @param resourceManager the resource manager to add to the file
+	 * @param branchOfficeManager the branch office manager to add to the xml file
 	 * @param clock the clock to add to the file
 	 * @throws IllegalArgumentException when one of the parameters is null
 	 * @post a new XMLObject is created with the given parameters
 	 */
-	public XmlObject(ProjectManager projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock) {
-		if(projectOrganizer == null || userManager == null || resourceManager == null || clock == null) {
+	public XmlObject(BranchOfficeManager branchOfficeManager, Clock clock) {
+		if(branchOfficeManager == null || clock == null) {
 			throw new IllegalArgumentException("No parameter can't be null!");
 		}
-		this.projectOrganizer = projectOrganizer;
-		this.userManager = userManager;
-		this.resourceManager = resourceManager;
+		this.branchOfficeManager = branchOfficeManager;
 		this.clock = clock;
 	}
 	
-	/**
-	 * represents the resource manager
-	 */
-	private final ResourceManager resourceManager;
-	
-	/**
-	 * @return the resourceManager
-	 */
-	public ResourceManager getResourceManager() {
-		return resourceManager;
-	}
-
-	/**
-	 * represents the user manager
-	 */
-	private final UserManager userManager;
-	
-	/**
-	 * @return the userManager
-	 */
-	public UserManager getUserManager() {
-		return userManager;
-	}
-
-	/**
-	 * represents the project organizer
-	 */
-	private final ProjectManager projectOrganizer;
-	
-	/**
-	 * @return the projectOrganizer
-	 */
-	public ProjectManager getProjectOrganizer() {
-		return projectOrganizer;
-	}
-
 	/**
 	 * represents the system clock
 	 */
@@ -87,6 +49,18 @@ public class XmlObject {
 	 */
 	public Clock getClock() {
 		return clock;
+	}
+	
+	/**
+	 * represents the branch office manager
+	 */
+	private BranchOfficeManager branchOfficeManager;
+	
+	/**
+	 * @return the branch office manager
+	 */
+	public BranchOfficeManager getBranchOfficeManager() {
+		return branchOfficeManager;
 	}
 
 	/**
