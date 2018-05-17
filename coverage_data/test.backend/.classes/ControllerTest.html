@@ -137,7 +137,7 @@
 <b class="fc"><i>63</i>&nbsp;    }</b>
 <i>64</i>&nbsp;
 <i>65</i>&nbsp;    private void addProjectManager() {
-<b class="fc"><i>66</i>&nbsp;        userManager.createUser(&quot;pm&quot;, &quot;pmpass&quot;, &quot;project manager&quot;, null, resourceManager);</b>
+<b class="fc"><i>66</i>&nbsp;        userManager.createUser(&quot;pm&quot;, &quot;pmpass&quot;, &quot;project userManager&quot;, null, resourceManager);</b>
 <b class="fc"><i>67</i>&nbsp;        userManager.login(&quot;pm&quot;, &quot;pmpass&quot;);</b>
 <b class="fc"><i>68</i>&nbsp;    }</b>
 <i>69</i>&nbsp;
@@ -145,9 +145,9 @@
 <i>71</i>&nbsp;    public void constructor() {
 <b class="fc"><i>72</i>&nbsp;        addProjectManager();</b>
 <b class="fc"><i>73</i>&nbsp;        assertEquals(&quot;Constructor does not initialize clock!&quot;, clock.getTime(), controller.getTime());</b>
-<b class="fc"><i>74</i>&nbsp;        assertEquals(&quot;Constructor does not initialize user manager!&quot;, userManager.getCurrentUser(), controller.getCurrentUser());</b>
+<b class="fc"><i>74</i>&nbsp;        assertEquals(&quot;Constructor does not initialize user userManager!&quot;, userManager.getCurrentUser(), controller.getCurrentUser());</b>
 <b class="fc"><i>75</i>&nbsp;        assertEquals(&quot;Constructor does not initialize project organizer!&quot;, projectOrganizer.getProjects(), controller.getProjects());</b>
-<b class="fc"><i>76</i>&nbsp;        assertEquals(&quot;Constructor does not initialize resource manager!&quot;, resourceManager.getResourceTypes(), controller.getResourceTypes());</b>
+<b class="fc"><i>76</i>&nbsp;        assertEquals(&quot;Constructor does not initialize resource userManager!&quot;, resourceManager.getResourceTypes(), controller.getResourceTypes());</b>
 <b class="fc"><i>77</i>&nbsp;    }</b>
 <i>78</i>&nbsp;
 <i>79</i>&nbsp;    @Test
@@ -204,7 +204,7 @@
 <i>130</i>&nbsp;    @Test
 <i>131</i>&nbsp;    public void createUser_login_logout_removeUser() {
 <b class="fc"><i>132</i>&nbsp;        assertFalse(&quot;User already created!&quot;, userManager.hasUser(&quot;alexander&quot;));</b>
-<b class="fc"><i>133</i>&nbsp;        controller.createUser(&quot;alexander&quot;, &quot;blabla&quot;, &quot;project manager&quot;, null);</b>
+<b class="fc"><i>133</i>&nbsp;        controller.createUser(&quot;alexander&quot;, &quot;blabla&quot;, &quot;project userManager&quot;, null);</b>
 <b class="fc"><i>134</i>&nbsp;        assertTrue(&quot;User not created!&quot;, userManager.hasUser(&quot;alexander&quot;));</b>
 <b class="fc"><i>135</i>&nbsp;        User alexander = userManager.getUser(&quot;alexander&quot;);</b>
 <b class="fc"><i>136</i>&nbsp;        assertFalse(&quot;User already created!&quot;, userManager.hasUser(&quot;julien&quot;));</b>

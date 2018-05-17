@@ -471,7 +471,7 @@ extends java.lang.Object</pre>
 <div class="block">Adds the given requirement to the requirements of the given task.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - the resource manager of the system</dd>
+<dd><code>resourceManager</code> - the resource userManager of the system</dd>
 <dd><code>task</code> - the task to add the requirement to its requirements</dd>
 <dd><code>resourceType</code> - the resource type of the requirement</dd>
 <dd><code>amount</code> - the amount of the requirement</dd>
@@ -494,7 +494,7 @@ extends java.lang.Object</pre>
 <div class="block">Returns if the planned task is available.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>task</code> - a task.</dd>
 <dd><code>startTime</code> - a start time.</dd>
 <DT><B>Returns:</B><DD>true if the planned task is available, otherwise false</DD>
@@ -527,7 +527,7 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>task</code> - a task.</dd>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>startTime</code> - the start time for the plan.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalStateException</code> - if the state is not unavailable.</dd>
@@ -566,7 +566,7 @@ extends java.lang.Object</pre>
 <div class="block">Returns a list of resources as alternatives for the given resource.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>task</code> - a task.</dd>
 <dd><code>resource</code> - a resource wrapper to search alternatives for.</dd>
 <DT><B>Returns:</B><DD>a list of resources as alternatives for the given resource.</DD>

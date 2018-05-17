@@ -22,7 +22,7 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
- * This class represents the façade controller. It is responsible for redirecting calls of the user interface to the responsible objects of the backend. 
+ * This class represents the faï¿½ade controller. It is responsible for redirecting calls of the user interface to the responsible objects of the backend. 
  * It also contains references to the branch office manager, the system clock and the simulation manager.  
  * @author Alexander Braekevelt, Julien Benaouda
  */

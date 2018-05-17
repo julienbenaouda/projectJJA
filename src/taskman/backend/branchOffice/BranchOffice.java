@@ -7,14 +7,14 @@ import taskman.backend.wrappers.BranchOfficeWrapper;
 
 /**
  * This class represents a branch office.
- * A branch office contains a name, project manager, resource manager and user manager. It is also responsible for accepting a task which is delegated from another branch office. 
+ * A branch office contains a name, project userManager, resource userManager and user userManager. It is also responsible for accepting a task which is delegated from another branch office.
  * @author Julien Benaouda
  *
  */
 public class BranchOffice implements BranchOfficeWrapper {
 
 	/**
-	 * creates a new branch office manager with the given name
+	 * creates a new branch office userManager with the given name
 	 * @param name the name of the new branch office 
 	 */
 	public BranchOffice(String name) {
@@ -49,7 +49,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	}
 
 	/**
-	 * represents the project manager
+	 * represents the project userManager
 	 */
 	private ProjectManager projectManager;
 
@@ -61,19 +61,19 @@ public class BranchOffice implements BranchOfficeWrapper {
 	}
 
 	/**
-	 * sets the project manager of the branch office to the given project manager
+	 * sets the project userManager of the branch office to the given project userManager
 	 * @param projectManager the projectManager to set for the branch office
-	 * @throws IllegalArgumentEception when the given project manager is null
+	 * @throws IllegalArgumentEception when the given project userManager is null
 	 */
 	private void setProjectManager(ProjectManager projectManager) throws IllegalArgumentException {
 		if(projectManager == null) {
-			throw new IllegalArgumentException("the project manager can't be null.");
+			throw new IllegalArgumentException("the project userManager can't be null.");
 		}
 		this.projectManager = projectManager;
 	}
 	
 	/**
-	 * represents the resource manager
+	 * represents the resource userManager
 	 */
 	private ResourceManager resourceManager;
 
@@ -85,7 +85,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	}
 
 	/**
-	 * sets the resource manager to the given resource manager
+	 * sets the resource userManager to the given resource userManager
 	 * @param resourceManager the resourceManager to set for this branch office
 	 */
 	private void setResourceManager(ResourceManager resourceManager) {
@@ -93,7 +93,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	}
 	
 	/**
-	 * represents the user manager
+	 * represents the user userManager
 	 */
 	private UserManager userManager;
 
@@ -105,7 +105,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	}
 
 	/**
-	 * sets the user manager to the given user manager
+	 * sets the user userManager to the given user userManager
 	 * @param userManager the userManager to set for this branch office
 	 */
 	private void setUserManager(UserManager userManager) {

@@ -15,7 +15,7 @@ High level design
 State pattern (Jeroen)
 Composite pattern (Jeroen)
 Wrappers (Alexander)
-Simulation, user, project & resource manager (Julien)
+Simulation, user, project & resource userManager (Julien)
 Controller (Alexander)
 
 Important design decisions: state pattern

@@ -554,7 +554,7 @@ implements <a href="../../../taskman/backend/wrappers/TaskWrapper.html" title="i
 <div class="block">makes a task executing</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - the resource manager to pass to the state</dd>
+<dd><code>resourceManager</code> - the resource userManager to pass to the state</dd>
 <dd><code>startTime</code> - the time when the task starts executing</dd>
 <dd><code>user</code> - the user to check the assignment for</dd>
 <DT><B>Postcondition:</B><DD>the status of the task is changed to executing</DD>
@@ -576,7 +576,7 @@ implements <a href="../../../taskman/backend/wrappers/TaskWrapper.html" title="i
 <div class="block">Returns if this task is available.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>startTime</code> - a start time.</dd>
 <DT><B>Returns:</B><DD>true if this task is available, otherwise false.</DD>
 </dl>
@@ -727,7 +727,7 @@ implements <a href="../../../taskman/backend/wrappers/TaskWrapper.html" title="i
 <div class="block">Initializes a plan for this task.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>startTime</code> - the start time for the plan.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalStateException</code> - if the state is not unavailable.</dd>
@@ -762,7 +762,7 @@ implements <a href="../../../taskman/backend/wrappers/TaskWrapper.html" title="i
 <div class="block">Returns a list of resources as alternatives for the given resource.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - a resource manager.</dd>
+<dd><code>resourceManager</code> - a resource userManager.</dd>
 <dd><code>resource</code> - a resource wrapper to search alternatives for.</dd>
 <DT><B>Returns:</B><DD>a list of resources as alternatives for the given resource.</DD>
 
@@ -817,7 +817,7 @@ implements <a href="../../../taskman/backend/wrappers/TaskWrapper.html" title="i
 <div class="block">Adds the given requirement to the task its requirements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>resourceManager</code> - the resource manager of the system</dd>
+<dd><code>resourceManager</code> - the resource userManager of the system</dd>
 <dd><code>resourceType</code> - the resource type of the requirement</dd>
 <dd><code>amount</code> - the amount of the requirement</dd>
 <DT><B>Postcondition:</B><DD>the requirement is added to the requirements of the task.</DD>

@@ -319,7 +319,7 @@
 <i>245</i>&nbsp;
 <i>246</i>&nbsp;    /**
 <i>247</i>&nbsp;     * makes a task executing
-<i>248</i>&nbsp;     * @param resourceManager the resource manager to pass to the state
+<i>248</i>&nbsp;     * @param resourceManager the resource userManager to pass to the state
 <i>249</i>&nbsp;     * @param startTime the time when the task starts executing
 <i>250</i>&nbsp;     * @param user the user to check the assignment for
 <i>251</i>&nbsp;     * @post the status of the task is changed to executing
@@ -336,7 +336,7 @@
 <i>262</i>&nbsp;
 <i>263</i>&nbsp;    /**
 <i>264</i>&nbsp;     * Returns if this task is available.
-<i>265</i>&nbsp;     * @param resourceManager a resource manager.
+<i>265</i>&nbsp;     * @param resourceManager a resource userManager.
 <i>266</i>&nbsp;     * @param startTime a start time.
 <i>267</i>&nbsp;     * @return true if this task is available, otherwise false.
 <i>268</i>&nbsp;     */
@@ -459,7 +459,7 @@
 <i>385</i>&nbsp;
 <i>386</i>&nbsp;    /**
 <i>387</i>&nbsp;     * Initializes a plan for this task.
-<i>388</i>&nbsp;     * @param resourceManager a resource manager.
+<i>388</i>&nbsp;     * @param resourceManager a resource userManager.
 <i>389</i>&nbsp;     * @param startTime the start time for the plan.
 <i>390</i>&nbsp;     * @throws IllegalStateException if the state is not unavailable.
 <i>391</i>&nbsp;     */
@@ -478,7 +478,7 @@
 <i>404</i>&nbsp;
 <i>405</i>&nbsp;    /**
 <i>406</i>&nbsp;     * Returns a list of resources as alternatives for the given resource.
-<i>407</i>&nbsp;     * @param resourceManager a resource manager.
+<i>407</i>&nbsp;     * @param resourceManager a resource userManager.
 <i>408</i>&nbsp;     * @param resource a resource wrapper to search alternatives for.
 <i>409</i>&nbsp;     * @return a list of resources as alternatives for the given resource.
 <i>410</i>&nbsp;     * @throws IllegalStateException if the state is not planned.
@@ -508,7 +508,7 @@
 <i>434</i>&nbsp;    /**
 <i>435</i>&nbsp;     * Adds the given requirement to the task its requirements.
 <i>436</i>&nbsp;     *
-<i>437</i>&nbsp;     * @param resourceManager the resource manager of the system
+<i>437</i>&nbsp;     * @param resourceManager the resource userManager of the system
 <i>438</i>&nbsp;     * @param resourceType the resource type of the requirement
 <i>439</i>&nbsp;     * @param amount the amount of the requirement
 <i>440</i>&nbsp;     * @post the requirement is added to the requirements of the task.

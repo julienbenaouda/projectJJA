@@ -122,15 +122,15 @@
 <i>48</i>&nbsp;     * Starts the simulation.
 <i>49</i>&nbsp;     *
 <i>50</i>&nbsp;     * @param projectOrganizer the project organizer of the system
-<i>51</i>&nbsp;     * @param userManager the user manager of the system
-<i>52</i>&nbsp;     * @param resourceManager the resource manager of the system
+<i>51</i>&nbsp;     * @param userManager the user userManager of the system
+<i>52</i>&nbsp;     * @param resourceManager the resource userManager of the system
 <i>53</i>&nbsp;     * @param clock the clock of the system
 <i>54</i>&nbsp;     * @post the previous state of the simulation is set to an xml string representing the system its state
 <i>55</i>&nbsp;     * @throws ImportExportException if there occurs an error while creating the xml string
-<i>56</i>&nbsp;     * @throws IllegalArgumentException if the user is not a project manager
+<i>56</i>&nbsp;     * @throws IllegalArgumentException if the user is not a project userManager
 <i>57</i>&nbsp;     */
 <i>58</i>&nbsp;    public void startSimulation(ProjectOrganizer projectOrganizer, UserManager userManager, ResourceManager resourceManager, Clock clock, User user) throws ImportExportException {
-<b class="fc"><i>59</i>&nbsp;    	if(!user.getUserType().equals(&quot;project manager&quot;)) {</b>
+<b class="fc"><i>59</i>&nbsp;    	if(!user.getUserType().equals(&quot;project userManager&quot;)) {</b>
 <b class="nc"><i>60</i>&nbsp;    		throw new IllegalArgumentException(&quot;The user is not allowed to perform this action&quot;);</b>
 <i>61</i>&nbsp;    	}
 <b class="fc"><i>62</i>&nbsp;        XmlObject xmlObject = new XmlObject(projectOrganizer, userManager, resourceManager, clock);</b>

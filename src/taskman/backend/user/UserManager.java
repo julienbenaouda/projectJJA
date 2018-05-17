@@ -105,7 +105,7 @@ public class UserManager {
 	 * @post a project manager with the given name and password is added to the list of users.
 	 */
 	private void createProjectManager(String name, String password) {
-		users.add(new ProjectManager(name, password));
+		users.add(new Manager(name, password));
 	}
 
 	/**

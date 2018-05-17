@@ -5,7 +5,7 @@ package taskman.backend.user;
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */
-public class ProjectManager extends User {
+public class Manager extends User {
 
 	/**
 	 * creates a new project manager with the given parameters
@@ -13,7 +13,7 @@ public class ProjectManager extends User {
 	 * @param password the password of the project manager
 	 * @post a new project manager is created with the given parameters
 	 */
-	public ProjectManager(String name, String password) {
+	public Manager(String name, String password) {
 		super(name, password);
 	}
 

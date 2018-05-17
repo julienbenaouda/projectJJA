@@ -83,15 +83,15 @@
 <i>9</i>&nbsp;import java.util.List;
 <i>10</i>&nbsp;
 <i>11</i>&nbsp;/**
-<i>12</i>&nbsp; * This class represents the user manager in the taskman system.
+<i>12</i>&nbsp; * This class represents the user userManager in the taskman system.
 <i>13</i>&nbsp; * @author Julien Benaouda, Alexander Braekevelt
 <i>14</i>&nbsp; *
 <i>15</i>&nbsp; */
 <i>16</i>&nbsp;public class UserManager {
 <i>17</i>&nbsp;
 <i>18</i>&nbsp;	/**
-<i>19</i>&nbsp;	 * Creates a new user manager object
-<i>20</i>&nbsp;	 * @post a new user manager is created 
+<i>19</i>&nbsp;	 * Creates a new user userManager object
+<i>20</i>&nbsp;	 * @post a new user userManager is created
 <i>21</i>&nbsp;	 */
 <b class="fc"><i>22</i>&nbsp;	public UserManager() {</b>
 <b class="fc"><i>23</i>&nbsp;		this.users = new ArrayList&lt;&gt;();</b>
@@ -148,7 +148,7 @@
 <i>74</i>&nbsp;			case &quot;developer&quot;:
 <b class="fc"><i>75</i>&nbsp;				createDeveloper(name, password);</b>
 <b class="fc"><i>76</i>&nbsp;				break;</b>
-<i>77</i>&nbsp;			case &quot;project manager&quot;:
+<i>77</i>&nbsp;			case &quot;project userManager&quot;:
 <b class="fc"><i>78</i>&nbsp;				createProjectManager(name, password);</b>
 <b class="fc"><i>79</i>&nbsp;				break;</b>
 <i>80</i>&nbsp;			default:
@@ -173,10 +173,10 @@
 <b class="fc"><i>99</i>&nbsp;	}</b>
 <i>100</i>&nbsp;
 <i>101</i>&nbsp;	/**
-<i>102</i>&nbsp;	 * Adds a new project manager to the list of users.
-<i>103</i>&nbsp;	 * @param name the name of the project manager.
-<i>104</i>&nbsp;	 * @param password the password of the project manager.
-<i>105</i>&nbsp;	 * @post a project manager with the given name and password is added to the list of users.
+<i>102</i>&nbsp;	 * Adds a new project userManager to the list of users.
+<i>103</i>&nbsp;	 * @param name the name of the project userManager.
+<i>104</i>&nbsp;	 * @param password the password of the project userManager.
+<i>105</i>&nbsp;	 * @post a project userManager with the given name and password is added to the list of users.
 <i>106</i>&nbsp;	 */
 <i>107</i>&nbsp;	private void createProjectManager(String name, String password) {
 <b class="fc"><i>108</i>&nbsp;		users.add(new ProjectManager(name, password));</b>
@@ -201,7 +201,7 @@
 <i>127</i>&nbsp;	 * @return a collection of user types.
 <i>128</i>&nbsp;	 */
 <i>129</i>&nbsp;	public Collection&lt;String&gt; getUserTypes() {
-<b class="fc"><i>130</i>&nbsp;		return Arrays.asList(&quot;developer&quot;, &quot;project manager&quot;);</b>
+<b class="fc"><i>130</i>&nbsp;		return Arrays.asList(&quot;developer&quot;, &quot;project userManager&quot;);</b>
 <i>131</i>&nbsp;	}
 <i>132</i>&nbsp;
 <i>133</i>&nbsp;	/**

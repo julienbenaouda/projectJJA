@@ -58,7 +58,7 @@ public class BranchOfficeManager {
 	
 	/**
 	 * changes the current branch office to the given branch office
-	 * @param branchoffice the branch office to be set as new branch office
+	 * @param branchOffice the branch office to be set as new branch office
 	 * @throws IllegalArgumentException when the given branch office is nulll
 	 */
 	public void changeBranchOffice(BranchOffice branchOffice) throws IllegalArgumentException {

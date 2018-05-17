@@ -113,7 +113,7 @@ title __TASKMAN's Class Diagram__\n
 
     package taskman.backend {
       class Controller {
-          + Controller(Clock, UserManager, ProjectOrganizer, ResourceManager, SimulationManager)
+          + Controller(Clock, UserManager, ProjectManager, ResourceManager, SimulationManager)
           + LocalDateTime getTime()
           + void updateTime(LocalDateTime)
           + UserWrapper getCurrentUser()
@@ -150,7 +150,7 @@ title __TASKMAN's Class Diagram__\n
           + void executeSimulation()
           - void setClock(Clock)
           - void setUserManager(UserManager)
-          - void setProjectOrganizer(ProjectOrganizer)
+          - void setProjectManager(ProjectManager)
           - void setResourceManager(ResourceManager)
       }
 
@@ -208,10 +208,10 @@ title __TASKMAN's Class Diagram__\n
 
         class XmlObject {
             - xstream : XStream
-            + XmlObject(ProjectOrganizer, UserManager, ResourceManager, Clock)
+            + XmlObject(ProjectManager, UserManager, ResourceManager, Clock)
             + ResourceManager getResourceManager()
             + UserManager getUserManager()
-            + ProjectOrganizer getProjectOrganizer()
+            + ProjectManager getProjectManager()
             + Clock getClock()
             {static} - XStream createXstream()
             + String toXMLString()
@@ -248,9 +248,9 @@ title __TASKMAN's Class Diagram__\n
             + String getStatus(LocalDateTIme)
         }
 
-        class ProjectOrganizer {
+        class ProjectManager {
             - projects : Collection<Project>
-            + ProjectOrganizer()
+            + ProjectManager()
             + List<Project> getProjects()
             + List<Project> getProjects(User)
             + Project getProject(String)
@@ -436,7 +436,7 @@ title __TASKMAN's Class Diagram__\n
             + SimulationManager()
             - String getPreviousState()
             - void setPreviousState(String)
-            + void startSimulation(ProjectOrganizer, UserManager, ResourceManager, Clock, User)
+            + void startSimulation(ProjectManager, UserManager, ResourceManager, Clock, User)
             + XmlObject cancelSimulation()
             + void executeSimulation()
         }
@@ -605,8 +605,8 @@ title __TASKMAN's Class Diagram__\n
             + OperationNotPermittedException(String)
         }
 
-        class ProjectManager {
-            + ProjectManager(String, String)
+        class Manager {
+            + Manager(String, String)
             + String getUserType()
         }
 
@@ -629,7 +629,7 @@ title __TASKMAN's Class Diagram__\n
             + boolean hasUser(String)
             + void createUser(String, String, String, LocalTime, ResourceManager)
             - void createDeveloper(String, String)
-            - void createProjectManager(String, String)
+            - void createManager(String, String)
             + void removeUser(User, String, ResourceManager, )
             + Collection<String> getUserTypes()
             + User getCurrentUser()
@@ -645,7 +645,7 @@ title __TASKMAN's Class Diagram__\n
   package taskman.backend.branchoffice {
     class BranchOffice {
       + ProjectManager getProjectManager()
-      + ResourceManager getResourceManager() 
+      + ResourceManager getResourceManager()
       + UserManager getUserManager()
       - void setProjectManager(ProjectManager)
       - void setResourceManager(ResourceManager)
@@ -676,13 +676,13 @@ title __TASKMAN's Class Diagram__\n
   TitleSection o-- TextSection : textSection
   Controller o-- Clock : clock
   BranchOffice o-- UserManager : userManager
-  BranchOffice o-- ProjectOrganizer : projectOrganizer
+  BranchOffice o-- ProjectManager : projectManager
   BranchOffice o-- ResourceManager : resourceManager
   Controller o-- SimulationManager : simulationManager
   Controller o-- BranchOffice: BranchOffice
   XmlObject o-- ResourceManager : resourceManager
   XmlObject o-- UserManager : userManager
-  XmlObject o-- ProjectOrganizer : projectOrganizer
+  XmlObject o-- ProjectManager : projectManager
   XmlObject o-- Clock : clock
   Project -up-|> ProjectWrapper
   DeveloperResource -up-|> Resource
@@ -709,7 +709,7 @@ title __TASKMAN's Class Diagram__\n
   AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
   TimeSpan -up-|> TimeSpanWrapper
   Developer -up-|> User
-  ProjectManager -up-|> User
+  Manager -up-|> User
   User -up-|> UserWrapper
   UserManager o-- User : currentUser
 

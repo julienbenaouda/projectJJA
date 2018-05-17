@@ -69,7 +69,7 @@ public class ControllerTest {
     }
 
     private void addProjectManager() {
-        userManager.createUser("pm", "pmpass", "project manager", null, resourceManager);
+        userManager.createUser("pm", "pmpass", "project userManager", null, resourceManager);
         userManager.login("pm", "pmpass");
     }
 
@@ -77,9 +77,9 @@ public class ControllerTest {
     public void constructor() {
         addProjectManager();
         assertEquals("Constructor does not initialize clock!", clock.getTime(), controller.getTime());
-        assertEquals("Constructor does not initialize user manager!", userManager.getCurrentUser(), controller.getCurrentUser());
+        assertEquals("Constructor does not initialize user userManager!", userManager.getCurrentUser(), controller.getCurrentUser());
         assertEquals("Constructor does not initialize project organizer!", projectOrganizer.getProjects(), controller.getProjects());
-        assertEquals("Constructor does not initialize resource manager!", resourceManager.getResourceTypes(), controller.getResourceTypes());
+        assertEquals("Constructor does not initialize resource userManager!", resourceManager.getResourceTypes(), controller.getResourceTypes());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ControllerTest {
     @Test
     public void createUser_login_logout_removeUser() {
         assertFalse("User already created!", userManager.hasUser("alexander"));
-        controller.createUser("alexander", "blabla", "project manager", null);
+        controller.createUser("alexander", "blabla", "project userManager", null);
         assertTrue("User not created!", userManager.hasUser("alexander"));
         User alexander = userManager.getUser("alexander");
         assertFalse("User already created!", userManager.hasUser("julien"));

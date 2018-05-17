@@ -100,12 +100,12 @@
 <i>26</i>&nbsp;    /**
 <i>27</i>&nbsp;     * Returns a constraint from a given string.
 <i>28</i>&nbsp;     * @param string a string which represents a constraint.
-<i>29</i>&nbsp;     * @param manager a resource manager.
+<i>29</i>&nbsp;     * @param userManager a resource userManager.
 <i>30</i>&nbsp;     * @return a constraint.
 <i>31</i>&nbsp;     * @throws IllegalArgumentException if the string does not represent a valid constraint.
 <i>32</i>&nbsp;     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
 <i>33</i>&nbsp;     */
-<i>34</i>&nbsp;    static ConstraintComponent parseConstraint(String string, ResourceManager manager) throws IllegalArgumentException, NumberFormatException {
+<i>34</i>&nbsp;    static ConstraintComponent parseConstraint(String string, ResourceManager userManager) throws IllegalArgumentException, NumberFormatException {
 <b class="fc"><i>35</i>&nbsp;        if (string == null || string.isEmpty()) {</b>
 <b class="nc"><i>36</i>&nbsp;            throw new IllegalArgumentException(&quot;Constraint cannot be empty!&quot;);</b>
 <i>37</i>&nbsp;        }
@@ -147,7 +147,7 @@
 <b class="nc"><i>73</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>74</i>&nbsp;                    } else {
 <b class="fc"><i>75</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="fc"><i>76</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="fc"><i>76</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>77</i>&nbsp;                                AmountComparator.EQUALS,
 <b class="fc"><i>78</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>79</i>&nbsp;                        ));
@@ -158,7 +158,7 @@
 <b class="nc"><i>84</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>85</i>&nbsp;                    } else {
 <b class="nc"><i>86</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="nc"><i>87</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="nc"><i>87</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>88</i>&nbsp;                                AmountComparator.NOT_EQUALS,
 <b class="nc"><i>89</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>90</i>&nbsp;                        ));
@@ -169,7 +169,7 @@
 <b class="nc"><i>95</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>96</i>&nbsp;                    } else {
 <b class="nc"><i>97</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="nc"><i>98</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="nc"><i>98</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>99</i>&nbsp;                                AmountComparator.GREATER_THAN,
 <b class="nc"><i>100</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>101</i>&nbsp;                        ));
@@ -180,7 +180,7 @@
 <b class="nc"><i>106</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>107</i>&nbsp;                    } else {
 <b class="nc"><i>108</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="nc"><i>109</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="nc"><i>109</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>110</i>&nbsp;                                AmountComparator.GREATER_THAN_OR_EQUALS,
 <b class="nc"><i>111</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>112</i>&nbsp;                        ));
@@ -191,7 +191,7 @@
 <b class="nc"><i>117</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>118</i>&nbsp;                    } else {
 <b class="nc"><i>119</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="nc"><i>120</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="nc"><i>120</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>121</i>&nbsp;                                AmountComparator.SMALLER_THAN,
 <b class="nc"><i>122</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>123</i>&nbsp;                        ));
@@ -202,7 +202,7 @@
 <b class="nc"><i>128</i>&nbsp;                        throw new IllegalArgumentException(parts[i] + &quot; cannot be applied to &quot; + argumentStack.size() + &quot; arguments!&quot;);</b>
 <i>129</i>&nbsp;                    } else {
 <b class="nc"><i>130</i>&nbsp;                        constraintStack.push(new Constraint(</b>
-<b class="nc"><i>131</i>&nbsp;                                manager.getResourceType(argumentStack.pop()),</b>
+<b class="nc"><i>131</i>&nbsp;                                userManager.getResourceType(argumentStack.pop()),</b>
 <i>132</i>&nbsp;                                AmountComparator.SMALLER_THAN_OR_EQUALS,
 <b class="nc"><i>133</i>&nbsp;                                Integer.parseInt(argumentStack.pop())</b>
 <i>134</i>&nbsp;                        ));
