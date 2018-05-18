@@ -45,7 +45,7 @@ public class ControllerTest {
         clock = new Clock();
         branchOfficeManager = new BranchOfficeManager();
         branchOfficeManager.createBranchOffice("test");
-        BranchOffice b = (BranchOffice)branchOfficeManager.getBranchOffices().get(0);
+        BranchOffice b = branchOfficeManager.getBranchOffices().get(0);
         userManager = b.getUserManager();
         projectOrganizer = b.getProjectManager();
         resourceManager = b.getResourceManager();
