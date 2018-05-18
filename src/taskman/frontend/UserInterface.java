@@ -314,7 +314,7 @@ public class UserInterface {
 		TitleSection timeTitle = new TitleSection("select start time");
 		timeTitle.show();
 		SelectionSection<LocalDateTime> timeSelection = new SelectionSection<>(true);
-		Iterator<LocalDateTime> times = controller.getStartingsTimes(task);
+		Iterator<LocalDateTime> times = controller.getStartingTimes(task);
 		for (int i = 1; i <= 3 && times.hasNext(); i++) {
 			LocalDateTime nextTime = times.next();
 			timeSelection.addOption(TimeParser.convertLocalDateTimeToString(nextTime), nextTime);

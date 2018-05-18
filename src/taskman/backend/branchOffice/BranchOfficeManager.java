@@ -3,8 +3,6 @@ package taskman.backend.branchOffice;
 import java.util.ArrayList;
 import java.util.List;
 
-import taskman.backend.wrappers.BranchOfficeWrapper;
-
 /**
  * this class represents the branch office manager.
  * It keeps a list of all branch ofices and a reference to the current branch office.
@@ -52,8 +50,8 @@ public class BranchOfficeManager {
 	/**
 	 * returns a list of all branch offices
 	 */
-	public List<BranchOfficeWrapper> getBranchOffices() {
-		return new ArrayList<BranchOfficeWrapper>(branchOffices);
+	public List<BranchOffice> getBranchOffices() {
+		return new ArrayList<>(branchOffices);
 	}
 	
 	/**
@@ -75,9 +73,14 @@ public class BranchOfficeManager {
 
 	/**
 	 * returns the current BranchOffice of the system
+	 * @throws IllegalStateException if no current branch office is set
 	 */
-	public BranchOffice getCurrentBranchOffice() {
-		return currentBranchOffice;
+	public BranchOffice getCurrentBranchOffice() throws IllegalStateException {
+		if (currentBranchOffice == null) {
+			throw new IllegalStateException("No current branch office is set!");
+		} else {
+			return currentBranchOffice;
+		}
 	}
 
 	/**

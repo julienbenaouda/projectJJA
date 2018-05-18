@@ -14,14 +14,25 @@ import taskman.backend.wrappers.BranchOfficeWrapper;
 public class BranchOffice implements BranchOfficeWrapper {
 
 	/**
-	 * creates a new branch office userManager with the given name
-	 * @param name the name of the new branch office 
+	 * creates a new branch office manager with the given name
+	 * @param name the name of the new branch office
 	 */
 	public BranchOffice(String name) {
 		setName(name);
 		setProjectManager(new ProjectManager());
 		setResourceManager(new ResourceManager());
 		setUserManager(new UserManager());
+	}
+
+	/**
+	 * creates a new branch office manager with the given name
+	 * @param name the name of the new branch office
+	 */
+	public BranchOffice(String name, ProjectManager projectManager, ResourceManager resourceManager, UserManager userManager) {
+		setName(name);
+		setProjectManager(projectManager);
+		setResourceManager(resourceManager);
+		setUserManager(userManager);
 	}
 	
 	/**
@@ -63,7 +74,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	/**
 	 * sets the project userManager of the branch office to the given project userManager
 	 * @param projectManager the projectManager to set for the branch office
-	 * @throws IllegalArgumentEception when the given project userManager is null
+	 * @throws IllegalArgumentException when the given project manager is null
 	 */
 	private void setProjectManager(ProjectManager projectManager) throws IllegalArgumentException {
 		if(projectManager == null) {

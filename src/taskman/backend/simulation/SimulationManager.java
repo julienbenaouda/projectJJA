@@ -46,13 +46,11 @@ public class SimulationManager {
     /**
      * Starts the simulation.
      *
-     * @param projectOrganizer the project organizer of the system
-     * @param userManager the user manager of the system
-     * @param resourceManager the resource manager of the system
+     * @param branchOfficeManager the BranchOfficeManager of the system
      * @param clock the clock of the system
      * @post the previous state of the simulation is set to an xml string representing the system its state
-     * @throws ImportExportException if there occurs an error while creating the xml string
-     * @throws IllegalArgumentException if the user is not a project manager
+     * @throws ImportExportException if there occurs an error while creating the xml string.
+     * @throws IllegalArgumentException if the user is not a project manager.
      */
     public void startSimulation(BranchOfficeManager branchOfficeManager, Clock clock, User user) throws ImportExportException {
     	if(!user.getUserType().equals("project manager")) {
