@@ -24,7 +24,7 @@ public class DelegatedTask extends Task {
 	 * @throws IllegalStateException because noo dependencies can be added to a delegated task
 	 */
 	@Override
-	public void addDependency(Task task) throws IllegaStateException {
+	public void addDependency(Task task) throws IllegalStateException {
 		throw new IllegalStateException("It is not possible to add dependencies to a delegated task!");
 	}
 	
@@ -33,7 +33,7 @@ public class DelegatedTask extends Task {
 	 * @throws IllegalStateException because removing dependencies from a delegated task is not possible
 	 */
 	@Override
-	public void removeDepencency(Task task) throws IllegalStateException {
+	public void removeDependency(Task task) throws IllegalStateException {
 		throw new IllegalStateException("It is not possible to remove dependencies from a delegated task!");
 	}
 	

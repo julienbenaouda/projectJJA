@@ -94,6 +94,7 @@ public class ProjectManager {
     	Project p = new Project("delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
     	projects.add(p);
     	p.createDelegatedTask(name, description, estimatedDuration, acceptableDeviation);
+    	return p.getTask(name);
     }
 
 }
