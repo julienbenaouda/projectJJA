@@ -63,19 +63,19 @@ public class ControllerTest {
         startBreak = null;
     }
 
-    private void addDeveloper() {
+    private void loginNewDeveloper() {
         userManager.createUser("dev", "devpass", "developer", startBreak, resourceManager);
         userManager.login("dev", "devpass");
     }
 
-    private void addProjectManager() {
-        userManager.createUser("pm", "pmpass", "project userManager", null, resourceManager);
+    private void loginNewProjectManager() {
+        userManager.createUser("pm", "pmpass", "project manager", null, resourceManager);
         userManager.login("pm", "pmpass");
     }
 
     @Test
     public void constructor() {
-        addProjectManager();
+        loginNewProjectManager();
         assertEquals("Constructor does not initialize clock!", clock.getTime(), controller.getTime());
         assertEquals("Constructor does not initialize user userManager!", userManager.getCurrentUser(), controller.getCurrentUser());
         assertEquals("Constructor does not initialize project organizer!", projectOrganizer.getProjects(), controller.getProjects());
@@ -103,13 +103,13 @@ public class ControllerTest {
 
     @Test
     public void getCurrentUser_Developer() {
-        addDeveloper();
+        loginNewDeveloper();
         assertEquals("Wrong user!", userManager.getUser("dev"), controller.getCurrentUser());
     }
 
     @Test
     public void getCurrentUser_ProjectManager() {
-        addProjectManager();
+        loginNewProjectManager();
         assertEquals("Wrong user!", userManager.getUser("pm"), controller.getCurrentUser());
 
     }
@@ -122,9 +122,9 @@ public class ControllerTest {
     @Test
     public void getUsers() {
         assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
-        addDeveloper();
+        loginNewDeveloper();
         assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
-        addProjectManager();
+        loginNewProjectManager();
         assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
     }
 
@@ -165,7 +165,7 @@ public class ControllerTest {
 
     @Test
     public void project_and_task() {
-        addProjectManager();
+        loginNewProjectManager();
         assertTrue("Projects already present!", projectOrganizer.getProjects().isEmpty());
         assertTrue("Projects already present!", controller.getProjects().isEmpty());
         controller.createProject("proj", "xXx", randomTime);
@@ -196,8 +196,6 @@ public class ControllerTest {
 
         controller.logout();
         userManager.login("pm", "pmpass");
-
-
 
     }
 

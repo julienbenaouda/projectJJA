@@ -2,7 +2,7 @@ package test.backend.project;
 
 import org.junit.Before;
 import org.junit.Test;
-import taskman.backend.user.ProjectManager;
+import taskman.backend.user.Manager;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,28 +10,28 @@ import static org.junit.Assert.assertEquals;
  * @author Julien Benaouda
  *
  */
-public class ProjectManagerTest {
-	ProjectManager pm;
+public class ManagerTest {
+	Manager pm;
 
 	@Before
 	public void setUp() {
-		pm = new ProjectManager("test", "myPassword");
+		pm = new Manager("test", "myPassword");
 	}
 
 	@Test
-	public void testProjectManager() {
+	public void testManager() {
 		assertEquals("test", pm.getName());
 		assertEquals("myPassword", pm.getPassword());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testProjectManagerName() {
-		pm = new ProjectManager("", "myPassword");
+	public void testManagerName() {
+		pm = new Manager("", "myPassword");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testProjectManagerPassword() {
-		pm = new ProjectManager("test", null);
+	public void testManagerPassword() {
+		pm = new Manager("test", null);
 	}
 
 }
