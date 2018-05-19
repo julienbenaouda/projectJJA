@@ -1,5 +1,6 @@
 package taskman.backend.project;
 
+import taskman.backend.task.Task;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
@@ -87,6 +88,12 @@ public class ProjectManager {
     		}
     	}
     	return false;
+    }
+    
+    public Task createDelegatedTask(String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
+    	Project p = new Project("delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
+    	projects.add(p);
+    	p.createDelegatedTask(name, description, estimatedDuration, acceptableDeviation);
     }
 
 }

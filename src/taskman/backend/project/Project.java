@@ -1,6 +1,7 @@
 package taskman.backend.project;
 
 
+import taskman.backend.task.DelegatedTask;
 import taskman.backend.task.Task;
 import taskman.backend.user.Developer;
 import taskman.backend.user.OperationNotPermittedException;
@@ -35,6 +36,26 @@ public class Project implements ProjectWrapper {
 		if(!(user instanceof ProjectManager)) {
 			throw new OperationNotPermittedException("You don't have permission to create a project!");
 		}
+		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
+			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
+		}
+		setName(name);
+		setDescription(description);
+		setCreationTime(creationTime);
+		setDueTime(dueTime);
+		taskList = new ArrayList<>();
+	}
+	
+	/**
+	 * Creates a new project with the given values.
+	 * @param name the project name
+	 * @param description the project description
+	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
+	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
+	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format. TODO: is dit nodig?
+	 * @post a new project is created with the given attributes
+	 */
+	Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
 		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
 			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
@@ -257,6 +278,14 @@ public class Project implements ProjectWrapper {
 			}
 		}
 		return "finished";
+	}
+	
+	/**
+	 * creates a delegated task
+	 */
+	void createDelegatedTask(String name, String description, long estimatedDuration, double acceptableDeviation) {
+		Task t = new DelegatedTask(name, description, estimatedDuration, acceptableDeviation);
+		this.addTask(t);
 	}
 
 
