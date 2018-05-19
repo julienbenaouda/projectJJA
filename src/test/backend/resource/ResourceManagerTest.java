@@ -9,7 +9,7 @@ import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
-import taskman.backend.user.ProjectManager;
+import taskman.backend.user.Manager;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -99,7 +99,7 @@ public class ResourceManagerTest {
 
 	@Test
 	public void testCreateResourceForUser_illegal() {
-		ProjectManager d = new ProjectManager("test", "test");
+		Manager d = new Manager("test", "test");
 		LocalTime startBreak = LocalTime.of(12, 0);
 		resourceManager.createResourceForUser(d, startBreak);
 		assertEquals(0, resourceManager.getResourceType("developer").getNbOfResources());
@@ -140,7 +140,7 @@ public class ResourceManagerTest {
 		for(int j = 1; j < 8; j++) {
 			type.addAvailability(j, always);
 		}
-		ProjectManager user = new ProjectManager("test", "test");
+		Manager user = new Manager("test", "test");
 		ArrayList<Resource> resources = new ArrayList<>();
 		resources.add(type.getResource("r1"));
 		resources.add(type.getResource("r2"));

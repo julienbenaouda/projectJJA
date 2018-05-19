@@ -1,15 +1,15 @@
 package test.backend.project;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.project.Project;
+import taskman.backend.project.ProjectManager;
+import taskman.backend.user.Manager;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.backend.project.Project;
-import taskman.backend.project.ProjectManager;
+import static org.junit.Assert.assertEquals;
 
 public class ProjectOrganizerTest {
 	private ProjectManager organizer;
@@ -28,7 +28,7 @@ public class ProjectOrganizerTest {
 	public void testCreateProject_alreadyExists() {
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 19, 0);
-		taskman.backend.user.ProjectManager user = new taskman.backend.user.ProjectManager("test", "test");
+		Manager user = new Manager("test", "test");
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 	}
@@ -39,7 +39,7 @@ public class ProjectOrganizerTest {
 	public void testCreateProject() {
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 19, 0);
-		taskman.backend.user.ProjectManager user = new taskman.backend.user.ProjectManager("test", "test");
+		Manager user = new Manager("test", "test");
 		organizer.createProject("test", "testdesc", creationTime, dueTime, user);
 		Project p = organizer.getProject("test");
 		assertEquals("test", p.getName());

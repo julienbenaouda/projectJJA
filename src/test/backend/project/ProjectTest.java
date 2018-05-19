@@ -1,24 +1,22 @@
 package test.backend.project;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import taskman.backend.project.Project;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.Task;
 import taskman.backend.user.Developer;
+import taskman.backend.user.Manager;
 import taskman.backend.user.OperationNotPermittedException;
-import taskman.backend.user.ProjectManager;
 import taskman.backend.user.User;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProjectTest {
@@ -29,7 +27,7 @@ public class ProjectTest {
 
 	@Before
 	public void setUp() {
-		u = new ProjectManager("test", "test");
+		u = new Manager("test", "test");
 		creation = LocalDateTime.of(2018, Month.MARCH, 03, 12,0);
 		due = LocalDateTime.of(2018, Month.MARCH, 9, 19, 0);
 		p = new Project("test", "testdesc", creation, due, u);
@@ -97,7 +95,7 @@ public class ProjectTest {
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		Developer d = new Developer("test", "test");
-		ProjectManager pm = new ProjectManager("test", "test");
+		Manager pm = new Manager("test", "test");
 		ResourceManager rm = new ResourceManager();
 		rm.createResourceForUser(d, LocalTime.of(11, 0));
 		Resource r = rm.getResourceType("developer").getResource("test");
@@ -116,7 +114,7 @@ public class ProjectTest {
 		p.createTask("task name", "taskdesc", 20l, 5.0, u);
 		Task t = p.getTasks().get(0);
 		Developer d = new Developer("test", "test");
-		ProjectManager pm = new ProjectManager("test", "test");
+		Manager pm = new Manager("test", "test");
 		ResourceManager rm = new ResourceManager();
 		rm.createResourceForUser(d, LocalTime.of(11, 0));
 		Resource r = rm.getResourceType("developer").getResource("test");

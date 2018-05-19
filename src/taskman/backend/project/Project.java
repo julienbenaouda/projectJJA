@@ -4,7 +4,7 @@ package taskman.backend.project;
 import taskman.backend.task.Task;
 import taskman.backend.user.Developer;
 import taskman.backend.user.OperationNotPermittedException;
-import taskman.backend.user.ProjectManager;
+import taskman.backend.user.Manager;
 import taskman.backend.user.User;
 import taskman.backend.wrappers.ProjectWrapper;
 
@@ -32,7 +32,7 @@ public class Project implements ProjectWrapper {
 	 * @post a new project is created with the given attributes
 	 */
 	public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) {
-		if(!(user instanceof ProjectManager)) {
+		if(!(user instanceof Manager)) {
 			throw new OperationNotPermittedException("You don't have permission to create a project!");
 		}
 		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
@@ -92,7 +92,7 @@ public class Project implements ProjectWrapper {
      * @post a new task is created and added to the project
      */
     public void createTask(String name, String description, long estimatedDuration, double acceptableDeviation, User user) {
-    	if(!(user instanceof ProjectManager)) {
+    	if(!(user instanceof Manager)) {
     		throw new OperationNotPermittedException("you are not allowed to created tasks!");
     	}
     	Task t = new Task(name, description, estimatedDuration, acceptableDeviation);

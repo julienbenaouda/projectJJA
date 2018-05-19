@@ -10,7 +10,7 @@ import taskman.backend.resource.ResourceManager;
 import taskman.backend.task.*;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
-import taskman.backend.user.ProjectManager;
+import taskman.backend.user.Manager;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class TaskTest {
 	private static Task dependency1_1_3;
 	private static Task alternative1_3d;
 	private static ResourceManager resourceManager;
-	private static ProjectManager admin;
+	private static Manager admin;
 
 	@Before
 	public void init(){
@@ -44,7 +44,7 @@ public class TaskTest {
 
 	@BeforeClass
 	public static void setUp(){
-		admin = new ProjectManager("admin", "admin");
+		admin = new Manager("admin", "admin");
 
 		long duration = 22;
 		double deviation = 0.15;
