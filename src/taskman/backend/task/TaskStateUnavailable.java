@@ -1,9 +1,12 @@
 package taskman.backend.task;
 
+import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class representing an unavailable task state.
@@ -70,6 +73,18 @@ public class TaskStateUnavailable extends TaskState {
     public void initializePlan(Task task, ResourceManager resourceManager, LocalDateTime startTime) {
         resourceManager.initializePlan(task.getPlan(), task.getEstimatedDuration(), startTime);
         task.setState(new TaskStatePlanned());
+    }
+    
+    public void delegate(BranchOffice branchOffice, Task task, LocalDateTime currentTime) {
+    	Map<ResourceType, Integer> orRequirements = task.getPlan().getRequirements();
+    	HashMap<ResourceType, Integer> requirements = new HashMap<>();
+    	for(ResourceType type: orRequirements.keySet()) {
+    		requirements.put(type.clone(), orRequirements.get(type));
+    	}
+    	Task delegatedTask = branchOffice.executeDelegation(requirements, task.getName(), task.getDescription(), currentTime, task.getEstimatedDuration(), task.getAcceptableDeviation());
+    	TaskStateDelegated delegatedState = new TaskStateDelegated();
+    	delegatedState.setDelegatedTask(delegatedTask);
+    	task.setState(delegatedState);
     }
 
 }

@@ -257,4 +257,18 @@ public class ResourceType implements ResourceTypeWrapper {
 		}
 		availability.put(weekDay, availabilityPeriod);
 	}
+	
+	/**
+	 * checks if the name of this resource type is equal to the name of the given resource type
+	 * @param o the object to check with
+	 * @return true if the name is equal, false if the name is not equal or the object is not a resource type
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof ResourceType) {
+			ResourceType resourceType = (ResourceType)o;
+			return this.getName().equals(resourceType.getName());
+		}
+		return false;
+	}
 }

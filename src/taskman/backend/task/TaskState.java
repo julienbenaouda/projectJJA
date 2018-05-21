@@ -1,5 +1,6 @@
 package taskman.backend.task;
 
+import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
@@ -197,6 +198,16 @@ public abstract class TaskState {
      */
     public void cancelPlan(Task task) throws IllegalStateException {
         throw new IllegalStateException("Task must be in planned state!");
+    }
+    
+    /**
+     * delegates the task to the given branch office
+     * @param branchOffice the branch office to delegate the task to
+     * @param task the task to delegate
+     * @throws IllegalStateException when the task is not in the correct state to be delegated
+     */
+    public void delegate(BranchOffice branchOffice, Task task) throws IllegalStateException {
+    	throw new IllegalStateException("deleegating a task in this state is not possible!");
     }
 
 }

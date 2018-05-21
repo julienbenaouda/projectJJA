@@ -1,7 +1,11 @@
 package taskman.backend.branchOffice;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.BranchOfficeWrapper;
 
@@ -121,6 +125,14 @@ public class BranchOffice implements BranchOfficeWrapper {
 	 */
 	private void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
+	}
+	
+	public Task executeDelegation(HashMap<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
+		if(getResourceManager().checkRequirements(requirements)) {
+			return getProjectManager().createDelegatedTask(name, description, startTime, estimatedDuration, acceptableDeviation);
+		} else {
+			throw new IllegalArgumentException("This branch office had not enough resources available to accept this task!");
+		}
 	}
 
 }

@@ -284,7 +284,7 @@ public class Project implements ProjectWrapper {
 	 * creates a delegated task
 	 */
 	void createDelegatedTask(String name, String description, long estimatedDuration, double acceptableDeviation) {
-		Task t = new DelegatedTask(name, description, estimatedDuration, acceptableDeviation);
+		Task t = new DelegatedTask(name, description, estimatedDuration, acceptableDeviation, startTime);
 		this.addTask(t);
 	}
 

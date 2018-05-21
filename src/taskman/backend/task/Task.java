@@ -491,5 +491,9 @@ public class Task implements TaskWrapper {
             return true;
         }
     }
+    
+    public void delegate(BranchOffice branchOffice, LocalDateTime currentTime) {
+    	getState().delegate(branchOffice, this, currentTime);
+    }
 
 }
