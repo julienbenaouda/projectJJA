@@ -257,4 +257,14 @@ public class ResourceType implements ResourceTypeWrapper {
 		}
 		availability.put(weekDay, availabilityPeriod);
 	}
+
+	/**
+	 * Returns a clone of the resource type.
+	 * @return a clone with the same name as the resource type
+	 */
+	@Override
+	public ResourceType clone(){
+		ResourceType clone = new ResourceType(getName());
+		return clone;
+	}
 }
