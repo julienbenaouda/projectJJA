@@ -16,16 +16,25 @@ public class TaskStateDelegated extends TaskState {
     }
 
     /**
+     * Returns the status of the delegated task state.
+     * @return delegated_ + the status of the delegated task
+     */
+    @Override
+    public String getStatus(){
+        return super.getStatus() + "_" + getDelegatedTask().getStatus();
+    }
+
+    /**
      *
      */
-    private Task originalTask;
+    private Task delegatedTask;
 
     /**
      * Returns the delegated task.
      * @return the delegated task
      */
     public Task getDelegatedTask() {
-        return originalTask;
+        return delegatedTask;
     }
 
     /**
@@ -34,6 +43,6 @@ public class TaskStateDelegated extends TaskState {
      * @post the delegated task is set to the given task
      */
     public void setDelegatedTask(Task originalTask) {
-        this.originalTask = originalTask;
+        this.delegatedTask = originalTask;
     }
 }

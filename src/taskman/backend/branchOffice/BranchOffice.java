@@ -2,10 +2,12 @@ package taskman.backend.branchOffice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
+import taskman.backend.task.Task;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.BranchOfficeWrapper;
 
@@ -127,7 +129,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 		this.userManager = userManager;
 	}
 	
-	public Task executeDelegation(HashMap<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
+	public Task executeDelegation(Map<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
 		if(getResourceManager().checkRequirements(requirements)) {
 			return getProjectManager().createDelegatedTask(name, description, startTime, estimatedDuration, acceptableDeviation);
 		} else {

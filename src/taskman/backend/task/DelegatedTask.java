@@ -12,10 +12,11 @@ public class DelegatedTask extends Task {
 
 	/**
 	 * creates a new delegated task
-	 * @param name
-	 * @param description
-	 * @param estimatedDuration
-	 * @param acceptableDeviation
+	 * @param name the name of the delegated task
+	 * @param description the description of the delegated task
+	 * @param estimatedDuration the estimated duration of the delegated task
+	 * @param acceptableDeviation the acceptable deviation of the delegated task
+	 * @post a new delegated task is created with given arguments
 	 */
 	public DelegatedTask(String name, String description, long estimatedDuration, double acceptableDeviation) {
 		super(name, description, estimatedDuration, acceptableDeviation);

@@ -75,12 +75,9 @@ public class TaskStateUnavailable extends TaskState {
         task.setState(new TaskStatePlanned());
     }
     
+    @Override
     public void delegate(BranchOffice branchOffice, Task task, LocalDateTime currentTime) {
-    	Map<ResourceType, Integer> orRequirements = task.getPlan().getRequirements();
-    	HashMap<ResourceType, Integer> requirements = new HashMap<>();
-    	for(ResourceType type: orRequirements.keySet()) {
-    		requirements.put(type.clone(), orRequirements.get(type));
-    	}
+    	Map<ResourceType, Integer> requirements = task.getPlan().cloneRequirements();
     	Task delegatedTask = branchOffice.executeDelegation(requirements, task.getName(), task.getDescription(), currentTime, task.getEstimatedDuration(), task.getAcceptableDeviation());
     	TaskStateDelegated delegatedState = new TaskStateDelegated();
     	delegatedState.setDelegatedTask(delegatedTask);

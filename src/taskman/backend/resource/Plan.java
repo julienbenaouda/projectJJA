@@ -226,6 +226,14 @@ public class Plan {
 	public void emptyPlan() {
         this.reservations.clear();
     }
+	
+	public Map<ResourceType, Integer> cloneRequirements() {
+    	HashMap<ResourceType, Integer> requirements = new HashMap<>();
+    	for(ResourceType type: getRequirements().keySet()) {
+    		requirements.put(type.clone(), getRequirements().get(type));
+    	}
+return requirements;
+	}
 
 
 }

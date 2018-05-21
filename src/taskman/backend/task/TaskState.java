@@ -204,9 +204,10 @@ public abstract class TaskState {
      * delegates the task to the given branch office
      * @param branchOffice the branch office to delegate the task to
      * @param task the task to delegate
+     * @param currentTime the current system time
      * @throws IllegalStateException when the task is not in the correct state to be delegated
      */
-    public void delegate(BranchOffice branchOffice, Task task) throws IllegalStateException {
+    public void delegate(BranchOffice branchOffice, Task task, LocalDateTime currentTime) throws IllegalStateException {
     	throw new IllegalStateException("deleegating a task in this state is not possible!");
     }
 

@@ -1,5 +1,6 @@
 package taskman.backend.task;
 
+import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.resource.Plan;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;

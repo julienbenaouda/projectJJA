@@ -205,7 +205,7 @@ public class ResourceManager {
      * @param requirements the requirements to check the systems constraints with
      * @return true if there is no conflict between the system its constraints and the requirements, otherwise false
      */
-    private boolean checkRequirements(Map<ResourceType, Integer> requirements) {
+    public boolean checkRequirements(Map<ResourceType, Integer> requirements) {
         for (ConstraintComponent constraint : getConstraint()){
             if (!constraint.solution(requirements)){
                 return false;

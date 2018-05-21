@@ -14,7 +14,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Create a constraint with given attributes.
-     *
      * @param resourceType the resource type of the constraint
      * @param operator the operator of the constraint
      * @param amount the amount of the constraint
@@ -34,7 +33,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Returns the resource type of the constraint.
-     *
      * @return the resource type of the constraint
      */
     public ResourceType getResourceType(){
@@ -43,7 +41,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Sets the resource type of the constraint to the given resource type.
-     *
      * @param resourceType the resource type of the constraint
      * @post the resource type of the constraint is set to the given resource type
      */
@@ -59,7 +56,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Returns the amount comparator of the constraint.
-     *
      * @return the amount comparator of the constraint
      */
     public AmountComparator getAmountComparator(){
@@ -68,7 +64,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Sets the amount comparator of the constraint to the given amount comparator.
-     *
      * @param amountComparator the amount comparator of the constraint
      * @post the amount comparator of the constraint is set to the given amount comparator
      */
@@ -84,7 +79,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Returns the amount of the constraint.
-     *
      * @return the amount of the constraint
      */
     public int getAmount(){
@@ -93,7 +87,6 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Sets the amount of the constraint.
-     *
      * @param amount the amount of the constraint
      * @post the amount of the constraint is set to the given amount
      */
@@ -104,18 +97,17 @@ public class Constraint implements ConstraintComponent {
 
     /**
      * Returns the solution of testing the constraint with the given requirements.
-     *
      * @param requirements the requirements
      * @return true if the requirements meet the constraint, otherwise false
      */
     @Override
     public boolean solution(Map<ResourceType, Integer> requirements) {
-        if (requirements.containsKey(getResourceType())){
-            return getAmountComparator().evaluate(requirements.get(getResourceType()), getAmount());
+        for (ResourceType resourceType : requirements.keySet()){
+            if (resourceType.equals(getResourceType())){
+                return getAmountComparator().evaluate(requirements.get(getResourceType()), getAmount());
+            }
         }
-        else {
-            return getAmountComparator().evaluate(0, getAmount());
-            // TODO: nakijken of dit wel klopt
-        }
+        return getAmountComparator().evaluate(0, getAmount());
+        // TODO: nakijken of dit wel klopt
     }
 }
