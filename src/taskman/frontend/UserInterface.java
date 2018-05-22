@@ -41,7 +41,8 @@ public class UserInterface {
 	public void start() {
 
 		// Create default user
-		controller.createUser("admin", "admin", "project manager", null);
+		controller.createBranchOffice("main office");
+		controller.createUser(controller.getBranchOffices().get(0), "admin", "admin", "project manager", null);
 
 		// Show start menu
 		try {
@@ -78,11 +79,27 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void login() throws Cancel {
-		TitleSection title = new TitleSection("login");
-		title.show();
-		FormSection form = new FormSection(false, "Username:", "Password:");
+		TitleSection title1 = new TitleSection("select branch office");
+		title1.show();
+		SelectionSection<BranchOfficeWrapper> officeSelection = new SelectionSection<>(true);
+		for (BranchOfficeWrapper b: controller.getBranchOffices()){
+			officeSelection.addOption(b.getName(), b);
+		}
+		officeSelection.show();
+
+		TitleSection title2 = new TitleSection("select user");
+		title2.show();
+		SelectionSection<UserWrapper> userSelection = new SelectionSection<>(true);
+		for (UserWrapper u: controller.getUsers(officeSelection.getAnswerObject())) {
+			userSelection.addOption(u.getName(), u);
+		}
+		userSelection.show();
+
+		TitleSection title3 = new TitleSection("login");
+		title3.show();
+		FormSection form = new FormSection(false, "Password:");
 		form.show();
-		controller.login(form.getAnswer(0), form.getAnswer(1));
+		controller.login(officeSelection.getAnswerObject(), userSelection.getAnswer(), form.getAnswer(0));
 		try {
 			loggedInMenu();
 		} finally {
@@ -94,12 +111,23 @@ public class UserInterface {
 
 	/**
 	 * Shows the users in the system.
+	 * @throws Cancel when the user cancels the section.
 	 */
-	private void showUsers() {
+	private void showUsers() throws Cancel {
+		TitleSection title1 = new TitleSection("select branch office");
+		title1.show();
+		SelectionSection<BranchOfficeWrapper> officeSelection = new SelectionSection<>(true);
+		for (BranchOfficeWrapper b: controller.getBranchOffices()){
+			officeSelection.addOption(b.getName(), b);
+		}
+		officeSelection.show();
+
 		TitleSection title = new TitleSection("overview of users");
 		title.show();
 		TextSection info = new TextSection("", true);
-		for (UserWrapper user: controller.getUsers()) info.addLine(user.getName() + " (" + user.getUserType() + ")");
+		for (UserWrapper user: controller.getUsers(officeSelection.getAnswerObject())) {
+			info.addLine(user.getName() + " (" + user.getUserType() + ")");
+		}
 		info.show();
 	}
 
@@ -108,20 +136,37 @@ public class UserInterface {
 	 * @throws Cancel when the user cancels the section.
 	 */
 	private void createUser() throws Cancel {
-		TitleSection title = new TitleSection("create user");
-		title.show();
+		TitleSection title1 = new TitleSection("select branch office");
+		title1.show();
+		SelectionSection<BranchOfficeWrapper> officeSelection = new SelectionSection<>(true);
+		for (BranchOfficeWrapper b: controller.getBranchOffices()){
+			officeSelection.addOption(b.getName(), b);
+		}
+		officeSelection.show();
+
+		TitleSection title2 = new TitleSection("create user");
+		title2.show();
 		FormSection form = new FormSection(false, "Username:", "Password:");
 		form.show();
+
+		TitleSection title3 = new TitleSection("select type");
+		title3.show();
 		SelectionSection<String> selection = new SelectionSection<>(true);
 		selection.addOptions(this.controller.getUserTypes());
 		selection.show();
+
 		LocalTime startBreak = null;
 		if (selection.getAnswer().equals("developer")) {
 			FormSection breakForm = new FormSection(false, "Start of break time (hh:mm):");
 			breakForm.show();
 			startBreak = TimeParser.convertStringToLocalTime(breakForm.getAnswer(0));
 		}
-		controller.createUser(form.getAnswer(0), form.getAnswer(1), selection.getAnswer(), startBreak);
+
+		controller.createUser(
+				officeSelection.getAnswerObject(),
+				form.getAnswer(0), form.getAnswer(1),
+				selection.getAnswer(), startBreak
+		);
 		Section success = new TextSection("User created successfully!", false);
 		success.show();
 	}
@@ -133,14 +178,28 @@ public class UserInterface {
 	 * @throws IllegalStateException if the removal fails.
 	 */
 	private void removeUser() throws Cancel {
-		TitleSection title = new TitleSection("remove user");
-		title.show();
+		TitleSection title1 = new TitleSection("select branch office");
+		title1.show();
+		SelectionSection<BranchOfficeWrapper> officeSelection = new SelectionSection<>(true);
+		for (BranchOfficeWrapper b: controller.getBranchOffices()){
+			officeSelection.addOption(b.getName(), b);
+		}
+		officeSelection.show();
+
+		TitleSection title2 = new TitleSection("remove user");
+		title2.show();
 		SelectionSection<UserWrapper> selection = new SelectionSection<>(false);
-		for (UserWrapper user: controller.getUsers()) selection.addOption(user.getName(), user);
+		for (UserWrapper user: controller.getUsers(officeSelection.getAnswerObject())) {
+			selection.addOption(user.getName(), user);
+		}
 		selection.show();
+
+		TitleSection title3 = new TitleSection("give password");
+		title3.show();
 		FormSection form = new FormSection(false, "Password:");
 		form.show();
-		controller.removeUser(selection.getAnswerObject(), form.getAnswer(0));
+
+		controller.removeUser(officeSelection.getAnswerObject(), selection.getAnswerObject(), form.getAnswer(0));
 		TextSection success = new TextSection("User removed successfully!", false);
 		success.show();
 	}
