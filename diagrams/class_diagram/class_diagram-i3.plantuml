@@ -347,7 +347,7 @@ title __TASKMAN's Class Diagram__\n
             - void setTask(Task)
             + Map<ResourceType, Integer> getRequirements()
             + void addRequirement(ResourceType, int)
-            + List<REservation> getReservations()
+            + List<Reservation> getReservations()
             + void createReservation(Resource, LocalDateTime, LocalDateTime)
             + void createReservations(Lisst<Resource>, LocalDateTIme)
             + void createSpecificReservation(Resource, LocalDateTIme, LocalDateTime)
@@ -357,8 +357,11 @@ title __TASKMAN's Class Diagram__\n
             + Boolean isDeveloperFromPlan(User)
             + void finish(LocalDateTime)
             + void emptyPlan()
-            # boolean isAvailableStartingTime(long, LocalDateTIme)
-            + void addRequirement(ResourceType, int)
+            # boolean isAvailableStartingTime(long, LocalDateTime)
+            + boolean canBeRescheduled(TimeSpan)
+            + Map<ResourceType, Integer> cloneRequirements()
+            + void initializePlan(long, LocalDateTime)
+            + void reschedulePlan(TimeSpan)
         }
 
         class Reservation {
@@ -387,6 +390,7 @@ title __TASKMAN's Class Diagram__\n
             + void deleteReservation(Reservation)
             + boolean isAvailable(TimeSpan)
             + boolean canRemove()
+            + List<Resource> getAlternativeResources(TimeSpan)
         }
 
         class ResourceManager {
@@ -394,20 +398,15 @@ title __TASKMAN's Class Diagram__\n
             - constraints : List<ConstraintComponent>
             + ResourceManager()
             + ResourceType getResourceType(String)
-            + List<REsourceType> getResourceTypes()
+            + List<ResourceType> getResourceTypes()
             + void createResourceType(String)
             - List<ConstraintComponent> getConstraint()
             - void addConstraint(ConstraintComponent)
             + void createConstraint(String)
-            + Iterator<LocalDAteTIme> getStartingTimes(plan, long, LocalDateTIme)
-            + void testRequirements(Map<ResourceType, Integer>)
+            + Iterator<LocalDateTime> getStartingTimes(plan, long, LocalDateTIme)
             - boolean checkRequirements(Map<ResourceType, Integer)
             + void createResourceForUser(User, LocalTime)
             + void removeResourceForUser(User)
-            + void initializePlan(Plan, long, LocalDateTime)
-            + void reschedulePlan(Plan, TimeSpan)
-            + void canBeRescheduled(Plan, TimeSpan)
-            + List<Resource> getAlternativeResources(Resource, TimeSpan)
             + void addRequirement(Plan, ResourceType, int)
         }
 
@@ -418,7 +417,6 @@ title __TASKMAN's Class Diagram__\n
             + ResourceType(String)
             + String getName()
             - void setName(String)
-            + int hashCode()
             - Map<Integer, AvailabilityPeriod> getAvailability()
             + AvailabilityPeriod getAvailabilityPeriod(int)
             + List<Resource> getResources()
@@ -430,8 +428,11 @@ title __TASKMAN's Class Diagram__\n
             + void createResourceFromUser(String, LocalTime, Developer)
             + void removeResource(Resource)
             + boolean hasAvailableResources(TimeSpan, int)
-            + List<REsource> getAvailableResources(TimeSpan)
+            + List<Resource> getAvailableResources(TimeSpan)
             + void addAvailability(int, AvailabilityPeriod)
+            + void clone()
+            + boolean equals(object)
+            + int hashCode()
         }
       }
 
@@ -473,8 +474,9 @@ title __TASKMAN's Class Diagram__\n
             + boolean canBeUpdated()
             + void endExecution(LocalDateTime, LocalDateTime, String, User)
             + void makeExecuting(ResourceManager, LocalDateTime, User)
-            + boolean isAvailable(LocalDateTIme)
+            + boolean isAvailable(LocalDateTime)
             + boolean isFinished()
+            # boolean isFailed()
             + long getDelay()
             + Task getAlternative()
             # void setAlternativeTask(Task)
@@ -485,11 +487,12 @@ title __TASKMAN's Class Diagram__\n
             + void removeDependency(TAsk)
             + Plan getPlan()
             + void initializePlan(LocalDateTime)
-            + List<REsource> getPlannedResources()
+            + List<Resource> getPlannedResources()
             + List<Resource> getAlternativeResources(Resource)
             + void changeResource(Resource, Resource)
             + void cancelPlan()
             + void addRequirement(ResourceManager, ResourceType, int)
+            + void delegate(BranchOffice, LocalDateTime)
             {static} # boolean containsLoop(Task, Task)
             + boolean hasAccessTo(User)
         }
@@ -520,7 +523,8 @@ title __TASKMAN's Class Diagram__\n
             + List<Resource> getPlannedResources(Task)
             + List<Resources> getAlternativeResources(Task, Resource)
             + void changeResource(TAsk, REsource, REsource)
-            + void cancelPlan(TAsk)
+            + void cancelPlan(Task)
+            + delegate(BranchOffice, Task, LocalDateTime)
         }
 
         class TaskStateDelegated {
@@ -551,7 +555,7 @@ title __TASKMAN's Class Diagram__\n
         class TaskStatePlanned {
             + TaskStatePlanned()
             + boolean canBeUpdated()
-            + List<Resource> getPlannedResources(TAsk)
+            + List<Resource> getPlannedResources(Task)
             + List<Resource> getAlternativeResources(Task, Resource)
             + void changeResource(Task, Resource, REsource)
             + void cancelPlan(Task)
@@ -561,7 +565,7 @@ title __TASKMAN's Class Diagram__\n
 
         class TaskStateUnavailable {
             + TaskStateUnavailable()
-            + addDependency(TAsk, TAsk)
+            + addDependency(Task, Task)
             + boolean canBePlanned()
             + void addRequirement(ResourceManager, Task, ResourceType, int)
             + void initializePlan(Task, LocalDateTime)
@@ -710,11 +714,12 @@ title __TASKMAN's Class Diagram__\n
   TitleSection -up-|> Section
   TitleSection o-- TextSection : textSection
   Controller o-- Clock : clock
+  Controller o-- BranchOfficeManager: branchOfficeManager
   BranchOffice o-- UserManager : userManager
   BranchOffice o-- ProjectManager : projectManager
   BranchOffice o-- ResourceManager : resourceManager
+  BranchOfficeManager o-- BranchOffice
   Controller o-- SimulationManager : simulationManager
-  Controller o-- BranchOffice: BranchOffice
   XmlObject o-- ResourceManager : resourceManager
   XmlObject o-- UserManager : userManager
   XmlObject o-- ProjectManager : projectManager
@@ -730,6 +735,7 @@ title __TASKMAN's Class Diagram__\n
   Resource o-- ResourceType : type
   ResourceType -up-|> ResourceTypeWrapper
   Task -up-|> TaskWrapper
+  DelegatedTask -up-|> Task
   Task o-- TimeSpan : timeSpan
   Task o-- TaskState : state
   Task o-- Task : alternative
