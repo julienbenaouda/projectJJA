@@ -23,7 +23,6 @@ public class ResourceManager {
 
     /**
      * Construct an empty resource manager.
-     *
      * @post the set of resource types is set to a new HashsSet and the list of constraints is set to a new Arraylist
      */
     public ResourceManager() {
@@ -40,7 +39,6 @@ public class ResourceManager {
 
     /**
      * Returns the resource type with the given name.
-     *
      * @param name the name of the resource type
      * @return the resource type with the given name
      * @throws NoSuchElementException if there exists no resource type with the given name
@@ -66,8 +64,7 @@ public class ResourceManager {
 
     /**
      * Creates and adds the resource type with the given name to the resource types.
-     *
-     * @param name the name of the resource type
+     *     * @param name the name of the resource type
      * @post a resource type with given name is created and added to the resource types
      */
     public void createResourceType(String name){
@@ -83,7 +80,6 @@ public class ResourceManager {
 
     /**
      * Returns the constraints for the resource types.
-     *
      * @return the list of constraints for the resource types
      */
     private List<ConstraintComponent> getConstraint(){
@@ -92,7 +88,6 @@ public class ResourceManager {
 
     /**
      * Adds the given constraint to the list of constraints.
-     *
      * @param constraint the constraint to add to the list
      * @post the given constraint is added to the list of constraints
      */
@@ -102,7 +97,6 @@ public class ResourceManager {
 
     /**
      * Creates a constraint from a given string.
-     *
      * @param string a string which represents a constraint
      * @post adds a constraint to the resource manager
      * @throws IllegalArgumentException if the string does not represent a valid constraint
@@ -114,7 +108,6 @@ public class ResourceManager {
 
     /**
      * Returns an iterator of the starting times (on or after the given time) for the given task.
-     *
      * @param plan the plan to get the starting times for
      * @param duration the duration of the reservations
      * @param startTime the time on or before the starting times
@@ -155,7 +148,7 @@ public class ResourceManager {
             @Override
             public LocalDateTime next() {
                 if (hasNext()) {
-                    while (!isAvailableStartingTime(plan, duration, startingTime)) {
+                    while (!plan.isAvailableStartingTime(duration, startingTime)) {
                         startingTime = TimeParser.roundUpLocalDateTime(startingTime.plusHours(1));
                     }
                     LocalDateTime prevStartingTime = startingTime;
@@ -167,41 +160,9 @@ public class ResourceManager {
         };
     }
 
-    /**
-     * Returns if the given time is an available starting time for the given task.
-     *
-     * @param plan the plan to check the starting time for
-     * @param duration the duration of the reservations
-     * @param startTime the starting time to check
-     * @return true if the given time is available for the given task, otherwise false
-     */
-    private boolean isAvailableStartingTime(Plan plan, long duration, LocalDateTime startTime){ // TODO: mss beter om niet task door te geven maar de zaken die nodig zijn van task
-        Map<ResourceType, Integer> requirements = plan.getRequirements();
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        for (ResourceType resourceType : requirements.keySet()){
-            if (!resourceType.hasAvailableResources(timeSpan, requirements.get(resourceType))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    /**
-     * Tests a map of requirements on its correctness.
-     *
-     * @param requirements the requirements to test
-     * @throws IllegalArgumentException when the requirements are not valid
-     */
-    public void testRequirements(Map<ResourceType, Integer> requirements) {
-    	if(!checkRequirements(requirements)) {
-    		throw new IllegalArgumentException("The list of requirements doesn't match the constraints.");
-    	}
-    }
 
     /**
      * Checks the given requirements with the constraints of the system.
-     *
      * @param requirements the requirements to check the systems constraints with
      * @return true if there is no conflict between the system its constraints and the requirements, otherwise false
      */
@@ -216,7 +177,6 @@ public class ResourceManager {
 
     /**
      * Adds the given requirement to the plan of the corresponding task.
-     *
      * @param plan the task to add the requirement to
      * @param resourceType the resource type of the requirement
      * @param amount the amount of the requirement
@@ -233,7 +193,6 @@ public class ResourceManager {
 
     /**
      * Creates a new resource from the given user.
-     *
      * @param user the user to use for the resource creation
      * @throws IllegalArgumentException the break is null.
      * @post a new user resource is created and the resource is added to the user
@@ -263,87 +222,4 @@ public class ResourceManager {
         }
     }
 
-    /**
-     * Initializes a plan.
-     * @param plan the plan to initialize.
-     * @param duration the duration of the plan.
-     * @param startTime the start time.
-     */
-    public void initializePlan(Plan plan, long duration, LocalDateTime startTime) {
-        TimeSpan timeSpan = new TimeSpan(startTime, startTime.plusMinutes(duration));
-        Map<ResourceType, Integer> requirements = plan.getRequirements();
-        List<Resource> resources = new ArrayList<>();
-        for(ResourceType type: requirements.keySet()) {
-            resources.addAll(
-                    type.getAvailableResources(timeSpan)
-                            .stream()
-                            .limit(requirements.get(type))
-                            .collect(Collectors.toList())
-            );
-        }
-        plan.createReservations(resources, startTime);
-    }
-
-    /**
-     * Reschedule a plan to a given time span.
-     * @param plan the plan.
-     * @param newTimeSpan the new time span.
-     * @throws IllegalArgumentException if the plan cannot be rescheduled.
-     */
-    public void reschedulePlan(Plan plan, TimeSpan newTimeSpan) throws IllegalArgumentException {
-        if (!canBeRescheduled(plan, newTimeSpan)) throw new IllegalArgumentException("Plan cannot be rescheduled!");
-        for (Reservation reservation : plan.getReservations()) {
-            if (reservation.isUserSpecific()) {
-                Resource resource = reservation.getResource();
-                plan.removeReservation(reservation);
-                plan.createSpecificReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
-            } else {
-                Resource resource = reservation.getResource();
-                plan.removeReservation(reservation);
-                if (!resource.isAvailable(newTimeSpan)) {
-                    resource = getAlternativeResources(resource, newTimeSpan).get(0);
-                }
-                plan.createReservation(resource, newTimeSpan.getStartTime(), newTimeSpan.getEndTime());
-            }
-        }
-    }
-
-    /**
-     * Returns if the planned task can be rescheduled.
-     * @param plan a plan.
-     * @param newTimeSpan the time span to check.
-     * @return true if the plan can be rescheduled, otherwise false.
-     */
-    public boolean canBeRescheduled(Plan plan, TimeSpan newTimeSpan){
-        for (Reservation reservation: plan.getReservations()) {
-            if (reservation.isUserSpecific()) {
-                Resource resource = reservation.getResource();
-                plan.removeReservation(reservation);
-                if (!resource.isAvailable(newTimeSpan)) {
-                    return false;
-                }
-                plan.createSpecificReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
-            } else {
-                Resource resource = reservation.getResource();
-                plan.removeReservation(reservation);
-                if (!resource.isAvailable(newTimeSpan) && getAlternativeResources(resource, newTimeSpan).isEmpty()) {
-                    return false;
-                }
-                plan.createReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Returns a list of resources as alternatives for the given resource and the given task at the given time.
-     * @param resource the resource to get a list of alternatives for
-     * @param timeSpan the time span of the reservation time
-     * @return a list of resources as alternatives for the given resource and the given task at the given time
-     */
-    public List<Resource> getAlternativeResources(Resource resource, TimeSpan timeSpan){
-        List<Resource> r = resource.getType().getAvailableResources(timeSpan);
-        r.remove(resource);
-        return r;
-    }
 }

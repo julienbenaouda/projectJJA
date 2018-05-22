@@ -44,13 +44,13 @@ public class TaskStatePlanned extends TaskState {
 
 	/**
 	 * Returns a list of resources as alternatives for the given resource.
-	 * @param resourceManager a resource manager.
 	 * @param task a task.
 	 * @param resource a resource wrapper to search alternatives for.
 	 * @return a list of resources as alternatives for the given resource.
 	 */
-	public List<Resource> getAlternativeResources(ResourceManager resourceManager, Task task, Resource resource) {
-		return resourceManager.getAlternativeResources(resource, task.getTimeSpan());
+	@Override
+	public List<Resource> getAlternativeResources(Task task, Resource resource) {
+		return resource.getAlternativeResources(task.getTimeSpan());
 	}
 
 	/**
@@ -83,26 +83,25 @@ public class TaskStatePlanned extends TaskState {
     @Override
     public void execute(Task task, ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
     	System.out.println("executing method");
-    	if (!isAvailable(resourceManager, task, startTime)) {
+    	if (!isAvailable(task, startTime)) {
 		    throw new IllegalStateException("The task must be available in order to start its execution.");
 	    }
 	    TimeSpan newTimeSpan = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
-	    resourceManager.reschedulePlan(task.getPlan(), newTimeSpan);
+		task.getPlan().reschedulePlan(newTimeSpan);
         task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
         task.setState(new TaskStateExecuting());
     }
 
 	/**
 	 * Returns if the planned task is available.
-	 * @param resourceManager a resource manager.
 	 * @param task a task.
 	 * @param startTime a start time.
 	 * @return true if the planned task is available, otherwise false
 	 */
 	@Override
-	public boolean isAvailable(ResourceManager resourceManager, Task task, LocalDateTime startTime){
+	public boolean isAvailable(Task task, LocalDateTime startTime){
 		if (!task.getDependencies().stream().allMatch(Task::isFinished)) return false;
-		return resourceManager.canBeRescheduled(task.getPlan(), new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration())));
+		return task.getPlan().canBeRescheduled(new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration())));
 	}
 
 }
