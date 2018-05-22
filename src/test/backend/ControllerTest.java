@@ -141,13 +141,13 @@ public class ControllerTest {
 
     @Test
     public void getUsersTest() {
-        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
+        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers(branchOffice));
         controller.createUser(branchOffice, "dev", "devpass", "developer", startBreak);
         controller.login(branchOffice, "dev", "devpass");
-        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
+        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers(branchOffice));
         controller.createUser(branchOffice, "pm", "pmpass", "project manager", null);
         controller.login(branchOffice,"pm", "pmpass");
-        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers());
+        assertEquals("Incorrect users given!", userManager.getUsers(), controller.getUsers(branchOffice));
     }
 
     @Test

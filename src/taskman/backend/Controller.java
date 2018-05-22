@@ -176,11 +176,12 @@ public class Controller {
     }
 
     /**
-     * Returns a list of all users.
+     * Returns a list of all users of a branch office.
+     * @param branchOfficeWrapper a branch office.
      * @return a list of UserWrappers.
      */
-    public List<UserWrapper> getUsers() {
-        return new ArrayList<>(getUserManager().getUsers());
+    public List<UserWrapper> getUsers(BranchOfficeWrapper branchOfficeWrapper) {
+        return new ArrayList<>(((BranchOffice) branchOfficeWrapper).getUserManager().getUsers());
     }
 
     /**
