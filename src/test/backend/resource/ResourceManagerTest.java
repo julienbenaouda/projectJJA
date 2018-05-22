@@ -46,47 +46,6 @@ public class ResourceManagerTest {
 		}
 	}
 
-	@Test
-	public void testGetAlternativeResources() {
-		Task task = new Task("task", "test", 25l, 5.5);
-		ResourceType type = new ResourceType("test");
-		LocalTime start = LocalTime.of(0, 0);
-		LocalTime end = LocalTime.of(23, 59);
-		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
-		for(int i = 1; i <= 7; i++) {
-			type.addAvailability(i, always);
-		}
-		type.createResource("resource1");
-		type.createResource("resource2");
-		task.addRequirement(resourceManager, type, 1);
-		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
-		List<Resource> list = resourceManager.getAlternativeResources(type.getResource("resource1"), ts);
-		assertTrue(list.size() == 1);
-		assertEquals(type.getResource("resource2"), list.get(0));
-	}
-
-	@Test
-	public void testInitializePlan() {
-		Task task = new Task("task", "test", 25l, 5.5);
-		resourceManager.createResourceType("test");
-		ResourceType type = resourceManager.getResourceType("test");
-		LocalTime start = LocalTime.of(0, 0);
-		LocalTime end = LocalTime.of(23, 59);
-		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
-		for(int i = 1; i <= 7; i++) {
-			type.addAvailability(i, always);
-		}
-		type.createResource("resource4");
-		type.createResource("resource5");
-		Resource resource = type.getResource("resource4");
-		Resource alternative = type.getResource("resource5");
-		task.addRequirement(resourceManager, type, 2);
-		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
-		task.initializePlan(resourceManager, startTime);
-		List<Resource> list = task.getPlannedResources();
-		assertEquals(2, list.size());
-	}
 
 	@Test
 	public void testCreateResourceForUser_legal() {
@@ -145,12 +104,12 @@ public class ResourceManagerTest {
 		resources.add(type.getResource("r1"));
 		resources.add(type.getResource("r2"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
-		t.initializePlan(resourceManager, startTime);
+		t.initializePlan(startTime);
 		Resource test = t.getPlannedResources().get(0);
 		Task t2 = new Task("test", "test2", 60l, 5.5);
 		t2.addRequirement(resourceManager, type, 2);
 		TimeSpan ts = new TimeSpan(startTime, startTime.plusMinutes(t2.getEstimatedDuration()));
-		List<Resource> r = resourceManager.getAlternativeResources(test, ts);
+		List<Resource> r = t.getAlternativeResources(test);
 		Iterator<LocalDateTime> i = resourceManager.getStartingTimes(t2.getPlan(), t2.getEstimatedDuration(), startTime);
 		assertEquals(1, r.size());
 	}

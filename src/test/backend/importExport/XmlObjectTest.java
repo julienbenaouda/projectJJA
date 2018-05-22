@@ -33,6 +33,7 @@ public class XmlObjectTest {
 	private Controller controller;
 	private XmlObject o;
 	private BranchOfficeManager branchOfficeManager;
+	private BranchOffice b;
 
 	@Before
 	public void setUp() {
@@ -42,7 +43,7 @@ public class XmlObjectTest {
 		c = new Clock();
 		branchOfficeManager = new BranchOfficeManager();
 		branchOfficeManager.createBranchOffice("test");
-		BranchOffice b = (BranchOffice)branchOfficeManager.getBranchOffices().get(0);
+		b = branchOfficeManager.getBranchOffices().get(0);
 		um = b.getUserManager();
 		po = b.getProjectManager();
 		rm = b.getResourceManager();
@@ -58,8 +59,8 @@ public class XmlObjectTest {
 
 	@Test
 	public void testToXMLString() {
-		controller.createUser("test", "test", "project manager", null);
-		controller.login("test", "test");
+		controller.createUser(b, "test", "test", "project manager", null);
+		controller.login(b, "test", "test");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());
@@ -91,8 +92,8 @@ public class XmlObjectTest {
 
 	@Test
 	public void testFromXMLString() {
-		controller.createUser("test", "test", "project manager", null);
-		controller.login("test", "test");
+		controller.createUser(b, "test", "test", "project manager", null);
+		controller.login(b, "test", "test");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 23, 0);
 		po.createProject("test", "test", creationTime, dueTime, um.getCurrentUser());

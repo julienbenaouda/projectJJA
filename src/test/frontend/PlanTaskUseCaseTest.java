@@ -45,7 +45,7 @@ public class PlanTaskUseCaseTest {
 		rm = b.getResourceManager();
 		c = new Controller(clock, branchOfficeManager, new SimulationManager());
 		um.createUser("test", "test", "project manager", null, rm);
-		c.login("test", "test");
+		c.login(b, "test", "test");
 		c.createResourceType("car");
 		c.createResource(c.getResourceTypes().get(0), "bmw");
 		c.createResource(c.getResourceTypes().get(0), "mercedes");

@@ -50,7 +50,7 @@ public class UpdateStatusUseCaseTest {
 		c = new Controller(clock, branchOfficeManager, new SimulationManager());
 		um.createUser("test", "test", "developer", LocalTime.of(12, 0), rm);
 		um.createUser("admin2", "admin", "project manager", null, rm);
-		c.login("admin2", "admin");
+		c.login(b, "admin2", "admin");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
 		c.createTask(c.getProjects().get(0), "testTask", "test description", 1l, 4.5, new HashMap<>());
@@ -64,7 +64,7 @@ public class UpdateStatusUseCaseTest {
 		c.addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("testType"), 1);
 		c.addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("developer"), 1);
 		c.initializePlan(po.getProject("testProject").getTask("testTask"), creationTime);
-		c.login("test", "test");
+		c.login(b, "test", "test");
 		ui = new UserInterface(c);
 		outputStream = new ByteArrayOutputStream();
 		c.logout();

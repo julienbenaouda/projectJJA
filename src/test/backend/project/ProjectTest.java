@@ -101,7 +101,7 @@ public class ProjectTest {
 		Resource r = rm.getResourceType("developer").getResource("test");
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		t.addRequirement(rm, rm.getResourceType("developer"), 1);
-		t.initializePlan(rm, startTime);
+		t.initializePlan(startTime);
 		t.makeExecuting(rm, startTime, d);
 		t.endExecution(startTime, startTime.plusMinutes(60), "finished", d);
 		Assert.assertEquals("active", p.getStatus(creation));
@@ -122,7 +122,7 @@ public class ProjectTest {
 		List<Resource> resources = new ArrayList<>();
 		resources.add(r);
 		t.addRequirement(rm, rm.getResourceType("developer"), 1);
-		t.initializePlan(rm, startTime);
+		t.initializePlan(startTime);
 		t.makeExecuting(rm, startTime, d);
 		t.endExecution(startTime, startTime.plusMinutes(100), "failed", d);
 		Assert.assertEquals("active", p.getStatus(creation));

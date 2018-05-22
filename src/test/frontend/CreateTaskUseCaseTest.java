@@ -47,7 +47,7 @@ public class CreateTaskUseCaseTest {
         rm = b.getResourceManager();
         c = new Controller(clock, branchOfficeManager, new SimulationManager());
 		um.createUser("test", "test", "project manager", null, rm);
-		c.login("test", "test");
+		c.login(b, "test", "test");
 		LocalDateTime creationTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("testProject", "testDescription", creationTime);
 		ui = new UserInterface(c);

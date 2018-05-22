@@ -47,7 +47,7 @@ public class SimulationUseCaseTest {
 		rm = b.getResourceManager();
 		c = new Controller(clock, branchOfficeManager, new SimulationManager());
 		um.createUser("test", "test", "project manager", null, rm);
-		c.login("test", "test");
+		c.login(b, "test", "test");
 		LocalDateTime dueTime = LocalDateTime.of(2018, Month.JULY, 26, 8, 0);
 		c.createProject("test", "test", dueTime);
 		ui = new UserInterface(c);

@@ -7,14 +7,20 @@ import org.junit.Test;
 
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.task.*;
+import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.Manager;
 import taskman.backend.user.User;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -379,8 +385,8 @@ public class TaskTest {
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		availableTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
-		availableTask.initializePlan(resourceManager, startTime);
-		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(resourceManager, startTime));
+		availableTask.initializePlan(startTime);
+		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(startTime));
 	}
 
 	@Test
@@ -418,12 +424,12 @@ public class TaskTest {
 		};
 		dependencyFinished.endExecution(null, null,"planned", null);
 		availableTask.addDependency(dependencyFinished);
-		availableTask.initializePlan(resourceManager, startTime);
-		Assert.assertEquals("The task is not available", false, availableTask.isAvailable(resourceManager, startTime));
+		availableTask.initializePlan(startTime);
+		Assert.assertEquals("The task is not available", false, availableTask.isAvailable(startTime));
 
 
 		dependencyFinished.endExecution(null, null, "finished", null);
-		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(resourceManager, startTime));
+		Assert.assertEquals("The task is not available", true, availableTask.isAvailable(startTime));
 	}
 
 	@Test
@@ -496,7 +502,7 @@ public class TaskTest {
 		availableTask.addDependency(dependencyFinished);
 		dependencyFinished.endExecution(null, null, "finished", null);
 		dependencyFailed.endExecution(null, null, "failed", null);
-		Assert.assertEquals("the task is available", false, availableTask.isAvailable(resourceManager, startTime));
+		Assert.assertEquals("the task is available", false, availableTask.isAvailable(startTime));
 	}
 
 	@Test
@@ -592,8 +598,8 @@ public class TaskTest {
 		dependencyFailed.endExecution(null, null, "failed", null);
 		dependencyFailed.setAlternative(alternativeFinished);
 		alternativeFinished.endExecution(null, null, "finished", null);
-		availableTask.initializePlan(resourceManager, startTime);
-		Assert.assertEquals("the task is available", true, availableTask.isAvailable(resourceManager, startTime));
+		availableTask.initializePlan(startTime);
+		Assert.assertEquals("the task is available", true, availableTask.isAvailable(startTime));
 	}
 
 	@Test
@@ -686,7 +692,7 @@ public class TaskTest {
 		Task unavailableTask = new Task("unavailable task", "d",789, 1.25);
 		Task unavialableTask2 = new Task("unavailable task 2", "d", 4, 0.003);
 		unavailableTask.addDependency(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(startTime));
 		unavailableTask.removeDependency(unavialableTask2);
 		dependencyFinished.endExecution(null, null, "unavailable", null);
 		unavailableTask.addDependency(dependencyFinished);
@@ -695,12 +701,12 @@ public class TaskTest {
 		dependencyFailed.addDependency(unavialableTask2);
 		dependencyFinished.endExecution(null, null, "finished", null);
 		dependencyFailed.endExecution(null, null, "failed", null);
-		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(startTime));
 		dependencyFailed.endExecution(null, null, "inactive", null);
 		dependencyFailed.removeDependency(unavialableTask2);
 		dependencyFailed.endExecution(null, null, "failed", null);
 		dependencyFailed.setAlternative(unavialableTask2);
-		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(resourceManager, startTime));
+		Assert.assertEquals("The task is available", false, unavailableTask.isAvailable(startTime));
 	}
 
 	@Test
@@ -739,7 +745,7 @@ public class TaskTest {
 	}
 
 	@Test (expected = IllegalStateException.class)
-	public void testIlegalStateDelay(){
+	public void testIllegalStateDelay(){
 		Task task = new Task("task", "Descr", 14, 0.2315);
 		task.getDelay();
 	}
@@ -757,7 +763,7 @@ public class TaskTest {
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
 		updateStatusTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
-		updateStatusTask.initializePlan(resourceManager, startTime);
+		updateStatusTask.initializePlan(startTime);
 
 		Assert.assertEquals("The status is not planned", true, updateStatusTask.getStatus().equals("planned"));
 		updateStatusTask.makeExecuting(resourceManager, startTime, developer);
@@ -776,7 +782,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
+		invalidUpdateStatusTask.initializePlan(startTime);
 
 		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		invalidUpdateStatusTask.endExecution(startTime, endTime,  "failed", developer);
@@ -791,7 +797,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
+		invalidUpdateStatusTask.initializePlan(startTime);
 
 		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
 		invalidUpdateStatusTask.endExecution(startTime, endTime, "inactive", developer);
@@ -806,7 +812,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		List<Resource> resourceList = new ArrayList<>();
 		resourceList.add(resourceManager.getResourceType("developer").getResource(developer.getName()));
-		invalidUpdateStatusTask.initializePlan(resourceManager, startTime);
+		invalidUpdateStatusTask.initializePlan(startTime);
 		Developer developer2 = new Developer("jeroen2", "1233");
 
 		invalidUpdateStatusTask.makeExecuting(resourceManager, startTime, developer);
@@ -824,7 +830,7 @@ public class TaskTest {
 		Developer developer = new Developer("jeroen", "1234");
 		resourceManager.createResourceForUser(developer, LocalTime.of(12, 0));
 		makeExecutingTask.addRequirement(resourceManager, resourceManager.getResourceType("developer"), 1);
-		makeExecutingTask.initializePlan(resourceManager, startTime);
+		makeExecutingTask.initializePlan(startTime);
 
 		Assert.assertEquals("The status is not planned", true, makeExecutingTask.getStatus().equals("planned"));
 		makeExecutingTask.makeExecuting(resourceManager, executingStartTime, developer);
@@ -960,4 +966,44 @@ public class TaskTest {
 		root.addDependency(dependency1_1_3);
 	}
 
+	@Test
+	public void testGetAlternativeResources() {
+		Task task = new Task("task", "test", 25l, 5.5);
+		ResourceType type = new ResourceType("test");
+		LocalTime start = LocalTime.of(0, 0);
+		LocalTime end = LocalTime.of(23, 59);
+		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
+		for(int i = 1; i <= 7; i++) {
+			type.addAvailability(i, always);
+		}
+		type.createResource("resource1");
+		type.createResource("resource2");
+		task.addRequirement(resourceManager, type, 1);
+		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
+		task.initializePlan(startTime);
+		List<Resource> list = task.getAlternativeResources(type.getResource("resource1"));
+		assertTrue(list.size() == 1);
+		assertEquals(type.getResource("resource2"), list.get(0));
+	}
+	@Test
+	public void testInitializePlan() {
+		Task task = new Task("task", "test", 25l, 5.5);
+		resourceManager.createResourceType("test");
+		ResourceType type = resourceManager.getResourceType("test");
+		LocalTime start = LocalTime.of(0, 0);
+		LocalTime end = LocalTime.of(23, 59);
+		AvailabilityPeriod always = new AvailabilityPeriod(start, end);
+		for(int i = 1; i <= 7; i++) {
+			type.addAvailability(i, always);
+		}
+		type.createResource("resource4");
+		type.createResource("resource5");
+		Resource resource = type.getResource("resource4");
+		Resource alternative = type.getResource("resource5");
+		task.addRequirement(resourceManager, type, 2);
+		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 12, 0);
+		task.initializePlan(startTime);
+		List<Resource> list = task.getPlannedResources();
+		assertEquals(2, list.size());
+	}
 }
