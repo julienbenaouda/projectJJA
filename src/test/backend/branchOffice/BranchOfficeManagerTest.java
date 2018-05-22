@@ -47,7 +47,7 @@ public class BranchOfficeManagerTest {
 	public void changeBranchOfficeTest() {
 		List<BranchOffice> bs = branchOfficeManager.getBranchOffices();
 		for (BranchOffice b: bs) {
-			branchOfficeManager.changeBranchOffice(b);
+			branchOfficeManager.changeCurrentBranchOffice(b);
 			Assert.assertEquals("Changed to wrong current branch office!", b, branchOfficeManager.getCurrentBranchOffice());
 		}
 

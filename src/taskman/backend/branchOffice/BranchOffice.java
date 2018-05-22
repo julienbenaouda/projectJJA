@@ -1,15 +1,14 @@
 package taskman.backend.branchOffice;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
 import taskman.backend.task.Task;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.BranchOfficeWrapper;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * This class represents a branch office.
@@ -33,6 +32,9 @@ public class BranchOffice implements BranchOfficeWrapper {
 	/**
 	 * creates a new branch office manager with the given name
 	 * @param name the name of the new branch office
+	 * @param projectManager the project manager
+	 * @param resourceManager the resource manager
+	 * @param userManager the user manager
 	 */
 	public BranchOffice(String name, ProjectManager projectManager, ResourceManager resourceManager, UserManager userManager) {
 		setName(name);
