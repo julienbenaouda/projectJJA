@@ -32,7 +32,7 @@ public interface ConstraintComponent {
      * @throws IllegalArgumentException if the string does not represent a valid constraint.
      * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
      */
-    static ConstraintComponent parseConstraint(String string, ResourceManager manager) throws IllegalArgumentException, NumberFormatException {
+     static ConstraintComponent parseConstraint(String string, ResourceManager manager) throws IllegalArgumentException, NumberFormatException {
         if (string == null || string.isEmpty()) {
             throw new IllegalArgumentException("Constraint cannot be empty!");
         }

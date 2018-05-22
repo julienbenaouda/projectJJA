@@ -1,6 +1,7 @@
 package taskman.frontend;
 
 import taskman.backend.Controller;
+import taskman.backend.constraint.ConstraintParser;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.time.TimeParser;
 import taskman.backend.wrappers.*;
@@ -453,7 +454,7 @@ public class UserInterface {
 		title.show();
 		FormSection form = new FormSection(false, "Constraint:");
 		form.show();
-		controller.createConstraint(form.getAnswer(0));
+		controller.addConstraint((form.getAnswer(0)));
 		Section success = new TextSection("Constraint created successfully!", false);
 		success.show();
 	}

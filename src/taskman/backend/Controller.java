@@ -2,6 +2,7 @@ package taskman.backend;
 
 import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
+import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
@@ -375,14 +376,15 @@ public class Controller {
     }
 
     /**
-     * Creates a constraint from a given string.
-     * @param string a string which represents a constraint.
-     * @post adds a constraint to the system.
-     * @throws IllegalArgumentException if the string does not represent a valid constraint.
-     * @throws NumberFormatException if a number in the string cannot be parsed to an integer.
+     * Adds the given constraint.
+     * @param string the constraint to parse add.
+     * @post the string is parsed and then added to the system.
+     * @throws IllegalArgumentException if the string does not represent a valid constraint
+     * @throws NumberFormatException if a number in the string cannot be parsed to an integer
      */
-    public void createConstraint(String string) {
-        this.getResourceManager().createConstraint(string);
+    public void addConstraint(String string) {
+        this.getResourceManager().addConstraint(ConstraintComponent.parseConstraint(string, getResourceManager()));
+        // TODO: is het wel OK om in de controller te parsen?
     }
 
     /**

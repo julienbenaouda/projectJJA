@@ -89,19 +89,8 @@ public class ResourceManager {
      * @param constraint the constraint to add to the list
      * @post the given constraint is added to the list of constraints
      */
-    private void addConstraint(ConstraintComponent constraint){
+    public void addConstraint(ConstraintComponent constraint){
         constraints.add(constraint);
-    }
-
-    /**
-     * Creates a constraint from a given string.
-     * @param string a string which represents a constraint
-     * @post adds a constraint to the resource manager
-     * @throws IllegalArgumentException if the string does not represent a valid constraint
-     * @throws NumberFormatException if a number in the string cannot be parsed to an integer
-     */
-    public void createConstraint(String string) {
-        addConstraint(ConstraintComponent.parseConstraint(string, this));
     }
 
     /**
