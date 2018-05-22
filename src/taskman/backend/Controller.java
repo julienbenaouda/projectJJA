@@ -238,23 +238,6 @@ public class Controller {
     }
 
     /**
-     * Returns all projects.
-     * @return a List of ProjectWrappers.
-     */
-    public List<ProjectWrapper> getProjects() {
-        return new ArrayList<>(getProjectManager().getProjects(getUserManager().getCurrentUser()));
-    }
-
-    /**
-     * Return the status (active, finished, failed) of the project with the given name.
-     * @param project a ProjectWrapper.
-     * @return a String.
-     */
-    public String getProjectStatus(ProjectWrapper project) throws IllegalArgumentException {
-        return ((Project) project).getStatus(getClock().getTime());
-    }
-
-    /**
      * Add a project with the properties.
      * @param name the project name.
      * @param description the project description.
@@ -266,6 +249,23 @@ public class Controller {
     public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException {
         getProjectManager().createProject(name, description, getClock().getTime(), dueTime, getUserManager().getCurrentUser());
     }
+
+	/**
+	 * Returns all projects.
+	 * @return a List of ProjectWrappers.
+	 */
+	public List<ProjectWrapper> getProjects() {
+		return new ArrayList<>(getProjectManager().getProjects(getUserManager().getCurrentUser()));
+	}
+
+	/**
+	 * Return the status of the project with the given name.
+	 * @param project a ProjectWrapper.
+	 * @return a String.
+	 */
+	public String getProjectStatus(ProjectWrapper project) throws IllegalArgumentException {
+		return ((Project) project).getStatus(getClock().getTime());
+	}
 
     /**
      * Returns the tasks of a project.
@@ -313,7 +313,7 @@ public class Controller {
      * @throws IllegalStateException if the state is not unavailable.
      */
     public void initializePlan(TaskWrapper task, LocalDateTime startTime) throws IllegalStateException {
-        ((Task) task).getPlan().initializePlan(startTime);
+        ((Task) task).initializePlan(startTime);
     }
 
     /**
@@ -334,7 +334,7 @@ public class Controller {
      * @throws IllegalStateException if the state is not planned.
      */
     public List<ResourceWrapper> getAlternativeResources(TaskWrapper task, ResourceWrapper resource) throws IllegalStateException {
-        return new ArrayList<>(((Task) task).getAlternativeResources(getResourceManager(), (Resource) resource));
+        return new ArrayList<>(((Task) task).getAlternativeResources((Resource) resource));
     }
 
     /**
