@@ -116,8 +116,7 @@ public abstract class TaskState {
 
     /**
      * Adds the given requirement to the requirements of the given task.
-     *
-     * @param resourceManager the resource manager of the system
+     * @param resourceManager the resource manager
      * @param task the task to add the requirement to its requirements
      * @param resourceType the resource type of the requirement
      * @param amount the amount of the requirement
@@ -130,12 +129,11 @@ public abstract class TaskState {
 
     /**
      * Returns if the planned task is available.
-     * @param resourceManager a resource manager.
      * @param task a task.
      * @param startTime a start time.
      * @return true if the planned task is available, otherwise false
      */
-    public boolean isAvailable(ResourceManager resourceManager, Task task, LocalDateTime startTime){
+    public boolean isAvailable(Task task, LocalDateTime startTime){
         return false;
     }
 
@@ -158,11 +156,10 @@ public abstract class TaskState {
     /**
      * Initializes a plan for this state.
      * @param task a task.
-     * @param resourceManager a resource manager.
      * @param startTime the start time for the plan.
      * @throws IllegalStateException if the state is not unavailable.
      */
-    public void initializePlan(Task task, ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
+    public void initializePlan(Task task, LocalDateTime startTime) throws IllegalStateException {
         throw new IllegalStateException("Task can only be planned in unavailable state!");
     }
 
@@ -178,13 +175,12 @@ public abstract class TaskState {
 
     /**
      * Returns a list of resources as alternatives for the given resource.
-     * @param resourceManager a resource manager.
      * @param task a task.
      * @param resource a resource wrapper to search alternatives for.
      * @return a list of resources as alternatives for the given resource.
      * @throws IllegalStateException if the state is not planned.
      */
-    public List<Resource> getAlternativeResources(ResourceManager resourceManager, Task task, Resource resource) throws IllegalStateException {
+    public List<Resource> getAlternativeResources(Task task, Resource resource) throws IllegalStateException {
         throw new IllegalStateException("Task must be in planned state!");
     }
 

@@ -313,7 +313,7 @@ public class Controller {
      * @throws IllegalStateException if the state is not unavailable.
      */
     public void initializePlan(TaskWrapper task, LocalDateTime startTime) throws IllegalStateException {
-        ((Task) task).initializePlan(getResourceManager(), startTime);
+        ((Task) task).getPlan().initializePlan(startTime);
     }
 
     /**

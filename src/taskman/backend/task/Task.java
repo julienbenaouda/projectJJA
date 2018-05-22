@@ -265,12 +265,11 @@ public class Task implements TaskWrapper {
 
     /**
      * Returns if this task is available.
-     * @param resourceManager a resource manager.
      * @param startTime a start time.
      * @return true if this task is available, otherwise false.
      */
-    public boolean isAvailable(ResourceManager resourceManager, LocalDateTime startTime){
-        return getState().isAvailable(resourceManager, this, startTime);
+    public boolean isAvailable(LocalDateTime startTime){
+        return getState().isAvailable(this, startTime);
     }
 
     /**
@@ -396,12 +395,11 @@ public class Task implements TaskWrapper {
 
     /**
      * Initializes a plan for this task.
-     * @param resourceManager a resource manager.
      * @param startTime the start time for the plan.
      * @throws IllegalStateException if the state is not unavailable.
      */
-    public void initializePlan(ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
-        getState().initializePlan(this, resourceManager, startTime);
+    public void initializePlan(LocalDateTime startTime) throws IllegalStateException {
+        getState().initializePlan(this, startTime);
     }
 
     /**
@@ -415,13 +413,12 @@ public class Task implements TaskWrapper {
 
     /**
      * Returns a list of resources as alternatives for the given resource.
-     * @param resourceManager a resource manager.
      * @param resource a resource wrapper to search alternatives for.
      * @return a list of resources as alternatives for the given resource.
      * @throws IllegalStateException if the state is not planned.
      */
-    public List<Resource> getAlternativeResources(ResourceManager resourceManager, Resource resource) throws IllegalStateException {
-        return getState().getAlternativeResources(resourceManager,this, resource);
+    public List<Resource> getAlternativeResources(Resource resource) throws IllegalStateException {
+        return getState().getAlternativeResources(this, resource);
     }
 
     /**
@@ -500,7 +497,13 @@ public class Task implements TaskWrapper {
             return true;
         }
     }
-    
+
+    /**
+     * Delegates the task to the given branch office.
+     * @param branchOffice the branch office to delegate the given task to.
+     * @param currentTime the current system time
+     * @post the task is delegated to the given branch office
+     */
     public void delegate(BranchOffice branchOffice, LocalDateTime currentTime) {
     	getState().delegate(branchOffice, this, currentTime);
     }
