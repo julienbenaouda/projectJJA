@@ -37,9 +37,13 @@ public class TimeSpan implements TimeSpanWrapper {
 	/**
 	 * Sets the start time to the given starttime
 	 * @param startTime the startTime of the timeSpan
-	 * @post The startTime is set to the given start time 
+	 * @post The startTime is set to the given start time
+	 * @throws IllegalStateException if the starttime is null
 	 */
-	private void setStartTime(LocalDateTime startTime) {
+	private void setStartTime(LocalDateTime startTime) throws IllegalStateException{
+		if (startTime == null) { // TODO: hopelijk violate dit de rest niet
+			throw new IllegalArgumentException("The start time can't be null");
+		}
 		this.startTime = startTime;
 	}
 
@@ -47,9 +51,10 @@ public class TimeSpan implements TimeSpanWrapper {
 	 * Represents the start time
 	 */
 	private LocalDateTime startTime;
-	
-	/* (non-Javadoc)
-	 * @see taskman.backend.time.TimeSpanWrapper#getEndTime()
+
+	/**
+	 * Returns the end time of the time span.
+	 * @return the end time of the time span
 	 */
 	@Override
 	public LocalDateTime getEndTime() {
@@ -59,10 +64,10 @@ public class TimeSpan implements TimeSpanWrapper {
 	/**
 	 * sets the end time of the timespan to the given end time. 
 	 * @param endTime the endTime of the timespan7@post the end time of the time span is set to the given end time.
-	 * @throws IllegalArgumentException if the end time comes before the start time
+	 * @throws IllegalArgumentException if the end time comes before the start time or the end time is null
 	 */
 	private void setEndTime(LocalDateTime endTime) throws IllegalArgumentException {
-		if(canHaveAsEndTime(endTime)) {
+		if(endTime == null || canHaveAsEndTime(endTime)) {
 			this.endTime = endTime;
 		} else {
 			throw new IllegalArgumentException("The end time can't be earlier than the start time");

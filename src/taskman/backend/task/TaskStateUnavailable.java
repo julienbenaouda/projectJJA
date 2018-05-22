@@ -61,7 +61,6 @@ public class TaskStateUnavailable extends TaskState {
     @Override
     public void addRequirement(ResourceManager resourceManager, Task task, ResourceType resourceType, int amount){
         resourceManager.addRequirement(task.getPlan(), resourceType, amount);
-        // TODO: moet task wel meegegeven worden
     }
 
     /**

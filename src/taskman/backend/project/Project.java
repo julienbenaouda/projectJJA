@@ -28,7 +28,7 @@ public class Project implements ProjectWrapper {
 	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
 	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
 	 * @param user the current user
-	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format. TODO: is dit nodig?
+	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
 	 * @throws OperationNotPermittedException when the user doesn't have access to create a project
 	 * @post a new project is created with the given attributes
 	 */
@@ -36,7 +36,7 @@ public class Project implements ProjectWrapper {
 		if(!(user instanceof Manager)) {
 			throw new OperationNotPermittedException("You don't have permission to create a project!");
 		}
-		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
+		if(dueTime.isBefore(creationTime)) {
 			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
 		setName(name);
@@ -52,11 +52,11 @@ public class Project implements ProjectWrapper {
 	 * @param description the project description
 	 * @param creationTime the creation time of the project. The creation time must be of the following format: dd/mm/yyyy hh:mm.
 	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
-	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format. TODO: is dit nodig?
+	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
 	 * @post a new project is created with the given attributes
 	 */
 	Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime) {
-		if(dueTime.isBefore(creationTime)) { // TODO: moet dit ook niet bij setCreationTime? Anders bij TASK dit ook
+		if(dueTime.isBefore(creationTime)) {
 			throw new IllegalArgumentException("The due time can't be before or equal to the start time.");
 		}
 		setName(name);
@@ -196,14 +196,9 @@ public class Project implements ProjectWrapper {
 	/**
 	 * Sets the project description to the given description.
 	 * @param description the description of the project.
-	 * @throws IllegalArgumentException when de project description is null.
 	 * @post the project description is set to the given description.
 	 */
 	private void setDescription(String description) {
-		if(description == null) // TODO is dit echt nodig? Anders moet dit ook bij task gebeuren
-		{
-			throw new IllegalArgumentException("The description can't be null");
-		}
 		this.description = description.trim();
 	}
 
@@ -224,7 +219,7 @@ public class Project implements ProjectWrapper {
 	 * @post the creation time of the project is set to the given creation time.
 	 */
 	private void setCreationTime(LocalDateTime creationTime) {
-		if(creationTime == null) { // TODO: moet dit? anders moet dit ook in TASK
+		if(creationTime == null) {
 			throw new IllegalArgumentException("The creation time can't be null");
 		}
 		this.creationTime = creationTime;
@@ -252,7 +247,7 @@ public class Project implements ProjectWrapper {
 	 * @post the due time of the project is set to the given due time.
 	 */
 	private void setDueTime(LocalDateTime dueTime) {
-		if (dueTime == null){ // TODO: moet dit anders bij task dit ook
+		if (dueTime == null){
 			throw new IllegalArgumentException("The due time can't be null");
 		}
 		this.dueTime = dueTime;

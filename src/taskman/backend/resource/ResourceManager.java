@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
  */
 public class ResourceManager {
 
-    // TODO: duration en starttime samenvoegen in timespan!!!
-
     /**
      * Construct an empty resource manager.
      * @post the set of resource types is set to a new HashsSet and the list of constraints is set to a new Arraylist
@@ -184,7 +182,7 @@ public class ResourceManager {
     public void addRequirement(Plan plan, ResourceType resourceType, int amount){
         Map<ResourceType, Integer> requirementsCopy = plan.getRequirements();
         requirementsCopy.put(resourceType, amount);
-        if (checkRequirements(requirementsCopy)){ // TODO: moet deze check hier of bij Plan gebeuren?
+        if (checkRequirements(requirementsCopy)){
             plan.addRequirement(resourceType, amount);
         } else {
             throw new IllegalArgumentException("The requirements of the task do not meet the system its constraints.");
@@ -218,7 +216,6 @@ public class ResourceManager {
         if (user.getUserType().equals("developer")) {
             Developer d = (Developer) user;
             getResourceType("developer").removeResource(getResourceType("developer").getResource(user.getName()));
-            // TODO: is dit wel goede code
         }
     }
 

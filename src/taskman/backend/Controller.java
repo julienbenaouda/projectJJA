@@ -303,7 +303,7 @@ public class Controller {
      */
     public Iterator<LocalDateTime> getStartingTimes(TaskWrapper task) {
         Task t = (Task) task;
-        return getResourceManager().getStartingTimes(t.getPlan(), t.getEstimatedDuration(), getClock().getTime()); // TODO: @Jeroen, via task?
+        return getResourceManager().getStartingTimes(t.getPlan(), t.getEstimatedDuration(), getClock().getTime());
     }
 
     /**
@@ -393,7 +393,6 @@ public class Controller {
      */
     public void createResource(ResourceTypeWrapper type, String name) {
     	if (type.getName().equals("developer")) {
-    		// TODO: dit een een slechte fix!!!
     		throw new IllegalArgumentException("Cannot create a resource for a developer!");
 	    }
         ((ResourceType) type).createResource(name);

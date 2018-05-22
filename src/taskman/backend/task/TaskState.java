@@ -16,8 +16,6 @@ import java.util.List;
  */
 public abstract class TaskState {
 
-    // TODO: moet niet alles protected staan?
-
     private String status;
 
     /**

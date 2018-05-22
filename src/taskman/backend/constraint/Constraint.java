@@ -108,6 +108,6 @@ public class Constraint implements ConstraintComponent {
             }
         }
         return getAmountComparator().evaluate(0, getAmount());
-        // TODO: nakijken of dit wel klopt
     }
+
 }

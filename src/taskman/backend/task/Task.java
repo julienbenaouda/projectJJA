@@ -170,7 +170,6 @@ public class Task implements TaskWrapper {
     private void setTimeSpan(TimeSpan timeSpan){
         this.timeSpan = timeSpan;
     }
-    // TODO: in TimeSpan moet er gechecked worden of het wel een valid timespan is
 
 
     // STATE PATTERN

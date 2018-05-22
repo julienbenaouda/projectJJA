@@ -44,10 +44,6 @@ public abstract class Section {
         } catch (IOException ignored) {
             return "";
         }
-        /* TODO: waarom werkt scanner niet?
-        try (Scanner sc = new Scanner(System.in)) {
-            return sc.nextLine();
-        }*/
     }
 
     /**
