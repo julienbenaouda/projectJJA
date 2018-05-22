@@ -6,8 +6,9 @@ import java.util.Map;
 
 /**
  * Class representing an and constraint.
- * It is responsible for keeping references to the two clauses of an and literal. It is also responsible for checking if a map of requirements matches this constraint.
- * Note: We apply here the Composite Pattern
+ * It is responsible for keeping references to the two clauses of an and literal.
+ * It is also responsible for checking if a map of requirements matches this constraint.
+ * Note: We apply the Composite Pattern here
  *
  * @author Jeroen Van Der Donckt
  */
@@ -15,7 +16,6 @@ public class AndConstraint implements ConstraintComponent {
 
     /**
      * Creates a new and constraint with given attributes.
-
      * @param constraint1 the first constraint of the and constraint
      * @param constraint2 the second constraint of the and constraint
      * @post a new and constraint is created with given attributes
@@ -25,7 +25,6 @@ public class AndConstraint implements ConstraintComponent {
         setConstraint2(constraint2);
     }
 
-
     /**
      * Represents the first constraint of the and constraint.
      */
@@ -33,7 +32,6 @@ public class AndConstraint implements ConstraintComponent {
 
     /**
      * Returns the first constraint of the and constraint.
-     *
      * @return the first constraint of the and constraint
      */
     public ConstraintComponent getConstraint1() {
@@ -50,7 +48,6 @@ public class AndConstraint implements ConstraintComponent {
         this.constraint1 = constraint1;
     }
 
-
     /**
      * Represents the second constraint of the and constraint.
      */
@@ -58,7 +55,6 @@ public class AndConstraint implements ConstraintComponent {
 
     /**
      * Returns the second constraint of the and constraint.
-     *
      * @return the second constraint of the and constraint
      */
     public ConstraintComponent getConstraint2() {
@@ -67,7 +63,6 @@ public class AndConstraint implements ConstraintComponent {
 
     /**
      * Sets the second constraint of the and constraint to the given constraint.
-     *
      * @param constraint2 the second constraint of the and constraint
      * @post the second constraint of the and constraint is set to the given constraint
      */
@@ -75,10 +70,8 @@ public class AndConstraint implements ConstraintComponent {
         this.constraint2 = constraint2;
     }
 
-
     /**
-     * Returns the solution of testing the and constraint with the given requirements.
-     *
+     * Returns the evaluate of testing the and constraint with the given requirements.
      * @param requirements the requirements
      * @return true if the requirements meet the and constraint, otherwise false
      */

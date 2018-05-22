@@ -6,7 +6,8 @@ import java.util.Map;
 
 /**
  * Class representing an or constraint.
- * It is responsible for keeping references to the two parts of an or literal. It is also responsible for checking if a map of requirements matches this constraint.
+ * It is responsible for keeping references to the two parts of an or literal.
+ * It is also responsible for checking if a map of requirements matches this constraint.
  * Note: We apply here the Composite Pattern
  *
  * @author Jeroen Van Der Donckt
@@ -15,7 +16,6 @@ public class OrConstraint implements ConstraintComponent {
 
     /**
      * Creates a new or constraint with given attributes.
-
      * @param constraint1 the first constraint of the or constraint
      * @param constraint2 the second constraint of the or constraint
      * @post a new or constraint is created with given attributes
@@ -25,7 +25,6 @@ public class OrConstraint implements ConstraintComponent {
         setConstraint2(constraint2);
     }
 
-
     /**
      * Represents the first constraint of the or constraint.
      */
@@ -33,7 +32,6 @@ public class OrConstraint implements ConstraintComponent {
 
     /**
      * Returns the first constraint of the or constraint.
-     *
      * @return the first constraint of the or constraint
      */
     public ConstraintComponent getConstraint1() {
@@ -42,7 +40,6 @@ public class OrConstraint implements ConstraintComponent {
 
     /**
      * Sets the first constraint of the or constraint to the given constraint.
-     *
      * @param constraint1 the first constraint of the or constraint
      * @post the first constraint of the or constraint is set to the given constraint
      */
@@ -58,7 +55,6 @@ public class OrConstraint implements ConstraintComponent {
 
     /**
      * Returns the second constraint of the or constraint.
-     *
      * @return the second constraint of the or constraint
      */
     public ConstraintComponent getConstraint2() {
@@ -67,7 +63,6 @@ public class OrConstraint implements ConstraintComponent {
 
     /**
      * Sets the second constraint of the or constraint to the given constraint.
-     *
      * @param constraint2 the second constraint of the or constraint
      * @post the second constraint of the or constraint is set to the given constraint
      */
@@ -77,8 +72,7 @@ public class OrConstraint implements ConstraintComponent {
 
 
     /**
-     * Returns the solution of testing the or constraint with the given requirements.
-     *
+     * Returns the evaluate of testing the or constraint with the given requirements.
      * @param requirements the requirements
      * @return true if the requirements meet the or constraint, otherwise false
      */

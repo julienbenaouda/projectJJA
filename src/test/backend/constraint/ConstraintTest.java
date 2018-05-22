@@ -1,4 +1,4 @@
-package test.backend.resource;
+package test.backend.constraint;
 
 import org.junit.Before;
 import org.junit.Test;

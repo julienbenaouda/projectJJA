@@ -2,9 +2,9 @@ package taskman.backend;
 
 import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
-import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
+import taskman.backend.constraint.ConstraintParser;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.Resource;
@@ -384,7 +384,7 @@ public class Controller {
      * @throws NumberFormatException if a number in the string cannot be parsed to an integer
      */
     public void addConstraint(String string) {
-        this.getResourceManager().addConstraint(ConstraintComponent.parseConstraint(string, getResourceManager()));
+        this.getResourceManager().addConstraint(ConstraintParser.toConstraint(string, getResourceManager()));
         // TODO: is het wel OK om in de controller te parsen?
     }
 

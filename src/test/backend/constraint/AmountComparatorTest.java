@@ -1,10 +1,10 @@
-package test.backend.resource;
-
-import static org.junit.Assert.*;
+package test.backend.constraint;
 
 import org.junit.Test;
-
 import taskman.backend.constraint.AmountComparator;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AmountComparatorTest {
 

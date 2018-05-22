@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * Class representing a constraint. (This is the leaf component)
- * Note: We apply here the Composite Pattern
+ * Note: We apply the Composite Pattern here
  *
  * @author Jeroen Van Der Donckt
  */
@@ -24,7 +24,6 @@ public class Constraint implements ConstraintComponent {
         setAmountComparator(operator);
         setAmount(amount);
     }
-
 
     /**
      * Represents the resource type of the constraint.
@@ -48,7 +47,6 @@ public class Constraint implements ConstraintComponent {
         this.resourceType = resourceType;
     }
 
-
     /**
      * Represents the amount comparator of the constraint.
      */
@@ -70,7 +68,6 @@ public class Constraint implements ConstraintComponent {
     private void setAmountComparator(AmountComparator amountComparator){
         this.amountComparator = amountComparator;
     }
-
 
     /**
      * Represents the amount of the constraint.
@@ -94,20 +91,15 @@ public class Constraint implements ConstraintComponent {
         this.amount = amount;
     }
 
-
     /**
-     * Returns the solution of testing the constraint with the given requirements.
+     * Returns the evaluate of testing the constraint with the given requirements.
      * @param requirements the requirements
      * @return true if the requirements meet the constraint, otherwise false
      */
     @Override
     public boolean solution(Map<ResourceType, Integer> requirements) {
-        for (ResourceType resourceType : requirements.keySet()){
-            if (resourceType.equals(getResourceType())){
-                return getAmountComparator().evaluate(requirements.get(getResourceType()), getAmount());
-            }
-        }
-        return getAmountComparator().evaluate(0, getAmount());
+        Integer value = requirements.getOrDefault(getResourceType(), 0);
+        return getAmountComparator().evaluate(value, getAmount());
     }
 
 }

@@ -6,8 +6,9 @@ import java.util.Map;
 
 /**
  * Class representing a not constraint.
- * It is responsible for keeping a reference to the clause of a not constraint. It is also responsible for checking if a map of requirements matches this constraint.
- * Note: We apply here the Composite Pattern
+ * It is responsible for keeping a reference to the clause of a not constraint.
+ * It is also responsible for checking if a map of requirements matches this constraint.
+ * Note: We apply the Composite Pattern here
  *
  * @author Jeroen Van Der Donckt
  */
@@ -15,7 +16,6 @@ public class NotConstraint implements ConstraintComponent {
 
     /**
      * Creates a new or constraint with given attribute.
-
      * @param constraint the constraint of the not constraint
      * @post a new not constraint is created with given attribute
      */
@@ -30,7 +30,6 @@ public class NotConstraint implements ConstraintComponent {
 
     /**
      * Returns the constraint of the not constraint.
-     *
      * @return the constraint of the not constraint
      */
     public ConstraintComponent getConstraint() {
@@ -39,7 +38,6 @@ public class NotConstraint implements ConstraintComponent {
 
     /**
      * Sets the constraint of the not constraint to the given constraint.
-     *
      * @param constraint the constraint of the not constraint
      * @post the constraint of the not constraint is set to the given constraint
      */
@@ -48,8 +46,7 @@ public class NotConstraint implements ConstraintComponent {
     }
 
     /**
-     * Returns the solution of testing the not constraint with the given requirements.
-     *
+     * Returns the evaluate of testing the not constraint with the given requirements.
      * @param requirements the requirements
      * @return true if the requirements meet the not constraint, otherwise false
      */

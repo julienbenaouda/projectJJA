@@ -6,8 +6,9 @@ import java.util.Map;
 
 /**
  * Class representing a if ... then ... constraint.
- * It is responsible for keeping references to the two parts of an if then literal. It is also responsible for checking if a map of requirements matches this constraint.
- * Note: We apply here the Composite Pattern
+ * It is responsible for keeping references to the two parts of an if then literal.
+ * It is also responsible for checking if a map of requirements matches this constraint.
+ * Note: We apply the Composite Pattern here
  *
  * @author Jeroen Van Der Donckt
  */
@@ -25,7 +26,6 @@ public class IfThenConstraint implements ConstraintComponent {
         setThenConstraint(thenConstraint);
     }
 
-
     /**
      * Represents the if constraint of the if then constraint.
      */
@@ -33,7 +33,6 @@ public class IfThenConstraint implements ConstraintComponent {
 
     /**
      * Returns the if constraint of the if then constraint.
-     *
      * @return the if constraint of the if then constraint.
      */
     public ConstraintComponent getIfConstraint(){
@@ -42,14 +41,12 @@ public class IfThenConstraint implements ConstraintComponent {
 
     /**
      * Sets the if constraint of the if then constraint to the given constraint.
-     *
      * @param ifConstraint the if constraint of the if then constraint
      * @post the if constraint of the if then constraint is set to the given constraint
      */
     private void setIfConstraint(ConstraintComponent ifConstraint){
         this.ifConstraint = ifConstraint;
     }
-
 
     /**
      * Represents the then constraint of the if then constraint.
@@ -58,7 +55,6 @@ public class IfThenConstraint implements ConstraintComponent {
 
     /**
      * Returns the then constraint of the if then constraint.
-     *
      * @return the then constraint of the if then constraint
      */
     public ConstraintComponent getThenConstraint(){
@@ -67,7 +63,6 @@ public class IfThenConstraint implements ConstraintComponent {
 
     /**
      * Sets the then constraint of the if then constraint to the given constraint.
-     *
      * @param thenConstraint the then constraint of the if then constraint
      * @post the then constraint of the if then constraint is set to the given constraint
      */
@@ -75,10 +70,8 @@ public class IfThenConstraint implements ConstraintComponent {
         this.thenConstraint = thenConstraint;
     }
 
-
     /**
-     * Returns the solution of testing the if then constraint with the given requirements.
-     *
+     * Returns the evaluate of testing the if then constraint with the given requirements.
      * @param requirements the requirements
      * @return true if the requirements meet the if then constraint, otherwise false
      */
@@ -86,8 +79,9 @@ public class IfThenConstraint implements ConstraintComponent {
     public boolean solution(Map<ResourceType, Integer> requirements) {
         if (getIfConstraint().solution(requirements)){
             return getThenConstraint().solution(requirements);
+        } else {
+            return true;
         }
-        return true;
     }
 
 }
