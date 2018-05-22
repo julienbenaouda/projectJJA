@@ -87,9 +87,7 @@ public class IfThenConstraint implements ConstraintComponent {
         if (getIfConstraint().solution(requirements)){
             return getThenConstraint().solution(requirements);
         }
-        else {
-            return true;
-            // TODO: nakijken of dit wel klopt
-        }
+        return true;
     }
+
 }

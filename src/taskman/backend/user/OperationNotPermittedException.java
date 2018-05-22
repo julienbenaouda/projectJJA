@@ -14,7 +14,6 @@ public class OperationNotPermittedException extends RuntimeException {
 	 */
 	public OperationNotPermittedException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }
