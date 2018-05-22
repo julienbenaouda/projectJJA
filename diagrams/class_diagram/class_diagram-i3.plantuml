@@ -113,15 +113,16 @@ title __TASKMAN's Class Diagram__\n
 
     package taskman.backend {
       class Controller {
-          + Controller(Clock, UserManager, ProjectManager, ResourceManager, SimulationManager)
+          + Controller(Clock, BranchOfficeManager, SimulationManager)
+          + createBranchOffice(String)
           + LocalDateTime getTime()
           + void updateTime(LocalDateTime)
           + UserWrapper getCurrentUser()
           + List<UserWrapper> getUsers()
           + Collection<String> getUserTypes()
-          + void createUser(String, String, String, LocalTime)
-          + void removeUser(UserWrapper, String)
-          + void login(String, String)
+          + void createUser(BranchOfficeWrapper, String, String, String, LocalTime)
+          + void removeUser(BranchOfficeWrapper, UserWrapper, String)
+          + void login(BranchOffice, String, String)
           + void logout()
           + List<ProjectWrapper> getProjects()
           + String getProjectStatus(ProjectWrapper)
@@ -149,9 +150,12 @@ title __TASKMAN's Class Diagram__\n
           + void cancelSimulation()
           + void executeSimulation()
           - void setClock(Clock)
-          - void setUserManager(UserManager)
-          - void setProjectManager(ProjectManager)
-          - void setResourceManager(ResourceManager)
+          - UserManager getUserManager()
+          - ProjectManager getProjectManager()
+          - ResourceManager getResourceManager()
+          + BranchOfficeManager getBranchOfficeManager()
+          - void setBranchOfficeManager(BranchOfficeManager)
+          + List<BranchOfficeWrapper> getBranchOffices()
       }
 
       package taskman.backend.wrappers {
@@ -469,7 +473,7 @@ title __TASKMAN's Class Diagram__\n
             + boolean canBeUpdated()
             + void endExecution(LocalDateTime, LocalDateTime, String, User)
             + void makeExecuting(ResourceManager, LocalDateTime, User)
-            + boolean isAvailable(ResourceManager, LocalDateTIme)
+            + boolean isAvailable(LocalDateTIme)
             + boolean isFinished()
             + long getDelay()
             + Task getAlternative()
@@ -480,9 +484,9 @@ title __TASKMAN's Class Diagram__\n
             + void addDependency(Task)
             + void removeDependency(TAsk)
             + Plan getPlan()
-            + void initializePlan(ResourceManager, LocalDateTime)
+            + void initializePlan(LocalDateTime)
             + List<REsource> getPlannedResources()
-            + List<Resource> getAlternativeResources(REsourceManager, Resource)
+            + List<Resource> getAlternativeResources(Resource)
             + void changeResource(Resource, Resource)
             + void cancelPlan()
             + void addRequirement(ResourceManager, ResourceType, int)
@@ -507,14 +511,14 @@ title __TASKMAN's Class Diagram__\n
             + void execute(Task, ResourceManager, LocalDateTime)
             + void endExecution(TAsk, LocalDateTime, LocalDateTime)
             + void setAlternative(Task, Task)
-            + void addDependency(TAsk, Task)
+            + void addDependency(Task, Task)
             + void addRequirement(ResourceManager, TAsk, ResourceType, int)
-            + void isAvailable(ResourceManager, Task, LocalDateTime)
+            + boolean isAvailable(Task, LocalDateTime)
             + boolean isFinished()
             # boolean isFailed()
-            + void initializePlan(TAsk, ResourceManager, LocalDateTIme)
-            + List<REsource> getPlannedResources(Task)
-            + List<Resources> getAlternativeResources(ResourceManager, Task, Resource)
+            + void initializePlan(Task, LocalDateTIme)
+            + List<Resource> getPlannedResources(Task)
+            + List<Resources> getAlternativeResources(Task, Resource)
             + void changeResource(TAsk, REsource, REsource)
             + void cancelPlan(TAsk)
         }
@@ -534,7 +538,7 @@ title __TASKMAN's Class Diagram__\n
 
         class TaskStateFailed {
             + TaskStateFailed()
-            + void setAlternative(TAsk, TAsk)
+            + void setAlternative(Task, Task)
             # boolean isFailed()
         }
 
@@ -548,11 +552,11 @@ title __TASKMAN's Class Diagram__\n
             + TaskStatePlanned()
             + boolean canBeUpdated()
             + List<Resource> getPlannedResources(TAsk)
-            + List<REsource> getAlternativeResources(ResourceManager, Task, Resource)
+            + List<Resource> getAlternativeResources(Task, Resource)
             + void changeResource(Task, Resource, REsource)
             + void cancelPlan(Task)
             + void execute(Task, ResourceManager, LocalDateTime)
-            + boolean isAvailable(ResourceManager, Task, LocalDateTime)
+            + boolean isAvailable(Task, LocalDateTime)
         }
 
         class TaskStateUnavailable {
@@ -560,7 +564,7 @@ title __TASKMAN's Class Diagram__\n
             + addDependency(TAsk, TAsk)
             + boolean canBePlanned()
             + void addRequirement(ResourceManager, Task, ResourceType, int)
-            + void initializePlan(Task, REsourceManager, LocalDateTime)
+            + void initializePlan(Task, LocalDateTime)
             + void delegate(BranchOffice, Task, LocalDateTime)
         }
       }
