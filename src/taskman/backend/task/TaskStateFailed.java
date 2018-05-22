@@ -29,4 +29,12 @@ public class TaskStateFailed extends TaskState {
         }
         task.setAlternativeTask(alternative);
     }
+    /**
+     * Returns if this task is failed.
+     * @return if this task is failed.
+     */
+    @Override
+    boolean isFailed() {
+    	return true;
+    }
 }

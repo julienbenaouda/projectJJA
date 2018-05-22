@@ -45,4 +45,33 @@ public class TaskStateDelegated extends TaskState {
     public void setDelegatedTask(Task originalTask) {
         this.delegatedTask = originalTask;
     }
+
+    /**
+     * Sets the alternative of the task to the given alternative.
+     *
+     * @param task the task to set the alternative from
+     * @param alternative the alternative of the task
+     * @throws IllegalargumentException when the task contains a loop
+     * @post the alternative of the task is set to the given alternative
+     */
+    @Override
+    public void setAlternative(Task task, Task alternative) throws IllegalArgumentException {
+    	if(delegatedTask.isFailed()) {
+            if (Task.containsLoop(task, alternative)){
+                throw new IllegalArgumentException("The alternative may not be one of the dependencies or the alternative of this or of its dependendecies recursivley.");
+            }
+            task.setAlternativeTask(alternative);
+    	} else {
+    		throw new IllegalStateException("the task is not in the correct state to add an alternative!");
+    	}
+    }
+    
+    /**
+     * returns if a task is failed
+     * @return true if the task is failed, else false
+     */
+    @Override
+    boolean isFailed() {
+    	return getDelegatedTask().isFailed();
+    }
 }

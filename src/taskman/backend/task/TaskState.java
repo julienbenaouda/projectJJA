@@ -146,6 +146,14 @@ public abstract class TaskState {
     public boolean isFinished() {
         return false;
     }
+    
+    /**
+     * Returns if this task is failed.
+     * @return if this task is failed.
+     */
+    boolean isFailed() {
+    	return false;
+    }
 
     /**
      * Initializes a plan for this state.

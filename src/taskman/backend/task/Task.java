@@ -280,6 +280,14 @@ public class Task implements TaskWrapper {
     public boolean isFinished() {
         return getState().isFinished();
     }
+    
+    /**
+     * Returns if this task is failed.
+     * @return if this task is failed.
+     */
+    boolean isFailed() {
+    	return getState().isFailed();
+    }
 
     /**
      * Return the delay between the end time and the estimated end time in minutes.

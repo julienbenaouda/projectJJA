@@ -353,6 +353,8 @@ title __TASKMAN's Class Diagram__\n
             + Boolean isDeveloperFromPlan(User)
             + void finish(LocalDateTime)
             + void emptyPlan()
+            # boolean isAvailableStartingTime(long, LocalDateTIme)
+            + void addRequirement(ResourceType, int)
         }
 
         class Reservation {
@@ -394,16 +396,15 @@ title __TASKMAN's Class Diagram__\n
             - void addConstraint(ConstraintComponent)
             + void createConstraint(String)
             + Iterator<LocalDAteTIme> getStartingTimes(plan, long, LocalDateTIme)
-            - boolean isAvailableStartingTime(plan, long, LocalDateTIme)
             + void testRequirements(Map<ResourceType, Integer>)
             - boolean checkRequirements(Map<ResourceType, Integer)
-            + void addRequirement(plan, ResourceType, int)
             + void createResourceForUser(User, LocalTime)
             + void removeResourceForUser(User)
             + void initializePlan(Plan, long, LocalDateTime)
             + void reschedulePlan(Plan, TimeSpan)
             + void canBeRescheduled(Plan, TimeSpan)
             + List<Resource> getAlternativeResources(Resource, TimeSpan)
+            + void addRequirement(Plan, ResourceType, int)
         }
 
         class ResourceType {
@@ -489,6 +490,13 @@ title __TASKMAN's Class Diagram__\n
             + boolean hasAccessTo(User)
         }
 
+        class DelegatedTask {
+            + DelegatedTask(String, String, long, double)
+            + void addDependency(Task)
+            + void removeDependency(Task)
+            + void setAlternative(Task)
+        }
+
         abstract class TaskState {
             - status : String
             + String getStatus()
@@ -503,6 +511,7 @@ title __TASKMAN's Class Diagram__\n
             + void addRequirement(ResourceManager, TAsk, ResourceType, int)
             + void isAvailable(ResourceManager, Task, LocalDateTime)
             + boolean isFinished()
+            # boolean isFailed()
             + void initializePlan(TAsk, ResourceManager, LocalDateTIme)
             + List<REsource> getPlannedResources(Task)
             + List<Resources> getAlternativeResources(ResourceManager, Task, Resource)
@@ -511,9 +520,11 @@ title __TASKMAN's Class Diagram__\n
         }
 
         class TaskStateDelegated {
+            + String getStatus()
             - getDelegatedTask()
             - setDelegatedTask()
-            + delegate()
+            + void setAlternative(Task, Task)
+            # boolean isFailed()
         }
 
         class TaskStateExecuting {
@@ -524,6 +535,7 @@ title __TASKMAN's Class Diagram__\n
         class TaskStateFailed {
             + TaskStateFailed()
             + void setAlternative(TAsk, TAsk)
+            # boolean isFailed()
         }
 
         class TaskStateFinished {
@@ -540,7 +552,7 @@ title __TASKMAN's Class Diagram__\n
             + void changeResource(Task, Resource, REsource)
             + void cancelPlan(Task)
             + void execute(Task, ResourceManager, LocalDateTime)
-            + booleanisAvailable(ResourceManager, Task, LocalDateTime)
+            + boolean isAvailable(ResourceManager, Task, LocalDateTime)
         }
 
         class TaskStateUnavailable {
@@ -549,6 +561,7 @@ title __TASKMAN's Class Diagram__\n
             + boolean canBePlanned()
             + void addRequirement(ResourceManager, Task, ResourceType, int)
             + void initializePlan(Task, REsourceManager, LocalDateTime)
+            + void delegate(BranchOffice, Task, LocalDateTime)
         }
       }
 
@@ -644,12 +657,30 @@ title __TASKMAN's Class Diagram__\n
 
   package taskman.backend.branchoffice {
     class BranchOffice {
+      - projectManager: ProjectManager
+      - userManager: UserManager
+      - resourceManager: ResourceManager
+      - name: String
+      + BranchOffice(String)
       + ProjectManager getProjectManager()
       + ResourceManager getResourceManager()
       + UserManager getUserManager()
-      - void setProjectManager(ProjectManager)
+      - void setProjectmanager(ProjectManager)
       - void setResourceManager(ResourceManager)
-      - void setUserManager(UserManager)
+      - void setUserManager(UserManager) 
+      + Task executeDelegation(Map<ResourceType, Integer>, String, String, LocalDateTime, long, double)
+    }
+
+    class BranchOfficeManager {
+      - branchOffices: List<BranchOffice>
+      - currentBranchOffice: BranchOffice
+      + branchOfficeManager()
+      - void addBranchOffice(BranchOffice)
+      + void changeBranchOffice(BranchOffice)
+      + void createBranchOffice(String)
+      + List<BranchOffice> getBranchOffices()
+      + BranchOffice getCurrentBranchOffice()
+      - void setCurrentBranchOffice(BranchOffice)
     }
   }
 
