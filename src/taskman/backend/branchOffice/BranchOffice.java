@@ -28,20 +28,6 @@ public class BranchOffice implements BranchOfficeWrapper {
 		setResourceManager(new ResourceManager());
 		setUserManager(new UserManager());
 	}
-
-	/**
-	 * creates a new branch office manager with the given name
-	 * @param name the name of the new branch office
-	 * @param projectManager the project manager
-	 * @param resourceManager the resource manager
-	 * @param userManager the user manager
-	 */
-	public BranchOffice(String name, ProjectManager projectManager, ResourceManager resourceManager, UserManager userManager) {
-		setName(name);
-		setProjectManager(projectManager);
-		setResourceManager(resourceManager);
-		setUserManager(userManager);
-	}
 	
 	/**
 	 * represents the name of the branch office
