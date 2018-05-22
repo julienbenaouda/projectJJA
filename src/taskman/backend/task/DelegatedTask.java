@@ -1,7 +1,5 @@
 package taskman.backend.task;
 
-import java.time.LocalDateTime;
-
 /**
  * This class represents a delegated task. That is, a task which is delegated from another branch office.
  * It doesn't contain any data, but restricts the execution of several options which can be executed on a normal task.

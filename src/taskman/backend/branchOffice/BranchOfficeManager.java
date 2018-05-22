@@ -5,14 +5,14 @@ import java.util.List;
 
 /**
  * this class represents the branch office manager.
- * It keeps a list of all branch ofices and a reference to the current branch office.
+ * It keeps a list of all branch offices and a reference to the current branch office.
  * @author Julien Benaouda
  *
  */
 public class BranchOfficeManager {
 
 	/**
-	 * 
+	 * creates a new branch office manager
 	 */
 	public BranchOfficeManager() {
 		branchOffices = new ArrayList<>();
@@ -33,8 +33,8 @@ public class BranchOfficeManager {
 	
 	/**
 	 * create a new branch office with the given name
-	 * @param name the name of the branchoffice
-	 * @effect adds the branch office to the list of branch offices
+	 * @param name the name of the branch office
+	 * @post adds the branch office to the list of branch offices
 	 * @throws IllegalArgumentException when a branch office with the given name already exists
 	 */
 	public void createBranchOffice(String name) throws IllegalArgumentException {
@@ -59,11 +59,19 @@ public class BranchOfficeManager {
 	 * @param branchOffice the branch office to be set as new branch office
 	 * @throws IllegalArgumentException when the given branch office is nulll
 	 */
-	public void changeBranchOffice(BranchOffice branchOffice) throws IllegalArgumentException {
+	public void changeCurrentBranchOffice(BranchOffice branchOffice) throws IllegalArgumentException {
 		if(branchOffice == null) {
 			throw new IllegalArgumentException("The branch office can't be null");
 		}
 		setCurrentBranchOffice(branchOffice);
+	}
+
+	/**
+	 * deactivates the current branch office
+	 * @post no current branch office is present
+	 */
+	public void deactivateCurrentBranchOffice() {
+		setCurrentBranchOffice(null);
 	}
 	
 	/**
@@ -73,11 +81,11 @@ public class BranchOfficeManager {
 
 	/**
 	 * returns the current BranchOffice of the system
-	 * @throws IllegalStateException if no current branch office is set
+	 * @throws IllegalStateException if no current branch office is found
 	 */
 	public BranchOffice getCurrentBranchOffice() throws IllegalStateException {
 		if (currentBranchOffice == null) {
-			throw new IllegalStateException("No current branch office is set!");
+			throw new IllegalStateException("No current branch office is found!");
 		} else {
 			return currentBranchOffice;
 		}

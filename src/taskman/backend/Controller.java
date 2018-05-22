@@ -1,5 +1,6 @@
 package taskman.backend;
 
+import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.ImportExportException;
 import taskman.backend.importexport.XmlObject;
@@ -34,7 +35,7 @@ public class Controller {
 	 * @param branchOfficeManager a branch office management system.
 	 * @throws NullPointerException if an argument is null.
 	 */
-	public Controller(Clock clock, BranchOfficeManager branchOfficeManager, SimulationManager simulationManager) throws NullPointerException{
+	public Controller(Clock clock, BranchOfficeManager branchOfficeManager, SimulationManager simulationManager) throws NullPointerException {
 		if (clock == null || branchOfficeManager == null || simulationManager == null) {
 			throw new NullPointerException("Arguments cannot be null!");
 		}
@@ -147,6 +148,24 @@ public class Controller {
         getClock().updateTime(newTime);
     }
 
+	/**
+	 * Returns a list of branch offices.
+	 * @return a list of branch offices.
+	 */
+	public List<BranchOfficeWrapper> getBranchOffices() {
+    	return new ArrayList<>(getBranchOfficeManager().getBranchOffices());
+    }
+
+	/**
+	 * Creates a new branch office with the given name.
+	 * @param name the name of the branch office.
+	 * @post adds the branch office to the list of branch offices.
+	 * @throws IllegalArgumentException if a branch office with the given name already exists.
+	 */
+    public void createBranchOffice(String name) {
+		getBranchOfficeManager().createBranchOffice(name);
+    }
+
     /**
      * Returns the active user.
      * @return a UserWrapper.
@@ -174,26 +193,28 @@ public class Controller {
 
     /**
      * Adds a new user to the system.
+     * @param office the branch office of the new user.
      * @param name the name of the user.
      * @param password the password of the user.
      * @param type the type of user.
      * @throws IllegalArgumentException if the type is not valid.
      * @post a new user is added to the system.
      */
-    public void createUser(String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
-        getUserManager().createUser(name, password, type, startBreak, getResourceManager());
+    public void createUser(BranchOfficeWrapper office, String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
+	    ((BranchOffice) office).getUserManager().createUser(name, password, type, startBreak, getResourceManager());
     }
 
     /**
      * Removes a user from the system.
+     * @param office the branch office of the user.
      * @param user the user wrapper.
      * @param password the password of the user.
      * @post a user is removed from the system.
      * @throws IllegalArgumentException if the password is incorrect.
      * @throws IllegalStateException if the resource for the user cannot be removed.
      */
-    public void removeUser(UserWrapper user, String password) throws IllegalArgumentException, IllegalStateException {
-        getUserManager().removeUser((User) user, password, getResourceManager());
+    public void removeUser(BranchOfficeWrapper office, UserWrapper user, String password) throws IllegalArgumentException, IllegalStateException {
+	    ((BranchOffice) office).getUserManager().removeUser((User) user, password, getResourceManager());
     }
 
     /**
@@ -203,7 +224,8 @@ public class Controller {
      * @throws IllegalArgumentException when the password for the user with the given name is incorrect.
      * @post the user is logged in and is now used in the system.
      */
-    public void login(String name, String password) throws IllegalArgumentException {
+    public void login(BranchOfficeWrapper office, String name, String password) throws IllegalArgumentException {
+    	getBranchOfficeManager().changeCurrentBranchOffice((BranchOffice) office);
         getUserManager().login(name, password);
     }
 
@@ -212,6 +234,7 @@ public class Controller {
      */
     public void logout() {
         getUserManager().logout();
+	    getBranchOfficeManager().deactivateCurrentBranchOffice();
     }
 
     /**

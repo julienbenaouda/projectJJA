@@ -185,7 +185,7 @@ public class Task implements TaskWrapper {
      *
      * @return the task state of the task
      */
-    public TaskState getState(){
+    public TaskState getState() {
         return state;
     }
 
