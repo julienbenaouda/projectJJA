@@ -8,17 +8,17 @@ import taskman.backend.Controller;
 import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.importexport.ImportExportException;
-import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.simulation.SimulationManager;
-import taskman.backend.task.Task;
 import taskman.backend.time.Clock;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.BranchOfficeWrapper;
+import taskman.backend.wrappers.ProjectWrapper;
 import taskman.backend.wrappers.ResourceTypeWrapper;
+import taskman.backend.wrappers.TaskWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -206,117 +206,103 @@ public class ControllerTest {
         assertFalse("Logout failed!", userManager.hasCurrentUser());
     }
 
-    @Test
-    public void getProjectsTest() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
-        controller.login(branchOffice,"alexander", "blabla");
-        assertTrue("Projects already present!", projectOrganizer.getProjects().isEmpty());
+    @Test(expected = IllegalArgumentException.class)
+    public void createProjectTest_Developer_IllegalArgumentException() {
+        controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
+        controller.login(branchOffice,"julien", "blablabla");
         assertTrue("Projects already present!", controller.getProjects().isEmpty());
         controller.createProject("proj", "xXx", randomTime);
-        assertEquals("More or less than one project added!",1, projectOrganizer.getProjects().size());
-        assertEquals("More or less than one project added!",1, controller.getProjects().size());
-        Project project = projectOrganizer.getProject("proj");
-        assertEquals("Wrong project added!", project, controller.getProjects().get(0));
-
-        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
-
-        assertTrue("Tasks already present!", project.getTasks().isEmpty());
-        assertTrue("Tasks already present!", controller.getTasks(project).isEmpty());
-        HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
-        controller.createTask(project, "tsk", "oOo", 10, 0.5, empty);
-        assertEquals("More or less than one task added!",1, project.getTasks().size());
-        assertEquals("More or less than one task added!",1, controller.getTasks(project).size());
-        Task task = project.getTask("tsk");
-        assertEquals("Wrong task added!", task, controller.getTasks(project).get(0));
-
-        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
-
-        controller.logout();
-        userManager.createUser("dev", "devpass", "developer", startBreak, resourceManager);
-        controller.login(branchOffice, "dev", "devpass");
-
-        assertTrue("Developer can see unassigned projects!",controller.getProjects().isEmpty());
-        assertTrue("Developer can see unassigned tasks!", controller.getTasks(project).isEmpty());
-
-        controller.logout();
-        userManager.login("pm", "pmpass");
-
+        Assert.fail("Developer should not be able to create projects!");
     }
 
     @Test
-    public void project_and_task() {
+    public void getProjectsTest_Developer() {
+        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
+        controller.login(branchOffice,"alexander", "blabla");
+        controller.createProject("proj", "xXx", randomTime);
+        ProjectWrapper project = controller.getProjects().get(0);
+        controller.logout();
+        controller.login(branchOffice,"julien", "blablabla");
+        Assert.assertTrue("Project shouldn't be visible!", controller.getProjects().isEmpty());
+        controller.logout();
+        controller.login(branchOffice,"alexander", "blabla");
+        ResourceTypeWrapper developer = controller.getResourceTypes().get(0);
+        HashMap<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
+        requirements.put(developer, 1);
+        controller.createTask(project, "tsk", "oOo", 10, 0.5, requirements);
+        TaskWrapper task = controller.getTasks(project).get(0);
+        controller.initializePlan(task, randomTime);
+        controller.makeExecuting(task);
+        controller.logout();
+        controller.login(branchOffice,"julien", "blablabla");
+        Assert.assertFalse("Project should be visible!", controller.getProjects().isEmpty());
+        Assert.assertEquals("Only one project should be visible!", 1, controller.getProjects().size());
+        Assert.assertEquals("Wrong project is visible!", project, controller.getProjects().get(0));
+        assertEquals("Wrong project status!", "executing", controller.getProjectStatus(project));
+    }
+
+    @Test
+    public void getProjectsTest_ProjectManager() {
         controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
         controller.login(branchOffice,"alexander", "blabla");
-        assertTrue("Projects already present!", projectOrganizer.getProjects().isEmpty());
         assertTrue("Projects already present!", controller.getProjects().isEmpty());
         controller.createProject("proj", "xXx", randomTime);
-        assertEquals("More or less than one project added!",1, projectOrganizer.getProjects().size());
         assertEquals("More or less than one project added!",1, controller.getProjects().size());
-        Project project = projectOrganizer.getProject("proj");
-        assertEquals("Wrong project added!", project, controller.getProjects().get(0));
-
+        assertEquals("Wrong project added!", "proj", controller.getProjects().get(0).getName());
+        assertEquals("Wrong project added!", "xXx", controller.getProjects().get(0).getDescription());
+        ProjectWrapper project = controller.getProjects().get(0);
         assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
+    }
 
-        assertTrue("Tasks already present!", project.getTasks().isEmpty());
-        assertTrue("Tasks already present!", controller.getTasks(project).isEmpty());
-        HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
-        controller.createTask(project, "tsk", "oOo", 10, 0.5, empty);
-        assertEquals("More or less than one task added!",1, project.getTasks().size());
-        assertEquals("More or less than one task added!",1, controller.getTasks(project).size());
-        Task task = project.getTask("tsk");
-        assertEquals("Wrong task added!", task, controller.getTasks(project).get(0));
-
-        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
-
+    @Test
+    public void getTasksTest_Developer() {
+        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
+        controller.login(branchOffice,"alexander", "blabla");
+        controller.createProject("proj", "xXx", randomTime);
+        ProjectWrapper project = controller.getProjects().get(0);
         controller.logout();
-        userManager.createUser("dev", "devpass", "developer", startBreak, resourceManager);
-        controller.login(branchOffice, "dev", "devpass");
-
-        assertTrue("Developer can see unassigned projects!",controller.getProjects().isEmpty());
-        assertTrue("Developer can see unassigned tasks!", controller.getTasks(project).isEmpty());
-
+        controller.login(branchOffice,"julien", "blablabla");
         controller.logout();
-        userManager.login("pm", "pmpass");
+        controller.login(branchOffice,"alexander", "blabla");
+        ResourceTypeWrapper developer = controller.getResourceTypes().get(0);
+        HashMap<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
+        requirements.put(developer, 1);
+        controller.createTask(project, "tsk", "oOo", 10, 0.5, requirements);
+        TaskWrapper task = controller.getTasks(project).get(0);
+        controller.initializePlan(task, randomTime);
+        controller.makeExecuting(task);
+        controller.logout();
+        controller.login(branchOffice,"julien", "blablabla");
+        Assert.assertEquals("Wrong number of tasks!", 1, controller.getTasks(project).size());
+        Assert.assertEquals("Wrong task!", task, controller.getTasks(project).get(0));
+        Assert.assertEquals("Wrong task!", "tsk", controller.getTasks(project).get(0).getName());
+    }
 
+    @Test
+    public void getTasksTest_ProjectManager() {
+        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.login(branchOffice,"alexander", "blabla");
+        controller.createProject("proj", "xXx", randomTime);
+        ProjectWrapper project = controller.getProjects().get(0);
+        controller.createTask(project, "tsk", "oOo", 10, 0.5, new HashMap<>());
+        Assert.assertEquals("Wrong number of tasks!", 1, controller.getTasks(project).size());
+        Assert.assertEquals("Wrong task!", "tsk", controller.getTasks(project).get(0).getName());
+    }
+
+    @Test
+    public void getStartingTimesTest() {
+        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.login(branchOffice,"alexander", "blabla");
+        controller.createProject("proj", "xXx", randomTime);
+        ProjectWrapper project = controller.getProjects().get(0);
+        controller.createTask(project, "tsk", "oOo", 10, 0.5, new HashMap<>());
+        TaskWrapper task = controller.getTasks(project).get(0);
+        Assert.assertTrue("No starting time given.", controller.getStartingTimes(task).hasNext());
     }
 
     // TODO: rest van de tests overlopen ...
-
-    @Test
-    public void project_and_task() {
-        loginNewProjectManager();
-        assertTrue("Projects already present!", projectOrganizer.getProjects().isEmpty());
-        assertTrue("Projects already present!", controller.getProjects().isEmpty());
-        controller.createProject("proj", "xXx", randomTime);
-        assertEquals("More or less than one project added!",1, projectOrganizer.getProjects().size());
-        assertEquals("More or less than one project added!",1, controller.getProjects().size());
-        Project project = projectOrganizer.getProject("proj");
-        assertEquals("Wrong project added!", project, controller.getProjects().get(0));
-
-        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
-
-        assertTrue("Tasks already present!", project.getTasks().isEmpty());
-        assertTrue("Tasks already present!", controller.getTasks(project).isEmpty());
-        HashMap<ResourceTypeWrapper, Integer> empty = new HashMap<>();
-        controller.createTask(project, "tsk", "oOo", 10, 0.5, empty);
-        assertEquals("More or less than one task added!",1, project.getTasks().size());
-        assertEquals("More or less than one task added!",1, controller.getTasks(project).size());
-        Task task = project.getTask("tsk");
-        assertEquals("Wrong task added!", task, controller.getTasks(project).get(0));
-
-        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
-
-        controller.logout();
-        userManager.createUser("dev", "devpass", "developer", startBreak, resourceManager);
-        controller.login("dev", "devpass");
-
-        assertTrue("Developer can see unassigned projects!",controller.getProjects().isEmpty());
-        assertTrue("Developer can see unassigned tasks!", controller.getTasks(project).isEmpty());
-
-        controller.logout();
-        userManager.login("pm", "pmpass");
-
-    }
 
     @Test
     public void import_export() throws ImportExportException, AccessDeniedException {
