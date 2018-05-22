@@ -131,4 +131,17 @@ public class Resource implements ResourceWrapper {
 	public boolean canRemove() {
 		return this.reservations.isEmpty();
 	}
+
+	/**
+	 * Returns a list of resources as alternatives for the resource at the given the given time.
+	 * @param timeSpan the time span of the reservation time
+	 * @return a list of resources as alternatives for the  resource at the given time
+	 */
+	public List<Resource> getAlternativeResources(TimeSpan timeSpan){
+		List<Resource> resources = getType().getAvailableResources(timeSpan);
+		resources.remove(this);
+		return resources;
+	}
+
+
 }

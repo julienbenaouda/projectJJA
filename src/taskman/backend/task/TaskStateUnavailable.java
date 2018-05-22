@@ -67,11 +67,11 @@ public class TaskStateUnavailable extends TaskState {
     /**
      * Initializes a plan for this task.
      * @param task a task.
-     * @param resourceManager a resource manager.
      * @param startTime the start time for the plan.
      */
-    public void initializePlan(Task task, ResourceManager resourceManager, LocalDateTime startTime) {
-        resourceManager.initializePlan(task.getPlan(), task.getEstimatedDuration(), startTime);
+    @Override
+    public void initializePlan(Task task, LocalDateTime startTime) {
+        task.getPlan().initializePlan(task.getEstimatedDuration(), startTime);
         task.setState(new TaskStatePlanned());
     }
     
