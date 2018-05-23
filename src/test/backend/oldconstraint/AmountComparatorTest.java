@@ -1,4 +1,4 @@
-package test.backend.constraint;
+package test.backend.oldconstraint;
 
 import org.junit.Test;
 import taskman.backend.constraint.AmountComparator;
