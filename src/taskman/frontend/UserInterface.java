@@ -44,7 +44,6 @@ public class UserInterface {
 		} catch (Cancel ignored) {}
 		TitleSection exit = new TitleSection("Bye!");
 		exit.show();
-		// System.exit(0);
 	}
 
 	/**
@@ -55,6 +54,8 @@ public class UserInterface {
 		TitleSection title = new TitleSection("start menu");
 		MenuSection menu = new MenuSection("quit");
 		menu.addOption("login", this::login);
+		menu.addOption("show branch offices", this::showBranchOffices);
+		menu.addOption("create branch office", this::createBranchOffice);
 		menu.addOption("show users", this::showUsers);
 		menu.addOption("create user", this::createUser);
 		menu.addOption("remove user", this::removeUser);
@@ -104,6 +105,32 @@ public class UserInterface {
 	}
 
 	/**
+	 * Shows the branch offices in the system.
+	 * @throws Cancel when the user cancels the section.
+	 */
+	private void showBranchOffices() throws Cancel {
+		TitleSection title = new TitleSection("overview of branch offices");
+		title.show();
+		TextSection info = new TextSection("", true);
+		for (BranchOfficeWrapper office: controller.getBranchOffices()) {
+			info.addLine(office.getName());
+		}
+		info.show();
+	}
+
+	/**
+	 * Shows user creation form.
+	 * @throws Cancel when the user cancels the section.
+	 */
+	private void createBranchOffice() throws Cancel {
+		TitleSection title = new TitleSection("create branch office");
+		title.show();
+		FormSection form = new FormSection(false, "Name:");
+		form.show();
+		controller.createBranchOffice(form.getAnswer(0));
+	}
+
+	/**
 	 * Shows the users in the system.
 	 * @throws Cancel when the user cancels the section.
 	 */
@@ -137,6 +164,7 @@ public class UserInterface {
 			officeSelection.addOption(b.getName(), b);
 		}
 		officeSelection.show();
+		BranchOfficeWrapper office = officeSelection.getAnswerObject();
 
 		TitleSection title2 = new TitleSection("create user");
 		title2.show();
@@ -146,7 +174,7 @@ public class UserInterface {
 		TitleSection title3 = new TitleSection("select type");
 		title3.show();
 		SelectionSection<String> selection = new SelectionSection<>(true);
-		selection.addOptions(this.controller.getUserTypes());
+		selection.addOptions(this.controller.getUserTypes(office));
 		selection.show();
 
 		LocalTime startBreak = null;
@@ -157,7 +185,7 @@ public class UserInterface {
 		}
 
 		controller.createUser(
-				officeSelection.getAnswerObject(),
+				office,
 				form.getAnswer(0), form.getAnswer(1),
 				selection.getAnswer(), startBreak
 		);
@@ -242,6 +270,7 @@ public class UserInterface {
 		menu.addOption("update task status", this::updateTaskStatus);
 		menu.addOption("add alternative to task", this::addAlternativeToTask);
 		menu.addOption("add dependency to task", this::addDependencyToTask);
+		menu.addOption("delegate task", this::delegateTask);
 		menu.addOption("create resource type", this::createResourceType);
 		menu.addOption("create resource type constraint", this::createConstraint);
 		menu.addOption("create resource", this::createResource);
@@ -481,6 +510,26 @@ public class UserInterface {
 		TaskWrapper dependency = selectTask(true, "select dependent task", project);
 		controller.addDependencyToTask(task, dependency);
 		Section success = new TextSection("Dependency added successfully!", false);
+		success.show();
+	}
+
+	/**
+	 * Delegates a task.
+	 * @throws Cancel when the user cancels the section.
+	 */
+	private void delegateTask() throws Cancel {
+		ProjectWrapper project = selectProject(true, "select project of task");
+		TaskWrapper task = selectTask(true, "select task", project);
+
+		TitleSection title = new TitleSection("select branch office to delegate to");
+		SelectionSection<BranchOfficeWrapper> selection = new SelectionSection<>(true);
+		for (BranchOfficeWrapper office: controller.getBranchOffices()) {
+			selection.addOption(office.getName(), office);
+		}
+		selection.show();
+
+		controller.delegateTask(task, selection.getAnswerObject());
+		Section success = new TextSection("Delegates successfully!", false);
 		success.show();
 	}
 
