@@ -233,13 +233,12 @@ public class ControllerTest {
         controller.createTask(project, "tsk", "oOo", 10, 0.5, requirements);
         TaskWrapper task = controller.getTasks(project).get(0);
         controller.initializePlan(task, randomTime);
-        controller.makeExecuting(task);
         controller.logout();
         controller.login(branchOffice,"julien", "blablabla");
         Assert.assertFalse("Project should be visible!", controller.getProjects().isEmpty());
         Assert.assertEquals("Only one project should be visible!", 1, controller.getProjects().size());
         Assert.assertEquals("Wrong project is visible!", project, controller.getProjects().get(0));
-        assertEquals("Wrong project status!", "executing", controller.getProjectStatus(project));
+        assertEquals("Wrong project status!", "active", controller.getProjectStatus(project));
     }
 
     @Test
@@ -273,7 +272,6 @@ public class ControllerTest {
         controller.logout();
         controller.login(branchOffice,"alexander", "blabla");
         controller.initializePlan(task, randomTime);
-        controller.makeExecuting(task);
         controller.logout();
         controller.login(branchOffice,"julien", "blablabla");
         Assert.assertEquals("Wrong number of tasks!", 1, controller.getTasks(project).size());
