@@ -51,7 +51,7 @@ public class TaskStateDelegated extends TaskState {
      *
      * @param task the task to set the alternative from
      * @param alternative the alternative of the task
-     * @throws IllegalargumentException when the task contains a loop
+     * @throws IllegalArgumentException when the task contains a loop
      * @post the alternative of the task is set to the given alternative
      */
     @Override
