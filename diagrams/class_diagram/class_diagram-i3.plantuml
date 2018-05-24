@@ -264,65 +264,62 @@ title __TASKMAN's Class Diagram__\n
       }
 
       package taskman.backend.constraint {
-        enum AmountComparator {
-          EQUALS
-          NOT_EQUALS
-          GREATER_THAN
-          GREATER_THAN_OR_EQUALS
-          SMALLER_THAN
-          SMALLER_THAN_OR_EQUALS
-          + boolean evaluate(int, int)
+        class ConstraintParser {
+            [static] Constraint parse(String, ResourceManager)
+        }
+      }
+
+      package taskman.backend.constraint.amount {
+        interface Amount {
+            + {abstract} int evaluate(Map<ResourceType, Integer>)
         }
 
-        class AndConstraint {
-            + AndConstraint(ConstraintComponent, ConstraintComponent)
-            + ConstraintComponent getConstraint1()
-            - setConstraint1(ConstraintComponent)
-            + ConstraintComponent getConstraint2()
-            - setConstraint2(ConstraintComponent)
-            + boolean solution(Map<ResourceType, Integer>)
+        class Constant {
+            - constant: int
+            + constant(int)
+            + int evaluate(Map<ResourceType, Integer>)
         }
 
-        class Constraint {
-            - amount : int
-            + Constraint(ResourceType, AmountComparator, Integer)
-            + ResourceType getResourceType()
-            - setResourceType(ResourceType)
-            + AmountComparator getAmountComparator()
-            - setAmountComparator(AmountComparator)
-            + int getAmount()
-            - setAmount(int)
-            + boolen solution(Map<ResourceType, Integer>)
+        class Minus {
+            + Minus(Amount, Amount)
+            + int evaluate(Map<ResourceType, Integer>)            
         }
 
-        interface ConstraintComponent {
-            {abstract} + boolean solution(Map<ResourceType, Integer>)
-            {static} + ConstraintComponent parseConstraint(String, ResourceManager)
+        class Plus {
+            + Plus(Amount, Amount)
+            + int evaluate(Map<ResourceType, Integer>)            
         }
 
-        class IfThenConstraint {
-            + IfThenConstraint(ConstraintComponent, ConstraintComponent)
-            + ConstraintComponent getIfConstraint()
-            - setIfConstraint(ConstraintComponent)
-            + ConstraintComponent getThenConstraint()
-            - setThenConstraint(ConstraintComponent)
-            + boolean solution(Map<ResourceType, Integer>)
+        class Type {
+            + Type(ResourceType)
+            + int evaluate(Map<ResourceType, Integer>)            
+        }
+      }
+
+      package taskman.backend.constraint.constraint {
+
+        class Smaller {
+            + Smaller(Amount, Amount)
+            + boolean evaluate(Map<ResourceType, Integer>)
         }
 
-        class NotConstraint {
-            + NotConstraint(ConstraintComponent)
-            + ConstraintComponent getConstraint()
-            - setConstraint(ConstraintComponent)
-            + boolean solution(Map<ResourceType, Integer>)
+        class Equals {
+            + Equals(Amount, Amount)
+            + boolean evaluate(Map<ResourceType, Integer>)
         }
 
-        class OrConstraint {
-            + OrConstraint(ConstraintComponent, ConstraintComponent)
-            + ConstraintComponent getConstraint1()
-            - setConstraint1(ConstraintComponent)
-            + ConstraintComponent getConstraint2()
-            - setConstraint2(ConstraintComponent)
-            + boolean solution(Map<ResourceType, Integer>)
+        interface Constraint {
+            {abstract} + boolean evaluate(Map<ResourceType, Integer>)
+        }
+
+        class Not {
+            + Not(Constraint)
+            + boolean evaluate(Map<ResourceType, Integer>)
+        }
+
+        class Or {
+            + Or(Constraint, Constraint)
+            + boolean evaluate(Map<ResourceType, Integer>)
         }
       }
 
@@ -395,13 +392,13 @@ title __TASKMAN's Class Diagram__\n
 
         class ResourceManager {
             - resourceTypes : Set<ResourceType>
-            - constraints : List<ConstraintComponent>
+            - constraints : List<Constraint>
             + ResourceManager()
             + ResourceType getResourceType(String)
             + List<ResourceType> getResourceTypes()
             + void createResourceType(String)
-            - List<ConstraintComponent> getConstraint()
-            - void addConstraint(ConstraintComponent)
+            - List<Constraint> getConstraint()
+            - void addConstraint(Constraint)
             + void createConstraint(String)
             + Iterator<LocalDateTime> getStartingTimes(plan, long, LocalDateTIme)
             - boolean checkRequirements(Map<ResourceType, Integer)
@@ -689,23 +686,33 @@ title __TASKMAN's Class Diagram__\n
       + List<BranchOffice> getBranchOffices()
       + BranchOffice getCurrentBranchOffice()
       - void setCurrentBranchOffice(BranchOffice)
+      + void deactivateBranchOffice()
     }
   }
 
-  AndConstraint -up-|> ConstraintComponent
-  AndConstraint o-- ConstraintComponent : constraint1
-  AndConstraint o-- ConstraintComponent : constraint2
-  Constraint -up-|> ConstraintComponent
-  Constraint o-- ResourceType : resourceType
-  Constraint o-- AmountComparator : amountComparator
-  IfThenConstraint -up-|> ConstraintComponent
-  IfThenConstraint o-- ConstraintComponent : ifConstraint
-  IfThenConstraint o-- ConstraintComponent : thenConstraint
-  NotConstraint -up-|> ConstraintComponent
-  NotConstraint o-- ConstraintComponent : constraint
-  OrConstraint -up-|> ConstraintComponent
-  OrConstraint o-- ConstraintComponent : constraint1
-  OrConstraint o-- ConstraintComponent : constraint2
+  Smaller -up-|> Constraint
+  Smaller o-- Amount : amount1
+  Smaller o-- Amount : amount2
+  Equals -up-|> Constraint
+  Equals o-- Amount : amount1
+  Equals  o-- Amount : amount2
+  Not -up-|> Constraint
+  Not o-- Constraint : constraint
+  Or -up-|> Constraint
+  Or o-- Constraint : constraint1
+  Or o-- Constraint : constraint2
+  Constant -up-|> Amount
+  Minus -up-|> Amount
+  Minus o-- Amount: amount1
+  Minus o-- Amount: amount2
+  Plus -up-|> Amount
+  Plus o-- Amount: amount1
+  Plus o-- Amount: amount2
+  Type -up-|> Amount
+  Type o-- ResourceType: resourceType
+  Controller o-- ConstraintParser (?)
+  ConstraintParser o-- Constraint (?)
+  ConstraintParser o-- Amount (?)
   UserInterface o-- Controller : controller
   FormSection -up-|> Section
   MenuSection -up-|> Section
