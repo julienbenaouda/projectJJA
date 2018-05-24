@@ -1,4 +1,4 @@
-package test.backend.constraint;
+package test.backend.oldconstraint;
 
 import org.junit.Before;
 import org.junit.Test;
