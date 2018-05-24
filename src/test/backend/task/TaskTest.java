@@ -1042,7 +1042,6 @@ public class TaskTest {
 		task.delegate(branchOffice1, time);
 		Assert.assertEquals( "There is not 1 project in branch office 1.",1 ,branchOffice1.getProjectManager().getProjects().size());
 		Project delegatedProject = branchOffice1.getProjectManager().getProjects().get(0);
-		System.out.println(delegatedProject.getName());
 		Assert.assertEquals( "The project its creation time is not correct.", time, delegatedProject.getCreationTime());
 		Assert.assertEquals("There is not 1 task in the project", 1, delegatedProject.getTasks().size());
 		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("delegated_task12");;
