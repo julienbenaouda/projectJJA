@@ -35,16 +35,13 @@ public class ConstraintParser {
                 Amount b;
                 switch (parts[i]) {
                     case "and":
-                        constraintStack.push(new Not(new Or(constraintStack.pop(), constraintStack.pop())));
+                        constraintStack.push(new Not(new Or(new Not(constraintStack.pop()), new Not(constraintStack.pop()))));
                         break;
                     case "or":
                         constraintStack.push(new Or(constraintStack.pop(), constraintStack.pop()));
                         break;
                     case "not":
                         constraintStack.push(new Not(constraintStack.pop()));
-                        break;
-                    case "if":
-                        constraintStack.push(new Or(new Not(constraintStack.pop()), constraintStack.pop()));
                         break;
                     case "==":
                         constraintStack.push(new Equals(amountStack.pop(), amountStack.pop()));
