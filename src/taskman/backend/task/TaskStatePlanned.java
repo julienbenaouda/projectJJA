@@ -81,7 +81,6 @@ public class TaskStatePlanned extends TaskState {
      */
     @Override
     public void execute(Task task, ResourceManager resourceManager, LocalDateTime startTime) throws IllegalStateException {
-    	System.out.println("executing method");
     	if (!isAvailable(task, startTime)) {
 		    throw new IllegalStateException("The task must be available in order to start its execution.");
 	    }
