@@ -529,7 +529,7 @@ public class UserInterface {
 		selection.show();
 
 		controller.delegateTask(task, selection.getAnswerObject());
-		Section success = new TextSection("Delegates successfully!", false);
+		Section success = new TextSection("Delegated successfully!", false);
 		success.show();
 	}
 
