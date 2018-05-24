@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import taskman.backend.branchOffice.BranchOffice;
+import taskman.backend.project.Project;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
@@ -1040,15 +1041,18 @@ public class TaskTest {
 		LocalDateTime time = LocalDateTime.now();
 		task.delegate(branchOffice1, time);
 		Assert.assertEquals( "There is not 1 project in branch office 1.",1 ,branchOffice1.getProjectManager().getProjects().size());
-		Assert.assertEquals( "The project its creation time is not correct.", time, branchOffice1.getProjectManager().getProjects().get(0).getCreationTime());
-		Assert.assertEquals("There is not 1 task in the project", 1, branchOffice1.getProjectManager().getProjects().get(0).getTasks().size());
-		Assert.assertEquals("The task name is not correct.", task.getName(), branchOffice1.getProjectManager().getProjects().get(0).getTask("task12").getName());
-		Assert.assertEquals("The description is not correct.", task.getDescription(), branchOffice1.getProjectManager().getProjects().get(0).getTask("task12").getDescription());
-		Assert.assertEquals("The estimated duration is not correct.",task.getEstimatedDuration(), branchOffice1.getProjectManager().getProjects().get(0).getTask("task12").getEstimatedDuration());
-		Assert.assertEquals("The acceptable deviation is not correct.",task.getAcceptableDeviation(), branchOffice1.getProjectManager().getProjects().get(0).getTask("task12").getAcceptableDeviation(), 0);
+		Project delegatedProject = branchOffice1.getProjectManager().getProjects().get(0);
+		System.out.println(delegatedProject.getName());
+		Assert.assertEquals( "The project its creation time is not correct.", time, delegatedProject.getCreationTime());
+		Assert.assertEquals("There is not 1 task in the project", 1, delegatedProject.getTasks().size());
+		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("delegated_task12");;
+		Assert.assertEquals("The task name is not correct.", "delegated_" + task.getName(), delegatedTask.getName());
+		Assert.assertEquals("The description is not correct.", task.getDescription(), delegatedTask.getDescription());
+		Assert.assertEquals("The estimated duration is not correct.",task.getEstimatedDuration(), delegatedTask.getEstimatedDuration());
+		Assert.assertEquals("The acceptable deviation is not correct.",task.getAcceptableDeviation(), delegatedTask.getAcceptableDeviation(), 0);
 		Assert.assertEquals("The status is not delegated unavailable.", "delegated_unavailable" ,task.getStatus());
-		Assert.assertEquals("The description is not unavailable.", "unavailable", branchOffice1.getProjectManager().getProjects().get(0).getTask("task12").getStatus());
-		Assert.assertEquals("The delegated task is not referenced.", branchOffice1.getProjectManager().getProjects().get(0).getTask("task12"), ((TaskStateDelegated) task.getState()).getDelegatedTask());
+		Assert.assertEquals("The description is not unavailable.", "unavailable", delegatedTask.getStatus());
+		Assert.assertEquals("The delegated task is not referenced.", delegatedTask, ((TaskStateDelegated) task.getState()).getDelegatedTask());
 	}
 
 	@Test (expected = IllegalStateException.class)
@@ -1056,7 +1060,7 @@ public class TaskTest {
 		BranchOffice branchOffice1 = new BranchOffice("branchoffice 1");
 		Task task = new Task("task12", "will be delegated soon", 69, 0.69);
 		task.delegate(branchOffice1, LocalDateTime.now());
-		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("task12");
+		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("delegated_task12");
 		Task dependency = new Task("dependency", "blabla", 123, 0.1);
 		delegatedTask.addDependency(dependency);
 	}
@@ -1066,7 +1070,7 @@ public class TaskTest {
 		BranchOffice branchOffice1 = new BranchOffice("branchoffice 1");
 		Task task = new Task("task12", "will be delegated soon", 69, 0.69);
 		task.delegate(branchOffice1, LocalDateTime.now());
-		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("task12");
+		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("delegated_task12");
 		Task dependency = new Task("dependency", "blabla", 123, 0.1);
 		delegatedTask.removeDependency(dependency);
 	}
@@ -1076,7 +1080,7 @@ public class TaskTest {
 		BranchOffice branchOffice1 = new BranchOffice("branchoffice 1");
 		Task task = new Task("task12", "will be delegated soon", 69, 0.69);
 		task.delegate(branchOffice1, LocalDateTime.now());
-		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("task12");
+		DelegatedTask delegatedTask = (DelegatedTask) branchOffice1.getProjectManager().getProjects().get(0).getTask("delegated_task12");
 		Task alternative = new Task("alternative", "blabla", 123, 0.1);
 		delegatedTask.setAlternative(alternative);
 	}

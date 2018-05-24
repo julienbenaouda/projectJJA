@@ -93,10 +93,11 @@ public class ProjectManager {
     }
     
     public Task createDelegatedTask(String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
-    	Project p = new Project("delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
+    	String delegatedName = "delegated_" + name;
+        Project p = new Project("project_delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
     	projects.add(p);
-    	p.createDelegatedTask(name, description, estimatedDuration, acceptableDeviation);
-    	return p.getTask(name);
+    	p.createDelegatedTask(delegatedName, description, estimatedDuration, acceptableDeviation);
+    	return p.getTask(delegatedName);
     }
 
 }
