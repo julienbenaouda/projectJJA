@@ -71,6 +71,7 @@ public class TaskStateUnavailable extends TaskState {
     @Override
     public void initializePlan(Task task, LocalDateTime startTime) {
         task.getPlan().initializePlan(task.getEstimatedDuration(), startTime);
+        task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
         task.setState(new TaskStatePlanned());
     }
     

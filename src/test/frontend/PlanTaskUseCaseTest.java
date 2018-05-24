@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static test.frontend.StubbedInputStream.stubInputStream;
 
 public class PlanTaskUseCaseTest {
@@ -71,10 +74,15 @@ public class PlanTaskUseCaseTest {
 						.then("1")
 						.then("test")
 						.then("4")
-						// xxx
+						.then("1")
+						.then("1")
+						.then("1")
+						.then("0")
+						.then("0")
 						.atSomePoint()
 		);
 		ui.start();
+		assertTrue(outputStream.toString().contains("planned"));
 	}
 
 }
