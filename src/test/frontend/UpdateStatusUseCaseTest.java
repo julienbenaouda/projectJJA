@@ -73,7 +73,7 @@ public class UpdateStatusUseCaseTest {
 	@Test
 	public void testUpdateTaskStatusNormalFlow() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/07/2018 10:00").then("N").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/07/2018 10:00").then("N").then("0").then("0").atSomePoint());
 		ui.start();
 		assertFalse(outputStream.toString().contains("error"));
 	}

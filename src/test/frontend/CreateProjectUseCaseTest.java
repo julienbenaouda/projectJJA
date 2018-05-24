@@ -52,7 +52,7 @@ public class CreateProjectUseCaseTest {
 	@Test
 	public void testCreateProjectNormalFlow() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00").then("N").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00").then("N").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("successful"));
 	}
@@ -60,7 +60,7 @@ public class CreateProjectUseCaseTest {
 	@Test
 	public void testCreateProjectCancel() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00").then("Y").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00").then("Y").then("0").then("0").atSomePoint());
 		ui.start();
 		assertFalse(outputStream.toString().contains("successful"));
 	}
@@ -68,7 +68,7 @@ public class CreateProjectUseCaseTest {
 	@Test
 	public void testCreateProjectIllegalCase() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00y").then("N").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("2").then("testProject").then("N").then("test").then("N").then("26/07/1996 12:00y").then("N").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("error"));
 	}

@@ -64,7 +64,7 @@ public class ShowProjectsUseCaseTest {
 	@Test
 	public void testNormalFlow() throws IOException {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("1").then("1").then("").then("1").then("").then("0").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("1").then("1").then("").then("1").then("").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("testProject (status: active)"));
 		assertTrue(outputStream.toString().contains("2018"));

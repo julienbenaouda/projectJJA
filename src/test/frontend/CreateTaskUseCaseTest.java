@@ -57,7 +57,7 @@ public class CreateTaskUseCaseTest {
 	@Test
 	public void testNormalFlow() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("Task created successfully!"));
 	}
@@ -65,7 +65,7 @@ public class CreateTaskUseCaseTest {
 	@Test
 	public void testCreateTaskCancel() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("Y").then("1").then("0").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5.5").then("Y").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertFalse(outputStream.toString().contains("successful"));
 	}
@@ -73,7 +73,7 @@ public class CreateTaskUseCaseTest {
 	@Test
 	public void testCreateTaskIllegalData() {
 		System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5,5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("3").then("1").then("N").then("testTask").then("N").then("description").then("N").then("60").then("N").then("5,5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
 		ui.start();
 		assertTrue(outputStream.toString().contains("error"));
 	}
