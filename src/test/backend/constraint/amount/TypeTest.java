@@ -1,4 +1,4 @@
-package test.backend.constraint;
+package test.backend.constraint.amount;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.backend.new_constraint.amount.Type;
+import taskman.backend.constraint.amount.Type;
 import taskman.backend.resource.ResourceType;
 
 public class TypeTest {

@@ -2,6 +2,7 @@ package test.backend.resource;
 
 import org.junit.Before;
 import org.junit.Test;
+import taskman.backend.constraint.ConstraintParser;
 import taskman.backend.resource.Resource;
 import taskman.backend.resource.ResourceManager;
 import taskman.backend.resource.ResourceType;
@@ -69,7 +70,7 @@ public class ResourceManagerTest {
 		resourceManager.createResourceType("type1");
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
-		resourceManager.createConstraint(string);
+		resourceManager.addConstraint(ConstraintParser.parse(string, resourceManager));
 		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 5);
 		assertEquals(1, task.getPlan().getRequirements().size());
@@ -80,7 +81,7 @@ public class ResourceManagerTest {
 		resourceManager.createResourceType("type1");
 		ResourceType type1 = resourceManager.getResourceType("type1");
 		String string = "== type1 5";
-		resourceManager.createConstraint(string);
+		resourceManager.addConstraint(ConstraintParser.parse(string, resourceManager));
 		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 4);
 	}

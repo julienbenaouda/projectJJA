@@ -1,16 +1,16 @@
-package test.backend.constraint;
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
+package test.backend.constraint.constraint;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import taskman.backend.new_constraint.amount.Constant;
-import taskman.backend.new_constraint.amount.Type;
-import taskman.backend.new_constraint.constraint.Equals;
+import taskman.backend.constraint.amount.Constant;
+import taskman.backend.constraint.amount.Type;
+import taskman.backend.constraint.constraint.Equals;
 import taskman.backend.resource.ResourceType;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EqualsTest {
 	private Equals equals;

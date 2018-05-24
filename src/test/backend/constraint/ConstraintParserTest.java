@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import taskman.backend.new_constraint.ConstraintParser;
-import taskman.backend.new_constraint.constraint.Constraint;
+import taskman.backend.constraint.ConstraintParser;
+import taskman.backend.constraint.constraint.Constraint;
 import taskman.backend.resource.ResourceManager;
 
 public class ConstraintParserTest {

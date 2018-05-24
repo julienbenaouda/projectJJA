@@ -1,22 +1,21 @@
-package test.backend.constraint;
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
+package test.backend.constraint.amount;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import taskman.backend.new_constraint.amount.Constant;
-import taskman.backend.new_constraint.amount.Minus;
+import taskman.backend.constraint.amount.Constant;
+import taskman.backend.constraint.amount.Minus;
 import taskman.backend.resource.ResourceType;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 public class MinusTest {
 	private Minus minus;
 
 	@Before
 	public void setUp() {
-		minus = new Minus(new Constant(5), new Consstant(2));
+		minus = new Minus(new Constant(5), new Constant(2));
 	}
 
 	@Test

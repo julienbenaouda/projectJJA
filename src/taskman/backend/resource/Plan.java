@@ -1,6 +1,5 @@
 package taskman.backend.resource;
 
-import taskman.backend.constraint.ConstraintComponent;
 import taskman.backend.task.Task;
 import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;

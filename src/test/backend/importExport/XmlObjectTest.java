@@ -5,6 +5,7 @@ import org.junit.Test;
 import taskman.backend.Controller;
 import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
+import taskman.backend.constraint.ConstraintParser;
 import taskman.backend.importexport.XmlObject;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
@@ -81,7 +82,7 @@ public class XmlObjectTest {
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		controller.initializePlan(po.getProject("test").getTask("test"), startTime);
-		rm.createConstraint("== type1 1");
+		rm.addConstraint(ConstraintParser.parse("== type1 1", rm));
 		try {
 			assertNotNull(o.toXMLString());
 			//System.out.println(o.toXMLString());
@@ -114,7 +115,7 @@ public class XmlObjectTest {
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
 		LocalDateTime startTime = LocalDateTime.of(2018, Month.JULY, 26, 0, 0);
 		controller.initializePlan(po.getProject("test").getTask("test"), startTime);
-		rm.createConstraint("== type1 1");
+		rm.addConstraint(ConstraintParser.parse("== type1 1", rm));
 		String xml = "";
 		try {
 			xml = o.toXMLString();

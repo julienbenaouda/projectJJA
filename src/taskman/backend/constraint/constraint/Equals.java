@@ -1,6 +1,6 @@
-package taskman.backend.new_constraint.constraint;
+package taskman.backend.constraint.constraint;
 
-import taskman.backend.new_constraint.amount.Amount;
+import taskman.backend.constraint.amount.Amount;
 import taskman.backend.resource.ResourceType;
 
 import java.util.Map;
@@ -9,7 +9,6 @@ import java.util.Map;
  * Class representing an '==' constraint.
  * It is responsible for keeping references to the two amount of an '==' literal.
  * It is also responsible for checking if a map of requirements matches this constraint.
- * Note: We apply the Composite Pattern here
  *
  * @author Jeroen Van Der Donckt, Alexander Braekevelt
  */

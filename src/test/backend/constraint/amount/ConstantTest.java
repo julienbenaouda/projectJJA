@@ -1,14 +1,13 @@
-package test.backend.constraint;
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
+package test.backend.constraint.amount;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import taskman.backend.new_constraint.amount.Constant;
+import taskman.backend.constraint.amount.Constant;
 import taskman.backend.resource.ResourceType;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 public class ConstantTest {
 	private Constant constant;

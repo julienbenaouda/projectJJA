@@ -1,4 +1,4 @@
-package taskman.backend.new_constraint.constraint;
+package taskman.backend.constraint.constraint;
 
 import taskman.backend.resource.ResourceType;
 

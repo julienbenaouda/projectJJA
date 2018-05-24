@@ -384,8 +384,7 @@ public class Controller {
      * @throws NumberFormatException if a number in the string cannot be parsed to an integer
      */
     public void addConstraint(String string) {
-        this.getResourceManager().addConstraint(ConstraintParser.toConstraint(string, getResourceManager()));
-        // TODO: is het wel OK om in de controller te parsen?
+        this.getResourceManager().addConstraint(ConstraintParser.parse(string, getResourceManager()));
     }
 
     /**

@@ -1,15 +1,13 @@
 package taskman.backend.resource;
 
-import taskman.backend.constraint.ConstraintComponent;
+import taskman.backend.constraint.constraint.Constraint;
 import taskman.backend.time.TimeParser;
-import taskman.backend.time.TimeSpan;
 import taskman.backend.user.Developer;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class is responsible for creating, storing and retrieving resources of the system.
@@ -74,13 +72,13 @@ public class ResourceManager {
     /**
      * Represents the list of constraints for the resource types in the system.
      */
-    private List<ConstraintComponent> constraints;
+    private List<Constraint> constraints;
 
     /**
      * Returns the constraints for the resource types.
      * @return the list of constraints for the resource types
      */
-    private List<ConstraintComponent> getConstraint(){
+    private List<Constraint> getConstraint(){
         return constraints;
     }
 
@@ -89,7 +87,7 @@ public class ResourceManager {
      * @param constraint the constraint to add to the list
      * @post the given constraint is added to the list of constraints
      */
-    public void addConstraint(ConstraintComponent constraint){
+    public void addConstraint(Constraint constraint){
         constraints.add(constraint);
     }
 
@@ -154,8 +152,8 @@ public class ResourceManager {
      * @return true if there is no conflict between the system its constraints and the requirements, otherwise false
      */
     public boolean checkRequirements(Map<ResourceType, Integer> requirements) {
-        for (ConstraintComponent constraint : getConstraint()){
-            if (!constraint.solution(requirements)){
+        for (Constraint constraint : getConstraint()){
+            if (!constraint.evaluate(requirements)){
                 return false;
             }
         }
