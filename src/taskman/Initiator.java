@@ -18,9 +18,8 @@ public class Initiator {
 	 */
 	public static void main(String[] args) {
 		BranchOfficeManager branchOfficeManager = new BranchOfficeManager();
-		branchOfficeManager.createBranchOffice("default branch office");
-		branchOfficeManager.changeCurrentBranchOffice(branchOfficeManager.getBranchOffices().get(0));
 		Controller controller = new Controller(new Clock(), branchOfficeManager, new SimulationManager());
+		controller.createBranchOffice("Main office");
 		controller.createUser(controller.getBranchOffices().get(0), "admin", "admin", "project manager", null);
 		UserInterface ui = new UserInterface(controller);
 		ui.start();

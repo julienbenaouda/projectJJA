@@ -74,7 +74,7 @@ public class ControllerTest {
 
     @Test
     public void constructorTest() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.login(branchOffice,"alexander", "blabla");
         assertEquals("Constructor does not initialize clock!", clock.getTime(), controller.getTime());
         assertEquals("Constructor does not initialize user userManager!", userManager.getCurrentUser(), controller.getCurrentUser());
@@ -152,7 +152,7 @@ public class ControllerTest {
 
     @Test
     public void getUserTypesTest() {
-        assertEquals("Incorrect user types given!", userManager.getUserTypes(), controller.getUserTypes());
+        assertEquals("Incorrect user types given!", userManager.getUserTypes(), controller.getUserTypes(branchOffice));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class ControllerTest {
 
     @Test
     public void removeUserTest_ProjectManager() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         User alexander = userManager.getUser("alexander");
         assertTrue("User already removed!", userManager.hasUser("alexander"));
         controller.removeUser(branchOffice, alexander, "blabla");
@@ -217,7 +217,7 @@ public class ControllerTest {
 
     @Test
     public void getProjectsTest_Developer() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
         controller.login(branchOffice,"alexander", "blabla");
         controller.createProject("proj", "xXx", randomTime);
@@ -244,7 +244,7 @@ public class ControllerTest {
 
     @Test
     public void getProjectsTest_ProjectManager() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.login(branchOffice,"alexander", "blabla");
         assertTrue("Projects already present!", controller.getProjects().isEmpty());
         controller.createProject("proj", "xXx", randomTime);
@@ -257,7 +257,7 @@ public class ControllerTest {
 
     @Test
     public void getTasksTest_Developer() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
         controller.login(branchOffice,"alexander", "blabla");
         controller.createProject("proj", "xXx", randomTime);
@@ -282,7 +282,7 @@ public class ControllerTest {
 
     @Test
     public void getTasksTest_ProjectManager() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.login(branchOffice,"alexander", "blabla");
         controller.createProject("proj", "xXx", randomTime);
         ProjectWrapper project = controller.getProjects().get(0);
@@ -293,7 +293,7 @@ public class ControllerTest {
 
     @Test
     public void getStartingTimesTest() {
-        controller.createUser(branchOffice, "alexander", "blabla", "project userManager", null);
+        controller.createUser(branchOffice, "alexander", "blabla", "project manager", null);
         controller.login(branchOffice,"alexander", "blabla");
         controller.createProject("proj", "xXx", randomTime);
         ProjectWrapper project = controller.getProjects().get(0);

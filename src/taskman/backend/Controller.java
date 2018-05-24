@@ -113,21 +113,23 @@ public class Controller {
 	 * Returns the user manager of the current branch.
 	 * @return a UserManager.
 	 */
-	private UserManager getUserManager() {
+	private UserManager getCurrentUserManager() {
 		return getBranchOfficeManager().getCurrentBranchOffice().getUserManager();
 	}
 
 	/**
-	 * returns thee project manager of the current branch office
+	 * Returns the project manager of the current branch office.
+	 * @return a ProjectManager.
 	 */
-	private ProjectManager getProjectManager() {
+	private ProjectManager getCurrentProjectManager() {
 		return getBranchOfficeManager().getCurrentBranchOffice().getProjectManager();
 	}
 
 	/**
-	 * returns the resource manager of the current branch office
+	 * Returns the resource manager of the current branch office.
+	 * @return a ResourceManager.
 	 */
-	private ResourceManager getResourceManager() {
+	private ResourceManager getCurrentResourceManager() {
 		return getBranchOfficeManager().getCurrentBranchOffice().getResourceManager();
 	}
 
@@ -173,24 +175,25 @@ public class Controller {
      * @throws OperationNotPermittedException if no user is logged in.
      */
     public UserWrapper getCurrentUser() throws OperationNotPermittedException {
-        return getUserManager().getCurrentUser();
+        return getCurrentUserManager().getCurrentUser();
     }
 
     /**
      * Returns a list of all users of a branch office.
-     * @param branchOfficeWrapper a branch office.
+     * @param office a branch office.
      * @return a list of UserWrappers.
      */
-    public List<UserWrapper> getUsers(BranchOfficeWrapper branchOfficeWrapper) {
-        return new ArrayList<>(((BranchOffice) branchOfficeWrapper).getUserManager().getUsers());
+    public List<UserWrapper> getUsers(BranchOfficeWrapper office) {
+        return new ArrayList<>(((BranchOffice) office).getUserManager().getUsers());
     }
 
     /**
      * Return the possible user types.
+     * @param office a branch office.
      * @return a collection of user types.
      */
-    public Collection<String> getUserTypes() {
-        return getUserManager().getUserTypes();
+    public Collection<String> getUserTypes(BranchOfficeWrapper office) {
+	    return ((BranchOffice) office).getUserManager().getUserTypes();
     }
 
     /**
@@ -203,7 +206,7 @@ public class Controller {
      * @post a new user is added to the system.
      */
     public void createUser(BranchOfficeWrapper office, String name, String password, String type, LocalTime startBreak) throws IllegalArgumentException {
-	    ((BranchOffice) office).getUserManager().createUser(name, password, type, startBreak, getResourceManager());
+	    ((BranchOffice) office).getUserManager().createUser(name, password, type, startBreak, ((BranchOffice) office).getResourceManager());
     }
 
     /**
@@ -216,7 +219,7 @@ public class Controller {
      * @throws IllegalStateException if the resource for the user cannot be removed.
      */
     public void removeUser(BranchOfficeWrapper office, UserWrapper user, String password) throws IllegalArgumentException, IllegalStateException {
-	    ((BranchOffice) office).getUserManager().removeUser((User) user, password, getResourceManager());
+	    ((BranchOffice) office).getUserManager().removeUser((User) user, password, ((BranchOffice) office).getResourceManager());
     }
 
     /**
@@ -227,15 +230,21 @@ public class Controller {
      * @post the user is logged in and is now used in the system.
      */
     public void login(BranchOfficeWrapper office, String name, String password) throws IllegalArgumentException {
-    	getBranchOfficeManager().changeCurrentBranchOffice((BranchOffice) office);
-        getUserManager().login(name, password);
+    	try {
+		    getBranchOfficeManager().changeCurrentBranchOffice((BranchOffice) office);
+		    ((BranchOffice) office).getUserManager().login(name, password);
+	    } catch (IllegalArgumentException e) {
+		    ((BranchOffice) office).getUserManager().logout();
+		    getBranchOfficeManager().deactivateCurrentBranchOffice();
+    		throw e;
+	    }
     }
 
     /**
      * Logout the current user in the system.
      */
     public void logout() {
-        getUserManager().logout();
+        getBranchOfficeManager().getCurrentBranchOffice().getUserManager().logout();
 	    getBranchOfficeManager().deactivateCurrentBranchOffice();
     }
 
@@ -249,7 +258,8 @@ public class Controller {
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
     public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException {
-        getProjectManager().createProject(name, description, getClock().getTime(), dueTime, getUserManager().getCurrentUser());
+        BranchOffice office = getBranchOfficeManager().getCurrentBranchOffice();
+	    office.getProjectManager().createProject(name, description, getClock().getTime(), dueTime, office.getUserManager().getCurrentUser());
     }
 
 	/**
@@ -257,7 +267,7 @@ public class Controller {
 	 * @return a List of ProjectWrappers.
 	 */
 	public List<ProjectWrapper> getProjects() {
-		return new ArrayList<>(getProjectManager().getProjects(getUserManager().getCurrentUser()));
+		return new ArrayList<>(getCurrentProjectManager().getProjects(getCurrentUserManager().getCurrentUser()));
 	}
 
 	/**
@@ -275,7 +285,7 @@ public class Controller {
      * @return a list of tasks.
      */
     public List<TaskWrapper> getTasks(ProjectWrapper project) {
-        return new ArrayList<>(((Project) project).getTasks(getUserManager().getCurrentUser()));
+        return new ArrayList<>(((Project) project).getTasks(getCurrentUserManager().getCurrentUser()));
     }
 
     /**
@@ -292,11 +302,20 @@ public class Controller {
      * @post a new task is created and added to the project in the system.
      */
     public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation, Map<ResourceTypeWrapper, Integer> requirements) throws IllegalArgumentException, OperationNotPermittedException {
-        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, getUserManager().getCurrentUser());
+        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, getCurrentUserManager().getCurrentUser());
         Task task = ((Project) project).getTask(taskName);
         for (ResourceTypeWrapper rtw : requirements.keySet()){
             addRequirementToTask(task, rtw, requirements.get(rtw));
         }
+    }
+
+	/**
+	 * Delegates a task to a given branch office.
+	 * @param task the task to delegate.
+	 * @param office the branch office to delegate to.
+	 */
+	public void delegateTask(TaskWrapper task, BranchOfficeWrapper office) {
+	    ((Task) task).delegate((BranchOffice) office, getClock().getTime());
     }
 
     /**
@@ -305,7 +324,7 @@ public class Controller {
      */
     public Iterator<LocalDateTime> getStartingTimes(TaskWrapper task) {
         Task t = (Task) task;
-        return getResourceManager().getStartingTimes(t.getPlan(), t.getEstimatedDuration(), getClock().getTime());
+        return getCurrentResourceManager().getStartingTimes(t.getPlan(), t.getEstimatedDuration(), getClock().getTime());
     }
 
     /**
@@ -364,7 +383,7 @@ public class Controller {
      * @return a list of the resource types.
      */
     public List<ResourceTypeWrapper> getResourceTypes() {
-        return new ArrayList<>(this.getResourceManager().getResourceTypes());
+        return new ArrayList<>(this.getCurrentResourceManager().getResourceTypes());
     }
 
     /**
@@ -373,7 +392,7 @@ public class Controller {
      * @post a resource type with given name is created and added to the resource types
      */
     public void createResourceType(String name) {
-        this.getResourceManager().createResourceType(name);
+        this.getCurrentResourceManager().createResourceType(name);
     }
 
     /**
@@ -384,7 +403,7 @@ public class Controller {
      * @throws NumberFormatException if a number in the string cannot be parsed to an integer
      */
     public void addConstraint(String string) {
-        this.getResourceManager().addConstraint(ConstraintParser.parse(string, getResourceManager()));
+        this.getCurrentResourceManager().addConstraint(ConstraintParser.parse(string, getCurrentResourceManager()));
     }
 
     /**
@@ -433,7 +452,7 @@ public class Controller {
      * @param amount the amount of resources needed.
      */
     public void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount) {
-        ((Task) task).addRequirement(getResourceManager(), (ResourceType) resourceType, amount);
+        ((Task) task).addRequirement(getCurrentResourceManager(), (ResourceType) resourceType, amount);
     }
 
     /**
@@ -448,7 +467,7 @@ public class Controller {
      * @post the start time, end time and status of the task will be updated.
      */
     public void endTaskExecution(TaskWrapper task, LocalDateTime startTime, LocalDateTime endTime, String status) throws DateTimeParseException, IllegalArgumentException, IndexOutOfBoundsException {
-        ((Task) task).endExecution(startTime, endTime, status, getUserManager().getCurrentUser());
+        ((Task) task).endExecution(startTime, endTime, status, getCurrentUserManager().getCurrentUser());
     }
 
 	/**
@@ -458,7 +477,7 @@ public class Controller {
 	 * @throws IllegalArgumentException if the plan cannot be rescheduled to this time.
 	 */
 	public void makeExecuting(TaskWrapper task) throws IllegalArgumentException {
-		((Task) task).makeExecuting(getResourceManager(), getClock().getTime(), getUserManager().getCurrentUser());
+		((Task) task).makeExecuting(getCurrentResourceManager(), getClock().getTime(), getCurrentUserManager().getCurrentUser());
 	}
 
     /**
@@ -490,7 +509,7 @@ public class Controller {
      * @throws ImportExportException if there occurs an error while starting the simulation.
      */
     public void startSimulation() throws OperationNotPermittedException, ImportExportException {
-    	getSimulationManager().startSimulation(getBranchOfficeManager(), getClock(), getUserManager().getCurrentUser());
+    	getSimulationManager().startSimulation(getBranchOfficeManager(), getClock(), getCurrentUserManager().getCurrentUser());
     }
 
     /**
