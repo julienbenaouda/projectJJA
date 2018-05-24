@@ -38,11 +38,6 @@ public class UserInterface {
 	 * Starts the user interface.
 	 */
 	public void start() {
-
-		// Create default user
-		controller.createBranchOffice("main office");
-		controller.createUser(controller.getBranchOffices().get(0), "admin", "admin", "project manager", null);
-
 		// Show start menu
 		try {
 			startMenu();
