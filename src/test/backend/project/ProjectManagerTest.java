@@ -11,7 +11,7 @@ import java.time.Month;
 
 import static org.junit.Assert.assertEquals;
 
-public class ProjectOrganizerTest {
+public class ProjectManagerTest {
 	private ProjectManager organizer;
 
 	@Before

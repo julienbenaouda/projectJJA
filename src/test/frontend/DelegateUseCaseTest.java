@@ -38,9 +38,6 @@ public class DelegateUseCaseTest {
 
 	@Before
 	public void setUp() {
-		po = new ProjectManager();
-		um = new UserManager();
-		rm = new ResourceManager();
 		sm = new SimulationManager();
 		clock = new Clock();
 		BranchOfficeManager branchOfficeManager = new BranchOfficeManager();
@@ -90,7 +87,7 @@ public class DelegateUseCaseTest {
 						.then("0")
 						.atSomePoint()
 					);
-		assertTrue(outputStream.toString().contains("delegates"));
+		ui.start();
 		assertEquals(1, bo2.getProjectManager().getProjects().size());
 	}
 

@@ -1,4 +1,4 @@
-package test.backend.project;
+package test.backend.user;
 
 import org.junit.Before;
 import org.junit.Test;
