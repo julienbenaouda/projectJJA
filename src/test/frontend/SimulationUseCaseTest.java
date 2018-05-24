@@ -15,8 +15,11 @@ import taskman.frontend.UserInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.time.Month;
+
+import static test.frontend.StubbedInputStream.stubInputStream;
 
 public class SimulationUseCaseTest {
 
@@ -53,11 +56,10 @@ public class SimulationUseCaseTest {
 
 	@Test
 	public void testNormalFlow() throws IOException {
-		// System.setOut(new PrintStream(outputStream));
-		// System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("13").then("2").then("1").then("test").then("N").then("test").then("N").then("20").then("N").then("2.5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
-		// ui.start();
-		// assertFalse(outputStream.toString().contains("error"));
-		Assert.fail("TODO: fix infinite loop!");
+		System.setOut(new PrintStream(outputStream));
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("14").then("2").then("1").then("test").then("N").then("test").then("N").then("20").then("N").then("2.5").then("N").then("1").then("0").then("0").then("0").atSomePoint());
+		ui.start();
+		Assert.assertFalse(outputStream.toString().contains("error"));
 	}
 
 
