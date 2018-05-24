@@ -21,6 +21,7 @@ import java.time.Month;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static test.frontend.StubbedInputStream.stubInputStream;
 
 public class UpdateStatusUseCaseTest {
@@ -80,20 +81,19 @@ public class UpdateStatusUseCaseTest {
 
 	@Test
 	public void testUpdateTaskStatusIllegalData() {
-		// TODO
-		/*System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/12/2018 10:00").then("N").then("5").then("1").then("2").then("26/07/2018 08:00").then("N").then("27/12/2018 10:00aa").then("N").then("0").then("0").atSomePoint());
+		System.setOut(new PrintStream(outputStream));
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("admin2").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/07/2018 10:00").then("N").then("0").then("0").atSomePoint());
 		ui.start();
-		assertTrue(outputStream.toString().contains("error"));*/
+		System.out.println(outputStream.toString());
+		assertTrue(outputStream.toString().contains("error"));
 	}
 
 	@Test
 	public void testUpdateTaskStatusCancel() {
-		// TODO
-		/*System.setOut(new PrintStream(outputStream));
-		System.setIn(stubInputStream().then("1").then("test").then("test").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/12/2018 10:00").then("N").then("5").then("1").then("2").then("26/07/2018 08:00").then("N").then("27/12/2018 10:00aa").then("Y").then("0").then("0").atSomePoint());
+		System.setOut(new PrintStream(outputStream));
+		System.setIn(stubInputStream().then("1").then("1").then("1").then("test").then("5").then("1").then("1").then("26/07/2018 08:00").then("N").then("27/07/2018 10:00").then("Y").then("0").then("0").atSomePoint());
 		ui.start();
-		assertFalse(outputStream.toString().contains("error"));*/
+		assertTrue(outputStream.toString().contains("cancel"));
 	}
 
 }
