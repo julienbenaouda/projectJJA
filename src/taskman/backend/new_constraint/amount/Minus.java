@@ -24,7 +24,7 @@ public class Minus implements Amount {
 	/**
 	 * Creates a minus operator.
 	 * @param amount1 the first value of the subtraction.
-	 * @param b the second value of the subtraction.
+	 * @param amount2 the second value of the subtraction.
 	 */
 	public Minus(Amount amount1, Amount amount2) {
 		this.amount1 = amount1;
