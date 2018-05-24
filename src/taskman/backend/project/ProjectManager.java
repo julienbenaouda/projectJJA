@@ -1,6 +1,7 @@
 package taskman.backend.project;
 
 import taskman.backend.task.Task;
+import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
 
 import java.time.LocalDateTime;
@@ -67,9 +68,10 @@ public class ProjectManager {
      * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
      * @param user the current user.
      * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+     * @throws OperationNotPermittedException when the user doesn't have access to create a project.
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
-    public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) throws IllegalArgumentException {
+    public void createProject(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) throws IllegalArgumentException, OperationNotPermittedException {
     	if(projectExists(name)) {
     		throw new IllegalArgumentException("A project with the given name already exists");
     	}

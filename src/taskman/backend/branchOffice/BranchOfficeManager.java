@@ -81,7 +81,7 @@ public class BranchOfficeManager {
 
 	/**
 	 * returns the current BranchOffice of the system
-	 * @throws IllegalStateException if no current branch office is found
+	 * @throws IllegalStateException if no current branch office is found.
 	 */
 	public BranchOffice getCurrentBranchOffice() throws IllegalStateException {
 		if (currentBranchOffice == null) {

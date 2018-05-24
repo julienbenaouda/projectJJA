@@ -112,8 +112,9 @@ public class Controller {
 	/**
 	 * Returns the user manager of the current branch.
 	 * @return a UserManager.
+	 * @throws IllegalStateException if no current branch office is found.
 	 */
-	private UserManager getCurrentUserManager() {
+	private UserManager getCurrentUserManager() throws IllegalStateException {
 		return getBranchOfficeManager().getCurrentBranchOffice().getUserManager();
 	}
 
@@ -173,8 +174,9 @@ public class Controller {
      * Returns the active user.
      * @return a UserWrapper.
      * @throws OperationNotPermittedException if no user is logged in.
+     * @throws IllegalStateException if no current branch office is found.
      */
-    public UserWrapper getCurrentUser() throws OperationNotPermittedException {
+    public UserWrapper getCurrentUser() throws OperationNotPermittedException, IllegalStateException {
         return getCurrentUserManager().getCurrentUser();
     }
 
@@ -255,9 +257,10 @@ public class Controller {
      * @param dueTime the due time of the project. (dd/mm/yyyy hh:mm)
      * @throws DateTimeParseException if the dueTime cannot be parsed.
      * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
+     * @throws OperationNotPermittedException when the user doesn't have access to create a project.
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
-    public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException {
+    public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException, OperationNotPermittedException {
         BranchOffice office = getBranchOfficeManager().getCurrentBranchOffice();
 	    office.getProjectManager().createProject(name, description, getClock().getTime(), dueTime, office.getUserManager().getCurrentUser());
     }

@@ -158,7 +158,7 @@ public class Task implements TaskWrapper {
      * @post a new time span is created with given attributes and the time span of the task is set to this time span
      */
     protected void setTimeSpan(LocalDateTime startTime, LocalDateTime endTime){
-        this.timeSpan = new TimeSpan(startTime, endTime);
+        setTimeSpan(new TimeSpan(startTime, endTime));
     }
 
     /**
