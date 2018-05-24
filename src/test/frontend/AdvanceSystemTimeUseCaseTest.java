@@ -29,6 +29,7 @@ public class AdvanceSystemTimeUseCaseTest {
 		bm.changeCurrentBranchOffice(bm.getBranchOffices().get(0));
 		c.createUser(bm.getCurrentBranchOffice(), "test", "test", "project manager", null);
 		ui = new UserInterface(c);
+		outputStream = new ByteArrayOutputStream();
 	}
 
 	@Test
