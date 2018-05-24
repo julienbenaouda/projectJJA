@@ -31,6 +31,11 @@ public class Type implements Amount {
 	 */
 	@Override
 	public int evaluate(Map<ResourceType, Integer> requirements) {
-		return requirements.getOrDefault(this.type, 0);
+		int amount = requirements.getOrDefault(this.type, 0);
+		if (amount < 0) {
+			throw new IllegalArgumentException("Amount of resources cannot be negative!");
+		} else {
+			return amount;
+		}
 	}
 }

@@ -1,13 +1,12 @@
 package test.backend.constraint.amount;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import taskman.backend.constraint.amount.Type;
+import taskman.backend.resource.ResourceType;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import taskman.backend.constraint.amount.Type;
-import taskman.backend.resource.ResourceType;
+import static org.junit.Assert.assertEquals;
 
 public class TypeTest {
 	private Type type;
@@ -21,9 +20,11 @@ public class TypeTest {
 
 	@Test
 	public void testEvaluate() {
-		HashMap<ResourceType, Integer> requirements = new HashMap<>();
-		requirements.put(resourceType, 4);
-		assertEquals(4, type.evaluate(requirements));
+		for (int i = 0; i <= 10; i++) {
+			HashMap<ResourceType, Integer> requirements = new HashMap<>();
+			requirements.put(resourceType, i);
+			assertEquals(i, type.evaluate(requirements));
+		}
 	}
 	
 	@Test
@@ -32,5 +33,11 @@ public class TypeTest {
 		assertEquals(0, type.evaluate(requirements));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testEvaluateNegativeValue() {
+		HashMap<ResourceType, Integer> requirements = new HashMap<>();
+		requirements.put(resourceType, -1);
+		type.evaluate(requirements);
+	}
 
 }

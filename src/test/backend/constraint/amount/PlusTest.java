@@ -1,27 +1,23 @@
 package test.backend.constraint.amount;
 
-import org.junit.Before;
 import org.junit.Test;
 import taskman.backend.constraint.amount.Constant;
 import taskman.backend.constraint.amount.Plus;
-import taskman.backend.resource.ResourceType;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
 public class PlusTest {
-	private Plus plus;
-
-	@Before
-	public void setUp() {
-		plus = new Plus(new Constant(5), new Constant(5));
-	}
 
 	@Test
 	public void testEvaluate() {
-		HashMap<ResourceType, Integer> requirements = new HashMap<>();
-		assertEquals(10, plus.evaluate(requirements));
+		for (int i = -10; i <= 10; i++) {
+			for (int j = -10; i <= 10; i++) {
+				Plus plus = new Plus(new Constant(i), new Constant(j));
+				assertEquals(i + j, plus.evaluate(new HashMap<>()));
+			}
+		}
 	}
 	
 
