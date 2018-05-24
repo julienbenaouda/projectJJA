@@ -134,8 +134,8 @@ public class ControllerTest {
 
     }
 
-    @Test(expected = OperationNotPermittedException.class)
-    public void getCurrentUserTest_OperationNotPermittedException() {
+    @Test(expected = IllegalStateException.class)
+    public void getCurrentUserTest_IllegalStateException() {
         controller.getCurrentUser();
     }
 
@@ -206,8 +206,8 @@ public class ControllerTest {
         assertFalse("Logout failed!", userManager.hasCurrentUser());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createProjectTest_Developer_IllegalArgumentException() {
+    @Test(expected = OperationNotPermittedException.class)
+    public void createProjectTest_Developer_OperationNotPermittedException() {
         controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
         controller.login(branchOffice,"julien", "blablabla");
         assertTrue("Projects already present!", controller.getProjects().isEmpty());
@@ -262,15 +262,16 @@ public class ControllerTest {
         controller.login(branchOffice,"alexander", "blabla");
         controller.createProject("proj", "xXx", randomTime);
         ProjectWrapper project = controller.getProjects().get(0);
-        controller.logout();
-        controller.login(branchOffice,"julien", "blablabla");
-        controller.logout();
-        controller.login(branchOffice,"alexander", "blabla");
         ResourceTypeWrapper developer = controller.getResourceTypes().get(0);
         HashMap<ResourceTypeWrapper, Integer> requirements = new HashMap<>();
         requirements.put(developer, 1);
         controller.createTask(project, "tsk", "oOo", 10, 0.5, requirements);
         TaskWrapper task = controller.getTasks(project).get(0);
+        controller.logout();
+        controller.login(branchOffice,"julien", "blablabla");
+        Assert.assertTrue("Tasks should not be visible!", controller.getTasks(project).isEmpty());
+        controller.logout();
+        controller.login(branchOffice,"alexander", "blabla");
         controller.initializePlan(task, randomTime);
         controller.makeExecuting(task);
         controller.logout();

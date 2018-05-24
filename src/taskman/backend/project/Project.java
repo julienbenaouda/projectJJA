@@ -29,7 +29,7 @@ public class Project implements ProjectWrapper {
 	 * @param dueTime the due time of the project. The due time must be of the following format: dd/mm/yyyy hh:mm
 	 * @param user the current user
 	 * @throws IllegalArgumentException when one of the given parameters is not of a valid format.
-	 * @throws OperationNotPermittedException when the user doesn't have access to create a project
+	 * @throws OperationNotPermittedException when the user doesn't have access to create a project.
 	 * @post a new project is created with the given attributes
 	 */
 	public Project(String name, String description, LocalDateTime creationTime, LocalDateTime dueTime, User user) {
