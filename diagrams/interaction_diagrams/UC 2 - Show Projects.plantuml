@@ -5,11 +5,11 @@ title "Use Case - Show Projects"
 -> ":Controller": getProjects()
 activate ":Controller"
 
-":Controller" -> ":ProjectOrganizer" : getProjects(User)
-activate ":ProjectOrganizer"
+":Controller" -> ":ProjectManager" : getProjects(User)
+activate ":ProjectManager"
 
 loop over projects
-    ":ProjectOrganizer" -> ":Project" : hasAccessTo(User)
+    ":ProjectManager" -> ":Project" : hasAccessTo(User)
     activate ":Project"
 
     loop over tasks
@@ -27,13 +27,13 @@ loop over projects
 
     end
 
-    ":Project" --> ":ProjectOrganizer" : boolean
+    ":Project" --> ":ProjectManager" : boolean
     deactivate ":Project"
 end
 
 
-":ProjectOrganizer" --> ":Controller" : List<Project>
-deactivate ":ProjectOrganizer"
+":ProjectManager" --> ":Controller" : List<Project>
+deactivate ":ProjectManager"
 
 ":Controller" -> ":Project" : getTasks(User)
 activate ":Project"

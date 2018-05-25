@@ -41,7 +41,7 @@ public class TimeSpan implements TimeSpanWrapper {
 	 * @throws IllegalStateException if the starttime is null
 	 */
 	private void setStartTime(LocalDateTime startTime) throws IllegalStateException{
-		if (startTime == null) { // TODO: hopelijk violate dit de rest niet
+		if (startTime == null) {
 			throw new IllegalArgumentException("The start time can't be null");
 		}
 		this.startTime = startTime;

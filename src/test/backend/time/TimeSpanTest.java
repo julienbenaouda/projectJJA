@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  * @author Julien Benaouda
  *
  */
-public class TimespanTest {
+public class TimeSpanTest {
 	TimeSpan timespan;
 	LocalDateTime start;
 	LocalDateTime end;
