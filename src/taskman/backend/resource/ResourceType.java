@@ -281,4 +281,5 @@ public class ResourceType implements ResourceTypeWrapper {
 		ResourceType clone = new ResourceType(getName());
 		return clone;
 	}
+	
 }

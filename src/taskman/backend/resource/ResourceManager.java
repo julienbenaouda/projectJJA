@@ -152,6 +152,11 @@ public class ResourceManager {
      * @return true if there is no conflict between the system its constraints and the requirements, otherwise false
      */
     public boolean checkRequirements(Map<ResourceType, Integer> requirements) {
+        for(ResourceType type: requirements.keySet()) {
+        	if(requirements.get(type).intValue() > getResourceType(type.getName()).getNbOfResources()) {
+        		return false;
+        	}
+        }
         for (Constraint constraint : getConstraint()){
             if (!constraint.evaluate(requirements)){
                 return false;
