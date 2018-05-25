@@ -67,9 +67,14 @@ public class ResourceManagerTest {
 	
 	@Test
 	public void testCheckRequirements_true() {
-		resourceManager.createResourceType("type1");
-		ResourceType type1 = resourceManager.getResourceType("type1");
-		String string = "== type1 5";
+		resourceManager.createResourceType("type123");
+		ResourceType type1 = resourceManager.getResourceType("type123");
+		type1.createResource("r1");
+		type1.createResource("r2");
+		type1.createResource("r3");
+		type1.createResource("r4");
+		type1.createResource("r5");
+		String string = "== type123 5";
 		resourceManager.addConstraint(ConstraintParser.parse(string, resourceManager));
 		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 5);
@@ -80,22 +85,25 @@ public class ResourceManagerTest {
 	public void testCheckRequirements_false() {
 		resourceManager.createResourceType("type1");
 		ResourceType type1 = resourceManager.getResourceType("type1");
+		type1.createResource("r1");
+		type1.createResource("r2");
+		type1.createResource("r3");
+		type1.createResource("r4");
 		String string = "== type1 5";
 		resourceManager.addConstraint(ConstraintParser.parse(string, resourceManager));
 		Task task = new Task("task", "test", 30l, 5.5);
 		task.addRequirement(resourceManager, type1, 4);
 	}
 	
-	// TODO @Jeroen deze test werkt nog niet
 	@Test
 	public void testMultipleResources() {
 		Task t = new Task("test", "test", 20l, 5.5);
-		resourceManager.createResourceType("type");
-		ResourceType type = resourceManager.getResourceType("type");
-		t.addRequirement(resourceManager, type, 2);
+		resourceManager.createResourceType("type89");
+		ResourceType type = resourceManager.getResourceType("type89");
 		type.createResource("r1");
 		type.createResource("r2");
 		type.createResource("r3");
+		t.addRequirement(resourceManager, type, 2);
 		AvailabilityPeriod always = new AvailabilityPeriod(LocalTime.of(0, 0), LocalTime.of(23, 59));
 		for(int j = 1; j < 8; j++) {
 			type.addAvailability(j, always);

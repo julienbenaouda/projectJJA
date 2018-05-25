@@ -970,7 +970,8 @@ public class TaskTest {
 	@Test
 	public void testGetAlternativeResources() {
 		Task task = new Task("task", "test", 25l, 5.5);
-		ResourceType type = new ResourceType("test");
+		resourceManager.createResourceType("test1234567");
+		ResourceType type = resourceManager.getResourceType("test1234567");
 		LocalTime start = LocalTime.of(0, 0);
 		LocalTime end = LocalTime.of(23, 59);
 		AvailabilityPeriod always = new AvailabilityPeriod(start, end);

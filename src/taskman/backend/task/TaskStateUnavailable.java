@@ -73,7 +73,14 @@ public class TaskStateUnavailable extends TaskState {
         task.setTimeSpan(startTime, startTime.plusMinutes(task.getEstimatedDuration()));
         task.setState(new TaskStatePlanned());
     }
-    
+
+    /**
+     * Delegates the given task to the given branchoffice.
+     * @param branchOffice the branch office to delegate the task to
+     * @param task the task to delegate
+     * @param currentTime the current system time
+     * @post the given task is delegated to the given branchoffice
+     */
     @Override
     public void delegate(BranchOffice branchOffice, Task task, LocalDateTime currentTime) {
     	Map<ResourceType, Integer> requirements = task.getPlan().cloneRequirements();
