@@ -7,10 +7,14 @@ import taskman.backend.branchOffice.BranchOffice;
 import taskman.backend.branchOffice.BranchOfficeManager;
 import taskman.backend.project.ProjectManager;
 import taskman.backend.resource.ResourceManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.simulation.SimulationManager;
+import taskman.backend.task.Task;
 import taskman.backend.time.AvailabilityPeriod;
 import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
+import taskman.backend.wrappers.ResourceTypeWrapper;
+import taskman.backend.wrappers.TaskWrapper;
 import taskman.frontend.UserInterface;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +38,10 @@ public class UpdateStatusUseCaseTest {
 	private Controller c;
 	private UserInterface ui;
 	private ByteArrayOutputStream outputStream;
+
+	private void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount){
+		((Task) task).getPlan().addRequirement((ResourceType) resourceType, amount);
+	}
 
 	@Before
 	public void setUp() {
@@ -62,8 +70,8 @@ public class UpdateStatusUseCaseTest {
 			rm.getResourceType("testType").addAvailability(i, always);
 			rm.getResourceType("developer").addAvailability(i, always);
 		}
-		c.addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("testType"), 1);
-		c.addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("developer"), 1);
+		addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("testType"), 1);
+		addRequirementToTask(po.getProject("testProject").getTask("testTask"), rm.getResourceType("developer"), 1);
 		c.initializePlan(po.getProject("testProject").getTask("testTask"), creationTime);
 		c.login(b, "test", "test");
 		ui = new UserInterface(c);

@@ -459,7 +459,7 @@ public class Controller {
      * @param resourceType the type of the resource.
      * @param amount the amount of resources needed.
      */
-    public void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount) {
+    private void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount) {
         ((Task) task).addRequirement(getCurrentResourceManager(), (ResourceType) resourceType, amount);
     }
 

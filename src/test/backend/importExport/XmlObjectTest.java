@@ -17,6 +17,7 @@ import taskman.backend.time.Clock;
 import taskman.backend.user.UserManager;
 import taskman.backend.wrappers.ResourceTypeWrapper;
 import taskman.backend.wrappers.ResourceWrapper;
+import taskman.backend.wrappers.TaskWrapper;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,6 +33,7 @@ public class XmlObjectTest {
 	private UserManager um;
 	private Clock c;
 	private Controller controller;
+
 	private XmlObject o;
 	private BranchOfficeManager branchOfficeManager;
 	private BranchOffice b;
@@ -58,6 +60,10 @@ public class XmlObjectTest {
 		assertEquals(c, o.getClock());
 	}
 
+	private void addRequirementToTask(TaskWrapper task, ResourceTypeWrapper resourceType, int amount){
+		((Task) task).getPlan().addRequirement((ResourceType) resourceType, amount);
+	}
+
 	@Test
 	public void testToXMLString() {
 		controller.createUser(b, "test", "test", "project manager", null);
@@ -75,8 +81,8 @@ public class XmlObjectTest {
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testDeveloper", "test", "developer", startBreak, rm);
 		ResourceType developerResourceType = rm.getResourceType("developer");
-		controller.addRequirementToTask(task, resourceType, 1);
-		controller.addRequirementToTask(task, developerResourceType, 1);
+		addRequirementToTask(task, resourceType, 1);
+		addRequirementToTask(task, developerResourceType, 1);
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
 		resources.add(rm.getResourceType("developer").getResource("testDeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
@@ -108,8 +114,8 @@ public class XmlObjectTest {
 		LocalTime startBreak = LocalTime.of(12, 0);
 		um.createUser("testdeveloper", "test", "developer", startBreak, rm);
 		ResourceType developerResourceType = rm.getResourceType("developer");
-		controller.addRequirementToTask(task, resourceType, 1);
-		controller.addRequirementToTask(task, developerResourceType, 1);
+		addRequirementToTask(task, resourceType, 1);
+		addRequirementToTask(task, developerResourceType, 1);
 		ArrayList<ResourceWrapper> resources = new ArrayList<>();
 		resources.add(rm.getResourceType("developer").getResource("testdeveloper"));
 		resources.add(rm.getResourceType("type1").getResource("testResource"));
