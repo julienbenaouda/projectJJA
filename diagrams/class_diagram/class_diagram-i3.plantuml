@@ -118,7 +118,7 @@ title __TASKMAN's Class Diagram__\n
           + LocalDateTime getTime()
           + void updateTime(LocalDateTime)
           + UserWrapper getCurrentUser()
-          + List<UserWrapper> getUsers()
+          + List<UserWrapper> getUsers(BranchOfficeWrapper)
           + Collection<String> getUserTypes()
           + void createUser(BranchOfficeWrapper, String, String, String, LocalTime)
           + void removeUser(BranchOfficeWrapper, UserWrapper, String)
@@ -150,12 +150,13 @@ title __TASKMAN's Class Diagram__\n
           + void cancelSimulation()
           + void executeSimulation()
           - void setClock(Clock)
-          - UserManager getUserManager()
-          - ProjectManager getProjectManager()
-          - ResourceManager getResourceManager()
+          - UserManager getCurrentUserManager()
+          - ProjectManager getCurrentProjectManager()
+          - ResourceManager getCurrentResourceManager()
           + BranchOfficeManager getBranchOfficeManager()
           - void setBranchOfficeManager(BranchOfficeManager)
           + List<BranchOfficeWrapper> getBranchOffices()
+          + delegateTask(TaskWrapper, BranchOfficeWrapper)
       }
 
       package taskman.backend.wrappers {
@@ -695,7 +696,7 @@ title __TASKMAN's Class Diagram__\n
   Smaller o-- Amount : amount2
   Equals -up-|> Constraint
   Equals o-- Amount : amount1
-  Equals  o-- Amount : amount2
+  Equals o-- Amount : amount2
   Not -up-|> Constraint
   Not o-- Constraint : constraint
   Or -up-|> Constraint
@@ -710,9 +711,9 @@ title __TASKMAN's Class Diagram__\n
   Plus o-- Amount: amount2
   Type -up-|> Amount
   Type o-- ResourceType: resourceType
-  Controller o-- ConstraintParser (?)
-  ConstraintParser o-- Constraint (?)
-  ConstraintParser o-- Amount (?)
+  Controller o-- ConstraintParser 
+  ConstraintParser o-- Constraint 
+  ConstraintParser o-- Amount 
   UserInterface o-- Controller : controller
   FormSection -up-|> Section
   MenuSection -up-|> Section
@@ -734,8 +735,7 @@ title __TASKMAN's Class Diagram__\n
   Project -up-|> ProjectWrapper
   DeveloperResource -up-|> Resource
   DeveloperResource o-- AvailabilityPeriod : breakTime
-  DeveloperResource o-- Developer : developer
-  Plan o-- Task : task
+  DeveloperResource *-- Developer : developer
   Reservation o-- Resource : resource
   Reservation o-- TimeSpan : timeSpan
   Resource -up-|> ResourceWrapper
@@ -744,21 +744,23 @@ title __TASKMAN's Class Diagram__\n
   Task -up-|> TaskWrapper
   DelegatedTask -up-|> Task
   Task o-- TimeSpan : timeSpan
-  Task o-- TaskState : state
+  Task *-- TaskState : state
   Task o-- Task : alternative
-  Task o-- Plan : plan
+  Task *-- Plan : plan
   TaskStateExecuting -up-|> TaskState
   TaskStateDelegated -up-|> TaskState
+  TaskStateDelegated o-- Task: delegatedTask
   TaskStateFailed -up-|> TaskState
   TaskStateFinished -up-|> TaskState
   TaskStatePlanned -up-|> TaskState
   TaskStateUnavailable -up-|> TaskState
-  TaskStateDelegated o-- Task: DelegatedTask
   AvailabilityPeriod -up-|> AvailabilityPeriodWrapper
   TimeSpan -up-|> TimeSpanWrapper
   Developer -up-|> User
   Manager -up-|> User
   User -up-|> UserWrapper
   UserManager o-- User : currentUser
+  UserManager o-- User : Users
+  Controller o-- TimeParser 
 
 @enduml
