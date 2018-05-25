@@ -2,80 +2,35 @@
 
 title "Use Case - Plan Task"
 
--> ":Controller": getProjects()
+-> ":Controller" : getStartingsTimes(TaskWrapper)
 activate ":Controller"
 
+":Controller" -> ":BranchOfficeManager": getCurrentBranchOffice()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": BranchOffice
+deactivate ":BranchOfficeManager"
 
-":Controller" -> ":ProjectManager" : getProjects(User)
-activate ":ProjectManager"
+":Controller" -> ":BranchOffice": getResourceManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": ResourceManager
+deactivate ":BranchOffice"
 
-loop over projects
-    ":ProjectManager" -> ":Project" : hasAccessTo(User)
-    activate ":Project"
+":Controller" -> ":Task": getPlan()
+activate ":Task"
+":Controller" <-- ":Task": Plan
+deactivate ":Task"
 
-    loop over tasks
-        ":Project" -> ":Task" : hasAccessTo(User)
-        activate ":Task"
+":Controller" -> ":Task": getEstimatedDuration()
+activate ":Task"
+":Controller" <-- ":Task": long
+deactivate ":Task"
 
-        ":Task" -> ":Plan" : isDeveloperFromPlan(User)
-        activate ":Plan"
+":Controller" -> ":Clock": getTime()
+activate ":Clock"
+":Controller" <-- ":Clock": LocalDateTime
+deactivate ":Clock"
 
-        ":Plan" --> ":Task" : boolean
-        deactivate ":Plan"
-
-        ":Task" --> ":Project" : boolean
-        deactivate ":Task"
-
-    end
-
-    ":Project" --> ":ProjectManager" : boolean
-    deactivate ":Project"
-end
-
-":ProjectManager" --> ":Controller" : List<ProjectWrapper>
-deactivate ":ProjectManager"
-
-
-loop over projects
-    ":Controller" -> ":Project" : getTasks(User)
-    activate ":Project"
-
-    loop over tasks
-        ":Project" -> ":Task" : hasAccessTo(User)
-        activate ":Task"
-
-        ":Task" -> ":Plan" : isDeveloperFromPlan(User)
-        activate ":Plan"
-
-        ":Plan" --> ":Task" : boolean
-        deactivate ":Plan"
-
-        ":Task" --> ":Project" : boolean
-        deactivate ":Task"
-
-    end
-
-    ":Project" --> ":Controller" : List<ProjectWrapper>
-    deactivate ":Project"
-
-    loop over tasks
-        ":Controller" -> ":Task" : canBePlanned()
-        activate ":Task"
-
-        ":Task" -> ":TaskState" : canBePlanned()
-        activate ":TaskState"
-
-        ":TaskState" --> ":Task" : boolean
-        deactivate ":TaskState"
-
-        ":Task" --> ":Controller" : boolean
-        deactivate ":Task"
-
-    end
-end
-
--> ":Controller" : getStartingsTimes(TaskWrapper)
-":Controller" -> ":ResourceManager" : getStartingTimes(Plan long LocalDateTime)
+":Controller" -> ":ResourceManager" : getStartingTimes(Plan, long, LocalDateTime)
 activate ":ResourceManager"
 
 ":ResourceManager" -> ":Plan": getRequirements()
@@ -109,46 +64,65 @@ deactivate ":ResourceManager"
 loop i = 1; i <= 3 && hasNext() ; i++
     <-- ":Controller" : LocalDateTime
 end
+deactivate ":Controller"
 
 -> ":Controller" : initializePlan(TaskWrapper, LocalDateTime)
-":Controller" -> ":Task" : initializePlan(ResourceManager, LocalDateTime)
+activate ":Controller"
+
+":Controller" -> ":Task" : initializePlan(LocalDateTime)
 activate ":Task"
-":Task" -> ":TaskState" : initializePlan(ResourceManager, LocalDateTime)
-activate ":TaskState"
-":TaskState" -> ":ResourceManager" : initializePlan(Plan, long, LocalDateTime)
-":ResourceManager" -> ":Plan" : getRequirements()
+
+":Task" -> ":TaskStateUnavailable" : initializePlan(LocalDateTime)
+activate ":TaskStateUnavailable"
+
+":TaskStateUnavailable" -> ":Task": getEstimatedDuration()
+activate ":Task"
+":TaskStateUnavailable" <-- ":Task": long
+deactivate ":Task"
+
+":TaskStateUnavailable" -> ":Plan" : initializePlan(long, LocalDateTime)
 activate ":Plan"
-":Plan" --> ":ResourceManager" : Map<ResourceType, Integer>
-deactivate ":Plan"
+
+":Plan" -> ":TimeSpan": TimeSpan(LocalDateTime, LocalDateTime)
+activate ":TimeSpan"
+":Plan" <-- ":TimeSpan": TimeSpan
+deactivate ":TimeSpan"
 
 loop over resource types
-    ":ResourceManager" -> ":ResourceType" : getAvailableResources(TimeSpan)
-    activate ":ResourceType"
-
-    ":ResourceType" --> ":ResourceManager" : List<Resource>
-    deactivate ":ResourceType"
+    ":Plan" -> ":ResourceType" : getAvailableResources(TimeSpan)
+    activate ":Plan"
+    ":ResourceType" --> ":Plan" : List<Resource>
+    deactivate ":Plan"
 end
 
-":ResourceManager" -> ":Plan" : createReservations(List<Resource>, LocalDateTime)
-activate ":Plan"
 loop over resources
-    ":Plan" -> ":Reservation" : new Reservation(Resource, LocalDateTime, LocalDateTime)
+    ":Plan" -> ":Reservation" : Reservation(Resource, LocalDateTime, LocalDateTime)
     activate ":Reservation"
     ":Reservation" --> ":Plan" : Resource
+    deactivate ":Reservation"
 end
+
 deactivate ":Plan"
+deactivate ":TaskStateUnavailable"
+deactivate ":Task"
+deactivate ":Controller"
 
 
 -> ":Controller" : getPlannedResources(Task)
+activate ":Controller"
+
 ":Controller" -> ":Task" : getPlannedResources()
 activate ":Task"
-":Task" -> ":TaskState" : getPlannedResources(Task)
-activate ":TaskState"
-":TaskState" -> ":Task": getPlan()
+
+":Task" -> ":TaskStatePlanned" : getPlannedResources(Task)
+activate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":Task": getPlan()
 activate ":Task"
-":Task" --> ":TaskState" : Plan
+":TaskState" <-- ":Task": Plan
 deactivate ":Task"
-":TaskState" -> ":Plan" : getPlannedResources()
+
+":TaskStatePlanned" -> ":Plan" : getPlannedResources()
 activate ":Plan"
 
 loop over reservations
@@ -159,66 +133,70 @@ loop over reservations
 
 end
 
-":Plan" --> ":TaskState" : List<Resource>
+":Plan" --> ":TaskStatePlanned" : List<Resource>
 deactivate ":Plan"
-":TaskState" --> "Task" : List<Resource>
-deactivate ":TaskState"
+":TaskStatePlanned" --> "Task" : List<Resource>
+deactivate ":TaskStatePlanned"
 ":Task" --> ":Controller" : List<Resource>
 deactivate ":Task"
+<-- ":Controller": List<ResourceWrapper>
+deactivate ":Controller"
+
 
 -> ":Controller": getAlternativeResources(TaskWrapper, ResourceWrapper)
-loop over resources
-    ":Controller" -> ":Task" : getAlternativeResources(ResourceManager, Resource)
-    activate ":Task"
-    ":Task" -> ":TaskState" : getAlternativeResources(ResourceManager, Task, Resource)
-    activate ":TaskState"
-    ":TaskState" -> ":ResourceManager" : getAlternativeResources(Resource, TimeSpan)
-    activate ":ResourceManager"
-    ":ResourceManager" -> ":Resource" : getType()
-    activate ":Resource"
-    ":Resource" --> ":ResourceManager" : ResourceType
-    deactivate ":Resource"
-    ":ResourceManager" -> ":ResourceType" : getAvailableResources(TimeSpan)
-    ":ResourceType" --> ":ResourceManager" : List<Resource>
-    deactivate ":ResourceType"
-    ":ResourceManager" --> ":TaskState" : List<Resource>
-    deactivate ":ResourceManager"
-    ":TaskState" --> ":Task" : List<Resource>
-    deactivate ":TaskState"
-    ":Task" --> ":Controller" : List<Resource>
-    deactivate ":Task"
-end
+activate ":Controller"
+
+":Controller" -> ":Task" : getAlternativeResources(Resource)
+activate ":Task"
+
+":Task" -> ":TaskStatePlanned" : getAlternativeResources(Task, Resource)
+activate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":ResourceManager" : getAlternativeResources(TimeSpan)
+activate ":ResourceManager"
+
+":ResourceManager" -> ":ResourceType": getAvailableResources(TimeSpan)
+activate ":ResourceType"
+
+":ResourceManager" <-- ":ResourceType": List<Resource>
+deactivate ":ResourceType"
+
+":TaskStatePlanned" <-- ":ResourceManager" : List<Resource>
+deactivate ":ResourceManager"
+
+":Task" <-- ":TaskStatePlanned" : List<Resource>
+deactivate ":TaskStatePlanned"
+
+":Controller" -> ":Task" : List<Resource>
+deactivate ":Task"
+
 <-- ":Controller": List<ResourceWrapper>
+deactivate ":Controller"
+
+
 
 -> ":Controller" : changeResource(TaskWrapper, ResourceWrapper, ResourceWrapper)
+activate ":Controller"
+
 ":Controller" -> ":Task" : changeResource(Resource, Resource)
 activate ":Task"
-":Task" -> ":TaskState" : changeResource(Task, Resource, Resource)
-activate ":TaskState"
-":TaskState" -> ":Task": getPlan()
-activate ":Task"
-":Task" --> ":TaskState" : Plan
-deactivate ":Task"
-":TaskState" -> ":Plan" : changeResource(Resource, Resource)
+
+":Task" -> ":TaskStatePlanned" : changeResource(Task, Resource, Resource)
+activate ":TaskStatePlanned"
+
+":TaskStatePlanned" -> ":Plan" : changeResource(Resource, Resource)
 activate ":Plan"
 
 loop over reservations
     ":Plan" -> ":Plan" : removeReservation(Reservation)
+    activate ":Plan"
     ":Plan" -> ":Plan" : deleteReservation(Reservation)
+    deactivate ":Plan"
 end
 
 deactivate ":Plan"
-deactivate ":TaskState"
+deactivate ":TaskStatePlanned"
 deactivate ":Task"
-
-
-":TaskState" -> "Task" : setState(new TaskStatePlanned)
-deactivate ":TaskState"
-deactivate ":Task"
-
-
-<-- ":Controller" : Iterator<LocalDateTime>
-
 deactivate ":Controller"
 
 @enduml
