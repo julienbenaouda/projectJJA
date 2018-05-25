@@ -1,0 +1,14 @@
+@startuml
+
+title "Use Case - Office Login"
+
+-> ":Controller": getProjects()
+activate ":Controller"
+
+
+
+<-- ":Controller" : List<ProjectWrapper>
+deactivate ":Controller"
+
+
+@enduml

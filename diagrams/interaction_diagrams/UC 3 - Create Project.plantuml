@@ -5,8 +5,8 @@ title "Use Case - Create Project"
 -> ":Controller": createProject(String, String, LocalDateTime)
 activate ":Controller"
 
-":Controller" -> ":ProjectOrganizer" : createProject(String, String, LocalDateTime, LocalDateTime, User)
-activate ":ProjectOrganizer"
+":Controller" -> ":ProjectManager" : createProject(String, String, LocalDateTime, LocalDateTime, User)
+activate ":ProjectManager"
 
 "
 

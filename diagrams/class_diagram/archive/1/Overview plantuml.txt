@@ -10,8 +10,8 @@ class Clock
 class User
 class UserType
 
-' <|--  Extension:   ... is first ...
-'  *--  Composition: ... has first ... (afhankelijk)
+' <|--  Extension:   ... is ...
+'  *--  Composition: ... has ... (afhankelijk)
 '  o--  Aggregation: ... uses ... (onafhankelijk)
 
 UI *-- Controller

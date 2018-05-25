@@ -299,6 +299,7 @@ public class Plan {
                 Resource resource = reservation.getResource();
                 removeReservation(reservation);
                 if (!resource.isAvailable(newTimeSpan)) {
+                    createSpecificReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
                     return false;
                 }
                 createSpecificReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
@@ -306,6 +307,7 @@ public class Plan {
                 Resource resource = reservation.getResource();
                 removeReservation(reservation);
                 if (!resource.isAvailable(newTimeSpan) && resource.getAlternativeResources(newTimeSpan).isEmpty()) {
+                    createReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
                     return false;
                 }
                 createReservation(resource, reservation.getTimeSpan().getStartTime(), reservation.getTimeSpan().getEndTime());
