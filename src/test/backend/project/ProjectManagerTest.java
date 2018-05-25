@@ -5,11 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import taskman.backend.project.Project;
 import taskman.backend.project.ProjectManager;
+import taskman.backend.resource.ResourceType;
 import taskman.backend.task.Task;
 import taskman.backend.user.Manager;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -54,7 +57,8 @@ public class ProjectManagerTest {
 	@Test
 	public void testCreateDelegatedTask(){
 		ProjectManager manager = new ProjectManager();
-		manager.createDelegatedTask("taskname", "task description", LocalDateTime.now(), 123, 0.3);
+		Map<ResourceType, Integer> requirements = new HashMap<>();
+		manager.createDelegatedTask(requirements, "taskname", "task description", LocalDateTime.now(), 123, 0.3);
 		Assert.assertEquals("There is a project in the branchoffice.", 1, manager.getProjects().size());
 		Project project = manager.getProjects().get(0);
 		Assert.assertEquals("The project name is not correct", "project_delegated_taskname", project.getName());
