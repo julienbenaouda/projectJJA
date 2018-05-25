@@ -116,8 +116,20 @@ public class BranchOffice implements BranchOfficeWrapper {
 	private void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
 	}
-	
-	public Task executeDelegation(Map<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
+
+	/**
+	 * Executes the delegation of the task to this branch office.
+	 * @param requirements the requirements for the task to delegate
+	 * @param name the name of the task
+	 * @param description the description of the task
+	 * @param startTime the start time of the task
+	 * @param estimatedDuration the estimated duration of the task
+	 * @param acceptableDeviation the acceptable deviation of the task
+	 * @return the delegated task
+	 * @throws IllegalArgumentException if the branchoffice has not enough resources available
+	 * @post a new delegated task is created
+	 */
+	public Task executeDelegation(Map<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException {
 		if(getResourceManager().checkRequirements(requirements)) {
 			return getProjectManager().createDelegatedTask(name, description, startTime, estimatedDuration, acceptableDeviation);
 		} else {
