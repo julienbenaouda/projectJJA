@@ -9,6 +9,7 @@ import java.time.LocalTime;
 
 /**
  * This class represents a availability period containing an start time and an end time. IN this class, dates are not involved.
+ * It contains a start time and end time in hours and minutes. It is used for the availability of resources.
  * @author Julien Benaouda
  *
  */

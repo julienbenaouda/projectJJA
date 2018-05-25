@@ -4,6 +4,7 @@ import taskman.backend.wrappers.UserWrapper;
 
 /**
  * This class represents a user in the system.
+ * It contains a user name and password.
  * @author Julien Benaouda
  */
 public abstract class User implements UserWrapper {

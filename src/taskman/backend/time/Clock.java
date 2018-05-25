@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 /**
  * This class is responsible for storing a consistent time for the system.
+ * This class contains the system time of the system.
+ * @author Alexander Braekevelt
  */
 public class Clock {
 

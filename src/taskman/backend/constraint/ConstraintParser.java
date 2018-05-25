@@ -9,7 +9,7 @@ import java.util.Deque;
 import java.util.NoSuchElementException;
 
 /**
- * This class is responsible for converting from and to constraint objects.
+ * This class is responsible for converting from strings to constraint objects.
  *
  * @author Alexander Braekevelt, Jeroen Van Der Donckt
  */

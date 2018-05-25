@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 /**
  * Class representing an executing task state.
+ * A task is in this state when it is executing. 
  * Note: We apply here the State Pattern
  *
  * @author Jeroen Van Der Donckt

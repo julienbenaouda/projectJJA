@@ -2,6 +2,7 @@ package taskman.backend.task;
 
 /**
  * Class representing a delegated task state.
+ * A task is in this state when it is delegated to another branch office. It contains a reference to the delegated task and delegates some requests to it.
  * Note: We apply here the State Pattern
  *
  * @author Jeroen Van Der Donckt

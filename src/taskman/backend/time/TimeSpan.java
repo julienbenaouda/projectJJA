@@ -8,7 +8,8 @@ import taskman.backend.wrappers.TimeSpanWrapper;
 import java.time.LocalDateTime;
 
 /**
- * This class represents a time span containing a start time, end time and status
+ * This class represents a time span containing a start time and end time.
+ * It contains also a method to check if it overlaps with another time span.
  * @author Julien Benaouda, Jeroen Van Der Donckt
  *
  */

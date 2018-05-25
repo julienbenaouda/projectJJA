@@ -2,6 +2,7 @@ package taskman.backend.task;
 
 /**
  * Class representing a failed task state.
+ * A task is in this state when it is failed. In this state, an alternative can be added to the task.
  * Note: We apply here the State Pattern
  *
  * @author Jeroen Van Der Donckt

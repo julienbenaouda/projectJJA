@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * Class representing an unavailable task state.
+ * A task is in this state when it is just created and when it is ready to be planned.
  * Note: We apply here the State Pattern
  *
  * @author Jeroen Van Der Donckt
