@@ -43,4 +43,12 @@ public class TaskStateExecuting extends TaskState{
         }
     }
 
+	/**
+	 * Returns if the state can be updated.
+	 * @return if the state can be update.
+	 */
+	@Override
+	public boolean canBeUpdated() {
+		return true;
+	}
 }

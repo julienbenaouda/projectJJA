@@ -62,8 +62,12 @@ public class ResourceManager {
      * Creates and adds the resource type with the given name to the resource types.
      *     * @param name the name of the resource type
      * @post a resource type with given name is created and added to the resource types
+     * @throws IllegalArgumentException when the name contains spaces
      */
     public void createResourceType(String name){
+    	if(name.contains(" ")) {
+    		throw new IllegalArgumentException("a name for a resource type can't contain spaces");
+    	}
         ResourceType resourceType = new ResourceType(name);
         resourceTypes.add(resourceType); // If there exists already a resource type with the given
     }
