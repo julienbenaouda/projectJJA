@@ -93,13 +93,14 @@ public class ProjectManager {
     }
 
     /**
-     *
-     * @param name
-     * @param description
-     * @param startTime
-     * @param estimatedDuration
-     * @param acceptableDeviation
-     * @return
+     * Created the delegated task with the given arguments.
+     * @param name the name of the task
+     * @param description the description of the task
+     * @param startTime the start time of the task
+     * @param estimatedDuration the estimated duration of the task
+     * @param acceptableDeviation the acceptable deviation of the task
+     * @return the delegated task
+     * @post the delegated task and its project are created with the given arguments
      */
     public Task createDelegatedTask(String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
     	String delegatedName = "delegated_" + name;
