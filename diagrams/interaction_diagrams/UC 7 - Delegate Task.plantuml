@@ -1,0 +1,125 @@
+@startuml
+
+title "Use Case - Delegating a Task"
+
+
+-> ":Controller": getProjects()
+activate ":Controller"
+
+
+":Controller" -> ":ProjectManager" : getProjects(User)
+activate ":ProjectManager"
+
+loop over projects
+    ":ProjectManager" -> ":Project" : hasAccessTo(User)
+    activate ":Project"
+
+    loop over tasks
+        ":Project" -> ":Task" : hasAccessTo(User)
+        activate ":Task"
+
+        ":Task" -> ":Plan" : isDeveloperFromPlan(User)
+        activate ":Plan"
+
+        ":Plan" --> ":Task" : boolean
+        deactivate ":Plan"
+
+        ":Task" --> ":Project" : boolean
+        deactivate ":Task"
+
+    end
+
+    ":Project" --> ":ProjectManager" : boolean
+    deactivate ":Project"
+end
+
+":ProjectManager" --> ":Controller" : List<ProjectWrapper>
+deactivate ":ProjectManager"
+
+
+":Controller" -> ":Project" : getTasks(User)
+activate ":Project"
+
+loop over tasks
+    ":Project" -> ":Task" : hasAccessTo(User)
+    activate ":Task"
+
+    ":Task" -> ":Plan" : isDeveloperFromPlan(User)
+    activate ":Plan"
+
+    ":Plan" --> ":Task" : boolean
+    deactivate ":Plan"
+
+    ":Task" --> ":Project" : boolean
+    deactivate ":Task"
+
+end
+
+":Project" --> ":Controller" : List<TaksWrapper>
+deactivate ":Project"
+
+
+-> ":Controller" : delegateTask(Task, BranchOffice)
+
+":Controller" -> ":Clock" : getTime()
+activate ":Clock"
+
+":Clock" --> ":Controller" : LocalDateTime
+deactivate ":Clock"
+
+":Controller" -> ":Task": delegateTask(BranchOffice, LocalDateTime)
+activate ":Task"
+
+":Task" -> ":TaskState" : delegate(BranchOffice, Task, LocalDateTime)
+activate ":TaskState"
+
+":TaskState" -> ":Plan" : getRequirements()
+activate ":Plan"
+":Plan" --> ":Task" : Map<ResourceType, Integer>
+deactivate ":Plan"
+
+":TaskState" -> ":BranchOffice" : executeDelegation(Map<ResourceType, Integer>, String, String, LocalDateTime, long , double)
+activate ":BranchOffice"
+":BranchOffice" -> ":ProjectManager" : createDelegatedTask(Map<ResourceType, Integer>, String, String, LocalDateTime, long , double)
+activate ":ProjectManager"
+
+":ProjectManager" -> ":Project" : new Project(String, String, LocalDateTime, LocalDateTime)
+activate ":Project"
+":Project" --> ":ProjectManager" : Project
+deactivate ":Project"
+
+":ProjectManager" -> ":Project" : createDelegatedTask(String, String, long, double)
+activate ":Project"
+":Project" -> ":DelegatedTask" : new DelegatedTask(String, String, long, double)
+activate ":DelegatedTask"
+":DelegatedTask" --> ":Project" : delegatedTask
+deactivate ":Project"
+
+loop over requirements
+    ":ProjectManager" -> ":Project" : getTask(String)
+    activate ":Project"
+    ":Project" --> ":ProjectManager" : Task
+    deactivate ":Project"
+
+    ":ProjectManager" -> ":Task" : getPlan()
+    activate ":Task"
+    ":Task" --> ":ProjectManager" : Plan
+    deactivate ":Task"
+
+    ":ProjectManager" -> ":Plan" : addRequirement(ResourceType, Integer)
+    deactivate ":Plan"
+end
+
+":ProjectManager" --> ":BranchOffice" : Task
+deactivate ":ProjectManager"
+
+":BranchOffice" --> ":TaskState" : Task
+deactivate ":BranchOffice"
+
+":TaskState" -> ":Task" : setState(TaskStateDelegated)
+deactivate ":TaskState"
+deactivate ":Task"
+deactivate ":Controller"
+
+
+@enduml
