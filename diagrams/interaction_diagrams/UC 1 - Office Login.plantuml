@@ -2,12 +2,52 @@
 
 title "Use Case - Office Login"
 
--> ":Controller": getProjects()
+
+-> ":Controller": getBranchOffices()
 activate ":Controller"
 
+":Controller" -> ":BranchOfficeManager": getBranchOffices()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": List<BranchOffice>
+deactivate ":BranchOfficeManager"
+
+<-- ":Controller": List<BranchOfficeWrapper>
+deactivate ":Controller"
 
 
-<-- ":Controller" : List<ProjectWrapper>
+-> ":Controller": getUsers(BranchOfficeWrapper)
+activate ":Controller"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManager": getUsers()
+activate ":UserManager"
+":Controller" <-- ":UserManager": List<User>
+deactivate ":UserManager"
+
+<-- ":Controller": List<UserWrapper>
+deactivate ":Controller"
+
+
+-> ":Controller": login(BranchOfficeWrapper, String, String)
+activate ":Controller"
+
+":Controller" -> ":BranchOfficeManager": changeCurrentBranchOffice(BranchOffice)
+activate ":BranchOfficeManager"
+deactivate ":BranchOfficeManager"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManage": login(String, String)
+activate ":UserManage"
+deactivate ":UserManage"
+
 deactivate ":Controller"
 
 

@@ -261,8 +261,7 @@ public class Controller {
      * @post a project with the given properties will be added to the ProjectOrganizer.
      */
     public void createProject(String name, String description, LocalDateTime dueTime) throws DateTimeParseException, IllegalArgumentException, OperationNotPermittedException {
-        BranchOffice office = getBranchOfficeManager().getCurrentBranchOffice();
-	    office.getProjectManager().createProject(name, description, getClock().getTime(), dueTime, office.getUserManager().getCurrentUser());
+	    getCurrentProjectManager().createProject(name, description, getClock().getTime(), dueTime, getCurrentUserManager().getCurrentUser());
     }
 
 	/**
@@ -307,8 +306,13 @@ public class Controller {
     public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation, Map<ResourceTypeWrapper, Integer> requirements) throws IllegalArgumentException, OperationNotPermittedException {
         ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, getCurrentUserManager().getCurrentUser());
         Task task = ((Project) project).getTask(taskName);
-        for (ResourceTypeWrapper rtw : requirements.keySet()){
-            addRequirementToTask(task, rtw, requirements.get(rtw));
+        try {
+	        for (ResourceTypeWrapper rtw : requirements.keySet()) {
+		        addRequirementToTask(task, rtw, requirements.get(rtw));
+	        }
+        } catch (Exception e) {
+
+        	throw e;
         }
     }
 

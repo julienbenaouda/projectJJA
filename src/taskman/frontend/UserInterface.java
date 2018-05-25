@@ -605,7 +605,7 @@ public class UserInterface {
 	private void advanceTime() throws Cancel {
 		TitleSection titleForm = new TitleSection("advance system time");
 		titleForm.show();
-		FormSection form = new FormSection(false, "New time (dd/mm/uuuu hh:mm):");
+		FormSection form = new FormSection(false, "New time (dd/mm/yyyy hh:mm):");
 		form.show();
 		if (!form.hasAnswers()) return; // Cancelled
 		controller.updateTime(TimeParser.convertStringToLocalDateTime(form.getAnswer(0)));
