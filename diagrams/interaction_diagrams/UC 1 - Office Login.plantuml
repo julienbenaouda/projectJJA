@@ -5,55 +5,10 @@ title "Use Case - Office Login"
 -> ":Controller": getProjects()
 activate ":Controller"
 
-":Controller" -> ":ProjectManager" : getProjects(User)
-activate ":ProjectManager"
-
-loop over projects
-    ":ProjectManager" -> ":Project" : hasAccessTo(User)
-    activate ":Project"
-
-    loop over tasks
-        ":Project" -> ":Task" : hasAccessTo(User)
-        activate ":Task"
-
-        ":Task" -> ":Plan" : isDeveloperFromPlan(User)
-        activate ":Plan"
-
-        ":Plan" --> ":Task" : boolean
-        deactivate ":Plan"
-
-        ":Task" --> ":Project" : boolean
-        deactivate ":Task"
-
-    end
-
-    ":Project" --> ":ProjectManager" : boolean
-    deactivate ":Project"
-end
-
-
-":ProjectManager" --> ":Controller" : List<Project>
-deactivate ":ProjectManager"
-
-":Controller" -> ":Project" : getTasks(User)
-activate ":Project"
-loop over tasks
-    ":Project" -> ":Task" : hasAccessTo(User)
-    activate ":Task"
-
-
-    ":Task" --> ":Project" : boolean
-    deactivate ":Task"
-
-end
-
-":Project" --> ":Controller" : List<Task>
-deactivate ":Project"
 
 
 <-- ":Controller" : List<ProjectWrapper>
 deactivate ":Controller"
-
 
 
 @enduml
