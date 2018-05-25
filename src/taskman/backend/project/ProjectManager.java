@@ -91,7 +91,16 @@ public class ProjectManager {
     	}
     	return false;
     }
-    
+
+    /**
+     *
+     * @param name
+     * @param description
+     * @param startTime
+     * @param estimatedDuration
+     * @param acceptableDeviation
+     * @return
+     */
     public Task createDelegatedTask(String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
     	String delegatedName = "delegated_" + name;
         Project p = new Project("project_delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
