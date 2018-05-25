@@ -131,7 +131,7 @@ public class BranchOffice implements BranchOfficeWrapper {
 	 */
 	public Task executeDelegation(Map<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) throws IllegalArgumentException {
 		if(getResourceManager().checkRequirements(requirements)) {
-			return getProjectManager().createDelegatedTask(name, description, startTime, estimatedDuration, acceptableDeviation);
+			return getProjectManager().createDelegatedTask(requirements, name, description, startTime, estimatedDuration, acceptableDeviation);
 		} else {
 			throw new IllegalArgumentException("This branch office had not enough resources available to accept this task!");
 		}

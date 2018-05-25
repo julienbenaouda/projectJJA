@@ -1,5 +1,6 @@
 package taskman.backend.project;
 
+import taskman.backend.resource.ResourceType;
 import taskman.backend.task.Task;
 import taskman.backend.user.OperationNotPermittedException;
 import taskman.backend.user.User;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -94,6 +96,7 @@ public class ProjectManager {
 
     /**
      * Created the delegated task with the given arguments.
+     * @param requirements the requirements for the task to delegate
      * @param name the name of the task
      * @param description the description of the task
      * @param startTime the start time of the task
@@ -102,11 +105,14 @@ public class ProjectManager {
      * @return the delegated task
      * @post the delegated task and its project are created with the given arguments
      */
-    public Task createDelegatedTask(String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
+    public Task createDelegatedTask(Map<ResourceType, Integer> requirements, String name, String description, LocalDateTime startTime, long estimatedDuration, double acceptableDeviation) {
     	String delegatedName = "delegated_" + name;
         Project p = new Project("project_delegated_" +name, description, startTime, startTime.plusMinutes(estimatedDuration));
     	projects.add(p);
     	p.createDelegatedTask(delegatedName, description, estimatedDuration, acceptableDeviation);
+    	for (ResourceType rt : requirements.keySet()) {
+            p.getTask(delegatedName).getPlan().addRequirement(rt, requirements.get(rt));
+        }
     	return p.getTask(delegatedName);
     }
 
