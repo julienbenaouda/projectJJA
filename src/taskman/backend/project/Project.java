@@ -114,7 +114,7 @@ public class Project implements ProjectWrapper {
      */
     public void createTask(String name, String description, long estimatedDuration, double acceptableDeviation, User user) {
     	if(!(user instanceof Manager)) {
-    		throw new OperationNotPermittedException("you are not allowed to created tasks!");
+    		throw new OperationNotPermittedException("You are not allowed to create a task!");
     	}
     	Task t = new Task(name, description, estimatedDuration, acceptableDeviation);
     	addTask(t);
@@ -134,7 +134,7 @@ public class Project implements ProjectWrapper {
      * @param task the task to remove from the project.
 	 * @post the task is removed from the project.
      */
-    private void removeTask(Task task) {
+    public void removeTask(Task task) {
 		taskList.remove(task);
 	}
 

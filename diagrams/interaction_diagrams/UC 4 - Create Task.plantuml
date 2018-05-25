@@ -5,12 +5,27 @@ title "Use Case - Create Task"
 -> ":Controller": createTask(ProjectWrapper, String, String, long, double, Map<ResourceTypeWrapper, Integer>)
 activate ":Controller"
 
+":Controller" -> ":BranchOfficeManager": getCurrentBranchOffice()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": BranchOffice
+deactivate ":BranchOfficeManager"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
 ":Controller" -> ":Project" : createTask(String, String, long, double, User)
 activate ":Project"
 
 ":Project" -> ":Task" : new Task(String, String, long, double, User)
 activate ":Task"
-":Task" -> ":Project" : Task
+":Project" <-- ":Task": Task
 deactivate ":Task"
 deactivate ":Project"
 

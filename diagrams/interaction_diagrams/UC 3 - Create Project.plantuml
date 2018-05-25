@@ -5,9 +5,43 @@ title "Use Case - Create Project"
 -> ":Controller": createProject(String, String, LocalDateTime)
 activate ":Controller"
 
+":Controller" -> ":Clock": getTime()
+activate ":Clock"
+":Controller" <-- ":Clock": LocalDateTime
+deactivate ":Clock"
+
+":Controller" -> ":BranchOfficeManager": getCurrentBranchOffice()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": BranchOffice
+deactivate ":BranchOfficeManager"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":BranchOffice": getProjectManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": ProjectManager
+deactivate ":BranchOffice"
+
 ":Controller" -> ":ProjectManager" : createProject(String, String, LocalDateTime, LocalDateTime, User)
 activate ":ProjectManager"
 
-"
+":ProjectManager" -> ":Project" : Project(String, String, LocalDateTime, LocalDateTime, User)
+activate ":Project"
+
+":ProjectManager" <-- ":Project" : Project
+deactivate ":Project"
+
+":Controller" <-- ":ProjectManager" : Project
+deactivate ":ProjectManager"
+
+deactivate ":Controller"
 
 @enduml

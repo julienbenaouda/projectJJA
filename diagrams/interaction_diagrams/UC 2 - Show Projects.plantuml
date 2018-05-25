@@ -5,6 +5,26 @@ title "Use Case - Show Projects"
 -> ":Controller": getProjects()
 activate ":Controller"
 
+":Controller" -> ":BranchOfficeManager": getCurrentBranchOffice()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": BranchOffice
+deactivate ":BranchOfficeManager"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
+
+":Controller" -> ":BranchOffice": getProjectManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": ProjectManager
+deactivate ":BranchOffice"
+
 ":Controller" -> ":ProjectManager" : getProjects(User)
 activate ":ProjectManager"
 
@@ -31,9 +51,32 @@ loop over projects
     deactivate ":Project"
 end
 
-
 ":ProjectManager" --> ":Controller" : List<Project>
 deactivate ":ProjectManager"
+
+<-- ":Controller" : List<ProjectWrapper>
+deactivate ":Controller"
+
+
+
+
+-> ":Controller": getTasks(ProjectWrapper)
+activate ":Controller"
+
+":Controller" -> ":BranchOfficeManager": getCurrentBranchOffice()
+activate ":BranchOfficeManager"
+":Controller" <-- ":BranchOfficeManager": BranchOffice
+deactivate ":BranchOfficeManager"
+
+":Controller" -> ":BranchOffice": getUserManager()
+activate ":BranchOffice"
+":Controller" <-- ":BranchOffice": UserManager
+deactivate ":BranchOffice"
+
+":Controller" -> ":UserManager": getCurrentUser()
+activate ":UserManager"
+":Controller" <-- ":UserManager": User
+deactivate ":UserManager"
 
 ":Controller" -> ":Project" : getTasks(User)
 activate ":Project"
@@ -50,10 +93,8 @@ end
 ":Project" --> ":Controller" : List<Task>
 deactivate ":Project"
 
-
-<-- ":Controller" : List<ProjectWrapper>
+<-- ":Controller" : List<TaskWrapper>
 deactivate ":Controller"
-
 
 
 @enduml
