@@ -134,7 +134,7 @@ public class Project implements ProjectWrapper {
      * @param task the task to remove from the project.
 	 * @post the task is removed from the project.
      */
-    private void removeTask(Task task) {
+    public void removeTask(Task task) {
 		taskList.remove(task);
 	}
 

@@ -292,7 +292,7 @@ public class Controller {
 
     /**
      * Adds a task with the given properties.
-     * @param project the project wrapper.
+     * @param projectWrapper the project wrapper.
      * @param taskName the name of the task.
      * @param description the description of the task.
      * @param estimatedDuration the estimated duration of the task as Long.
@@ -303,15 +303,16 @@ public class Controller {
      * @throws OperationNotPermittedException when the user is not allowed to create tasks.
      * @post a new task is created and added to the project in the system.
      */
-    public void createTask(ProjectWrapper project, String taskName, String description, long estimatedDuration, double acceptableDeviation, Map<ResourceTypeWrapper, Integer> requirements) throws IllegalArgumentException, OperationNotPermittedException {
-        ((Project) project).createTask(taskName, description, estimatedDuration, acceptableDeviation, getCurrentUserManager().getCurrentUser());
-        Task task = ((Project) project).getTask(taskName);
+    public void createTask(ProjectWrapper projectWrapper, String taskName, String description, long estimatedDuration, double acceptableDeviation, Map<ResourceTypeWrapper, Integer> requirements) throws IllegalArgumentException, OperationNotPermittedException {
+        Project project = ((Project) projectWrapper);
+        project.createTask(taskName, description, estimatedDuration, acceptableDeviation, getCurrentUserManager().getCurrentUser());
+        Task task = project.getTask(taskName);
         try {
 	        for (ResourceTypeWrapper rtw : requirements.keySet()) {
 		        addRequirementToTask(task, rtw, requirements.get(rtw));
 	        }
         } catch (Exception e) {
-
+        	project.removeTask(task);
         	throw e;
         }
     }
