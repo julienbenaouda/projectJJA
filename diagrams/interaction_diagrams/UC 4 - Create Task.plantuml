@@ -1,6 +1,6 @@
 @startuml
 
-title "Use Case - Create Project"
+title "Use Case - Create Task"
 
 -> ":Controller": createTask(ProjectWrapper, String, String, long, double, Map<ResourceTypeWrapper, Integer>)
 activate ":Controller"

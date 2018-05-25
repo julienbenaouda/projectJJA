@@ -10,7 +10,7 @@ activate ":UserManager"
 ":Controller" <-- ":UserManager": User
 deactivate ":UserManager"
 
-":Controller" -> ":SimulationManager": startSimulation(ProjectOrganizer, UserManager, ResourceManager, Clock, User)
+":Controller" -> ":SimulationManager": startSimulation(ProjectManager, UserManager, ResourceManager, Clock, User)
 activate ":SimulationManager"
 
 ":SimulationManager" -> ":User": getUserType()
@@ -18,7 +18,7 @@ activate ":User"
 ":SimulationManager" <-- ":User": String
 deactivate ":User"
 
-":SimulationManager" -> ":XmlObject": XmlObject(ProjectOrganizer, UserManager, ResourceManager, Clock)
+":SimulationManager" -> ":XmlObject": XmlObject(ProjectManager, UserManager, ResourceManager, Clock)
 activate ":XmlObject"
 ":SimulationManager" <-- ":XmlObject": XmlObject
 deactivate ":XmlObject"

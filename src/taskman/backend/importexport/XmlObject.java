@@ -113,7 +113,7 @@ public class XmlObject {
 		try (BufferedWriter w = new BufferedWriter(new FileWriter(path))) {
 			w.write(toXMLString());
 		} catch(Exception e) {
-			throw new ImportExportException("Something went wrong writing the string to file: " +e.getMessage());
+			throw new ImportExportException("Something went wrong writing the string to file: " + e.getMessage());
 		}
 	}
 	
@@ -132,7 +132,7 @@ public class XmlObject {
 			}
 			return fromXMLString(sb.toString());
 		} catch (Exception e) {
-			throw new ImportExportException("Something went wrong druing parsing of the file: " + e.getMessage());
+			throw new ImportExportException("Something went wrong during parsing of the file: " + e.getMessage());
 		}
 	}
 

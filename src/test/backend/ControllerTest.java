@@ -188,7 +188,7 @@ public class ControllerTest {
     }
 
     @Test
-    public void login_logout_Developer() {
+    public void loginLogoutTest_Developer() {
         controller.createUser(branchOffice,"julien", "blablabla", "developer", LocalTime.of(12, 0));
         controller.login(branchOffice,"julien", "blablabla");
         assertTrue("Login failed!", userManager.hasCurrentUser());
