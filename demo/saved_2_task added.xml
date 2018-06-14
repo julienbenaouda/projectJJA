@@ -1,0 +1,184 @@
+<taskman.backend.importexport.XmlObject>
+  <clock>
+    <time>2000-01-01T08:00:00</time>
+  </clock>
+  <branchOfficeManager>
+    <branchOffices>
+      <taskman.backend.branchOffice.BranchOffice>
+        <name>Microsoft</name>
+        <projectManager>
+          <projects class="list"/>
+        </projectManager>
+        <resourceManager>
+          <resourceTypes>
+            <taskman.backend.resource.ResourceType>
+              <name>developer</name>
+              <availability>
+                <entry>
+                  <int>1</int>
+                  <taskman.backend.time.AvailabilityPeriod>
+                    <startTime>00:00:00</startTime>
+                    <endTime>23:59:00</endTime>
+                  </taskman.backend.time.AvailabilityPeriod>
+                </entry>
+                <entry>
+                  <int>2</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+                <entry>
+                  <int>3</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+                <entry>
+                  <int>4</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+                <entry>
+                  <int>5</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+                <entry>
+                  <int>6</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+                <entry>
+                  <int>7</int>
+                  <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                </entry>
+              </availability>
+              <resources>
+                <taskman.backend.resource.DeveloperResource>
+                  <name>Jeroen</name>
+                  <type reference="../../.."/>
+                  <reservations/>
+                  <breakTime>
+                    <startTime>12:00:00</startTime>
+                    <endTime>13:00:00</endTime>
+                  </breakTime>
+                  <developer>
+                    <name>Jeroen</name>
+                    <password>Jeroen</password>
+                  </developer>
+                </taskman.backend.resource.DeveloperResource>
+              </resources>
+            </taskman.backend.resource.ResourceType>
+          </resourceTypes>
+          <constraints/>
+        </resourceManager>
+        <userManager>
+          <users>
+            <taskman.backend.user.Developer reference="../../../resourceManager/resourceTypes/taskman.backend.resource.ResourceType/resources/taskman.backend.resource.DeveloperResource/developer"/>
+            <taskman.backend.user.Manager>
+              <name>Julien</name>
+              <password>Julien</password>
+            </taskman.backend.user.Manager>
+            <taskman.backend.user.Manager>
+              <name>Bill Gates</name>
+              <password>Bill Gates</password>
+            </taskman.backend.user.Manager>
+          </users>
+        </userManager>
+      </taskman.backend.branchOffice.BranchOffice>
+      <taskman.backend.branchOffice.BranchOffice>
+        <name>Github</name>
+        <projectManager>
+          <projects class="list">
+            <taskman.backend.project.Project>
+              <taskList>
+                <taskman.backend.task.Task>
+                  <name>Sniffing for bad code smells</name>
+                  <description>&quot;If it smells, change it.&quot; -Grandma</description>
+                  <estimatedDuration>30</estimatedDuration>
+                  <acceptableDeviation>0.69</acceptableDeviation>
+                  <state class="taskman.backend.task.TaskStateUnavailable">
+                    <status>unavailable</status>
+                  </state>
+                  <dependencies/>
+                  <plan>
+                    <task reference="../.."/>
+                    <requirements>
+                      <entry>
+                        <taskman.backend.resource.ResourceType>
+                          <name>developer</name>
+                          <availability>
+                            <entry>
+                              <int>1</int>
+                              <taskman.backend.time.AvailabilityPeriod>
+                                <startTime>00:00:00</startTime>
+                                <endTime>23:59:00</endTime>
+                              </taskman.backend.time.AvailabilityPeriod>
+                            </entry>
+                            <entry>
+                              <int>2</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                            <entry>
+                              <int>3</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                            <entry>
+                              <int>4</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                            <entry>
+                              <int>5</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                            <entry>
+                              <int>6</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                            <entry>
+                              <int>7</int>
+                              <taskman.backend.time.AvailabilityPeriod reference="../../entry/taskman.backend.time.AvailabilityPeriod"/>
+                            </entry>
+                          </availability>
+                          <resources>
+                            <taskman.backend.resource.DeveloperResource>
+                              <name>Alexander</name>
+                              <type reference="../../.."/>
+                              <reservations/>
+                              <breakTime>
+                                <startTime>11:55:00</startTime>
+                                <endTime>12:55:00</endTime>
+                              </breakTime>
+                              <developer>
+                                <name>Alexander</name>
+                                <password>Alexander</password>
+                              </developer>
+                            </taskman.backend.resource.DeveloperResource>
+                          </resources>
+                        </taskman.backend.resource.ResourceType>
+                        <int>1</int>
+                      </entry>
+                    </requirements>
+                    <reservations/>
+                  </plan>
+                </taskman.backend.task.Task>
+              </taskList>
+              <name>SWOP</name>
+              <description>Make a TaskMan!</description>
+              <creationTime>2000-01-01T08:00:00</creationTime>
+              <dueTime>2018-06-15T18:00:00</dueTime>
+            </taskman.backend.project.Project>
+          </projects>
+        </projectManager>
+        <resourceManager>
+          <resourceTypes>
+            <taskman.backend.resource.ResourceType reference="../../../projectManager/projects/taskman.backend.project.Project/taskList/taskman.backend.task.Task/plan/requirements/entry/taskman.backend.resource.ResourceType"/>
+          </resourceTypes>
+          <constraints/>
+        </resourceManager>
+        <userManager>
+          <users>
+            <taskman.backend.user.Developer reference="../../../projectManager/projects/taskman.backend.project.Project/taskList/taskman.backend.task.Task/plan/requirements/entry/taskman.backend.resource.ResourceType/resources/taskman.backend.resource.DeveloperResource/developer"/>
+            <taskman.backend.user.Manager>
+              <name>Mario</name>
+              <password>Mario</password>
+            </taskman.backend.user.Manager>
+          </users>
+        </userManager>
+      </taskman.backend.branchOffice.BranchOffice>
+    </branchOffices>
+  </branchOfficeManager>
+</taskman.backend.importexport.XmlObject>
