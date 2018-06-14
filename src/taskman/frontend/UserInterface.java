@@ -522,6 +522,7 @@ public class UserInterface {
 		TaskWrapper task = selectTask(true, "select task", project);
 
 		TitleSection title = new TitleSection("select branch office to delegate to");
+		title.show();
 		SelectionSection<BranchOfficeWrapper> selection = new SelectionSection<>(true);
 		for (BranchOfficeWrapper office: controller.getBranchOffices()) {
 			selection.addOption(office.getName(), office);
